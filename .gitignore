@@ -1,0 +1,11 @@
+# Caché y archivos generados por Godot 4
+.godot/
+/android/
+
+# Exportaciones locales
+/build/
+/export/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

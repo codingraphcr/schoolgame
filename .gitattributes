@@ -1,0 +1,11 @@
+# Normaliza saltos de línea (recomendado por Godot)
+* text=auto eol=lf
+
+# Binarios
+*.png binary
+*.jpg binary
+*.ogg binary
+*.wav binary
+*.mp3 binary
+*.ttf binary
+*.otf binary
