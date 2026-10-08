@@ -15,7 +15,10 @@ y **defensa** (herramientas reales de ciberseguridad).
 | Tema | Decisión |
 |---|---|
 | Ataque básico (Pulso Digital) | Solo horizontal, en el suelo y en el aire. Ataques hacia arriba/abajo: después del MVP |
-| Dash | 1 en el aire por salto, con **invulnerabilidad breve (~0,15 s)** |
+| Dash | Disponible desde el inicio. 1 en el aire por salto, con **invulnerabilidad durante el dash (0,15 s)** |
+| Doble salto | **Se desbloquea** con la historia (pedido del director tras probar el movimiento) |
+| Pared | **Deslizar + salto de pared**, se desbloquea con la historia. Al agarrarse se recuperan el doble salto y el dash aéreo |
+| Caída | Más rápida y firme (gravedad ×2 al caer); la cámara se adelanta hacia abajo en caídas rápidas |
 | Habilidad especial | Solo **Escudo MFA**: bloquea daño de tipo *credenciales*, cuesta energía, tiene tiempo de reutilización |
 | Integridad (vida) | Al llegar a 0: fundido y regreso al último punto de control, sin perder progreso |
 | Energía defensiva | Independiente de la integridad. Se gana al acertar ataques, completar acciones defensivas y recoger recursos |
@@ -50,7 +53,7 @@ Es el vínculo entre el combate y el contenido educativo.
 |---|---|---|
 | T0 | Reestructuración, controles, capas, pixel art, documentación | ✅ |
 | T1 | Sala de pruebas + movimiento + cámara | ✅ |
-| T2 | Dash | ⏳ |
+| T2 | Movimiento avanzado: dash + doble salto + deslizar/salto de pared | ✅ |
 | T3 | Componentes de daño + integridad + invulnerabilidad + reaparición | ⏳ |
 | T4 | Pulso Digital + sensación de impacto | ⏳ |
 | T5 | Enemigo patrullero | ⏳ |

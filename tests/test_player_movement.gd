@@ -7,6 +7,7 @@ const FLOOR_Y := 480.0  # Superficie del suelo de la sala (fila 30 × 16 px)
 const PIT_EDGE_X := 600.0  # Un poco antes del primer hueco (columna 40)
 const ONE_WAY_X := 1024.0  # Bajo la primera plataforma de un sentido (superficie en y=416)
 const HIGH_LEDGE := Vector2(1750, 192)  # Cima antes de la caída larga (borde derecho en x=1776)
+const GAP6_START := Vector2(850, 480)  # Antes del hueco de 6 bloques (x 896–992)
 
 var _failures := 0
 var _jumps := 0
@@ -23,12 +24,16 @@ func _run() -> void:
 	await _frames(30)
 	room = current_scene as Room
 	player = room.player
+	# Esta prueba mide el movimiento base: sin doble salto ni salto de pared.
+	player.can_double_jump = false
+	player.can_wall_jump = false
 	player.jumped.connect(func() -> void: _jumps += 1)
 
 	await _test_ground_movement()
 	await _test_jump_heights()
 	await _test_coyote_time()
 	await _test_jump_buffer()
+	await _test_gap_six()
 	await _test_one_way_platform()
 	await _test_respawn_and_camera()
 
@@ -108,6 +113,21 @@ func _test_jump_buffer() -> void:
 	await _until_on_floor()
 
 
+func _test_gap_six() -> void:
+	player.teleport_to(GAP6_START)
+	await _frames(5)
+	await _press("move_right")
+	await _until_airborne()
+	await _press("jump")  # Salto apurando el borde (coyote time)
+	await _frames(10)
+	await _until_on_floor()
+	Input.action_release("jump")
+	Input.action_release("move_right")
+	_check(player.global_position.x > 992.0 and absf(player.global_position.y - FLOOR_Y) < 1.0,
+		"cruza el hueco de 6 bloques saltando en el borde (x=%.0f, y=%.0f)" % [player.global_position.x, player.global_position.y])
+	await _frames(15)
+
+
 func _test_one_way_platform() -> void:
 	player.teleport_to(Vector2(ONE_WAY_X, FLOOR_Y))
 	await _frames(5)
@@ -124,7 +144,7 @@ func _test_respawn_and_camera() -> void:
 	await _frames(3)
 	_check(player.global_position.distance_to(room.spawn_point.global_position) < 2.0, "reaparece al caer fuera de la sala")
 	var camera := room.camera
-	_check(camera.limit_left == 0 and camera.limit_top == 0 and camera.limit_right == 1920 and camera.limit_bottom == 544,
+	_check(camera.limit_left == 0 and camera.limit_top == 0 and camera.limit_right == 2560 and camera.limit_bottom == 544,
 		"límites de cámara = sala (%d, %d, %d, %d)" % [camera.limit_left, camera.limit_top, camera.limit_right, camera.limit_bottom])
 	_check(camera.zoom == Vector2(2, 2), "zoom de cámara ×2")
 

@@ -73,28 +73,49 @@ Los controles táctiles se agregarán en la tarea T10.
 
 ## Jugador (`characters/player/`)
 
-`CharacterBody2D` con el origen a la altura de los pies. Estados: `IDLE`, `RUN`, `JUMP`, `FALL`
-(señal `state_changed`, útil para animaciones). Señales `jumped` y `landed`.
+`CharacterBody2D` con el origen a la altura de los pies.
+Estados: `IDLE`, `RUN`, `JUMP`, `FALL`, `DASH`, `WALL_SLIDE` (señal `state_changed`, útil para animaciones).
+Señales: `jumped`, `double_jumped`, `wall_jumped`, `dashed`, `landed`.
 
-| Parámetro | Valor inicial | Efecto |
+**Habilidades** (interruptores en el Inspector, grupo "Habilidades"):
+
+| Habilidad | Por defecto | Notas |
+|---|---|---|
+| `can_dash` | activada | Disponible desde el inicio |
+| `can_double_jump` | desactivada | Se desbloquea con la historia. Activada en la sala de pruebas |
+| `can_wall_jump` | desactivada | Deslizar por paredes y saltar desde ellas. Activada en la sala de pruebas |
+
+**Valores principales:**
+
+| Parámetro | Valor | Efecto |
 |---|---|---|
 | `max_speed` | 140 px/s | Velocidad máxima horizontal |
 | `jump_height` | 72 px (4,5 tiles) | Altura máxima del salto: alcanza plataformas de 4 tiles |
 | `time_to_apex` | 0,4 s | Tiempo hasta el punto más alto (define la gravedad) |
-| `fall_gravity_multiplier` | 1,5 | Caída más rápida que la subida |
+| `fall_gravity_multiplier` | 2,0 | Caída más rápida y firme que la subida |
+| `max_fall_speed` | 500 px/s | Velocidad máxima de caída |
 | `jump_cut_multiplier` | 0,45 | Salto corto al soltar el botón |
-| `coyote_time` | 0,1 s | Margen para saltar después de salir de un borde |
-| `jump_buffer_time` | 0,12 s | Margen para pulsar salto antes de aterrizar |
+| `coyote_time` / `jump_buffer_time` | 0,1 s / 0,12 s | Márgenes de tolerancia para saltar |
+| `double_jump_height` | 56 px | Altura del doble salto (con salto + doble se alcanzan 7 tiles) |
+| `wall_slide_speed` | 60 px/s | Caída máxima al deslizarse por una pared |
+| `wall_jump_height` / `wall_jump_push` | 56 px / 160 px/s | Salto de pared: altura e impulso horizontal |
+| `dash_speed` / `dash_duration` | 340 px/s / 0,15 s | Dash de ~51 px (3 tiles) |
+| `dash_cooldown` | 0,35 s | Tiempo entre dashes |
 
-Todos se ajustan en el Inspector. El dibujo (`Visual/Body`) se deforma al saltar y aterrizar sin afectar a la colisión.
+**Prioridad al pulsar salto:** salto desde el suelo (con coyote time) → salto de pared → doble salto.
+Si ninguno es posible, la pulsación se guarda (jump buffer) para el aterrizaje.
+
+`is_invulnerable()` devuelve verdadero durante el dash; lo usará el sistema de daño (T3).
+El dibujo (`Visual/Body`) se deforma al saltar/aterrizar y el dash deja una estela de siluetas.
 
 ## Salas (`world/`)
 
 - `world/rooms/room.gd` (`Room`): calcula los límites de la cámara a partir del `TileMapLayer`,
   coloca al jugador en el `SpawnPoint` y lo devuelve ahí si cae fuera de la sala.
-- `world/camera/` (`GameCamera`): zoom ×2, suavizado, mirada hacia adelante y margen vertical.
+- `world/camera/` (`GameCamera`): zoom ×2, suavizado, mirada hacia adelante, adelanto hacia abajo en caídas rápidas y margen vertical.
+- `world/effects/ring_burst.gd` (`RingBurst`): anillo que se expande; efecto reutilizable (doble salto, impactos).
 - `world/tilesets/graybox_tileset.tres`: tiles de prueba (bloque sólido y plataforma de un sentido).
-- `world/test/combat_test_room.tscn`: sala de pruebas del prototipo. Se edita normalmente en el editor.
+- `world/test/combat_test_room.tscn`: sala de pruebas del prototipo (alturas, huecos, plataformas, techo bajo, caída, hueco con dash, chimenea para salto de pared y pilar de doble salto). Se edita normalmente en el editor.
 - `ui/debug/` : panel de depuración (F3) con estado, velocidad y temporizadores del jugador.
 
 ## Pruebas automáticas
@@ -110,4 +131,5 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | Prueba | Comprueba |
 |---|---|
 | `test_menu_navigation.gd` | Menú → Configuración → Menú → Jugar |
-| `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, plataforma de un sentido, reaparición y límites de cámara |
+| `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, hueco de 6, plataforma de un sentido, reaparición y límites de cámara |
+| `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
