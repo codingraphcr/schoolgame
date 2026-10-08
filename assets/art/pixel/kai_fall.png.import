@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://e0tdfcb604k5"
-path="res://.godot/imported/sign_lab.png-430d0cf0863c0e3076da71968e45b358.ctex"
+uid="uid://c4q676krcv0fp"
+path="res://.godot/imported/kai_fall.png-41b437121754d799a906a31cbae378da.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/sign_lab.png"
-dest_files=["res://.godot/imported/sign_lab.png-430d0cf0863c0e3076da71968e45b358.ctex"]
+source_file="res://assets/art/pixel/kai_fall.png"
+dest_files=["res://.godot/imported/kai_fall.png-41b437121754d799a906a31cbae378da.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxyj18bnke5wu"
-path="res://.godot/imported/kai_idle.png-080abf0dad79092417da89e20f7cc935.ctex"
+uid="uid://b2y8rxxd0t5mo"
+path="res://.godot/imported/server_rack.png-bf909e7a6382d1bb0e386695a665dc0d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/kai_idle.png"
-dest_files=["res://.godot/imported/kai_idle.png-080abf0dad79092417da89e20f7cc935.ctex"]
+source_file="res://assets/art/pixel/server_rack.png"
+dest_files=["res://.godot/imported/server_rack.png-bf909e7a6382d1bb0e386695a665dc0d.ctex"]
 
 [params]
 

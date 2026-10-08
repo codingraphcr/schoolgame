@@ -92,7 +92,7 @@ Es el vínculo entre el combate y el contenido educativo.
 | C1 | Daño compartido, 4 máscaras, invulnerabilidad, peligros, muerte, dash por niveles, HUD | ✅ |
 | C2 | `GameState`: progreso de combate y créditos (pérdida al morir) | ✅ |
 | Z1 | Retirar la sala de desarrollo (la sala gris queda solo para pruebas automáticas) | ✅ |
-| Z2 | Arte oficial de Ariel (estilo D) en el proyecto + Kai como personaje | ⏳ |
+| Z2 | Arte oficial de Ariel (estilo D) en el proyecto + Kai como personaje | ✅ |
 | Z3 | Primera sala real: Pasillo + Laboratorio (Zona 0) | ⏳ |
 | Z4 | Visión Digital como sistema (transición, red vectorial, puente de datos, evento del laboratorio) | ⏳ |
 | C3 | Nullblade.exe (datos de las 4 etapas) + sensación de impacto | ⏳ |

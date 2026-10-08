@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2idtromwacg8"
-path="res://.godot/imported/packet.png-5eae5acb336836ee0b86b642c8b5f12e.ctex"
+uid="uid://than4js5fw64"
+path="res://.godot/imported/phish_lure.png-6f86db69c8630561d5b87364c9e41b85.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/packet.png"
-dest_files=["res://.godot/imported/packet.png-5eae5acb336836ee0b86b642c8b5f12e.ctex"]
+source_file="res://assets/art/pixel/phish_lure.png"
+dest_files=["res://.godot/imported/phish_lure.png-6f86db69c8630561d5b87364c9e41b85.ctex"]
 
 [params]
 

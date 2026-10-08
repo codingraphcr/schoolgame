@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jgu8l8toxbo3"
-path="res://.godot/imported/board.png-7884bcfbcae40d4849e6b62c054af2bf.ctex"
+uid="uid://cbem4qq2cdmmx"
+path="res://.godot/imported/conduit.png-1adbf3ccdcae233c7a486a6d606b035f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/board.png"
-dest_files=["res://.godot/imported/board.png-7884bcfbcae40d4849e6b62c054af2bf.ctex"]
+source_file="res://assets/art/pixel/conduit.png"
+dest_files=["res://.godot/imported/conduit.png-1adbf3ccdcae233c7a486a6d606b035f.ctex"]
 
 [params]
 

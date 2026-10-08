@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2k7u1c1gvcm3"
-path="res://.godot/imported/lamp.png-ecb5a87aa6b4ab93beae9f462c42220d.ctex"
+uid="uid://cnrmkuk20woj0"
+path="res://.godot/imported/kai_dash.png-b79535bcfbd8bbe1419ac137ff08e34b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/lamp.png"
-dest_files=["res://.godot/imported/lamp.png-ecb5a87aa6b4ab93beae9f462c42220d.ctex"]
+source_file="res://assets/art/pixel/kai_dash.png"
+dest_files=["res://.godot/imported/kai_dash.png-b79535bcfbd8bbe1419ac137ff08e34b.ctex"]
 
 [params]
 

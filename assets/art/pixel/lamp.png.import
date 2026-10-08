@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1kdo6hl7ime3"
-path="res://.godot/imported/paleta.png-740198646807e27e2acc4c470f95ba57.ctex"
+uid="uid://2k7u1c1gvcm3"
+path="res://.godot/imported/lamp.png-a59d8892378b21578409f458f0f468b6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/paleta.png"
-dest_files=["res://.godot/imported/paleta.png-740198646807e27e2acc4c470f95ba57.ctex"]
+source_file="res://assets/art/pixel/lamp.png"
+dest_files=["res://.godot/imported/lamp.png-a59d8892378b21578409f458f0f468b6.ctex"]
 
 [params]
 

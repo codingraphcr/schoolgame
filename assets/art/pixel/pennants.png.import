@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btcrdxsspahpn"
-path="res://.godot/imported/kai_wall.png-e7233e5f3bdff2cbb28411a50837c7e8.ctex"
+uid="uid://vytebhydpevo"
+path="res://.godot/imported/pennants.png-6aef20b47e23ef8df746628684400922.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/kai_wall.png"
-dest_files=["res://.godot/imported/kai_wall.png-e7233e5f3bdff2cbb28411a50837c7e8.ctex"]
+source_file="res://assets/art/pixel/pennants.png"
+dest_files=["res://.godot/imported/pennants.png-6aef20b47e23ef8df746628684400922.ctex"]
 
 [params]
 

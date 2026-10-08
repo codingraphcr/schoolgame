@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cbem4qq2cdmmx"
-path="res://.godot/imported/conduit.png-054f83ffc5885c5d6309dbc5bc41586a.ctex"
+uid="uid://bss2ur4e0834g"
+path="res://.godot/imported/lockers.png-0878231ada0fe14220fd280885de319e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/conduit.png"
-dest_files=["res://.godot/imported/conduit.png-054f83ffc5885c5d6309dbc5bc41586a.ctex"]
+source_file="res://assets/art/pixel/lockers.png"
+dest_files=["res://.godot/imported/lockers.png-0878231ada0fe14220fd280885de319e.ctex"]
 
 [params]
 

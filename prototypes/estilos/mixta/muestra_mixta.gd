@@ -4,7 +4,7 @@ extends "res://prototypes/estilos/pixel/muestra_pixel.gd"
 ## (luz, halos neón, partículas, pulsos de datos, corrupción y efectos de pantalla).
 ## Reutiliza todo el arte de la muestra A y le suma la atmósfera de la muestra B.
 
-const GLITCH_SHADER := preload("res://prototypes/estilos/mixta/glitch_cercania.gdshader")
+const GLITCH_SHADER := preload("res://assets/shaders/glitch_cercania.gdshader")
 const VIGNETTE_SHADER := preload("res://prototypes/estilos/mixta/vineta.gdshader")
 ## Distancia (px) a la que la amenaza empieza a distorsionar la pantalla.
 const GLITCH_RANGE := 150.0

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1tkor0wa0bbt"
-path="res://.godot/imported/door.png-4d0f8065d630d127bce4bce85c587918.ctex"
+uid="uid://d345y1sbx6fkd"
+path="res://.godot/imported/kai_jump.png-a63f4867165e96159414c0db79deee8f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/door.png"
-dest_files=["res://.godot/imported/door.png-4d0f8065d630d127bce4bce85c587918.ctex"]
+source_file="res://assets/art/pixel/kai_jump.png"
+dest_files=["res://.godot/imported/kai_jump.png-a63f4867165e96159414c0db79deee8f.ctex"]
 
 [params]
 

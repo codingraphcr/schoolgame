@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://y1nprnwhnevp"
-path="res://.godot/imported/sign_sala.png-ada95a9a9b86777615a10b182947cb6d.ctex"
+uid="uid://p5f3si41blyu"
+path="res://.godot/imported/packet_bad.png-f60f5bcd714a23378c9f102e67bfb215.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/sign_sala.png"
-dest_files=["res://.godot/imported/sign_sala.png-ada95a9a9b86777615a10b182947cb6d.ctex"]
+source_file="res://assets/art/pixel/packet_bad.png"
+dest_files=["res://.godot/imported/packet_bad.png-f60f5bcd714a23378c9f102e67bfb215.ctex"]
 
 [params]
 

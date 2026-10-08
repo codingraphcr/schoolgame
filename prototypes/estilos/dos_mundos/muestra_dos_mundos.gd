@@ -6,7 +6,7 @@ extends "res://prototypes/estilos/pixel/muestra_pixel.gd"
 ## También aparece un puente de datos que solo existe en el mundo digital (en el juego final
 ## usaría la capa de colisión "mundo_digital" del proyecto).
 
-const GLITCH_SHADER := preload("res://prototypes/estilos/mixta/glitch_cercania.gdshader")
+const GLITCH_SHADER := preload("res://assets/shaders/glitch_cercania.gdshader")
 const TRANSITION_TIME := 0.45
 const PHYSICAL_AMBIENT := Color(0.62, 0.66, 0.85)
 const DIGITAL_AMBIENT := Color(0.13, 0.16, 0.3)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c67gs4twyjv4x"
-path="res://.godot/imported/tiles.png-e2416c132e8fb9fb01256de730cb046b.ctex"
+uid="uid://bbe673qrr363w"
+path="res://.godot/imported/router.png-5787b8586f74b520f86743337d4acbff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/tiles.png"
-dest_files=["res://.godot/imported/tiles.png-e2416c132e8fb9fb01256de730cb046b.ctex"]
+source_file="res://assets/art/pixel/router.png"
+dest_files=["res://.godot/imported/router.png-5787b8586f74b520f86743337d4acbff.ctex"]
 
 [params]
 

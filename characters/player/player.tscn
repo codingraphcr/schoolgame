@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://characters/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://components/combat/health_component.gd" id="2_health"]
 [ext_resource type="Script" path="res://components/combat/hurtbox_component.gd" id="3_hurtbox"]
 [ext_resource type="Script" path="res://characters/player/player_damage.gd" id="4_damage"]
+[ext_resource type="SpriteFrames" path="res://characters/player/kai_frames.tres" id="5_frames"]
+[ext_resource type="Script" path="res://characters/player/player_animation.gd" id="6_anim"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(10, 22)
@@ -53,26 +55,8 @@ safe_ground_right = NodePath("../SafeGroundRight")
 
 [node name="Body" type="Node2D" parent="Visual"]
 
-[node name="Hoodie" type="Polygon2D" parent="Visual/Body"]
-color = Color(0.231, 0.51, 0.965, 1)
-polygon = PackedVector2Array(-6, -14, 6, -14, 6, 0, -6, 0)
-
-[node name="Pants" type="Polygon2D" parent="Visual/Body"]
-color = Color(0.165, 0.2, 0.31, 1)
-polygon = PackedVector2Array(-5, -4, 5, -4, 5, 0, -5, 0)
-
-[node name="Head" type="Polygon2D" parent="Visual/Body"]
-color = Color(0.949, 0.78, 0.62, 1)
-polygon = PackedVector2Array(-5, -22, 5, -22, 5, -13, -5, -13)
-
-[node name="Hair" type="Polygon2D" parent="Visual/Body"]
-color = Color(0.169, 0.169, 0.227, 1)
-polygon = PackedVector2Array(-5, -23, 5, -23, 5, -20, -2, -20, -2, -17, -5, -17)
-
-[node name="Eye" type="Polygon2D" parent="Visual/Body"]
-color = Color(0.067, 0.067, 0.09, 1)
-polygon = PackedVector2Array(2, -19, 4, -19, 4, -16, 2, -16)
-
-[node name="Device" type="Polygon2D" parent="Visual/Body"]
-color = Color(0.133, 0.827, 0.933, 1)
-polygon = PackedVector2Array(3, -10, 7, -10, 7, -7, 3, -7)
+[node name="Sprite" type="AnimatedSprite2D" parent="Visual/Body"]
+sprite_frames = ExtResource("5_frames")
+animation = &"idle"
+offset = Vector2(0, -18)
+script = ExtResource("6_anim")

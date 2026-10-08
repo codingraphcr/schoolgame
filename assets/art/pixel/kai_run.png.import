@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b563hvnqy74k1"
-path="res://.godot/imported/clock.png-e550ce913602616ab7724f094a81d0a8.ctex"
+uid="uid://xph6caq2yts7"
+path="res://.godot/imported/kai_run.png-a462ef86a1b995d563f550d79f4ce442.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/clock.png"
-dest_files=["res://.godot/imported/clock.png-e550ce913602616ab7724f094a81d0a8.ctex"]
+source_file="res://assets/art/pixel/kai_run.png"
+dest_files=["res://.godot/imported/kai_run.png-a462ef86a1b995d563f550d79f4ce442.ctex"]
 
 [params]
 

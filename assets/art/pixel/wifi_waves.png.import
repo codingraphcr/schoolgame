@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbe673qrr363w"
-path="res://.godot/imported/router.png-39e2561f8222e04dc0c8ab8ffb5d6ad6.ctex"
+uid="uid://cxetu573lylfj"
+path="res://.godot/imported/wifi_waves.png-e10680775cab06b531812910ce6ed489.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/router.png"
-dest_files=["res://.godot/imported/router.png-39e2561f8222e04dc0c8ab8ffb5d6ad6.ctex"]
+source_file="res://assets/art/pixel/wifi_waves.png"
+dest_files=["res://.godot/imported/wifi_waves.png-e10680775cab06b531812910ce6ed489.ctex"]
 
 [params]
 

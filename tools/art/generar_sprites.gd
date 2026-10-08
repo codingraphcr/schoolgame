@@ -1,9 +1,10 @@
 extends SceneTree
-## Genera el pixel art provisional de la muestra como archivos PNG editables.
-## Ejecutar: godot --headless --path . --script res://prototypes/estilos/pixel/generar_sprites.gd
+## Genera el pixel art provisional del juego (estilo D de Ariel) como archivos PNG editables.
+## Ejecutar: godot --headless --path . --script res://tools/art/generar_sprites.gd
+## Ojo: sobrescribe los PNG de assets/art/pixel/ (si se retocaron a mano, se pierden los cambios).
 ## Los PNG resultantes se pueden abrir y retocar en Pixelorama, Aseprite o LibreSprite.
 
-const OUT := "res://prototypes/estilos/pixel/sprites/"
+const OUT := "res://assets/art/pixel/"
 
 # --- Paleta (también se exporta como paleta.png) ---
 const O := Color("0a0d1c")       # Contorno
@@ -555,7 +556,7 @@ func _save_palette() -> void:
 	var p := PixelPainter.new(COLUMNS * SIZE, rows * SIZE)
 	for i in PALETTE.size():
 		p.rect((i % COLUMNS) * SIZE, (i / COLUMNS) * SIZE, SIZE, SIZE, PALETTE[i])
-	p.save("res://prototypes/estilos/pixel/paleta.png")
+	p.save(OUT + "paleta.png")
 
 
 func _save_decor() -> void:

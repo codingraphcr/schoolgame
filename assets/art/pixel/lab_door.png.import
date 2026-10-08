@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vytebhydpevo"
-path="res://.godot/imported/pennants.png-f0202b6e3c22c5cbdf23193c7632d6c7.ctex"
+uid="uid://cgetg52wabqo2"
+path="res://.godot/imported/lab_door.png-9b9f7f0e81dc4bdaa980640d7ce268ef.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/pennants.png"
-dest_files=["res://.godot/imported/pennants.png-f0202b6e3c22c5cbdf23193c7632d6c7.ctex"]
+source_file="res://assets/art/pixel/lab_door.png"
+dest_files=["res://.godot/imported/lab_door.png-9b9f7f0e81dc4bdaa980640d7ce268ef.ctex"]
 
 [params]
 

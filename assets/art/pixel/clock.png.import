@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bss2ur4e0834g"
-path="res://.godot/imported/lockers.png-d41dc047c1cc5a3dd78e3a0795df6142.ctex"
+uid="uid://b563hvnqy74k1"
+path="res://.godot/imported/clock.png-f504286219222730c315995683e93b85.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prototypes/estilos/pixel/sprites/lockers.png"
-dest_files=["res://.godot/imported/lockers.png-d41dc047c1cc5a3dd78e3a0795df6142.ctex"]
+source_file="res://assets/art/pixel/clock.png"
+dest_files=["res://.godot/imported/clock.png-f504286219222730c315995683e93b85.ctex"]
 
 [params]
 
