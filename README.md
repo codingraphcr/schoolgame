@@ -1,43 +1,41 @@
 # Escudo Escolar: Defensa Cibernética
 
-Videojuego educativo 2D de ciberseguridad, desarrollado con **Godot 4** y **GDScript**.
+Videojuego educativo 2D de aventura, plataformas y exploración sobre ciberseguridad,
+desarrollado con **Godot 4.7.2** y **GDScript**.
 
-> Estado: **Etapa 1 — base del proyecto.** Incluye el menú principal y pantallas provisionales.
-> Todavía no hay sistema de juego (amenazas, defensas, niveles, etc.).
+> Estado: **prototipo de combate en desarrollo.** Ver el plan en [`docs/combate.md`](docs/combate.md).
 
 ## Cómo ejecutar
 
-1. Instala [Godot 4](https://godotengine.org/download) (versión 4.3 o superior, edición estándar).
+1. Instala [Godot 4.7.2](https://godotengine.org/download) (edición estándar). Todo el equipo debe usar la misma versión.
 2. Abre Godot → **Importar** → selecciona el archivo `project.godot` de esta carpeta.
 3. Presiona **F5** (o el botón ▶ "Ejecutar proyecto").
 
-Controles: ratón o pantalla táctil; también teclado (flechas + Enter) y **Esc** para volver al menú.
+Los controles están en [`docs/arquitectura.md`](docs/arquitectura.md#controles).
 
 ## Estructura
 
+Carpetas organizadas **por funcionalidad**: cada escena está junto a su script.
+
 ```
 res://
-├── assets/
-│   ├── audio/        # Música y efectos de sonido
-│   ├── fonts/        # Fuentes tipográficas
-│   ├── images/       # Imágenes e íconos (logo_shield.svg)
-│   └── themes/       # Tema visual compartido (main_theme.tres)
-├── data/             # Datos del juego (preguntas, niveles…) en etapas futuras
-├── scenes/
-│   ├── main/         # Pantallas completas: menú, configuración, nivel provisional
-│   └── ui/           # Componentes de interfaz reutilizables (fondo tecnológico)
-└── scripts/
-    ├── core/         # Sistemas globales (SceneManager)
-    ├── main/         # Scripts de las pantallas de scenes/main
-    └── ui/           # Scripts de los componentes de scenes/ui
+├── autoload/      # Singletons globales (SceneManager)
+├── characters/    # Jugador, NPC y enemigos
+├── world/         # Salas, tilesets, cámara y objetos del mundo
+├── ui/            # Menús, componentes de interfaz y tema visual
+├── data/          # Contenido del juego (diálogos, misiones, glosario…)
+├── assets/        # Arte, audio y fuentes
+├── tests/         # Pruebas automáticas
+└── docs/          # Documentación técnica y de diseño
 ```
 
-## Decisiones técnicas
+## Documentación
 
-- **Resolución base 1280×720 (horizontal)** con escalado `canvas_items` y aspecto `expand`:
-  la interfaz se adapta a PC, tabletas y teléfonos sin deformarse.
-- **Renderizador Compatibility** (OpenGL): máxima compatibilidad con equipos escolares, móviles y web.
-- **`SceneManager`** (autoload): centraliza las rutas de las pantallas y los cambios con transición de fundido.
-- **Tema global** (`assets/themes/main_theme.tres`): colores y estilos definidos en un solo lugar.
-  Variaciones disponibles: `TitleLabel`, `SubtitleLabel`, `HeadingLabel`, `HintLabel`, `PrimaryButton`.
-- Sin plugins ni dependencias externas.
+- [`docs/arquitectura.md`](docs/arquitectura.md): estructura, autoloads, resolución, capas de colisión, controles y pruebas.
+- [`docs/combate.md`](docs/combate.md): diseño del combate, decisiones del MVP y estado de las tareas.
+
+## Pruebas automáticas
+
+```
+godot --headless --path . --script res://tests/test_menu_navigation.gd
+```

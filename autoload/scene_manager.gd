@@ -3,9 +3,9 @@ extends CanvasLayer
 ## Está registrado como autoload "SceneManager" en project.godot,
 ## por lo que se puede usar desde cualquier script: SceneManager.change_scene(...)
 
-const MAIN_MENU := "res://scenes/main/main_menu.tscn"
-const SETTINGS := "res://scenes/main/settings_screen.tscn"
-const LEVEL_PLACEHOLDER := "res://scenes/main/level_placeholder.tscn"
+const MAIN_MENU := "res://ui/menus/main_menu/main_menu.tscn"
+const SETTINGS := "res://ui/menus/settings/settings_screen.tscn"
+const LEVEL_PLACEHOLDER := "res://ui/menus/level_placeholder/level_placeholder.tscn"
 
 const FADE_DURATION := 0.25
 const FADE_COLOR := Color(0.039, 0.067, 0.141)

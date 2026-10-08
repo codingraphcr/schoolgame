@@ -1,16 +1,16 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scripts/main/settings_screen.gd" id="1_settings"]
-[ext_resource type="PackedScene" path="res://scenes/ui/tech_background.tscn" id="2_bg"]
+[ext_resource type="Script" path="res://ui/menus/level_placeholder/level_placeholder.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://ui/components/tech_background/tech_background.tscn" id="2_bg"]
 
-[node name="SettingsScreen" type="Control"]
+[node name="LevelPlaceholder" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_settings")
+script = ExtResource("1_level")
 
 [node name="TechBackground" parent="." instance=ExtResource("2_bg")]
 layout_mode = 1
@@ -39,13 +39,13 @@ theme_override_constants/separation = 20
 [node name="Heading" type="Label" parent="CenterContainer/Card/Content"]
 layout_mode = 2
 theme_type_variation = &"HeadingLabel"
-text = "Configuración"
+text = "Nivel 1 — Próximamente"
 horizontal_alignment = 1
 
 [node name="Description" type="Label" parent="CenterContainer/Card/Content"]
 layout_mode = 2
 theme_type_variation = &"HintLabel"
-text = "Las opciones estarán disponibles en una próxima versión."
+text = "Estamos preparando la primera misión de defensa."
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -58,4 +58,4 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(240, 56)
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Volver"
+text = "Volver al menú"
