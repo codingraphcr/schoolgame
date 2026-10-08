@@ -1,0 +1,1262 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/characters/kai/kai_piezas.png" id="1_nulcm"]
+
+[sub_resource type="Animation" id="Animation_dkeld"]
+length = 0.32
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton2D/Cadera/Torso:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.08726646259971647, -0.2617993877991494, -0.17453292519943295, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton2D/Cadera/Torso/Cuello:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.08726646259971647, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-2.792526803190927, -1.3089969389957472, -0.5235987755982988, -0.10471975511965978]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente:rotation")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-0.6981317007977318, 0.0, -0.2617993877991494, -0.20943951023931956]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras:rotation")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.10471975511965978, 0.10471975511965978, 0.10471975511965978, 0.10471975511965978]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras/AntebrazoAtras:rotation")
+tracks/5/interp = 2
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-0.20943951023931956, -0.20943951023931956, -0.20943951023931956, -0.20943951023931956]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Skeleton2D/Cadera/MusloFrente:rotation")
+tracks/6/interp = 2
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-0.05235987755982989, -0.2617993877991494, -0.2617993877991494, -0.05235987755982989]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Skeleton2D/Cadera/MusloFrente/PiernaFrente:rotation")
+tracks/7/interp = 2
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0, 0.0]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Skeleton2D/Cadera/MusloAtras:rotation")
+tracks/8/interp = 2
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.05235987755982989, 0.20943951023931956, 0.20943951023931956, 0.05235987755982989]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Skeleton2D/Cadera/MusloAtras/PiernaAtras:rotation")
+tracks/9/interp = 2
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0, 0.0]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Skeleton2D/Cadera:position")
+tracks/10/interp = 2
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -13), Vector2(0, -13), Vector2(0, -13), Vector2(0, -13)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente/Mano/Arma:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.2, 0.32),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [true, true, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_1bdnj"]
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton2D/Cadera/Torso:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.05235987755982989, 0.05235987755982989]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton2D/Cadera/Torso/Cuello:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.06981317007977318, -0.06981317007977318]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-1.7453292519943295, -1.9198621771937625]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente:rotation")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.17453292519943295, 0.08726646259971647]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras:rotation")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-1.3962634015954636, -1.5707963267948966]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras/AntebrazoAtras:rotation")
+tracks/5/interp = 2
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.17453292519943295, 0.08726646259971647]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Skeleton2D/Cadera/MusloFrente:rotation")
+tracks/6/interp = 2
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.3490658503988659, -0.4363323129985824]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Skeleton2D/Cadera/MusloFrente/PiernaFrente:rotation")
+tracks/7/interp = 2
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.4363323129985824, 0.5235987755982988]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Skeleton2D/Cadera/MusloAtras:rotation")
+tracks/8/interp = 2
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.2617993877991494, 0.20943951023931956]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Skeleton2D/Cadera/MusloAtras/PiernaAtras:rotation")
+tracks/9/interp = 2
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.17453292519943295, 0.2617993877991494]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Skeleton2D/Cadera:position")
+tracks/10/interp = 2
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, -13), Vector2(0, -13)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente/Mano/Arma:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, false]
+}
+
+[sub_resource type="Animation" id="Animation_fpsgj"]
+length = 0.56
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton2D/Cadera/Torso:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-0.20943951023931956, -0.20943951023931956, -0.20943951023931956, -0.20943951023931956]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton2D/Cadera/Torso/Cuello:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.10471975511965978, 0.10471975511965978, 0.10471975511965978, 0.10471975511965978]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.6108652381980153, 0.0, -0.6108652381980153, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente:rotation")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-1.0471975511965976, -1.2217304763960306, -1.0471975511965976, -1.2217304763960306]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras:rotation")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-0.6108652381980153, 0.0, 0.6108652381980153, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras/AntebrazoAtras:rotation")
+tracks/5/interp = 2
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-1.0471975511965976, -1.2217304763960306, -1.0471975511965976, -1.2217304763960306]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Skeleton2D/Cadera/MusloFrente:rotation")
+tracks/6/interp = 2
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-0.6108652381980153, 0.0, 0.6108652381980153, -0.17453292519943295]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Skeleton2D/Cadera/MusloFrente/PiernaFrente:rotation")
+tracks/7/interp = 2
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.17453292519943295, 0.08726646259971647, 0.7853981633974483, 1.4835298641951802]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Skeleton2D/Cadera/MusloAtras:rotation")
+tracks/8/interp = 2
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.6108652381980153, -0.17453292519943295, -0.6108652381980153, 0.0]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Skeleton2D/Cadera/MusloAtras/PiernaAtras:rotation")
+tracks/9/interp = 2
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.7853981633974483, 1.4835298641951802, 0.17453292519943295, 0.08726646259971647]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Skeleton2D/Cadera:position")
+tracks/10/interp = 2
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -13), Vector2(0, -14), Vector2(0, -13), Vector2(0, -14)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente/Mano/Arma:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 0.14, 0.28, 0.42),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, false, false, false]
+}
+
+[sub_resource type="Animation" id="Animation_c4u4d"]
+length = 0.15
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton2D/Cadera/Torso:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.6108652381980153]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton2D/Cadera/Torso/Cuello:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.3490658503988659]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.2217304763960306]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente:rotation")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.3490658503988659]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras:rotation")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.3962634015954636]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras/AntebrazoAtras:rotation")
+tracks/5/interp = 2
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.17453292519943295]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Skeleton2D/Cadera/MusloFrente:rotation")
+tracks/6/interp = 2
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.6981317007977318]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Skeleton2D/Cadera/MusloFrente/PiernaFrente:rotation")
+tracks/7/interp = 2
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.9599310885968813]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Skeleton2D/Cadera/MusloAtras:rotation")
+tracks/8/interp = 2
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.8726646259971648]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Skeleton2D/Cadera/MusloAtras/PiernaAtras:rotation")
+tracks/9/interp = 2
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.4363323129985824]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Skeleton2D/Cadera:position")
+tracks/10/interp = 2
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -11)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente/Mano/Arma:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_cx7jr"]
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton2D/Cadera/Torso:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.13962634015954636, 0.13962634015954636]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton2D/Cadera/Torso/Cuello:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.10471975511965978, -0.10471975511965978]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.3490658503988659, -0.4363323129985824]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente:rotation")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.5235987755982988, -0.6108652381980153]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras:rotation")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [2.6179938779914944, 2.530727415391778]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras/AntebrazoAtras:rotation")
+tracks/5/interp = 2
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.3490658503988659, -0.4363323129985824]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Skeleton2D/Cadera/MusloFrente:rotation")
+tracks/6/interp = 2
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.6108652381980153, -0.6632251157578453]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Skeleton2D/Cadera/MusloFrente/PiernaFrente:rotation")
+tracks/7/interp = 2
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.8726646259971648, 0.9599310885968813]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Skeleton2D/Cadera/MusloAtras:rotation")
+tracks/8/interp = 2
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.2617993877991494, -0.2617993877991494]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Skeleton2D/Cadera/MusloAtras/PiernaAtras:rotation")
+tracks/9/interp = 2
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.6981317007977318, 0.6981317007977318]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Skeleton2D/Cadera:position")
+tracks/10/interp = 2
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, -13), Vector2(0, -13)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente/Mano/Arma:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, false]
+}
+
+[sub_resource type="Animation" id="Animation_eo2xl"]
+length = 1.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton2D/Cadera/Torso:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -0.03490658503988659]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton2D/Cadera/Torso/Cuello:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.03490658503988659]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.10471975511965978, -0.15707963267948966]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente:rotation")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.20943951023931956, -0.2792526803190927]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras:rotation")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.10471975511965978, 0.05235987755982989]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras/AntebrazoAtras:rotation")
+tracks/5/interp = 2
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.20943951023931956, -0.2792526803190927]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Skeleton2D/Cadera/MusloFrente:rotation")
+tracks/6/interp = 2
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.05235987755982989, -0.05235987755982989]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Skeleton2D/Cadera/MusloFrente/PiernaFrente:rotation")
+tracks/7/interp = 2
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.0]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Skeleton2D/Cadera/MusloAtras:rotation")
+tracks/8/interp = 2
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.05235987755982989, 0.05235987755982989]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Skeleton2D/Cadera/MusloAtras/PiernaAtras:rotation")
+tracks/9/interp = 2
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.0]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Skeleton2D/Cadera:position")
+tracks/10/interp = 2
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, -13), Vector2(0, -12)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente/Mano/Arma:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, false]
+}
+
+[sub_resource type="Animation" id="Animation_3t6cb"]
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton2D/Cadera/Torso:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.06981317007977318, -0.10471975511965978]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton2D/Cadera/Torso/Cuello:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.08726646259971647]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-2.0943951023931953, -2.6179938779914944]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente:rotation")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.3490658503988659, -0.17453292519943295]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras:rotation")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-1.7453292519943295, -2.2689280275926285]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Skeleton2D/Cadera/Torso/BrazoAtras/AntebrazoAtras:rotation")
+tracks/5/interp = 2
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.3490658503988659, -0.17453292519943295]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Skeleton2D/Cadera/MusloFrente:rotation")
+tracks/6/interp = 2
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.6981317007977318, -1.1344640137963142]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Skeleton2D/Cadera/MusloFrente/PiernaFrente:rotation")
+tracks/7/interp = 2
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.6981317007977318, 1.3089969389957472]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Skeleton2D/Cadera/MusloAtras:rotation")
+tracks/8/interp = 2
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.17453292519943295, 0.17453292519943295]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Skeleton2D/Cadera/MusloAtras/PiernaAtras:rotation")
+tracks/9/interp = 2
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.3490658503988659, 0.6108652381980153]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Skeleton2D/Cadera:position")
+tracks/10/interp = 2
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, -13), Vector2(0, -13)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente/Mano/Arma:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6x8nx"]
+_data = {
+&"ataque_1": SubResource("Animation_dkeld"),
+&"caer": SubResource("Animation_1bdnj"),
+&"correr": SubResource("Animation_fpsgj"),
+&"dash": SubResource("Animation_c4u4d"),
+&"pared": SubResource("Animation_cx7jr"),
+&"quieto": SubResource("Animation_eo2xl"),
+&"saltar": SubResource("Animation_3t6cb")
+}
+
+[node name="KaiEsqueleto" type="Node2D" unique_id=683194901]
+texture_filter = 1
+
+[node name="Skeleton2D" type="Skeleton2D" parent="." unique_id=1951390639]
+
+[node name="Cadera" type="Bone2D" parent="Skeleton2D" unique_id=1673170821]
+position = Vector2(0, -13)
+rest = Transform2D(1, 0, 0, 1, 0, -13)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 90.0
+
+[node name="Torso" type="Bone2D" parent="Skeleton2D/Cadera" unique_id=1892625626]
+rest = Transform2D(1, 0, 0, 1, 0, 0)
+auto_calculate_length_and_angle = false
+length = 13.0
+bone_angle = -90.0
+
+[node name="Pieza_torso" type="Sprite2D" parent="Skeleton2D/Cadera/Torso" unique_id=225061559]
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-7.5, -14.5)
+region_enabled = true
+region_rect = Rect2(29, 0, 14, 16)
+
+[node name="Cuello" type="Bone2D" parent="Skeleton2D/Cadera/Torso" unique_id=1413707720]
+position = Vector2(0, -13)
+rest = Transform2D(1, 0, 0, 1, 0, -13)
+auto_calculate_length_and_angle = false
+length = 14.0
+bone_angle = -90.0
+
+[node name="Pieza_cabeza" type="Sprite2D" parent="Skeleton2D/Cadera/Torso/Cuello" unique_id=317317787]
+z_index = 2
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-9.5, -16.5)
+region_enabled = true
+region_rect = Rect2(0, 0, 18, 18)
+
+[node name="Mechon" type="Bone2D" parent="Skeleton2D/Cadera/Torso/Cuello" unique_id=639526362]
+position = Vector2(4, -9)
+rest = Transform2D(1, 0, 0, 1, 4, -9)
+auto_calculate_length_and_angle = false
+length = 5.0
+bone_angle = 90.0
+
+[node name="Pieza_mechon" type="Sprite2D" parent="Skeleton2D/Cadera/Torso/Cuello/Mechon" unique_id=1073892062]
+z_index = 3
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-2.5, -1.5)
+region_enabled = true
+region_rect = Rect2(20, 0, 7, 9)
+
+[node name="Mochila" type="Bone2D" parent="Skeleton2D/Cadera/Torso" unique_id=1356992946]
+position = Vector2(-4, -8)
+rest = Transform2D(1, 0, 0, 1, -4, -8)
+auto_calculate_length_and_angle = false
+length = 8.0
+bone_angle = 90.0
+
+[node name="Pieza_mochila" type="Sprite2D" parent="Skeleton2D/Cadera/Torso/Mochila" unique_id=789277158]
+z_index = -5
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-6.5, -3.5)
+region_enabled = true
+region_rect = Rect2(45, 0, 10, 12)
+
+[node name="BrazoAtras" type="Bone2D" parent="Skeleton2D/Cadera/Torso" unique_id=1030815231]
+position = Vector2(-2, -10)
+rest = Transform2D(1, 0, 0, 1, -2, -10)
+auto_calculate_length_and_angle = false
+length = 6.0
+bone_angle = 90.0
+
+[node name="Pieza_brazo" type="Sprite2D" parent="Skeleton2D/Cadera/Torso/BrazoAtras" unique_id=987906858]
+modulate = Color(0.72, 0.72, 0.82, 1)
+z_index = -4
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-3.5, -2.5)
+region_enabled = true
+region_rect = Rect2(57, 0, 8, 11)
+
+[node name="AntebrazoAtras" type="Bone2D" parent="Skeleton2D/Cadera/Torso/BrazoAtras" unique_id=37652496]
+position = Vector2(0, 6)
+rest = Transform2D(1, 0, 0, 1, 0, 6)
+auto_calculate_length_and_angle = false
+length = 6.0
+bone_angle = 90.0
+
+[node name="Pieza_antebrazo" type="Sprite2D" parent="Skeleton2D/Cadera/Torso/BrazoAtras/AntebrazoAtras" unique_id=207587702]
+modulate = Color(0.72, 0.72, 0.82, 1)
+z_index = -4
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-3.5, -2.5)
+region_enabled = true
+region_rect = Rect2(67, 0, 8, 10)
+
+[node name="BrazoFrente" type="Bone2D" parent="Skeleton2D/Cadera/Torso" unique_id=63713896]
+position = Vector2(0, -10)
+rest = Transform2D(1, 0, 0, 1, 0, -10)
+auto_calculate_length_and_angle = false
+length = 6.0
+bone_angle = 90.0
+
+[node name="Pieza_brazo" type="Sprite2D" parent="Skeleton2D/Cadera/Torso/BrazoFrente" unique_id=1991926140]
+z_index = 5
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-3.5, -2.5)
+region_enabled = true
+region_rect = Rect2(57, 0, 8, 11)
+
+[node name="AntebrazoFrente" type="Bone2D" parent="Skeleton2D/Cadera/Torso/BrazoFrente" unique_id=642232798]
+position = Vector2(0, 6)
+rest = Transform2D(1, 0, 0, 1, 0, 6)
+auto_calculate_length_and_angle = false
+length = 6.0
+bone_angle = 90.0
+
+[node name="Pieza_antebrazo" type="Sprite2D" parent="Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente" unique_id=1955378418]
+z_index = 5
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-3.5, -2.5)
+region_enabled = true
+region_rect = Rect2(67, 0, 8, 10)
+
+[node name="Mano" type="Bone2D" parent="Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente" unique_id=2027912746]
+position = Vector2(0, 6)
+rest = Transform2D(1, 0, 0, 1, 0, 6)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 90.0
+
+[node name="Arma" type="Sprite2D" parent="Skeleton2D/Cadera/Torso/BrazoFrente/AntebrazoFrente/Mano" unique_id=247887493]
+visible = false
+z_index = 4
+rotation = 3.1415927
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-4.5, -17.5)
+region_enabled = true
+region_rect = Rect2(100, 0, 9, 22)
+
+[node name="MusloAtras" type="Bone2D" parent="Skeleton2D/Cadera" unique_id=553588058]
+position = Vector2(-1, 0)
+rest = Transform2D(1, 0, 0, 1, -1, 0)
+auto_calculate_length_and_angle = false
+length = 6.0
+bone_angle = 90.0
+
+[node name="Pieza_muslo" type="Sprite2D" parent="Skeleton2D/Cadera/MusloAtras" unique_id=1057587851]
+modulate = Color(0.72, 0.72, 0.82, 1)
+z_index = -3
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-3.5, -2.5)
+region_enabled = true
+region_rect = Rect2(77, 0, 8, 11)
+
+[node name="PiernaAtras" type="Bone2D" parent="Skeleton2D/Cadera/MusloAtras" unique_id=1555025334]
+position = Vector2(0, 6)
+rest = Transform2D(1, 0, 0, 1, 0, 6)
+auto_calculate_length_and_angle = false
+length = 7.0
+bone_angle = 90.0
+
+[node name="Pieza_pierna" type="Sprite2D" parent="Skeleton2D/Cadera/MusloAtras/PiernaAtras" unique_id=301719993]
+modulate = Color(0.72, 0.72, 0.82, 1)
+z_index = -3
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-3.5, -2.5)
+region_enabled = true
+region_rect = Rect2(87, 0, 11, 12)
+
+[node name="MusloFrente" type="Bone2D" parent="Skeleton2D/Cadera" unique_id=1501246531]
+position = Vector2(1, 0)
+rest = Transform2D(1, 0, 0, 1, 1, 0)
+auto_calculate_length_and_angle = false
+length = 6.0
+bone_angle = 90.0
+
+[node name="Pieza_muslo" type="Sprite2D" parent="Skeleton2D/Cadera/MusloFrente" unique_id=1923995573]
+z_index = -1
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-3.5, -2.5)
+region_enabled = true
+region_rect = Rect2(77, 0, 8, 11)
+
+[node name="PiernaFrente" type="Bone2D" parent="Skeleton2D/Cadera/MusloFrente" unique_id=1072506036]
+position = Vector2(0, 6)
+rest = Transform2D(1, 0, 0, 1, 0, 6)
+auto_calculate_length_and_angle = false
+length = 7.0
+bone_angle = 90.0
+
+[node name="Pieza_pierna" type="Sprite2D" parent="Skeleton2D/Cadera/MusloFrente/PiernaFrente" unique_id=801741712]
+z_index = -1
+texture = ExtResource("1_nulcm")
+centered = false
+offset = Vector2(-3.5, -2.5)
+region_enabled = true
+region_rect = Rect2(87, 0, 11, 12)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1127567010]
+libraries/ = SubResource("AnimationLibrary_6x8nx")
+autoplay = &"quieto"

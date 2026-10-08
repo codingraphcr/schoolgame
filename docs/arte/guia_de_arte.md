@@ -84,6 +84,18 @@ Archivos para importar en tu programa de dibujo:
 
 Ventaja: **cada personaje se dibuja una sola vez**. Agregar una animación nueva no requiere dibujar más.
 
+**Kai ya tiene su esqueleto armado** (pruébalo en la muestra E, con J para atacar):
+
+| Archivo | Para qué |
+|---|---|
+| `assets/art/characters/kai/kai_piezas.png` | **Tus piezas.** Si las redibujas y guardas, Kai cambia en el juego sin tocar nada más |
+| `characters/player/kai/kai_esqueleto.tscn` | Escena con `Skeleton2D`, los huesos y el `AnimationPlayer` (quieto, correr, saltar, caer, dash, pared, ataque_1). Ábrela en Godot para retocar poses y tiempos |
+| `characters/player/kai/kai_visual.gd` | Elige la animación según lo que hace el jugador, mueve el mechón y la mochila, y lo dibuja como pixel art |
+| `characters/player/kai/kai_piezas.gd` | Medidas de cada pieza (tamaño y pivotes). Si cambias el tamaño de una pieza, se actualiza aquí |
+
+> `characters/player/kai/generar_esqueleto_kai.gd` vuelve a crear el esqueleto desde cero:
+> úsalo solo si cambian las piezas, porque **borra los retoques hechos a mano** en la escena.
+
 ### 4.2 Tamaños
 
 | Personaje | Alto aproximado | Notas |

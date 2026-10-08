@@ -113,6 +113,13 @@ Si ninguno es posible, la pulsación se guarda (jump buffer) para el aterrizaje.
 `controls_locked` bloquea los controles (reaparición). `apply_knockback()` aplica el empuje de un golpe.
 El dibujo (`Visual/Body`) se deforma al saltar/aterrizar y el dash deja una estela de siluetas.
 
+**Apariencia de Kai (huesos pixelados, `characters/player/kai/`):** `KaiVisual` es el dibujo final del jugador.
+Instancia `kai_esqueleto.tscn` (`Skeleton2D` + `Bone2D` con una pieza de `assets/art/characters/kai/kai_piezas.png`
+por hueso y un `AnimationPlayer`), lo dibuja con `PixelatedRig` (`components/visual/`) a resolución de pixel art,
+elige la animación según `Player.state` y mueve el mechón y la mochila por código. Para usarlo en el jugador basta con
+agregarlo como hijo de `Visual/Body` (asignándole `player`) y ocultar los polígonos provisionales; hoy lo usa la muestra E.
+Las medidas de las piezas están en `kai_piezas.gd`; `generar_esqueleto_kai.gd` regenera la escena (borra retoques manuales).
+
 ## Combate (`components/combat/`)
 
 | Componente | Nodo | Responsabilidad |

@@ -23,19 +23,8 @@ const BACKGROUND := Color("1b2033")
 const LABEL := Color("c9d3ee")
 const BACK_TINT := Color(0.72, 0.72, 0.82)  # Las extremidades de atrás reutilizan la pieza, más oscura.
 
-## Piezas del esqueleto: tamaño del lienzo (incluye 1 px de margen para el contorno),
-## pivote (punto de giro, se une a la pieza padre) y articulaciones (donde se unen las piezas hijas).
-var pieces := {
-	"cabeza": { "size": Vector2i(18, 18), "pivot": Vector2i(9, 16), "joints": { "flequillo": Vector2i(13, 7) } },
-	"mechon": { "size": Vector2i(7, 9), "pivot": Vector2i(2, 1), "joints": {} },
-	"torso": { "size": Vector2i(14, 16), "pivot": Vector2i(7, 14), "joints": { "cuello": Vector2i(7, 1), "hombro": Vector2i(7, 4), "espalda": Vector2i(3, 6) } },
-	"mochila": { "size": Vector2i(10, 12), "pivot": Vector2i(6, 3), "joints": {} },
-	"brazo": { "size": Vector2i(8, 11), "pivot": Vector2i(3, 2), "joints": { "codo": Vector2i(3, 8) } },
-	"antebrazo": { "size": Vector2i(8, 10), "pivot": Vector2i(3, 2), "joints": { "mano": Vector2i(3, 8) } },
-	"muslo": { "size": Vector2i(8, 11), "pivot": Vector2i(3, 2), "joints": { "rodilla": Vector2i(3, 8) } },
-	"pierna": { "size": Vector2i(11, 12), "pivot": Vector2i(3, 2), "joints": {} },
-	"arma": { "size": Vector2i(9, 22), "pivot": Vector2i(4, 17), "joints": {} },
-}
+## Medidas de las piezas (compartidas con el esqueleto): ver characters/player/kai/kai_piezas.gd.
+var pieces := KaiPiezas.PIECES
 ## El Aegis flota junto a Kai: no lleva huesos, se anima por cuadros.
 const AEGIS_SIZE := Vector2i(16, 16)
 
@@ -65,31 +54,46 @@ func _initialize() -> void:
 
 # --- Piezas (mirando a la derecha) ---
 
+## Letras de los mapas de píxeles → colores de la paleta.
+var ink := {
+	"o": Sprites.O, "H": Sprites.PLATA, "L": Sprites.PLATA_L, "D": Sprites.PLATA_D, "V": Sprites.VIOLETA_D,
+	"S": Sprites.SKIN, "s": Sprites.SKIN_D, "E": Sprites.VIOLETA, "W": Sprites.PLATA_L,
+	"J": Sprites.PLATA_L, "j": Sprites.PLATA, "k": Sprites.PLATA_D, "C": Sprites.TELA, "c": Sprites.N3,
+	"B": Sprites.AZUL_E, "U": Sprites.VIOLETA, "A": Sprites.AZUL_L,
+}
+
+
+## Pinta un mapa de píxeles: una fila por línea, una letra por píxel ("." = transparente).
+func _paint_map(p: PixelPainter, rows: PackedStringArray) -> void:
+	for y in rows.size():
+		for x in rows[y].length():
+			var key := rows[y][x]
+			if ink.has(key):
+				p.px(x, y, ink[key])
+
+
+## Cabeza: pelo plateado en puntas, flequillo sobre la frente y ojo grande violeta.
 func _draw_cabeza(p: PixelPainter) -> void:
-	# Pelo plateado alborotado.
-	p.ellipse(8.5, 7.5, 7.0, 6.0, Sprites.PLATA)
-	p.line(4, 3, 2, 1, Sprites.PLATA)
-	p.line(8, 2, 8, 1, Sprites.PLATA)
-	p.line(12, 2, 14, 1, Sprites.PLATA)
-	p.line(2, 7, 1, 5, Sprites.PLATA)
-	p.rect(2, 6, 4, 7, Sprites.PLATA)
-	p.rect(3, 10, 3, 3, Sprites.PLATA_D)
-	p.rect(6, 3, 4, 1, Sprites.PLATA_L)
-	p.px(11, 4, Sprites.PLATA_L)
-	# Cara.
-	p.ellipse(11.0, 10.5, 4.2, 4.5, Sprites.SKIN)
-	p.rect(9, 6, 7, 2, Sprites.PLATA)  # Flequillo
-	p.rect(14, 8, 1, 3, Sprites.PLATA)
-	p.px(10, 8, Sprites.PLATA)
-	p.px(12, 8, Sprites.PLATA_D)
-	# Ojo violeta con brillo.
-	p.rect(12, 9, 2, 1, Sprites.O)
-	p.rect(12, 10, 2, 2, Sprites.VIOLETA)
-	p.px(13, 10, Sprites.PLATA_L)
-	p.px(8, 11, Sprites.SKIN_D)  # Oreja
-	p.px(14, 13, Sprites.SKIN_D)
-	p.rect(9, 14, 4, 1, Sprites.SKIN_D)
-	p.rect(9, 15, 3, 2, Sprites.SKIN_D)  # Cuello
+	_paint_map(p, PackedStringArray([
+		"..................",
+		".......L...H......",
+		"....H..HL.HH..H...",
+		"....HHHHLHHHH.HH..",
+		"...HHHHHLLHHHHH...",
+		"..DHHHHHHLHHHHHH..",
+		"..DHHHHHHHHHHHHHH.",
+		".DDHHHHHHHHHHHHHH.",
+		".DDHHHHHHHHHHHHHH.",
+		".DDHHHHHHHSHHSHHH.",
+		".VDDHHHHSSSooooHH.",
+		".VDDHHHSSSSSEWSHH.",
+		".VDDDHHsSSSSEESSH.",
+		"..VDDHHSSSSSSSSSS.",
+		"..VDDHHSSSSSSSsS..",
+		"...VDDHssSSSSSS...",
+		".....DHHssSSs.....",
+		"..................",
+	]))
 
 
 func _draw_mechon(p: PixelPainter) -> void:
@@ -99,19 +103,26 @@ func _draw_mechon(p: PixelPainter) -> void:
 	p.px(2, 1, Sprites.PLATA_L)
 
 
+## Torso: cuello alto oscuro, capucha detrás y chaqueta clara abierta sobre una camiseta con luz.
 func _draw_torso(p: PixelPainter) -> void:
-	p.rect(2, 2, 3, 3, Sprites.PLATA)  # Capucha detrás del cuello
-	p.px(3, 3, Sprites.PLATA_D)
-	p.rect(2, 4, 10, 9, Sprites.PLATA_L)  # Chaqueta
-	p.rect(2, 4, 2, 9, Sprites.PLATA)
-	p.rect(2, 10, 2, 3, Sprites.PLATA_D)
-	p.rect(2, 12, 9, 2, Sprites.PLATA)
-	p.rect(9, 4, 2, 8, Sprites.TELA)  # Camiseta oscura con luz
-	p.px(9, 7, Sprites.AZUL_E)
-	p.px(10, 8, Sprites.VIOLETA)
-	p.rect(5, 1, 5, 3, Sprites.TELA)  # Cuello alto
-	p.px(6, 2, Sprites.VIOLETA)
-	p.rect(6, 9, 2, 1, Sprites.PLATA_D)
+	_paint_map(p, PackedStringArray([
+		"..............",
+		".....CCCC.....",
+		"...jjCCCCC....",
+		"..jjjCCUCCJ...",
+		"..jjJJJJJCCJ..",
+		"..jjJJJJJCBJJ.",
+		"..kjJJJJJCCJJ.",
+		"..kjJJJJJCUJJ.",
+		"..kjJJjJJCCJJ.",
+		"..kjJJJJJCCJJ.",
+		"..kjJJJJJCCJ..",
+		"..kkjJJJJCCJ..",
+		"..kkjjjjjCCj..",
+		"...kkjjjjjjj..",
+		"....CCCCCCC...",
+		"..............",
+	]))
 
 
 func _draw_mochila(p: PixelPainter) -> void:
@@ -186,13 +197,13 @@ func _save_sheet() -> void:
 	var height := 0
 	for piece_name: String in pieces:
 		var size: Vector2i = pieces[piece_name].size
-		width += size.x + 2
+		width += size.x + KaiPiezas.GAP
 		height = maxi(height, size.y)
 	var sheet := PixelPainter.new(width, height)
 	var x := 0
 	for piece_name: String in pieces:
 		sheet.paste(images[piece_name], x, 0)
-		x += int(pieces[piece_name].size.x) + 2
+		x += int(pieces[piece_name].size.x) + KaiPiezas.GAP
 	sheet.save(PIECES_OUT)
 
 
