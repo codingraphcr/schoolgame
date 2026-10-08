@@ -140,6 +140,19 @@ func is_invulnerable() -> bool:
 	return damage != null and damage.is_invulnerable()
 
 
+## Aplica el progreso de la partida (GameState): el jugador solo puede usar lo que ya adquirió.
+## Con full_health se llenan las máscaras (al entrar a una sala); si no, se conserva la vida actual.
+func apply_progress(progress: Node, full_health := false) -> void:
+	dash_level = progress.dash_level
+	can_double_jump = progress.can_double_jump
+	can_wall_jump = progress.can_wall_jump
+	health.max_health = progress.max_masks
+	if full_health:
+		health.restore_full()
+	else:
+		health.health_changed.emit(health.current, health.max_health)
+
+
 ## Empuje al recibir un golpe: interrumpe el dash y bloquea la dirección un instante.
 func apply_knockback(force: Vector2) -> void:
 	if is_dashing:
