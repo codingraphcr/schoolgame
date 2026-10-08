@@ -16,7 +16,8 @@ func _process(_delta: float) -> void:
 		"En el suelo: %s" % ("sí" if player.is_on_floor() else "no"),
 		"Coyote: %.2f s   Buffer: %.2f s" % [player.coyote_timer, player.jump_buffer_timer],
 		"Saltos aéreos: %d   Dash: %s" % [player.air_jumps_left, "listo" if player.dash_cooldown_timer <= 0.0 else "%.2f s" % player.dash_cooldown_timer],
-		"Habilidades: dash %s · doble salto %s · pared %s" % [_on_off(player.can_dash), _on_off(player.can_double_jump), _on_off(player.can_wall_jump)],
+		"Habilidades: dash nivel %d · doble salto %s · pared %s" % [player.dash_level, _on_off(player.can_double_jump), _on_off(player.can_wall_jump)],
+		"Máscaras: %d/%d   Invulnerable: %s" % [ceili(player.health.current), int(player.health.max_health), _on_off(player.is_invulnerable())],
 		"F3: ocultar   Esc: menú",
 	])
 

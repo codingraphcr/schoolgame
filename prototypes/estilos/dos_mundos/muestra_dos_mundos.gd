@@ -1,6 +1,6 @@
 extends "res://prototypes/estilos/pixel/muestra_pixel.gd"
 ## Muestra D: dos mundos.
-## El colegio físico es pixel art. Con la Visión Digital (F) el mundo se oscurece y aparece
+## El colegio físico es pixel art. Con la Visión Digital (Q) el mundo se oscurece y aparece
 ## la red por dentro en estilo vectorial: conexiones, datos, la cobertura del Wi-Fi y la
 ## forma real de la amenaza. El "correo raro" era la carnada de un pez abisal: phishing.
 ## También aparece un puente de datos que solo existe en el mundo digital (en el juego final
@@ -38,7 +38,7 @@ var _toast_time := 0.0
 func _init() -> void:
 	super()
 	sample_title = "MUESTRA D · Dos mundos: colegio en pixel art + red en vectorial"
-	sample_hint = "F: Visión Digital (encuentra el puente de datos y mira qué es realmente el sobre)"
+	sample_hint = "Q: Visión Digital (encuentra el puente de datos y mira qué es realmente el sobre)"
 	other_sample = "res://prototypes/estilos/huesos_pixelados/muestra_huesos_pixelados.tscn"
 
 

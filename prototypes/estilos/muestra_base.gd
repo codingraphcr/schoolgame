@@ -95,6 +95,7 @@ func _spawn_player() -> void:
 	# Las muestras activan todas las habilidades de T2 para probar sus animaciones.
 	player.can_double_jump = true
 	player.can_wall_jump = true
+	player.dash_level = 2
 	add_child(player)
 	# Oculta el dibujo provisional de rectángulos y pone el de la muestra en su lugar.
 	# Al vivir dentro de Visual/Body, hereda el giro y la deformación de player.gd.
@@ -128,7 +129,7 @@ func _build_hud() -> void:
 	help_settings.font_size = 14
 	help_settings.font_color = Color(0.75, 0.82, 0.95)
 	var help := Label.new()
-	help.text = "A/D: mover · Espacio: saltar (doble salto, salto en pared) · Shift/K: dash · Tab: siguiente muestra · Esc: menú"
+	help.text = "A/D: mover · Espacio: saltar (doble salto, salto en pared) · Shift: dash · Tab: siguiente muestra · Esc: menú"
 	if not sample_hint.is_empty():
 		help.text += "\n" + sample_hint
 	help.label_settings = help_settings

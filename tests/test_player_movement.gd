@@ -141,8 +141,8 @@ func _test_one_way_platform() -> void:
 
 func _test_respawn_and_camera() -> void:
 	player.teleport_to(Vector2(200, room.bounds.end.y + 200))
-	await _frames(3)
-	_check(player.global_position.distance_to(room.spawn_point.global_position) < 2.0, "reaparece al caer fuera de la sala")
+	await create_timer(1.0, true, false, true).timeout
+	_check(player.global_position.y <= FLOOR_Y + 1.0 and player.is_on_floor(), "al caer fuera de la sala vuelve al suelo seguro")
 	var camera := room.camera
 	_check(camera.limit_left == 0 and camera.limit_top == 0 and camera.limit_right == 2560 and camera.limit_bottom == 544,
 		"límites de cámara = sala (%d, %d, %d, %d)" % [camera.limit_left, camera.limit_top, camera.limit_right, camera.limit_bottom])

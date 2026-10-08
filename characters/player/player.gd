@@ -2,6 +2,7 @@ class_name Player
 extends CharacterBody2D
 ## Jugador: movimiento de plataformas con coyote time, jump buffer, salto variable,
 ## dash, doble salto y deslizamiento/salto de pared.
+## El daño y la vida los gestiona el nodo hijo Damage (PlayerDamage) con Health (HealthComponent).
 ## El origen del nodo está a la altura de los pies.
 ## Todos los valores se ajustan desde el Inspector (16 px = 1 tile).
 
@@ -15,8 +16,10 @@ signal landed
 enum State { IDLE, RUN, JUMP, FALL, DASH, WALL_SLIDE }
 
 @export_group("Habilidades")
-## El dash está disponible desde el inicio.
-@export var can_dash := true
+## 0 = sin dash · 1 = Dash (no protege del daño) · 2 = Dash Fantasma (atraviesa enemigos
+## y ataques sin daño) · 3 = Esquiva Perfecta (pendiente, tarea C7).
+## El dash se adquiere con la historia y se mejora con créditos.
+@export_range(0, 3) var dash_level := 0
 ## Se desbloquea durante la historia.
 @export var can_double_jump := false
 ## Deslizar por paredes y saltar desde ellas. Se desbloquea durante la historia.
@@ -68,6 +71,10 @@ enum State { IDLE, RUN, JUMP, FALL, DASH, WALL_SLIDE }
 @export var dash_cooldown := 0.35
 @export var afterimage_interval := 0.035
 
+@export_group("Daño")
+## Tiempo tras recibir un golpe en el que se ignora la dirección (el empuje se nota).
+@export var knockback_input_lock := 0.15
+
 var state: State = State.IDLE
 var facing := 1
 var coyote_timer := 0.0
@@ -76,6 +83,8 @@ var air_jumps_left := 0
 var is_dashing := false
 var is_wall_sliding := false
 var dash_cooldown_timer := 0.0
+## Bloquea los controles (reaparición, cinemáticas). La gravedad sigue actuando.
+var controls_locked := false
 
 var jump_velocity: float:
 	get:
@@ -89,12 +98,15 @@ var jump_gravity: float:
 var _is_jump_rising := false
 var _wall_coyote_timer := 0.0
 var _wall_normal_x := 0.0
-var _wall_jump_lock_timer := 0.0
+var _input_lock_timer := 0.0
 var _air_dash_available := true
 var _dash_timer := 0.0
 var _dash_direction := 1
 var _afterimage_timer := 0.0
 
+@onready var health: HealthComponent = $Health
+@onready var hurtbox: HurtboxComponent = $Hurtbox
+@onready var damage: PlayerDamage = $Damage
 @onready var _visual: Node2D = $Visual
 @onready var _body: Node2D = $Visual/Body
 
@@ -105,7 +117,7 @@ func _physics_process(delta: float) -> void:
 
 	if is_dashing:
 		_process_dash(delta)
-	elif Input.is_action_just_pressed("dash") and _can_start_dash():
+	elif _action_just_pressed("dash") and _can_start_dash():
 		_start_dash()
 	else:
 		_apply_gravity(delta)
@@ -120,9 +132,21 @@ func _physics_process(delta: float) -> void:
 	_update_state()
 
 
-## Verdadero mientras el jugador no puede recibir daño (lo usará el sistema de daño en T3).
+## Verdadero mientras el jugador no puede recibir daño: tras un golpe, al reaparecer
+## o durante el dash desde el nivel 2 (Dash Fantasma).
 func is_invulnerable() -> bool:
-	return is_dashing
+	if is_dashing and dash_level >= 2:
+		return true
+	return damage != null and damage.is_invulnerable()
+
+
+## Empuje al recibir un golpe: interrumpe el dash y bloquea la dirección un instante.
+func apply_knockback(force: Vector2) -> void:
+	if is_dashing:
+		_end_dash()
+	velocity = force
+	_is_jump_rising = false
+	_input_lock_timer = knockback_input_lock
 
 
 ## Coloca al jugador en una posición y lo detiene (al aparecer o reaparecer).
@@ -133,7 +157,7 @@ func teleport_to(target_position: Vector2) -> void:
 	jump_buffer_timer = 0.0
 	_is_jump_rising = false
 	_wall_coyote_timer = 0.0
-	_wall_jump_lock_timer = 0.0
+	_input_lock_timer = 0.0
 	is_wall_sliding = false
 	if is_dashing:
 		_end_dash()
@@ -148,13 +172,13 @@ func _update_timers(delta: float, on_floor: bool) -> void:
 	else:
 		coyote_timer = maxf(coyote_timer - delta, 0.0)
 
-	if Input.is_action_just_pressed("jump"):
+	if _action_just_pressed("jump"):
 		jump_buffer_timer = jump_buffer_time
 	else:
 		jump_buffer_timer = maxf(jump_buffer_timer - delta, 0.0)
 
 	_wall_coyote_timer = maxf(_wall_coyote_timer - delta, 0.0)
-	_wall_jump_lock_timer = maxf(_wall_jump_lock_timer - delta, 0.0)
+	_input_lock_timer = maxf(_input_lock_timer - delta, 0.0)
 	dash_cooldown_timer = maxf(dash_cooldown_timer - delta, 0.0)
 
 
@@ -168,7 +192,7 @@ func _update_wall_state() -> void:
 	if not can_wall_jump or is_dashing or is_on_floor() or not is_on_wall_only():
 		return
 	var normal_x := get_wall_normal().x
-	var direction := Input.get_axis("move_left", "move_right")
+	var direction := _input_axis()
 	# Solo cuenta como agarre si el jugador empuja hacia la pared.
 	if is_zero_approx(direction) or signf(direction) != -signf(normal_x):
 		return
@@ -210,16 +234,17 @@ func _apply_gravity(delta: float) -> void:
 	var gravity := jump_gravity
 	if velocity.y > 0.0:
 		gravity *= fall_gravity_multiplier
-	if Input.is_action_pressed("jump") and absf(velocity.y) < apex_speed_threshold:
+	if _action_pressed("jump") and absf(velocity.y) < apex_speed_threshold:
 		gravity *= apex_gravity_multiplier
 	var fall_limit := wall_slide_speed if is_wall_sliding else max_fall_speed
 	velocity.y = minf(velocity.y + gravity * delta, fall_limit)
 
 
 func _apply_horizontal_movement(delta: float) -> void:
-	if _wall_jump_lock_timer > 0.0:
+	# Durante el bloqueo (salto de pared, empuje) se conserva la velocidad horizontal.
+	if _input_lock_timer > 0.0:
 		return
-	var direction := Input.get_axis("move_left", "move_right")
+	var direction := _input_axis()
 	var on_floor := is_on_floor()
 	var rate: float
 	if is_zero_approx(direction):
@@ -253,7 +278,7 @@ func _handle_jump() -> void:
 		jumped.emit()
 	elif can_wall_jump and _wall_coyote_timer > 0.0:
 		_wall_jump()
-	elif can_double_jump and air_jumps_left > 0 and Input.is_action_just_pressed("jump"):
+	elif can_double_jump and air_jumps_left > 0 and _action_just_pressed("jump"):
 		air_jumps_left -= 1
 		_jump(_velocity_for_height(double_jump_height))
 		_squash(Vector2(0.75, 1.25))
@@ -272,7 +297,7 @@ func _jump(vertical_speed: float) -> void:
 func _wall_jump() -> void:
 	_jump(_velocity_for_height(wall_jump_height))
 	velocity.x = _wall_normal_x * wall_jump_push
-	_wall_jump_lock_timer = wall_jump_input_lock
+	_input_lock_timer = wall_jump_input_lock
 	is_wall_sliding = false
 	_set_facing(int(_wall_normal_x))
 	_squash(Vector2(0.8, 1.2))
@@ -284,7 +309,7 @@ func _apply_jump_cut() -> void:
 		return
 	if velocity.y >= 0.0:
 		_is_jump_rising = false
-	elif not Input.is_action_pressed("jump"):
+	elif not _action_pressed("jump"):
 		velocity.y *= jump_cut_multiplier
 		_is_jump_rising = false
 
@@ -296,7 +321,7 @@ func _velocity_for_height(height: float) -> float:
 # --- Dash ---------------------------------------------------------------------
 
 func _can_start_dash() -> bool:
-	if not can_dash or dash_cooldown_timer > 0.0:
+	if dash_level < 1 or dash_cooldown_timer > 0.0:
 		return false
 	return is_on_floor() or is_wall_sliding or _air_dash_available
 
@@ -305,7 +330,7 @@ func _start_dash() -> void:
 	if is_wall_sliding:
 		_dash_direction = int(_wall_normal_x)
 	else:
-		var direction := Input.get_axis("move_left", "move_right")
+		var direction := _input_axis()
 		_dash_direction = facing if is_zero_approx(direction) else (1 if direction > 0.0 else -1)
 	if not is_on_floor():
 		_air_dash_available = false
@@ -355,6 +380,20 @@ func _spawn_afterimage() -> void:
 	var tween := ghost.create_tween()
 	tween.tween_property(ghost, "modulate:a", 0.0, 0.2)
 	tween.tween_callback(ghost.queue_free)
+
+
+# --- Controles (respetan controls_locked) --------------------------------------
+
+func _input_axis() -> float:
+	return 0.0 if controls_locked else Input.get_axis("move_left", "move_right")
+
+
+func _action_pressed(action: StringName) -> bool:
+	return not controls_locked and Input.is_action_pressed(action)
+
+
+func _action_just_pressed(action: StringName) -> bool:
+	return not controls_locked and Input.is_action_just_pressed(action)
 
 
 # --- Efectos visuales ---------------------------------------------------------

@@ -50,6 +50,17 @@ func change_scene(scene_path: String) -> void:
 	_is_changing = false
 
 
+## Fundido a negro, ejecuta midpoint (p. ej. mover al jugador) y vuelve a mostrar la escena.
+## Se usa para reaparecer tras un peligro o al morir, sin cambiar de escena.
+func transition(midpoint: Callable) -> void:
+	_fade_rect.mouse_filter = Control.MOUSE_FILTER_STOP
+	await _fade_to(1.0)
+	midpoint.call()
+	await get_tree().process_frame
+	await _fade_to(0.0)
+	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
 func quit_game() -> void:
 	get_tree().quit()
 

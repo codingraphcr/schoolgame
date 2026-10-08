@@ -18,6 +18,9 @@ extends Camera2D
 
 var _look_ahead := 0.0
 var _fall_offset := 0.0
+var _shake_strength := 0.0
+var _shake_duration := 0.0
+var _shake_time := 0.0
 
 
 func _ready() -> void:
@@ -38,6 +41,23 @@ func _physics_process(delta: float) -> void:
 	_fall_offset = lerpf(_fall_offset, desired_fall, 1.0 - exp(-fall_look_ahead_speed * delta))
 
 	global_position = target.global_position + Vector2(_look_ahead, vertical_offset + _fall_offset)
+
+
+func _process(delta: float) -> void:
+	if _shake_time <= 0.0:
+		return
+	_shake_time -= delta
+	var fade := maxf(_shake_time / _shake_duration, 0.0)
+	offset = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * _shake_strength * fade
+	if _shake_time <= 0.0:
+		offset = Vector2.ZERO
+
+
+## Sacudida breve de la cámara (golpes, impactos). strength en píxeles del mundo.
+func shake(strength := 3.0, duration := 0.2) -> void:
+	_shake_strength = strength
+	_shake_duration = maxf(duration, 0.01)
+	_shake_time = _shake_duration
 
 
 ## Coloca la cámara sobre el objetivo sin transición (al cargar una sala o reaparecer).

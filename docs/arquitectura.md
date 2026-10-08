@@ -62,15 +62,18 @@ Las carpetas se crean cuando se necesitan, no antes.
 | `move_left` / `move_right` | A / D, ← / → | Stick izquierdo, cruceta |
 | `move_up` / `move_down` | W / S, ↑ / ↓ | Stick izquierdo, cruceta |
 | `jump` | Espacio | A |
-| `attack` | J | X |
-| `dash` | K, Shift | RB |
-| `ability` | L, Q | Y |
-| `vision` | F | LB |
+| `attack` (Nullblade) | J | X |
+| `aegis_fire` | K | Y |
+| `dash` | Shift | RB |
+| `vision` (Visión Digital) | Q | LB |
 | `interact` | E | B |
+| `ultimate` (Dominio Nulo) | R | RT |
+| `heal` (mantener) | L | LT |
+| `aegis_platform` | F | Clic del stick derecho |
 | `pause` | Esc | Start |
 
 Las teclas usan **código físico**: funcionan igual en teclados en español o inglés.
-Los controles táctiles se agregarán en la tarea T10.
+Los controles táctiles se agregarán en la tarea C12.
 
 ## Jugador (`characters/player/`)
 
@@ -78,11 +81,11 @@ Los controles táctiles se agregarán en la tarea T10.
 Estados: `IDLE`, `RUN`, `JUMP`, `FALL`, `DASH`, `WALL_SLIDE` (señal `state_changed`, útil para animaciones).
 Señales: `jumped`, `double_jumped`, `wall_jumped`, `dashed`, `landed`.
 
-**Habilidades** (interruptores en el Inspector, grupo "Habilidades"):
+**Habilidades** (en el Inspector, grupo "Habilidades"):
 
 | Habilidad | Por defecto | Notas |
 |---|---|---|
-| `can_dash` | activada | Disponible desde el inicio |
+| `dash_level` | 0 | 0 sin dash · 1 Dash · 2 Dash Fantasma (invulnerable) · 3 Esquiva Perfecta. Nivel 2 en la sala de pruebas |
 | `can_double_jump` | desactivada | Se desbloquea con la historia. Activada en la sala de pruebas |
 | `can_wall_jump` | desactivada | Deslizar por paredes y saltar desde ellas. Activada en la sala de pruebas |
 
@@ -106,13 +109,34 @@ Señales: `jumped`, `double_jumped`, `wall_jumped`, `dashed`, `landed`.
 **Prioridad al pulsar salto:** salto desde el suelo (con coyote time) → salto de pared → doble salto.
 Si ninguno es posible, la pulsación se guarda (jump buffer) para el aterrizaje.
 
-`is_invulnerable()` devuelve verdadero durante el dash; lo usará el sistema de daño (T3).
+`is_invulnerable()` combina la invulnerabilidad tras un golpe/reaparición y el dash desde el nivel 2.
+`controls_locked` bloquea los controles (reaparición). `apply_knockback()` aplica el empuje de un golpe.
 El dibujo (`Visual/Body`) se deforma al saltar/aterrizar y el dash deja una estela de siluetas.
+
+## Combate (`components/combat/`)
+
+| Componente | Nodo | Responsabilidad |
+|---|---|---|
+| `HitData` | RefCounted | Datos de un golpe: daño, tipo de amenaza, empuje, origen, si es peligro |
+| `HitboxComponent` | Area2D | Causa daño. `once_per_activation` para que un tajo golpee una vez. Capa 4 (jugador) o 5 (enemigos/peligros) |
+| `HurtboxComponent` | Area2D | Recibe daño revisando superposiciones cada cuadro (el contacto prolongado vuelve a dañar). `immune` = escudo educativo |
+| `HealthComponent` | Node | Vida: máscaras del jugador o puntos de vida de enemigos. Señales `health_changed`, `damaged`, `died` |
+
+**Jugador:** `characters/player/player_damage.gd` (`PlayerDamage`, nodo `Damage`) aplica las reglas de Hollow Knight:
+quita máscaras, congela la acción (`HitStop`), empuja, da 1 s de invulnerabilidad con parpadeo, devuelve al último
+suelo seguro ante peligros y emite `died` al perder todas las máscaras. La sala (`Room`) decide dónde reaparece.
+
+**Peligros:** `world/hazards/spikes.gd` (`Spikes`): pinchos con ancho configurable, visibles en el editor.
+
+**HUD:** `ui/hud/combat_hud.tscn` muestra las máscaras (`MaskIcon`).
+
+**Autoloads en scripts compartidos:** `Room` y `PlayerDamage` obtienen `SceneManager` por ruta (`/root/SceneManager`)
+para que compilen también en las pruebas de línea de comandos.
 
 ## Salas (`world/`)
 
-- `world/rooms/room.gd` (`Room`): calcula los límites de la cámara a partir del `TileMapLayer`,
-  coloca al jugador en el `SpawnPoint` y lo devuelve ahí si cae fuera de la sala.
+- `world/rooms/room.gd` (`Room`): calcula los límites de la cámara a partir del `TileMapLayer` y coloca al jugador en el `SpawnPoint`.
+  Caer fuera cuenta como peligro; al morir se reaparece en `checkpoint` (o `SpawnPoint`). Sacude la cámara al recibir daño.
 - `world/camera/` (`GameCamera`): zoom ×2, suavizado, mirada hacia adelante, adelanto hacia abajo en caídas rápidas y margen vertical.
 - `world/effects/ring_burst.gd` (`RingBurst`): anillo que se expande; efecto reutilizable (doble salto, impactos).
 - `world/tilesets/graybox_tileset.tres`: tiles de prueba (bloque sólido y plataforma de un sentido).
@@ -164,4 +188,5 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | `test_menu_navigation.gd` | Menú → Configuración → Menú → Jugar |
 | `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, hueco de 6, plataforma de un sentido, reaparición y límites de cámara |
 | `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
+| `test_player_health.gd` | Máscaras, pinchos, suelo seguro, invulnerabilidad, empuje, contacto prolongado, escudo educativo, caída, muerte y niveles del dash |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

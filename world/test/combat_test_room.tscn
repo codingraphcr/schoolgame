@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="3_4vjnb"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="4_kicyc"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="5_k64yf"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="6_4vjnb"]
+[ext_resource type="Script" path="res://world/hazards/spikes.gd" id="7_kicyc"]
 
 [node name="CombatTestRoom" type="Node2D" unique_id=2011638855 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
@@ -33,6 +35,7 @@ position = Vector2(80, 480)
 
 [node name="Player" parent="." unique_id=654375246 instance=ExtResource("3_4vjnb")]
 position = Vector2(80, 480)
+dash_level = 2
 can_double_jump = true
 can_wall_jump = true
 
@@ -252,3 +255,42 @@ scale = Vector2(0.5, 0.5)
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.55, 0.64, 0.78, 0.9)
 text = "7 (doble salto)"
+
+[node name="LabelSpikes" type="Label" parent="Labels" unique_id=1182967882]
+texture_filter = 2
+offset_left = 1096.0
+offset_top = 448.0
+offset_right = 1096.0
+offset_bottom = 448.0
+scale = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.85, 0.55, 0.65, 0.9)
+text = "Pinchos (prueba el Dash Fantasma)"
+
+[node name="CombatHUD" parent="." unique_id=2126138432 node_paths=PackedStringArray("player") instance=ExtResource("6_4vjnb")]
+player = NodePath("../Player")
+
+[node name="Hazards" type="Node2D" parent="." unique_id=664985789]
+
+[node name="SpikesPit5" type="Area2D" parent="Hazards" unique_id=450457406]
+position = Vector2(752, 512)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("7_kicyc")
+width = 80.0
+is_hazard = true
+
+[node name="SpikesPit6" type="Area2D" parent="Hazards" unique_id=1990359172]
+position = Vector2(896, 512)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("7_kicyc")
+width = 96.0
+is_hazard = true
+
+[node name="SpikesFloor" type="Area2D" parent="Hazards" unique_id=385207106]
+position = Vector2(1120, 480)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("7_kicyc")
+is_hazard = true

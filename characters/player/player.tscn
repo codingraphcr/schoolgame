@@ -1,9 +1,15 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://characters/player/player.gd" id="1_player"]
+[ext_resource type="Script" path="res://components/combat/health_component.gd" id="2_health"]
+[ext_resource type="Script" path="res://components/combat/hurtbox_component.gd" id="3_hurtbox"]
+[ext_resource type="Script" path="res://characters/player/player_damage.gd" id="4_damage"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(10, 22)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(8, 20)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
@@ -14,6 +20,34 @@ script = ExtResource("1_player")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -11)
 shape = SubResource("RectangleShape2D_body")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2_health")
+max_health = 4.0
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+script = ExtResource("3_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -11)
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="SafeGroundLeft" type="RayCast2D" parent="."]
+position = Vector2(-4, -2)
+target_position = Vector2(0, 6)
+
+[node name="SafeGroundRight" type="RayCast2D" parent="."]
+position = Vector2(4, -2)
+target_position = Vector2(0, 6)
+
+[node name="Damage" type="Node" parent="." node_paths=PackedStringArray("health", "hurtbox", "safe_ground_left", "safe_ground_right")]
+script = ExtResource("4_damage")
+health = NodePath("../Health")
+hurtbox = NodePath("../Hurtbox")
+safe_ground_left = NodePath("../SafeGroundLeft")
+safe_ground_right = NodePath("../SafeGroundRight")
 
 [node name="Visual" type="Node2D" parent="."]
 

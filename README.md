@@ -21,6 +21,7 @@ Carpetas organizadas **por funcionalidad**: cada escena está junto a su script.
 res://
 ├── autoload/      # Singletons globales (SceneManager)
 ├── characters/    # Jugador, NPC y enemigos
+├── components/    # Componentes reutilizables (daño, vida…)
 ├── world/         # Salas, tilesets, cámara y objetos del mundo
 ├── ui/            # Menús, componentes de interfaz y tema visual
 ├── data/          # Contenido del juego (diálogos, misiones, glosario…)
@@ -41,4 +42,5 @@ godot --headless --path . --script res://tests/test_menu_navigation.gd
 godot --headless --path . --script res://tests/test_player_movement.gd
 godot --headless --path . --script res://tests/test_player_abilities.gd
 godot --headless --path . --script res://tests/test_decision_system.gd
+godot --headless --path . --script res://tests/test_player_health.gd
 ```
