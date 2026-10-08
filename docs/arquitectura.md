@@ -22,7 +22,8 @@ res://
 ├── minigames/     # Retos educativos
 ├── ui/            # Menús, HUD, tema visual y componentes de interfaz
 ├── data/          # Contenido: diálogos, misiones, glosario, traducciones
-├── assets/        # Arte, audio, fuentes y shaders
+├── assets/        # Arte (art/pixel: estilo oficial), audio, fuentes y shaders
+├── tools/         # Herramientas de desarrollo (generador de sprites)
 ├── tests/         # Pruebas automáticas (scripts de línea de comandos) y su sala gris (fixtures/)
 └── docs/          # Documentación (Godot la ignora por el archivo .gdignore)
 ```
@@ -35,6 +36,20 @@ Las carpetas se crean cuando se necesitan, no antes.
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
 | `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. **Progreso del jugador** (créditos, habilidades, evoluciones). Preparado para guardar partida (`to_dict` / `from_dict`). |
+
+## Estilo visual oficial: "Dos mundos" (muestra D de Ariel)
+
+- **Mundo físico** en pixel art (640×360, tiles de 16 px). **Mundo digital** (Visión Digital) en vectorial,
+  dibujado con `VectorCanvas` (`world/effects/vector_canvas.gd`).
+- `assets/art/pixel/`: sprites, tiles y paleta (`paleta.png`). Los genera `tools/art/generar_sprites.gd`
+  con `PixelPainter` (`tools/art/pixel_painter.gd`). **Ojo:** volver a ejecutar el generador sobrescribe los PNG;
+  si se retocan a mano (Pixelorama, Aseprite, LibreSprite), ya no conviene regenerarlos.
+- `assets/shaders/glitch_cercania.gdshader`: efecto de glitch (transición de la Visión Digital).
+- `prototypes/estilos/`: las 6 muestras originales (A–F) se conservan como referencia y usan los recursos de arriba.
+
+**Kai, el personaje:** `characters/player/kai_frames.tres` (SpriteFrames: idle, run, jump, fall, dash, wall; 24×36 px,
+pies en el origen). `player_animation.gd` elige la animación según `Player.state`. El giro y la deformación
+los hereda de `Visual/Body`; las siluetas del dash congelan el cuadro actual.
 
 ## Resolución y pixel art
 
