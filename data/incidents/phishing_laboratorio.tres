@@ -1,0 +1,98 @@
+[gd_resource type="Resource" script_class="Incident" format=3]
+
+[ext_resource type="Script" path="res://systems/incidents/clue.gd" id="1_jur8b"]
+[ext_resource type="Script" path="res://systems/incidents/security_control.gd" id="2_1nbpn"]
+[ext_resource type="Script" path="res://systems/incidents/incident.gd" id="3_do64e"]
+
+[sub_resource type="Resource" id="Resource_4olwb"]
+script = ExtResource("1_jur8b")
+id = &"remitente_falso"
+title = "Remitente falsificado"
+description = "El correo dice venir de soporte@escudo-escolar-soporte.com, pero el dominio oficial del colegio es escudoescolar.ed.cr. Los atacantes registran dominios parecidos para que nadie note la diferencia."
+
+[sub_resource type="Resource" id="Resource_e5hho"]
+script = ExtResource("1_jur8b")
+id = &"enlace_clonado"
+title = "Enlace a una página clonada"
+description = "El botón «Verificar cuenta» lleva a una copia exacta del portal estudiantil, alojada en otro dominio. Pasar el cursor sobre un enlace, sin hacer clic, revela su destino real."
+
+[sub_resource type="Resource" id="Resource_gcesd"]
+script = ExtResource("1_jur8b")
+id = &"cuentas_comprometidas"
+title = "Cuentas comprometidas"
+description = "El registro del servidor muestra que dos cuentas de estudiantes iniciaron sesión desde otro país minutos después de recibir el correo. Sus contraseñas ya fueron robadas."
+
+[sub_resource type="Resource" id="Resource_aef5c"]
+script = ExtResource("2_1nbpn")
+id = &"capacitacion"
+display_name = "Capacitar a los estudiantes"
+description = "Un taller práctico para reconocer correos fraudulentos y reportarlos a soporte."
+cost = 3000
+security_delta = 10
+trust_delta = 12
+consequence = "Los estudiantes aprenden a revisar remitentes y enlaces. Al día siguiente, tres de ellos reportan un correo parecido en lugar de abrirlo. Las dos cuentas robadas, sin embargo, siguen en manos del atacante."
+reaction = "«¡Ahora reviso el remitente antes de hacer clic en cualquier cosa!»"
+lesson = "Las personas son la primera línea de defensa: una comunidad capacitada detecta y reporta el phishing. Pero la capacitación tarda en dar frutos y no protege las cuentas que ya fueron comprometidas."
+flags_to_set = Array[StringName]([&"capacitacion_phishing"])
+
+[sub_resource type="Resource" id="Resource_u22sa"]
+script = ExtResource("2_1nbpn")
+id = &"filtro_correo"
+display_name = "Implementar un filtro de correo"
+description = "Un servicio que analiza los correos entrantes y bloquea los fraudulentos antes de que lleguen a las bandejas."
+cost = 4500
+security_delta = 15
+trust_delta = 3
+outcome = 1
+consequence = "El filtro bloquea el correo y otros 40 mensajes similares que venían en camino. Ya no llegan nuevos ataques, pero nadie aprendió a reconocerlos si alguno logra pasar."
+reaction = "«Ya no me llegan esos correos raros… aunque no sé muy bien qué cambió.»"
+lesson = "Los controles técnicos detienen la mayoría de los ataques de forma automática, pero ningún filtro es perfecto: siempre conviene combinarlos con personas capacitadas."
+flags_to_set = Array[StringName]([&"filtro_correo_activo"])
+
+[sub_resource type="Resource" id="Resource_bu1mk"]
+script = ExtResource("2_1nbpn")
+id = &"bloquear_dominio"
+display_name = "Bloquear el dominio del atacante"
+description = "Agregar escudo-escolar-soporte.com a la lista de dominios bloqueados del servidor de correo."
+cost = 500
+security_delta = 4
+consequence = "El dominio queda bloqueado y el correo deja de llegar. Dos días después, el atacante registra escudo-escolar-ayuda.com y el ataque vuelve a empezar."
+reaction = "«¿No era que ya lo habían arreglado? Me llegó otro igualito.»"
+lesson = "Bloquear un dominio es barato y rápido, pero solo frena al atacante hasta que registra otro. Es una medida temporal, no una solución de fondo."
+flags_to_set = Array[StringName]([&"phishing_dominio_rotado"])
+
+[sub_resource type="Resource" id="Resource_qsprg"]
+script = ExtResource("2_1nbpn")
+id = &"mfa"
+display_name = "Activar la autenticación multifactor (MFA)"
+description = "Exigir un segundo factor, como un código en el celular, además de la contraseña para entrar a las cuentas del colegio."
+cost = 6000
+security_delta = 20
+trust_delta = -5
+outcome = 1
+consequence = "Las contraseñas robadas dejan de servir: el atacante no tiene el segundo factor. Los correos falsos siguen llegando, y algunos docentes se quejan del paso extra al iniciar sesión."
+reaction = "«Es un poco molesto poner el código cada vez, pero me alegra que no puedan entrar a mi cuenta.»"
+lesson = "La MFA protege las cuentas aunque la contraseña sea robada: es una de las defensas más efectivas contra el robo de credenciales. Pero no evita que el phishing llegue ni que engañe a las personas."
+flags_to_set = Array[StringName]([&"mfa_activa"])
+
+[sub_resource type="Resource" id="Resource_8xcj6"]
+script = ExtResource("2_1nbpn")
+id = &"ignorar"
+display_name = "Ignorar el problema por ahora"
+description = "No gastar presupuesto y esperar a ver qué pasa."
+security_delta = -15
+trust_delta = -20
+outcome = 3
+consequence = "El atacante usa las cuentas robadas para enviar el mismo correo a todo el colegio desde direcciones legítimas. Ahora parece aún más confiable y docentes y administrativos también caen."
+reaction = "«¡Me llegó un correo de mi compañera pidiéndome la contraseña! ¿Por qué nadie hizo nada?»"
+lesson = "Ignorar un incidente no lo detiene: las cuentas comprometidas se usan para atacar a otras personas desde dentro, donde los correos parecen confiables. Responder rápido limita el daño."
+flags_to_set = Array[StringName]([&"phishing_ignorado"])
+
+[resource]
+script = ExtResource("3_do64e")
+id = &"phishing_laboratorio"
+title = "Correo sospechoso en el laboratorio"
+threat_type = &"phishing"
+briefing = "Varios estudiantes del laboratorio de informática recibieron un correo que parece venir de la administración del colegio. Les pide «verificar su cuenta» en un enlace antes de las 3:00 p. m. o la cuenta será bloqueada."
+clues = Array[ExtResource("1_jur8b")]([SubResource("Resource_4olwb"), SubResource("Resource_e5hho"), SubResource("Resource_gcesd")])
+controls = Array[ExtResource("2_1nbpn")]([SubResource("Resource_aef5c"), SubResource("Resource_u22sa"), SubResource("Resource_bu1mk"), SubResource("Resource_qsprg"), SubResource("Resource_8xcj6")])

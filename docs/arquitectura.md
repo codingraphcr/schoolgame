@@ -34,6 +34,7 @@ Las carpetas se crean cuando se necesitan, no antes.
 | Nombre | Archivo | Responsabilidad |
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
+| `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. Preparado para guardar partida (`to_dict` / `from_dict`). |
 
 ## Resolución y pixel art
 
@@ -118,6 +119,36 @@ El dibujo (`Visual/Body`) se deforma al saltar/aterrizar y el dash deja una este
 - `world/test/combat_test_room.tscn`: sala de pruebas del prototipo (alturas, huecos, plataformas, techo bajo, caída, hueco con dash, chimenea para salto de pared y pilar de doble salto). Se edita normalmente en el editor.
 - `ui/debug/` : panel de depuración (F3) con estado, velocidad y temporizadores del jugador.
 
+## Incidentes y decisiones (`systems/incidents/`)
+
+Sistema de recursos de la institución. Cada incidente enseña un concepto real de ciberseguridad:
+el jugador investiga, encuentra pistas y decide qué medida aplicar con un presupuesto limitado.
+
+| Indicador | Inicial | Significado |
+|---|---|---|
+| `budget` | 10 000 | Dinero disponible para implementar medidas |
+| `security` | 35 / 100 | Nivel general de protección de la institución |
+| `trust` | 60 / 100 | Percepción de estudiantes, docentes y administrativos |
+
+**Recursos de datos** (se editan en el Inspector, sin programar):
+
+| Clase | Contenido |
+|---|---|
+| `Incident` | Título, `threat_type` (mismos tipos que `docs/combate.md`), pistas, pistas necesarias y medidas posibles |
+| `Clue` | Evidencia que se descubre al investigar |
+| `SecurityControl` | Costo, efecto en seguridad y confianza, `outcome` (eliminada / contenida / reducida / empeorada), consecuencia, reacción, lección y marcas para consecuencias futuras |
+
+**Flujo** (estados de `Incident.State`):
+
+```
+INACTIVE ──start_incident()──▶ INVESTIGATING ──find_clue() × clues_to_decide──▶ READY ──apply_control()──▶ RESOLVED
+```
+
+- `GameState.check_control()` devuelve por qué no se puede aplicar una medida ("" si se puede): útil para deshabilitar botones.
+- Señales: `stats_changed`, `incident_state_changed`, `clue_found`, `control_applied`. La interfaz y el mundo reaccionan a ellas sin conocerse.
+- Las marcas (`has_flag()`) permiten consecuencias posteriores: p. ej. `phishing_dominio_rotado` si solo se bloqueó el dominio.
+- Incidente de ejemplo: `data/incidents/phishing_laboratorio.tres` (3 pistas, 5 medidas). Ninguna medida elimina por sí sola el phishing, a propósito: así se enseña la defensa en capas.
+
 ## Pruebas automáticas
 
 Scripts en `tests/` que se ejecutan sin abrir el editor:
@@ -133,3 +164,4 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | `test_menu_navigation.gd` | Menú → Configuración → Menú → Jugar |
 | `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, hueco de 6, plataforma de un sentido, reaparición y límites de cámara |
 | `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
+| `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |
