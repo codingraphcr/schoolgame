@@ -1,10 +1,9 @@
 extends SceneTree
 ## Prueba automática: progreso del jugador en GameState, créditos, penalización al morir,
-## guardado y sesión de desarrollo de la sala de pruebas.
+## guardado y aplicación del progreso al jugador en una sala.
 ## Ejecutar: godot --headless --path . --script res://tests/test_progress.gd
 
-const ROOM := "res://world/test/combat_test_room.tscn"
-const MENU := "res://ui/menus/main_menu/main_menu.tscn"
+const ROOM := "res://tests/fixtures/combat_test_room.tscn"
 
 var _failures := 0
 var state: Node
@@ -19,7 +18,7 @@ func _run() -> void:
 	_test_defaults_and_credits()
 	_test_limits()
 	_test_save_and_load()
-	await _test_dev_session()
+	await _test_room_applies_progress()
 
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
@@ -76,26 +75,26 @@ func _test_save_and_load() -> void:
 	state.reset()
 
 
-func _test_dev_session() -> void:
-	# Progreso "real" de la historia antes de entrar a la sala de desarrollo.
+func _test_room_applies_progress() -> void:
 	state.reset()
 	state.add_credits(42)
 	state.set_dash_level(1)
+	state.set_max_masks(5)
 
 	change_scene_to_file(ROOM)
 	await _frames(30)
 	var room: Room = current_scene
 	var player := room.player
-	_check(state.is_dev_session, "la sala de pruebas abre una sesión de desarrollo")
-	_check(player.dash_level == 2 and player.can_double_jump and player.can_wall_jump, "en la sesión todo está desbloqueado y aplicado al jugador")
-	_check(state.credits == 500, "la sesión da créditos de prueba")
+	_check(player.dash_level == 1 and not player.can_double_jump and not player.can_wall_jump,
+		"la sala aplica el progreso: solo lo adquirido (dash 1, sin doble salto ni pared)")
+	_check(player.health.max_health == 5.0 and player.health.current == 5.0, "y las máscaras máximas, llenas al entrar")
+	_check(room.get_node("CombatHUD/Masks").get_child_count() == 5, "el HUD muestra 5 máscaras")
+	_check(room.get_node("CombatHUD/Credits")._amount.text == "42", "el HUD muestra los créditos")
 
-	state.set_dash_level(3)
-	state.set_max_masks(5)
+	state.set_dash_level(2)
+	state.unlock_double_jump()
 	await _frames(2)
-	_check(player.dash_level == 3, "un cambio de progreso se aplica al jugador en vivo")
-	_check(player.health.max_health == 5.0 and room.get_node("CombatHUD/Masks").get_child_count() == 5, "más máscaras: el jugador y el HUD se actualizan")
-	state.set_max_masks(4)
+	_check(player.dash_level == 2 and player.can_double_jump, "un desbloqueo se aplica al jugador en vivo")
 
 	var killer := HitboxComponent.new()
 	killer.collision_layer = 16
@@ -110,15 +109,11 @@ func _test_dev_session() -> void:
 	killer.global_position = player.global_position + Vector2(0, -10)
 	await _frames(6)
 	killer.queue_free()
-	_check(state.credits == 450, "morir en la sesión quita el 10 %% de los créditos (500 → %d)" % state.credits)
+	_check(state.credits == 38, "morir quita el 10 %% de los créditos (42 → %d)" % state.credits)
 	await create_timer(1.2, true, false, true).timeout
-	_check(room.get_node("CombatHUD/Credits")._amount.text == "450", "el HUD muestra los créditos actuales")
-
-	change_scene_to_file(MENU)
-	await _frames(10)
-	_check(not state.is_dev_session, "al salir de la sala termina la sesión de desarrollo")
-	_check(state.credits == 42 and state.dash_level == 1 and not state.can_wall_jump and state.max_masks == 4,
-		"y se restaura el progreso real de la historia")
+	_check(room.get_node("CombatHUD/Credits")._amount.text == "38", "el HUD actualiza los créditos")
+	_check(player.health.current == 5.0, "reaparece con las máscaras llenas")
+	state.reset()
 
 
 func _frames(count: int) -> void:

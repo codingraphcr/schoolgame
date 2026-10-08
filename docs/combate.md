@@ -17,9 +17,21 @@ y **defensa** (herramientas reales de ciberseguridad).
 | **Nullblade** | Espada digital, cuerpo a cuerpo. Carga energía al golpear | Tutorial | .exe → .zero → .void → .max |
 | **Aegis** | Núcleo flotante: disparo teledirigido manual (K), barrera, plataformas | Capítulo 5 (misión "Eco en la Red") | Pulse → Bridge → Sync |
 | **Expansión Digital: Dominio Nulo** | Ultimate: enemigos al 80 % de velocidad y bonificación de daño. Barra propia | Capítulo 2 | I (15 s, +10 %, 100) · II (20 s, +15 %, 115) · III (30 s, +30 %, 138) |
-| **Parry** (estilo Cuphead) | Reemplaza al Escudo MFA. Detalles por definir en C7 | Por definir | — |
+| **Dash-parry** | Un dash justo antes de recibir un golpe hace el parry (no hay botón de parry). Reemplaza al Escudo MFA | Con el primer dash | Mejora con los niveles del dash |
 
 Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `HurtboxComponent.immune`).
+
+## Progresión de la historia
+
+| Momento | Qué tiene el jugador |
+|---|---|
+| **Etapa 0 (prólogo)** | Nada: es un alumno común. Solo caminar y saltar |
+| **Laboratorio** | Descubre la **Visión Digital** ("Por fin alguien está mirando") |
+| **Mini aventura** (tras descubrir la visión) | Desbloquea **Nullblade**, el **dash** y el **doble salto** |
+| Más adelante | Salto de pared, Dominio Nulo (capítulo 2), Aegis (capítulo 5) y mejoras con créditos |
+
+**No existe una sala de pruebas dentro del juego:** cada arma y habilidad se prueba en el mapa a medida que
+se desbloquea. La sala gris (`tests/fixtures/`) solo la usan las pruebas automáticas.
 
 ## Vida y daño (basado en Hollow Knight)
 
@@ -36,7 +48,7 @@ Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `
 
 | Tema | Decisión |
 |---|---|
-| Dash | **Por niveles**, se adquiere con la historia y se mejora con créditos: 0 sin dash · 1 Dash (no protege) · 2 **Dash Fantasma** (atraviesa enemigos y ataques sin daño) · 3 **Esquiva Perfecta** (energía + cámara lenta, C7) |
+| Dash | **Por niveles**, se adquiere en la mini aventura y se mejora con créditos: 0 sin dash · 1 Dash (no protege, pero **un dash en el momento justo hace el parry**) · 2 **Dash Fantasma** (atraviesa enemigos y ataques sin daño) · 3 **Esquiva Perfecta** (ventana de parry más amplia y mejor recompensa) |
 | Doble salto | Se desbloquea con la historia |
 | Pared | Deslizar + salto de pared, se desbloquea con la historia. Al agarrarse se recuperan el doble salto y el dash aéreo |
 | Caída | Más rápida y firme (gravedad ×2 al caer); la cámara se adelanta hacia abajo en caídas rápidas |
@@ -67,7 +79,7 @@ Es el vínculo entre el combate y el contenido educativo.
 
 ## Pendiente de definir
 
-- Parry estilo Cuphead (C7): botón, qué objetos se pueden parrear y recompensa.
+- Dash-parry (C7): qué se puede parrear (proyectiles, ataques cuerpo a cuerpo) y la recompensa exacta (energía, carga del Dominio, devolver proyectiles).
 - Si la Visión Digital tendrá un límite de uso.
 
 ## Plan de implementación
@@ -78,12 +90,15 @@ Es el vínculo entre el combate y el contenido educativo.
 | T1 | Sala de pruebas + movimiento + cámara | ✅ |
 | T2 | Movimiento avanzado: dash + doble salto + deslizar/salto de pared | ✅ |
 | C1 | Daño compartido, 4 máscaras, invulnerabilidad, peligros, muerte, dash por niveles, HUD | ✅ |
-| C2 | `GameState`: progreso de combate y créditos (pérdida al morir) + sala de desarrollo | ✅ |
+| C2 | `GameState`: progreso de combate y créditos (pérdida al morir) | ✅ |
+| Z1 | Retirar la sala de desarrollo (la sala gris queda solo para pruebas automáticas) | ✅ |
+| Z2 | Arte oficial de Ariel (estilo D) en el proyecto + Kai como personaje | ✅ |
+| Z3 | Primera sala real: Pasillo + Laboratorio (Zona 0) | ⏳ |
+| Z4 | Visión Digital como sistema (transición, red vectorial, puente de datos, evento del laboratorio) | ⏳ |
 | C3 | Nullblade.exe (datos de las 4 etapas) + sensación de impacto | ⏳ |
 | C4 | `EnemyBase` + `EnemyData` + `CombatClock` + enemigo patrullero | ⏳ |
 | C5 | Energía (curación con L) + carga del Dominio | ⏳ |
-| C6 | Visión Digital | ⏳ |
-| C7 | Parry estilo Cuphead + torreta de llaves + Esquiva Perfecta | ⏳ |
+| C7 | Dash-parry + torreta de llaves | ⏳ |
 | C8 | Terminal + escudo educativo | ⏳ |
 | C9 | Dominio Nulo I (si hay tiempo) | ⏳ |
 | C10 | Aegis Pulse (si hay tiempo) | ⏳ |

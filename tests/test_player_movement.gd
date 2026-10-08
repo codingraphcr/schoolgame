@@ -2,7 +2,7 @@ extends SceneTree
 ## Prueba automática: movimiento del jugador en la sala de pruebas.
 ## Ejecutar: godot --headless --path . --script res://tests/test_player_movement.gd
 
-const ROOM := "res://world/test/combat_test_room.tscn"
+const ROOM := "res://tests/fixtures/combat_test_room.tscn"
 const FLOOR_Y := 480.0  # Superficie del suelo de la sala (fila 30 × 16 px)
 const PIT_EDGE_X := 600.0  # Un poco antes del primer hueco (columna 40)
 const ONE_WAY_X := 1024.0  # Bajo la primera plataforma de un sentido (superficie en y=416)
@@ -20,13 +20,12 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	# Movimiento base: sin dash, doble salto ni salto de pared.
+	root.get_node("GameState").reset()
 	change_scene_to_file(ROOM)
 	await _frames(30)
 	room = current_scene as Room
 	player = room.player
-	# Esta prueba mide el movimiento base: sin doble salto ni salto de pared.
-	player.can_double_jump = false
-	player.can_wall_jump = false
 	player.jumped.connect(func() -> void: _jumps += 1)
 
 	await _test_ground_movement()

@@ -22,8 +22,9 @@ res://
 ├── minigames/     # Retos educativos
 ├── ui/            # Menús, HUD, tema visual y componentes de interfaz
 ├── data/          # Contenido: diálogos, misiones, glosario, traducciones
-├── assets/        # Arte, audio, fuentes y shaders
-├── tests/         # Pruebas automáticas (scripts de línea de comandos)
+├── assets/        # Arte (art/pixel: estilo oficial), audio, fuentes y shaders
+├── tools/         # Herramientas de desarrollo (generador de sprites)
+├── tests/         # Pruebas automáticas (scripts de línea de comandos) y su sala gris (fixtures/)
 └── docs/          # Documentación (Godot la ignora por el archivo .gdignore)
 ```
 
@@ -35,6 +36,27 @@ Las carpetas se crean cuando se necesitan, no antes.
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
 | `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. **Progreso del jugador** (créditos, habilidades, evoluciones). Preparado para guardar partida (`to_dict` / `from_dict`). |
+
+## Estilo visual oficial: muestra E de Ariel (huesos pixelados + Visión Digital)
+
+Detalle completo en [`docs/arte/guia_de_arte.md`](arte/guia_de_arte.md).
+
+- **Escenarios** en pixel art (640×360, tiles de 16 px).
+- **Personajes** animados por huesos (`Skeleton2D`) pero dibujados a resolución de pixel art (`PixelatedRig`):
+  se dibujan una vez por piezas y las animaciones no requieren más dibujos.
+- **Mundo digital** (Visión Digital) en vectorial, dibujado con `VectorCanvas` (`world/effects/vector_canvas.gd`).
+  En la muestra dura 10 s y se recarga en 16 s.
+- `assets/art/pixel/`: sprites, tiles y paleta (`paleta.png`). Los genera `tools/art/generar_sprites.gd`
+  con `PixelPainter` (`tools/art/pixel_painter.gd`). **Ojo:** volver a ejecutar el generador sobrescribe los PNG;
+  si se retocan a mano (Pixelorama, Aseprite, LibreSprite), ya no conviene regenerarlos.
+- `assets/shaders/glitch_cercania.gdshader`: efecto de glitch (transición de la Visión Digital).
+- `prototypes/estilos/`: las 6 muestras originales (A–F) se conservan como referencia y usan los recursos de arriba.
+
+**Kai, el personaje:** el diseño oficial es el de Ariel (pelo plateado, chaqueta clara, mochila; ~40 px), con
+huesos pixelados: `KaiVisual` (ver "Apariencia de Kai" más abajo).
+**Provisional:** hoy `player.tscn` usa `characters/player/kai_frames.tres` (el Kai de la muestra A, SpriteFrames:
+idle, run, jump, fall, dash, wall; 24×36 px) con `player_animation.gd`, que elige la animación según `Player.state`.
+Pendiente acordar el cambio a `KaiVisual` en el jugador.
 
 ## Resolución y pixel art
 
@@ -147,7 +169,7 @@ para que compilen también en las pruebas de línea de comandos.
 - `world/camera/` (`GameCamera`): zoom ×2, suavizado, mirada hacia adelante, adelanto hacia abajo en caídas rápidas y margen vertical.
 - `world/effects/ring_burst.gd` (`RingBurst`): anillo que se expande; efecto reutilizable (doble salto, impactos).
 - `world/tilesets/graybox_tileset.tres`: tiles de prueba (bloque sólido y plataforma de un sentido).
-- `world/test/combat_test_room.tscn`: sala de pruebas del prototipo (alturas, huecos, plataformas, techo bajo, caída, hueco con dash, chimenea para salto de pared y pilar de doble salto). Se edita normalmente en el editor.
+- `tests/fixtures/combat_test_room.tscn`: sala gris **solo para pruebas automáticas** (alturas, huecos, plataformas, techo bajo, caída, pinchos, hueco con dash, chimenea y pilar de doble salto). No es accesible desde el juego.
 - `ui/debug/` : panel de depuración (F3) con estado, velocidad y temporizadores del jugador.
 
 ## Progreso del jugador (`GameState`)
@@ -172,10 +194,8 @@ Se modifica solo con funciones que limitan los valores y emiten señales: `add_c
 `set_aegis_stage()`, `set_domain_stage()`, `set_max_masks()`, `unlock_double_jump()`, `unlock_wall_jump()`, `unlock_vision()`.
 Señales: `progress_changed` y `credits_changed(credits, delta)`. Nombres para la interfaz: `DASH_NAMES`, `NULLBLADE_NAMES`, `AEGIS_NAMES`, `DOMAIN_NAMES`.
 
-**Sesión de desarrollo:** `begin_dev_session()` guarda la partida real y desbloquea todo (500 créditos, Dash Fantasma,
-doble salto, pared, visión, Nullblade.exe, Aegis Pulse, Dominio Nulo I); `end_dev_session()` restaura la partida.
-La sala de pruebas la abre al entrar y la cierra al salir. Teclas en la sala: **1** dash · **2** Nullblade · **3** Aegis ·
-**4** Dominio · **5** doble salto · **6** pared · **7** +100 créditos · **8** llenar máscaras · **9** máscaras máximas.
+**Sin sala de desarrollo:** las habilidades se prueban en el mapa a medida que se desbloquean. Las pruebas automáticas
+declaran el progreso que necesitan con estas mismas funciones antes de cargar la sala gris (`tests/fixtures/combat_test_room.tscn`).
 
 ## Incidentes y decisiones (`systems/incidents/`)
 
@@ -223,5 +243,5 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, hueco de 6, plataforma de un sentido, reaparición y límites de cámara |
 | `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
 | `test_player_health.gd` | Máscaras, pinchos, suelo seguro, invulnerabilidad, empuje, contacto prolongado, escudo educativo, caída, muerte y niveles del dash |
-| `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas), sesión de desarrollo y restauración |
+| `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

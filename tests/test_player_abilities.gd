@@ -2,7 +2,7 @@ extends SceneTree
 ## Prueba automática: dash, doble salto y deslizamiento/salto de pared.
 ## Ejecutar: godot --headless --path . --script res://tests/test_player_abilities.gd
 
-const ROOM := "res://world/test/combat_test_room.tscn"
+const ROOM := "res://tests/fixtures/combat_test_room.tscn"
 const FLOOR_Y := 480.0
 const NEAR_LEFT_WALL := Vector2(40, 300)  # En el aire, junto a la pared izquierda (cara interior en x=16)
 
@@ -18,6 +18,11 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	var state := root.get_node("GameState")
+	state.reset()
+	state.set_dash_level(2)
+	state.unlock_double_jump()
+	state.unlock_wall_jump()
 	change_scene_to_file(ROOM)
 	await _frames(30)
 	room = current_scene as Room

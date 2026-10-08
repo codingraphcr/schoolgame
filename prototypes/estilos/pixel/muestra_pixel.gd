@@ -2,7 +2,7 @@ extends StyleSample
 ## Muestra A: pixel art a 640×360 (tiles de 16 px, filtro Nearest).
 ## El escenario usa un TileMapLayer real con el tileset generado, como lo harían las salas finales.
 
-const SPRITES := "res://prototypes/estilos/pixel/sprites/"
+const SPRITES := "res://assets/art/pixel/"
 const TILE := 16
 
 # Columnas de tiles.png

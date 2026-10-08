@@ -386,11 +386,13 @@ func _spawn_afterimage() -> void:
 	if parent == null:
 		return
 	var ghost := _visual.duplicate() as Node2D
+	# La silueta queda congelada en el cuadro actual de la animación.
+	ghost.process_mode = Node.PROCESS_MODE_DISABLED
 	parent.add_child(ghost)
 	ghost.global_position = _visual.global_position
 	ghost.z_index = -1
 	ghost.modulate = Color(0.4, 0.9, 1.0, 0.55)
-	var tween := ghost.create_tween()
+	var tween := create_tween()
 	tween.tween_property(ghost, "modulate:a", 0.0, 0.2)
 	tween.tween_callback(ghost.queue_free)
 

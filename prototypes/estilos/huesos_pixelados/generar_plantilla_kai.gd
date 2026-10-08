@@ -10,7 +10,7 @@ extends SceneTree
 ##   docs/arte/img/paleta.png                   → paleta ampliada con códigos hexadecimales
 ##   assets/art/paleta.png / paleta.gpl         → paleta para programas de dibujo
 
-const Sprites := preload("res://prototypes/estilos/pixel/generar_sprites.gd")
+const Sprites := preload("res://tools/art/generar_sprites.gd")
 
 const PIECES_OUT := "res://assets/art/characters/kai/kai_piezas.png"
 const AEGIS_OUT := "res://assets/art/characters/kai/aegis.png"

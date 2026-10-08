@@ -2,7 +2,7 @@ extends SceneTree
 ## Prueba automática: máscaras, daño, invulnerabilidad, peligros, muerte y niveles del dash.
 ## Ejecutar: godot --headless --path . --script res://tests/test_player_health.gd
 
-const ROOM := "res://world/test/combat_test_room.tscn"
+const ROOM := "res://tests/fixtures/combat_test_room.tscn"
 const FLOOR_Y := 480.0
 const BEFORE_FLOOR_SPIKES := Vector2(1080, 480)  # Pinchos del suelo: x 1120–1152
 const DASH_OVER_SPIKES := Vector2(1110, 480)
@@ -20,6 +20,9 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	var state := root.get_node("GameState")
+	state.reset()
+	state.set_dash_level(2)
 	change_scene_to_file(ROOM)
 	await _frames(30)
 	room = current_scene as Room
