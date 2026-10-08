@@ -34,7 +34,7 @@ ser peligroso en la red.** Mantenerla clara en el arte es lo más importante de 
 |---|---|
 | Resolución del arte | **640×360** (la cámara tiene zoom ×2 sobre 1280×720) |
 | Tiles | **16×16 px** |
-| Kai | ~**36 px** de alto con el pelo |
+| Kai | ~**40 px** de alto con el pelo |
 | Formato | PNG con transparencia, sin compresión con pérdida |
 | Antialiasing | **Nunca** en el pixel art: bordes duros, píxeles enteros |
 | Semitransparencias | Solo en efectos (luz, vidrio, hologramas), no en personajes ni tiles |
@@ -57,17 +57,20 @@ Archivos para importar en tu programa de dibujo:
 |---|---|---|
 | Noche | `0A0D1C` `121A33` `1B2647` `26355E` `34477A` `4A5F96` | Paredes, suelos, sombras. Base de todo el escenario |
 | Colegio (cálidos) | `5A3826` `8A5A3A` `B9824F` · `1E4F5C` `2F7383` `4FA3AC` · `E9DFC6` `B8AB8C` · `9A6A42` `7A4F30` · `A8384A` | Madera, casilleros, papel, corcho, detalles rojos |
-| Personas | `F0C39A` `C98D6B` · `2A2233` `4A3D58` · `E0913A` `A85D24` `FFC070` · `2C3555` `16161F` | Piel, pelo, sudadera de Kai, pantalón, zapatos |
+| Personas | `F0C39A` `C98D6B` · `2A2233` `4A3D58` · `E0913A` `A85D24` `FFC070` · `2C3555` `16161F` | Piel, pelo, ropa de NPC, pantalón, zapatos |
+| **Kai** | `8E8AA8` `C9C6E0` `EEEDF7` · `23243A` | Pelo plateado y chaqueta clara · ropa oscura (pantalón, guantes, mochila) |
+| **Poder de Kai** | `3A2A6E` `7B4FE0` · `3B8FF0` `8FD3FF` | Violeta y azul eléctrico: Nullblade, Aegis, detalles luminosos de la ropa |
 | Tecnología | `3A4462` `5A6788` `8B98B8` | Metal: racks, bandejas, routers |
-| Red sana | `3EF2FF` `1FA5C4` `146A8A` | Datos, Wi-Fi, interfaz, la bufanda de Kai |
-| **Amenaza** | `FF3EA5` `9C1F6E` | **Solo amenazas y corrupción** |
+| Red sana | `3EF2FF` `1FA5C4` `146A8A` | Datos, Wi-Fi, interfaz |
+| **Corrupción** | `FF3EA5` `9C1F6E` | Color base de las amenazas y la corrupción digital |
 | Luces de estado | `59FF9C` `FFB347` `FF4D4D` | LEDs: correcto / aviso / error |
 
 **Reglas de color**
-1. **El magenta es exclusivo de las amenazas.** Si algo es magenta, el jugador debe poder asumir que es peligroso.
-2. Lo escolar va en tonos cálidos y apagados; la tecnología, en neón frío. Así se distingue de un vistazo qué es colegio y qué es red.
-3. Máximo ~12 colores por sprite. Menos colores = más legible.
-4. Si necesitas un color que no está, no lo inventes: proponlo y se agrega aquí para todo el equipo.
+1. **El magenta es el color de la corrupción digital.** Cada enemigo tiene sus propios colores, pero el magenta es su acento principal (ojos, grietas, partes corruptas) y la forma más clara de decir "esto es peligroso".
+2. **El violeta azulado y el azul eléctrico son el poder de Kai.** Úsalos para sus armas y efectos y no en las amenazas, para que el jugador nunca confunda un ataque suyo con uno enemigo.
+3. Lo escolar va en tonos cálidos y apagados; la tecnología, en neón frío. Así se distingue de un vistazo qué es colegio y qué es red.
+4. Máximo ~12 colores por sprite. Menos colores = más legible.
+5. Si necesitas un color que no está, no lo inventes: proponlo y se agrega aquí para todo el equipo.
 
 ---
 
@@ -85,14 +88,14 @@ Ventaja: **cada personaje se dibuja una sola vez**. Agregar una animación nueva
 
 | Personaje | Alto aproximado | Notas |
 |---|---|---|
-| Kai | 36 px | Protagonista |
-| Estudiantes | 32–36 px | Variantes de las piezas de Kai (otra paleta, peinado, accesorio) |
+| Kai | 40 px | Protagonista (17 años) |
+| Estudiantes | 34–40 px | Variantes de las piezas de Kai (otra paleta, peinado, accesorio) |
 | Docentes y administrativos | 40–44 px | Proporciones de adulto: cabeza más pequeña respecto al cuerpo |
 | Enemigos comunes | 16–32 px | Siluetas simples y muy legibles |
 | Jefes | 64–128 px | Muchas piezas; aquí los huesos ahorran más trabajo |
 
 > La caja de colisión actual del jugador es 10×22 px (de la escena de tu compañero). Con Kai de
-> 36 px conviene acordar una nueva, cerca de **12×30 px**.
+> 40 px conviene acordar una nueva, cerca de **12×32 px**.
 
 ### 4.3 Kai por piezas
 
@@ -105,14 +108,17 @@ encima respetando el tamaño de cada pieza y guarda con el mismo nombre.
 
 | Pieza | Lienzo | Pivote (se une a…) | Articulaciones |
 |---|---|---|---|
-| Cabeza | 16×16 | (8, 14) → cuello del torso | — |
-| Torso | 12×14 | (6, 12) → cadera (raíz del esqueleto) | cuello (6, 1) · hombro (6, 3) |
-| Brazo | 7×9 | (3, 2) → hombro | codo (3, 7) |
-| Antebrazo + mano | 7×9 | (3, 2) → codo | — |
-| Muslo | 7×9 | (3, 2) → cadera | rodilla (3, 7) |
-| Pierna + zapato | 9×10 | (3, 2) → rodilla | — |
-| Bufanda (cuello) | 11×5 | (5, 2) → cuello | — |
-| Cola de la bufanda | 6×4 | (4, 2) → la pieza anterior | Se repite 3–4 veces en cadena |
+| Cabeza (pelo plateado) | 18×18 | (9, 16) → cuello del torso | flequillo (13, 7) |
+| Mechón | 7×9 | (2, 1) → flequillo de la cabeza | — *(rebota al moverse; puede haber 2–3)* |
+| Torso (chaqueta con cuello alto) | 14×16 | (7, 14) → cadera (raíz del esqueleto) | cuello (7, 1) · hombro (7, 4) · espalda (3, 6) |
+| Mochila | 10×12 | (6, 3) → espalda del torso | — |
+| Brazo (manga) | 8×11 | (3, 2) → hombro | codo (3, 8) |
+| Antebrazo + guante | 8×10 | (3, 2) → codo | mano (3, 8) |
+| Muslo (pantalón cargo) | 8×11 | (3, 2) → cadera | rodilla (3, 8) |
+| Pierna + zapatilla | 11×12 | (3, 2) → rodilla | — |
+| Arma (Nullblade) | 9×22 | (4, 17) → mano, en la empuñadura | — *(ver 4.8)* |
+
+También se genera `assets/art/characters/kai/aegis.png` (16×16): el Aegis **no va en el esqueleto** (ver 4.8).
 
 ### 4.4 Reglas para dibujar piezas
 1. **Mirando a la derecha**, en posición neutra (brazos y piernas rectos hacia abajo).
@@ -120,33 +126,41 @@ encima respetando el tamaño de cada pieza y guarda con el mismo nombre.
 3. **Solapa las piezas 1–2 px** en cada unión. Mejor que sobre a que falte.
 4. **Contorno en cada pieza,** excepto en la parte que queda tapada por la unión.
 5. **Las extremidades de atrás reutilizan la misma pieza,** solo que más oscura (el juego lo hace solo). No dibujes dos brazos.
-6. **Detalles grandes y pocos:** a 36 px, un ojo es 1×2 px. La silueta tiene que leerse sin colores.
+6. **Detalles grandes y pocos:** a 40 px, un ojo es 2×2 px. Elige 2–3 rasgos que se lean a tamaño real (en Kai: el pelo plateado, el cuello alto y la mochila con su luz) y el resto solo insinúalo.
 7. Deja **1 px de margen** transparente alrededor de cada pieza (para el contorno).
-8. No cambies el tamaño del lienzo de una pieza sin avisar: los pivotes dependen de él.
+8. **El arma es una pieza aparte:** se dibuja apuntando hacia arriba y con la empuñadura en el pivote. Así cambiar de arma es cambiar una sola imagen.
+9. Las piezas son una guía, no una jaula: si tu diseño necesita una pieza extra (otro mechón, la capucha suelta, una correa) o un lienzo más grande, se agrega. Solo avisa para ajustar el esqueleto.
 
 ### 4.5 Animaciones necesarias (Kai)
 
 | Animación | Cuándo | Bucle | Poses clave |
 |---|---|---|---|
 | Quieto (`idle`) | Sin moverse | Sí | Respiración: subir/bajar el torso 1 px |
-| Correr (`run`) | Moviéndose | Sí | Contacto · paso · contacto · paso |
+| Caminar (`walk`) | Moviéndose despacio | Sí | Contacto · paso · contacto · paso, brazos sueltos |
+| Correr (`run`) | Moviéndose rápido | Sí | Igual que caminar, más inclinado y con zancadas largas |
 | Saltar (`jump`) | Subiendo | No | Rodilla arriba, brazos arriba |
-| Caer (`fall`) | Bajando | Sí | Piernas colgando, brazos abiertos, bufanda hacia arriba |
+| Caer (`fall`) | Bajando | Sí | Piernas colgando, brazos abiertos |
 | Aterrizar (`land`) | Al tocar el suelo | No | Agacharse y volver |
-| Dash | Dash | No | Cuerpo inclinado, brazos atrás, bufanda horizontal |
+| Dash | Dash | No | Cuerpo muy inclinado, brazos atrás (la estela la hago por código) |
 | Deslizar en pared (`wall`) | Pegado a una pared | Sí | Espalda contra la pared, una mano apoyada |
 | Doble salto | Segundo salto | No | Giro o impulso con las piernas recogidas |
+| Ataque 1 (Nullblade) | Atacar | No | Preparación · corte · regreso (el arco de luz lo hago por código) |
+| Ataque 2 (combinado) | Segundo ataque seguido | No | Corte en sentido contrario, más amplio |
 | Interactuar | Usar terminal o hablar | No | Brazo extendido |
-| Ataque (Pulso Digital) | Atacar | No | Brazo hacia adelante + efecto (lo hago por código) |
 | Daño (`hurt`) | Recibir daño | No | Retroceso, parpadeo |
+| Muerte | Sin vida | No | Caer de rodillas y al suelo, con corrupción digital |
 
-La bufanda-cable se mueve sola por código (física simple): no hace falta animarla a mano.
+El mechón, la mochila y el borde de la chaqueta se mueven solos por código (movimiento secundario):
+no hace falta animarlos a mano.
 
 ### 4.6 Diseño de Kai
-- **Quién es:** estudiante del club de ciberseguridad del colegio.
-- **Silueta reconocible:** pelo oscuro despeinado, **auriculares con micrófono** y una **bufanda-cable cian** que flota detrás (deja ver el movimiento y la dirección).
-- **Sudadera ámbar:** contrasta con el fondo azul noche y lo distingue de inmediato. *(El dibujo provisional de tu compañero usa sudadera azul: el color final se acuerda en equipo.)*
-- Expresión simple: un ojo de 1×2 px; la personalidad se transmite con la pose.
+*Diseño de Ariel.*
+- **Quién es:** estudiante de 17 años y defensor digital. Ágil, estratégico, determinado.
+- **Silueta reconocible:** **pelo plateado alborotado**, **chaqueta clara con capucha y cuello alto oscuro** y una **mochila con un emblema luminoso**.
+- **Contraste:** la chaqueta y el pelo claros sobre el fondo azul noche se distinguen al instante; la ropa oscura (camiseta, pantalón cargo, guantes, zapatillas) lo ancla al suelo.
+- **Detalles luminosos** en violeta y azul eléctrico (camiseta, guantes, suela, mochila): conectan a Kai con su poder digital.
+- **Ojos violeta**, con un brillo de 1 px; la personalidad se transmite con la pose.
+- Las hojas de concepto (vistas, expresiones, siluetas) se pueden guardar en `docs/arte/referencias/`.
 
 ### 4.7 NPC
 Se construyen **reutilizando piezas** de Kai o de un adulto base:
@@ -155,6 +169,26 @@ Se construyen **reutilizando piezas** de Kai o de un adulto base:
 - **Administrativos:** chaleco o blazer, gafete, auriculares de oficina.
 
 Cada NPC importante necesita: `idle`, `talk` (gestos con los brazos) y, si camina, `walk`.
+
+### 4.8 Nullblade y Aegis
+Los nombres y las mejoras de cada uno están en `docs/combate.md`. Aquí solo va cómo se dibujan.
+
+**Nullblade (arma)**
+- Es la pieza **`arma`** (9×22): se dibuja **apuntando hacia arriba**, con la empuñadura en el pivote (4, 17).
+- **Cada nivel o mejora es una imagen distinta** con el mismo tamaño y el mismo pivote. El juego cambia la imagen; Kai no se redibuja.
+- Si una mejora necesita un arma más grande, se agranda el lienzo **manteniendo la empuñadura en el mismo lugar respecto al borde inferior** y se avisa.
+- Colores: metal claro con filo luminoso en violeta y azul eléctrico. A más nivel, más luz y más forma.
+- Los arcos de luz de los cortes los hago por código; si quieres un efecto especial para un nivel, dibújalo como tira de cuadros.
+
+**Aegis (acompañante flotante)**
+- **No va en el esqueleto:** flota junto a Kai y lo sigue por código.
+- Plantilla: `assets/art/characters/kai/aegis.png` (16×16). Los niveles altos pueden crecer hasta 24–32 px.
+- Se anima **por cuadros** (tira horizontal):
+  - flotar: 4–6 cuadros;
+  - activarse o proteger: 3–4 cuadros;
+  - un cuadro de golpe recibido.
+- Cada mejora es una tira nueva. Como con el arma, a más nivel, más piezas, más luz y más presencia.
+- Su núcleo usa el **azul eléctrico** de Kai, para que se lea como aliado.
 
 ---
 
@@ -243,7 +277,9 @@ Los nombres vienen de `docs/combate.md`. Las formas son **propuestas** para acor
 | Ingeniería social | El Suplantador | Un NPC con un detalle que no encaja (glitch sutil) | Figura sin rostro que cambia de máscara |
 
 **Reglas para las amenazas**
-- La forma física debe parecer **casi inofensiva**, con un solo detalle extraño (en magenta).
+- **Cada enemigo tiene su propia paleta,** pensada según lo que representa. El **magenta** es el acento común de la corrupción digital: ojos, grietas, partes infectadas.
+- Evita el violeta azulado y el azul eléctrico como color principal de un enemigo: son el poder de Kai.
+- La forma física debe parecer **casi inofensiva**, con un solo detalle extraño.
 - La forma digital es **la metáfora** del ataque: tiene que explicar qué hace la amenaza sin texto.
 - Las dos formas comparten **un elemento reconocible**, como el sobre del Imitador, para que el jugador las relacione.
 
@@ -299,7 +335,7 @@ Nombres en minúsculas, sin espacios ni tildes, separados con `_`.
 ## 10. Prioridades
 
 ### P1 · Primer nivel jugable (pasillo + laboratorio + phishing)
-1. **Kai por piezas**: redibujar la plantilla (9 piezas).
+1. **Kai por piezas**: redibujar la plantilla (cabeza, mechón, torso, mochila, brazo, antebrazo, muslo, pierna) + **Nullblade** (primer nivel) + **Aegis** (flotar, 4–6 cuadros).
 2. **Tileset del pasillo**: suelo, pared, moldura, zócalo, techo con bandeja (~12 tiles).
 3. **Tileset del laboratorio**: pared tecnológica, suelo (~8 tiles).
 4. **Objetos del pasillo**: casillero (2 variantes), puerta de aula, ventana, corcho, reloj, banderines, lámpara, router.
@@ -318,8 +354,9 @@ Nombres en minúsculas, sin espacios ni tildes, separados con `_`.
 ---
 
 ## 11. Por acordar en equipo
-- [ ] Color final de la sudadera de Kai (ámbar o azul).
-- [ ] Caja de colisión del jugador con Kai de 36 px (propuesta: 12×30).
-- [ ] Formas de las amenazas (sección 7).
+- [x] Diseño de Kai: pelo plateado, chaqueta clara con cuello alto, mochila y poder violeta-azul (Ariel).
+- [ ] Caja de colisión del jugador con Kai de 40 px (propuesta: 12×32).
+- [ ] Cuántos niveles visuales tendrán el Nullblade y el Aegis (según `docs/combate.md`).
+- [ ] Formas y paletas de las amenazas (sección 7).
 - [ ] Fuente de la interfaz.
 - [ ] Si La Nube será una zona propia.

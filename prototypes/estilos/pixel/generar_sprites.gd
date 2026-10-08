@@ -43,11 +43,21 @@ const MAG_D := Color("9c1f6e")
 const LED_G := Color("59ff9c")
 const LED_A := Color("ffb347")
 const LED_R := Color("ff4d4d")
+# Kai (diseño de Ariel): pelo plateado, chaqueta clara, ropa oscura y poder violeta-azul.
+const PLATA_D := Color("8e8aa8")
+const PLATA := Color("c9c6e0")
+const PLATA_L := Color("eeedf7")
+const TELA := Color("23243a")
+const VIOLETA_D := Color("3a2a6e")
+const VIOLETA := Color("7b4fe0")
+const AZUL_E := Color("3b8ff0")
+const AZUL_L := Color("8fd3ff")
 
 const PALETTE: Array[Color] = [
 	O, N1, N2, N3, N4, N5, WOOD_D, WOOD, WOOD_L, TEAL_D, TEAL, TEAL_L, PAPER, PAPER_D,
 	CORK, CORK_D, RED, SKIN, SKIN_D, HAIR, HAIR_L, HOOD, HOOD_D, HOOD_L, PANTS, SHOE,
 	MET_D, MET, MET_L, CYAN, CYAN_M, CYAN_D, MAG, MAG_D, LED_G, LED_A, LED_R,
+	PLATA_D, PLATA, PLATA_L, TELA, VIOLETA_D, VIOLETA, AZUL_E, AZUL_L,
 ]
 
 const KAI_W := 24
