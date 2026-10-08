@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://characters/player/player.gd" id="1_player"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(10, 22)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 1
+floor_snap_length = 4.0
+script = ExtResource("1_player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -11)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Node2D" parent="Visual"]
+
+[node name="Hoodie" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.231, 0.51, 0.965, 1)
+polygon = PackedVector2Array(-6, -14, 6, -14, 6, 0, -6, 0)
+
+[node name="Pants" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.165, 0.2, 0.31, 1)
+polygon = PackedVector2Array(-5, -4, 5, -4, 5, 0, -5, 0)
+
+[node name="Head" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.949, 0.78, 0.62, 1)
+polygon = PackedVector2Array(-5, -22, 5, -22, 5, -13, -5, -13)
+
+[node name="Hair" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.169, 0.169, 0.227, 1)
+polygon = PackedVector2Array(-5, -23, 5, -23, 5, -20, -2, -20, -2, -17, -5, -17)
+
+[node name="Eye" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.067, 0.067, 0.09, 1)
+polygon = PackedVector2Array(2, -19, 4, -19, 4, -16, 2, -16)
+
+[node name="Device" type="Polygon2D" parent="Visual/Body"]
+color = Color(0.133, 0.827, 0.933, 1)
+polygon = PackedVector2Array(3, -10, 7, -10, 7, -7, 3, -7)

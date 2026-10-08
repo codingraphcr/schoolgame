@@ -38,4 +38,5 @@ res://
 
 ```
 godot --headless --path . --script res://tests/test_menu_navigation.gd
+godot --headless --path . --script res://tests/test_player_movement.gd
 ```

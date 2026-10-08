@@ -71,6 +71,32 @@ Las carpetas se crean cuando se necesitan, no antes.
 Las teclas usan **código físico**: funcionan igual en teclados en español o inglés.
 Los controles táctiles se agregarán en la tarea T10.
 
+## Jugador (`characters/player/`)
+
+`CharacterBody2D` con el origen a la altura de los pies. Estados: `IDLE`, `RUN`, `JUMP`, `FALL`
+(señal `state_changed`, útil para animaciones). Señales `jumped` y `landed`.
+
+| Parámetro | Valor inicial | Efecto |
+|---|---|---|
+| `max_speed` | 140 px/s | Velocidad máxima horizontal |
+| `jump_height` | 72 px (4,5 tiles) | Altura máxima del salto: alcanza plataformas de 4 tiles |
+| `time_to_apex` | 0,4 s | Tiempo hasta el punto más alto (define la gravedad) |
+| `fall_gravity_multiplier` | 1,5 | Caída más rápida que la subida |
+| `jump_cut_multiplier` | 0,45 | Salto corto al soltar el botón |
+| `coyote_time` | 0,1 s | Margen para saltar después de salir de un borde |
+| `jump_buffer_time` | 0,12 s | Margen para pulsar salto antes de aterrizar |
+
+Todos se ajustan en el Inspector. El dibujo (`Visual/Body`) se deforma al saltar y aterrizar sin afectar a la colisión.
+
+## Salas (`world/`)
+
+- `world/rooms/room.gd` (`Room`): calcula los límites de la cámara a partir del `TileMapLayer`,
+  coloca al jugador en el `SpawnPoint` y lo devuelve ahí si cae fuera de la sala.
+- `world/camera/` (`GameCamera`): zoom ×2, suavizado, mirada hacia adelante y margen vertical.
+- `world/tilesets/graybox_tileset.tres`: tiles de prueba (bloque sólido y plataforma de un sentido).
+- `world/test/combat_test_room.tscn`: sala de pruebas del prototipo. Se edita normalmente en el editor.
+- `ui/debug/` : panel de depuración (F3) con estado, velocidad y temporizadores del jugador.
+
 ## Pruebas automáticas
 
 Scripts en `tests/` que se ejecutan sin abrir el editor:
@@ -80,3 +106,8 @@ godot --headless --path . --script res://tests/<prueba>.gd
 ```
 
 Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si todo pasó.
+
+| Prueba | Comprueba |
+|---|---|
+| `test_menu_navigation.gd` | Menú → Configuración → Menú → Jugar |
+| `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, plataforma de un sentido, reaparición y límites de cámara |

@@ -5,7 +5,7 @@ extends CanvasLayer
 
 const MAIN_MENU := "res://ui/menus/main_menu/main_menu.tscn"
 const SETTINGS := "res://ui/menus/settings/settings_screen.tscn"
-const LEVEL_PLACEHOLDER := "res://ui/menus/level_placeholder/level_placeholder.tscn"
+const COMBAT_TEST_ROOM := "res://world/test/combat_test_room.tscn"
 
 const FADE_DURATION := 0.25
 const FADE_COLOR := Color(0.039, 0.067, 0.141)

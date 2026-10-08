@@ -49,7 +49,7 @@ Es el vínculo entre el combate y el contenido educativo.
 | # | Tarea | Estado |
 |---|---|---|
 | T0 | Reestructuración, controles, capas, pixel art, documentación | ✅ |
-| T1 | Sala de pruebas + movimiento + cámara | ⏳ |
+| T1 | Sala de pruebas + movimiento + cámara | ✅ |
 | T2 | Dash | ⏳ |
 | T3 | Componentes de daño + integridad + invulnerabilidad + reaparición | ⏳ |
 | T4 | Pulso Digital + sensación de impacto | ⏳ |
