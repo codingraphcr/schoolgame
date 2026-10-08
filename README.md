@@ -34,6 +34,7 @@ res://
 
 - [`docs/arquitectura.md`](docs/arquitectura.md): estructura, autoloads, resolución, capas de colisión, controles y pruebas.
 - [`docs/combate.md`](docs/combate.md): diseño del combate, decisiones del MVP y estado de las tareas.
+- [`docs/arte/guia_de_arte.md`](docs/arte/guia_de_arte.md): dirección de arte (pixel art + huesos pixelados + Visión Digital), paleta, plantilla de Kai por piezas y prioridades.
 
 ## Pruebas automáticas
 
