@@ -66,10 +66,6 @@ var aegis_stage := 0
 ## 0 = bloqueado · 1, 2, 3 = versiones I, II, III
 var domain_stage := 0
 
-## Sesión de desarrollo: todo desbloqueado temporalmente; al terminar se restaura la partida.
-var is_dev_session := false
-var _dev_backup: Dictionary = {}
-
 
 ## Vuelve al estado inicial (nueva partida).
 func reset() -> void:
@@ -260,36 +256,6 @@ func _reset_progress() -> void:
 	nullblade_stage = 0
 	aegis_stage = 0
 	domain_stage = 0
-
-
-# --- Sesión de desarrollo ---
-
-## Desbloquea todo temporalmente (sala de desarrollo). La partida real queda guardada aparte
-## y se restaura con end_dev_session(). No anida: si ya hay una sesión, no hace nada.
-func begin_dev_session() -> void:
-	if is_dev_session:
-		return
-	_dev_backup = to_dict()
-	is_dev_session = true
-	credits = 500
-	dash_level = 2
-	can_double_jump = true
-	can_wall_jump = true
-	vision_unlocked = true
-	nullblade_stage = 1
-	aegis_stage = 1
-	domain_stage = 1
-	progress_changed.emit()
-	credits_changed.emit(credits, 0)
-
-
-func end_dev_session() -> void:
-	if not is_dev_session:
-		return
-	is_dev_session = false
-	from_dict(_dev_backup)
-	_dev_backup = {}
-	credits_changed.emit(credits, 0)
 
 
 # --- Guardado (preparado para más adelante) ---

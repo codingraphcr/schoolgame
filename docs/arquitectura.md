@@ -23,7 +23,7 @@ res://
 ├── ui/            # Menús, HUD, tema visual y componentes de interfaz
 ├── data/          # Contenido: diálogos, misiones, glosario, traducciones
 ├── assets/        # Arte, audio, fuentes y shaders
-├── tests/         # Pruebas automáticas (scripts de línea de comandos)
+├── tests/         # Pruebas automáticas (scripts de línea de comandos) y su sala gris (fixtures/)
 └── docs/          # Documentación (Godot la ignora por el archivo .gdignore)
 ```
 
@@ -140,7 +140,7 @@ para que compilen también en las pruebas de línea de comandos.
 - `world/camera/` (`GameCamera`): zoom ×2, suavizado, mirada hacia adelante, adelanto hacia abajo en caídas rápidas y margen vertical.
 - `world/effects/ring_burst.gd` (`RingBurst`): anillo que se expande; efecto reutilizable (doble salto, impactos).
 - `world/tilesets/graybox_tileset.tres`: tiles de prueba (bloque sólido y plataforma de un sentido).
-- `world/test/combat_test_room.tscn`: sala de pruebas del prototipo (alturas, huecos, plataformas, techo bajo, caída, hueco con dash, chimenea para salto de pared y pilar de doble salto). Se edita normalmente en el editor.
+- `tests/fixtures/combat_test_room.tscn`: sala gris **solo para pruebas automáticas** (alturas, huecos, plataformas, techo bajo, caída, pinchos, hueco con dash, chimenea y pilar de doble salto). No es accesible desde el juego.
 - `ui/debug/` : panel de depuración (F3) con estado, velocidad y temporizadores del jugador.
 
 ## Progreso del jugador (`GameState`)
@@ -165,10 +165,8 @@ Se modifica solo con funciones que limitan los valores y emiten señales: `add_c
 `set_aegis_stage()`, `set_domain_stage()`, `set_max_masks()`, `unlock_double_jump()`, `unlock_wall_jump()`, `unlock_vision()`.
 Señales: `progress_changed` y `credits_changed(credits, delta)`. Nombres para la interfaz: `DASH_NAMES`, `NULLBLADE_NAMES`, `AEGIS_NAMES`, `DOMAIN_NAMES`.
 
-**Sesión de desarrollo:** `begin_dev_session()` guarda la partida real y desbloquea todo (500 créditos, Dash Fantasma,
-doble salto, pared, visión, Nullblade.exe, Aegis Pulse, Dominio Nulo I); `end_dev_session()` restaura la partida.
-La sala de pruebas la abre al entrar y la cierra al salir. Teclas en la sala: **1** dash · **2** Nullblade · **3** Aegis ·
-**4** Dominio · **5** doble salto · **6** pared · **7** +100 créditos · **8** llenar máscaras · **9** máscaras máximas.
+**Sin sala de desarrollo:** las habilidades se prueban en el mapa a medida que se desbloquean. Las pruebas automáticas
+declaran el progreso que necesitan con estas mismas funciones antes de cargar la sala gris (`tests/fixtures/combat_test_room.tscn`).
 
 ## Incidentes y decisiones (`systems/incidents/`)
 
@@ -216,5 +214,5 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, hueco de 6, plataforma de un sentido, reaparición y límites de cámara |
 | `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
 | `test_player_health.gd` | Máscaras, pinchos, suelo seguro, invulnerabilidad, empuje, contacto prolongado, escudo educativo, caída, muerte y niveles del dash |
-| `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas), sesión de desarrollo y restauración |
+| `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

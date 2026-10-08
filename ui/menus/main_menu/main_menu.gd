@@ -23,7 +23,7 @@ func _ready() -> void:
 
 
 func _on_play_pressed() -> void:
-	SceneManager.change_scene(SceneManager.COMBAT_TEST_ROOM)
+	SceneManager.change_scene(SceneManager.FIRST_ROOM)
 
 
 func _on_settings_pressed() -> void:
