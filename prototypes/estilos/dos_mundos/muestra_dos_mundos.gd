@@ -8,6 +8,13 @@ extends "res://prototypes/estilos/pixel/muestra_pixel.gd"
 
 const GLITCH_SHADER := preload("res://prototypes/estilos/mixta/glitch_cercania.gdshader")
 const TRANSITION_TIME := 0.45
+## Segundos que dura la Visión Digital.
+const VISION_DURATION := 10.0
+## Segundos de recarga, contados desde que la Visión Digital se apaga.
+const VISION_COOLDOWN := 16.0
+## Últimos segundos en los que la capa digital parpadea para avisar que se acaba.
+const VISION_WARNING := 2.0
+const METER_WIDTH := 180.0
 const PHYSICAL_AMBIENT := Color(0.62, 0.66, 0.85)
 const DIGITAL_AMBIENT := Color(0.13, 0.16, 0.3)
 const DATA_BRIDGE := Rect2(556, 148, 112, 6)
@@ -33,12 +40,17 @@ var _bridge_shape: CollisionShape2D
 var _fragment_taken := false
 var _toast: Label
 var _toast_time := 0.0
+var _vision_left := 0.0
+var _cooldown_left := 0.0
+var _denied_flash := 0.0
+var _meter_fill: ColorRect
+var _meter_label: Label
 
 
 func _init() -> void:
 	super()
 	sample_title = "MUESTRA D · Dos mundos: colegio en pixel art + red en vectorial"
-	sample_hint = "Q: Visión Digital (encuentra el puente de datos y mira qué es realmente el sobre)"
+	sample_hint = "Q: Visión Digital (dura 10 s y se recarga en 16 s) · busca el puente de datos y mira qué es realmente el sobre"
 	other_sample = "res://prototypes/estilos/huesos_pixelados/muestra_huesos_pixelados.tscn"
 
 
@@ -62,6 +74,7 @@ func _build_art() -> void:
 	_build_bridge()
 	_build_transition_effect()
 	_build_toast()
+	_build_vision_meter()
 
 
 func _spawn_player() -> void:
@@ -72,14 +85,45 @@ func _spawn_player() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"vision"):
 		get_viewport().set_input_as_handled()
-		_set_digital(not _digital)
+		_toggle_vision()
+
+
+## Q enciende la Visión Digital si está lista, o la apaga antes de tiempo si está activa.
+func _toggle_vision() -> void:
+	if _digital:
+		_end_vision()
+	elif _cooldown_left > 0.0:
+		_denied_flash = 0.35
+		_show_toast("La Visión Digital se está recargando (%d s)" % ceili(_cooldown_left))
+	else:
+		_vision_left = VISION_DURATION
+		_set_digital(true)
+
+
+func _end_vision() -> void:
+	_vision_left = 0.0
+	_cooldown_left = VISION_COOLDOWN
+	_set_digital(false)
 
 
 func _process(delta: float) -> void:
 	super(delta)
+	if _digital:
+		_vision_left -= delta
+		if _vision_left <= 0.0:
+			_end_vision()
+	elif _cooldown_left > 0.0:
+		_cooldown_left = maxf(_cooldown_left - delta, 0.0)
+	_denied_flash = maxf(_denied_flash - delta, 0.0)
+	_update_vision_meter()
+
 	if _ambient:
 		_ambient.color = PHYSICAL_AMBIENT.lerp(DIGITAL_AMBIENT, _blend)
-	_digital_root.modulate.a = _blend
+	# Aviso: en los últimos segundos la capa digital parpadea.
+	var warning := 1.0
+	if _digital and _vision_left < VISION_WARNING:
+		warning = 0.55 + 0.45 * absf(cos(_vision_left * 9.0))
+	_digital_root.modulate.a = _blend * warning
 	_player_light.energy = _blend * 1.3
 	if _digital and not _fragment_taken and player.global_position.distance_to(FRAGMENT_POSITION + Vector2(0, 14)) < 18.0:
 		_fragment_taken = true
@@ -141,6 +185,54 @@ func _build_toast() -> void:
 func _show_toast(text: String) -> void:
 	_toast.text = text
 	_toast_time = 3.0
+
+
+## Indicador de la Visión Digital (arriba a la derecha): carga restante o recarga.
+func _build_vision_meter() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 6
+	add_child(layer)
+	var box := Control.new()
+	box.position = Vector2(1280 - METER_WIDTH - 24, 16)
+	layer.add_child(box)
+	_meter_label = Label.new()
+	var settings := LabelSettings.new()
+	settings.font_size = 13
+	settings.outline_size = 5
+	settings.outline_color = Color(0.02, 0.03, 0.08)
+	_meter_label.label_settings = settings
+	box.add_child(_meter_label)
+	var back := ColorRect.new()
+	back.color = Color(0.03, 0.05, 0.12, 0.9)
+	back.position = Vector2(0, 22)
+	back.size = Vector2(METER_WIDTH, 8)
+	box.add_child(back)
+	_meter_fill = ColorRect.new()
+	_meter_fill.position = Vector2(1, 23)
+	_meter_fill.size = Vector2(METER_WIDTH - 2, 6)
+	box.add_child(_meter_fill)
+
+
+func _update_vision_meter() -> void:
+	var ratio: float
+	var color: Color
+	if _digital:
+		ratio = clampf(_vision_left / VISION_DURATION, 0.0, 1.0)
+		color = CYAN
+		_meter_label.text = "VISIÓN DIGITAL · ACTIVA %d s" % ceili(_vision_left)
+	elif _cooldown_left > 0.0:
+		ratio = 1.0 - _cooldown_left / VISION_COOLDOWN
+		color = Color(0.35, 0.42, 0.6)
+		_meter_label.text = "VISIÓN DIGITAL · RECARGANDO %d s" % ceili(_cooldown_left)
+	else:
+		ratio = 1.0
+		color = CYAN
+		_meter_label.text = "VISIÓN DIGITAL · LISTA [Q]"
+	if _denied_flash > 0.0:
+		color = MAG
+	_meter_fill.color = color
+	_meter_fill.size.x = (METER_WIDTH - 2) * ratio
+	_meter_label.label_settings.font_color = color.lerp(Color.WHITE, 0.3)
 
 
 # =====================================================================

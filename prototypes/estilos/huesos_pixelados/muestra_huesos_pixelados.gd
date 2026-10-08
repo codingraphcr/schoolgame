@@ -1,8 +1,9 @@
-extends "res://prototypes/estilos/pixel/muestra_pixel.gd"
-## Muestra E: huesos pixelados.
+extends "res://prototypes/estilos/dos_mundos/muestra_dos_mundos.gd"
+## Muestra E: huesos pixelados + Visión Digital (estilo elegido para el juego).
 ## Kai y el Anzuelo se animan por huesos, igual que en la muestra B (animación fluida,
 ## pocas piezas dibujadas), pero se dibujan a la resolución del pixel art con PixelatedRig.
-## El escenario es el mismo pixel art de la muestra A.
+## El escenario es pixel art (muestra A) y la Visión Digital revela la red en vectorial
+## (muestra D): dura 10 s y se recarga en 16 s.
 
 const VectorKai := preload("res://prototypes/estilos/vectorial/vector_kai.gd")
 const VectorLure := preload("res://prototypes/estilos/vectorial/vector_lure.gd")
@@ -10,8 +11,8 @@ const VectorLure := preload("res://prototypes/estilos/vectorial/vector_lure.gd")
 
 func _init() -> void:
 	super()
-	sample_title = "MUESTRA E · Huesos pixelados: animación por huesos que se ve como pixel art"
-	sample_hint = "Kai y el Anzuelo están armados por piezas y huesos, pero se dibujan a resolución de pixel art"
+	sample_title = "MUESTRA E · Huesos pixelados + Visión Digital (estilo elegido)"
+	sample_hint = "Q: Visión Digital (dura 10 s, se recarga en 16 s) · Kai y el Anzuelo están animados con huesos y dibujados como pixel art"
 	other_sample = "res://prototypes/estilos/personajes_vectoriales/muestra_personajes_vectoriales.tscn"
 
 
