@@ -29,7 +29,7 @@ Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `
 | Tras un golpe | Congelamiento breve (0,08 s), sacudida de cámara, empuje y **1 s de invulnerabilidad** con parpadeo |
 | Peligros (pinchos, vacío) | Quitan 1 máscara y devuelven al **último suelo seguro** (el de ~0,3 s antes del golpe) |
 | Curación | Mantener **L** gasta energía y recupera 1 máscara (tarea C5) |
-| Muerte | Reaparece en el punto de control con las máscaras llenas y **pierde algunos créditos** (~10 %, se conecta en C2) |
+| Muerte | Reaparece en el punto de control con las máscaras llenas y **pierde el 10 % de los créditos** (redondeado hacia abajo) |
 | Monedas | **Créditos** del jugador (mejoras: dash, máscaras…) separados del **presupuesto** del colegio (decisiones de seguridad). Cada mejora tiene su propio precio |
 
 ## Decisiones de movimiento
@@ -78,7 +78,7 @@ Es el vínculo entre el combate y el contenido educativo.
 | T1 | Sala de pruebas + movimiento + cámara | ✅ |
 | T2 | Movimiento avanzado: dash + doble salto + deslizar/salto de pared | ✅ |
 | C1 | Daño compartido, 4 máscaras, invulnerabilidad, peligros, muerte, dash por niveles, HUD | ✅ |
-| C2 | `GameState`: progreso de combate y créditos (pérdida al morir) + sala de desarrollo | ⏳ |
+| C2 | `GameState`: progreso de combate y créditos (pérdida al morir) + sala de desarrollo | ✅ |
 | C3 | Nullblade.exe (datos de las 4 etapas) + sensación de impacto | ⏳ |
 | C4 | `EnemyBase` + `EnemyData` + `CombatClock` + enemigo patrullero | ⏳ |
 | C5 | Energía (curación con L) + carga del Dominio | ⏳ |

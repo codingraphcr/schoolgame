@@ -1,5 +1,5 @@
 extends CanvasLayer
-## HUD de combate. Por ahora muestra las máscaras de integridad del jugador.
+## HUD de combate: máscaras de integridad y créditos del jugador.
 ## La energía y la carga del Dominio Nulo se agregarán en la tarea C5.
 
 @export var player: Player

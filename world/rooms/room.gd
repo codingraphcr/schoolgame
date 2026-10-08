@@ -1,8 +1,9 @@
 class_name Room
 extends Node2D
 ## Sala del mundo. Calcula los límites de la cámara a partir del TileMapLayer y coloca al jugador
-## en el punto de aparición. Si el jugador cae fuera, cuenta como peligro (1 máscara y vuelta al
-## último suelo seguro). Si muere, reaparece en el punto de control con las máscaras llenas.
+## en el punto de aparición, aplicándole el progreso de la partida (GameState). Si el jugador cae
+## fuera, cuenta como peligro (1 máscara y vuelta al último suelo seguro). Si muere, pierde una
+## parte de los créditos y reaparece en el punto de control con las máscaras llenas.
 ## El nodo raíz de cada sala usa filtro Nearest para que el pixel art se vea nítido.
 
 @export var tile_layer: TileMapLayer
@@ -21,6 +22,10 @@ func _ready() -> void:
 	bounds = _compute_bounds()
 	if camera:
 		camera.set_limits(bounds)
+	var game_state := _game_state()
+	if player and game_state:
+		player.apply_progress(game_state, true)
+		game_state.progress_changed.connect(_on_progress_changed)
 	if player:
 		player.damage.died.connect(_on_player_died)
 		player.damage.hurt.connect(_on_player_hurt)
@@ -41,7 +46,15 @@ func respawn_player() -> void:
 
 
 func _on_player_died() -> void:
+	var game_state := _game_state()
+	if game_state:
+		game_state.apply_death_penalty()
 	await _scene_manager().transition(_respawn_at_checkpoint)
+
+
+func _on_progress_changed() -> void:
+	if player:
+		player.apply_progress(_game_state())
 
 
 func _respawn_at_checkpoint() -> void:
@@ -72,7 +85,11 @@ func _compute_bounds() -> Rect2:
 	return Rect2(top_left, Vector2(used.size) * tile_size)
 
 
-## El autoload se obtiene por ruta (no por nombre global) para que este script también compile
+## Los autoloads se obtienen por ruta (no por nombre global) para que este script también compile
 ## en las pruebas de línea de comandos, donde los autoloads se registran después.
 func _scene_manager() -> Node:
 	return get_node("/root/SceneManager")
+
+
+func _game_state() -> Node:
+	return get_node_or_null("/root/GameState")

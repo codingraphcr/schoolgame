@@ -1,5 +1,6 @@
 extends Node
-## Estado de la partida: recursos de la institución, incidentes, pistas y decisiones.
+## Estado de la partida: recursos de la institución, incidentes, pistas y decisiones,
+## y el progreso del jugador (créditos, habilidades y evoluciones de combate).
 ## Está registrado como autoload "GameState" en project.godot.
 ## Todo lo que habría que guardar vive aquí: to_dict() / from_dict() preparan el guardado.
 
@@ -7,6 +8,10 @@ signal stats_changed
 signal incident_state_changed(incident: Incident, state: Incident.State)
 signal clue_found(incident: Incident, clue: Clue)
 signal control_applied(incident: Incident, control: SecurityControl)
+## Cambió el progreso del jugador (créditos, habilidades o evoluciones).
+signal progress_changed
+## Cambiaron los créditos; delta es la diferencia (negativa al gastar o perder).
+signal credits_changed(credits: int, delta: int)
 
 const STAT_MIN := 0
 const STAT_MAX := 100
@@ -14,6 +19,20 @@ const STAT_MAX := 100
 const START_BUDGET := 10000
 const START_SECURITY := 35
 const START_TRUST := 60
+
+const START_MASKS := 4
+const MAX_DASH_LEVEL := 3
+const MAX_NULLBLADE_STAGE := 4
+const MAX_AEGIS_STAGE := 3
+const MAX_DOMAIN_STAGE := 3
+## Fracción de los créditos que se pierde al morir.
+const DEATH_CREDIT_PENALTY := 0.1
+
+## Nombres para la interfaz. El índice es la etapa (0 = no obtenido).
+const NULLBLADE_NAMES: Array[String] = ["—", "Nullblade.exe", "Nullblade.zero", "Nullblade.void", "Nullblade.max"]
+const AEGIS_NAMES: Array[String] = ["—", "Aegis Pulse", "Aegis Bridge", "Aegis Sync"]
+const DOMAIN_NAMES: Array[String] = ["—", "Dominio Nulo I", "Dominio Nulo II", "Dominio Nulo III"]
+const DASH_NAMES: Array[String] = ["—", "Dash", "Dash Fantasma", "Esquiva Perfecta"]
 
 ## Dinero disponible para implementar medidas de seguridad.
 var budget := START_BUDGET
@@ -28,6 +47,29 @@ var _flags: Dictionary[StringName, bool] = {}
 ## Historial de decisiones: [{ "incident": "...", "control": "..." }]
 var _decision_log: Array[Dictionary] = []
 
+# --- Progreso del jugador ---
+# Separado del presupuesto del colegio: los créditos son del jugador y pagan sus mejoras.
+# Solo se modifica con las funciones de abajo, que limitan los valores y avisan del cambio.
+
+## Créditos del jugador (mejoras de habilidades). Se pierde una parte al morir.
+var credits := 0
+var max_masks := START_MASKS
+## 0 = sin dash · 1 Dash · 2 Dash Fantasma · 3 Esquiva Perfecta.
+var dash_level := 0
+var can_double_jump := false
+var can_wall_jump := false
+var vision_unlocked := false
+## 0 = no obtenida · 1 .exe · 2 .zero · 3 .void · 4 .max
+var nullblade_stage := 0
+## 0 = no obtenido · 1 Pulse · 2 Bridge · 3 Sync
+var aegis_stage := 0
+## 0 = bloqueado · 1, 2, 3 = versiones I, II, III
+var domain_stage := 0
+
+## Sesión de desarrollo: todo desbloqueado temporalmente; al terminar se restaura la partida.
+var is_dev_session := false
+var _dev_backup: Dictionary = {}
+
 
 ## Vuelve al estado inicial (nueva partida).
 func reset() -> void:
@@ -38,7 +80,9 @@ func reset() -> void:
 	_found_clues.clear()
 	_flags.clear()
 	_decision_log.clear()
+	_reset_progress()
 	stats_changed.emit()
+	progress_changed.emit()
 
 
 func can_afford(cost: int) -> bool:
@@ -135,6 +179,119 @@ func _set_incident_state(incident: Incident, state: Incident.State) -> void:
 	incident_state_changed.emit(incident, state)
 
 
+# --- Progreso del jugador ---
+
+func add_credits(amount: int) -> void:
+	if amount <= 0:
+		return
+	credits += amount
+	credits_changed.emit(credits, amount)
+	progress_changed.emit()
+
+
+## Paga una mejora. Devuelve false (sin cobrar nada) si no alcanza.
+func spend_credits(amount: int) -> bool:
+	if amount < 0 or amount > credits:
+		return false
+	if amount > 0:
+		credits -= amount
+		credits_changed.emit(credits, -amount)
+		progress_changed.emit()
+	return true
+
+
+## Al morir se pierde una parte de los créditos. Devuelve cuántos se perdieron.
+func apply_death_penalty() -> int:
+	var lost := floori(credits * DEATH_CREDIT_PENALTY)
+	if lost > 0:
+		credits -= lost
+		credits_changed.emit(credits, -lost)
+		progress_changed.emit()
+	return lost
+
+
+func set_dash_level(level: int) -> void:
+	dash_level = clampi(level, 0, MAX_DASH_LEVEL)
+	progress_changed.emit()
+
+
+func set_nullblade_stage(stage: int) -> void:
+	nullblade_stage = clampi(stage, 0, MAX_NULLBLADE_STAGE)
+	progress_changed.emit()
+
+
+func set_aegis_stage(stage: int) -> void:
+	aegis_stage = clampi(stage, 0, MAX_AEGIS_STAGE)
+	progress_changed.emit()
+
+
+func set_domain_stage(stage: int) -> void:
+	domain_stage = clampi(stage, 0, MAX_DOMAIN_STAGE)
+	progress_changed.emit()
+
+
+func set_max_masks(masks: int) -> void:
+	max_masks = maxi(masks, 1)
+	progress_changed.emit()
+
+
+func unlock_double_jump(unlocked := true) -> void:
+	can_double_jump = unlocked
+	progress_changed.emit()
+
+
+func unlock_wall_jump(unlocked := true) -> void:
+	can_wall_jump = unlocked
+	progress_changed.emit()
+
+
+func unlock_vision(unlocked := true) -> void:
+	vision_unlocked = unlocked
+	progress_changed.emit()
+
+
+func _reset_progress() -> void:
+	credits = 0
+	max_masks = START_MASKS
+	dash_level = 0
+	can_double_jump = false
+	can_wall_jump = false
+	vision_unlocked = false
+	nullblade_stage = 0
+	aegis_stage = 0
+	domain_stage = 0
+
+
+# --- Sesión de desarrollo ---
+
+## Desbloquea todo temporalmente (sala de desarrollo). La partida real queda guardada aparte
+## y se restaura con end_dev_session(). No anida: si ya hay una sesión, no hace nada.
+func begin_dev_session() -> void:
+	if is_dev_session:
+		return
+	_dev_backup = to_dict()
+	is_dev_session = true
+	credits = 500
+	dash_level = 2
+	can_double_jump = true
+	can_wall_jump = true
+	vision_unlocked = true
+	nullblade_stage = 1
+	aegis_stage = 1
+	domain_stage = 1
+	progress_changed.emit()
+	credits_changed.emit(credits, 0)
+
+
+func end_dev_session() -> void:
+	if not is_dev_session:
+		return
+	is_dev_session = false
+	from_dict(_dev_backup)
+	_dev_backup = {}
+	credits_changed.emit(credits, 0)
+
+
 # --- Guardado (preparado para más adelante) ---
 
 func to_dict() -> Dictionary:
@@ -146,6 +303,17 @@ func to_dict() -> Dictionary:
 		"found_clues": _key_list(_found_clues),
 		"flags": _key_list(_flags),
 		"decision_log": _decision_log.duplicate(true),
+		"player": {
+			"credits": credits,
+			"max_masks": max_masks,
+			"dash_level": dash_level,
+			"can_double_jump": can_double_jump,
+			"can_wall_jump": can_wall_jump,
+			"vision_unlocked": vision_unlocked,
+			"nullblade_stage": nullblade_stage,
+			"aegis_stage": aegis_stage,
+			"domain_stage": domain_stage,
+		},
 	}
 
 
@@ -163,7 +331,20 @@ func from_dict(data: Dictionary) -> void:
 		_flags[StringName(flag)] = true
 	for entry: Dictionary in data.get("decision_log", []):
 		_decision_log.append(entry)
+	# Partidas sin progreso del jugador (versiones anteriores) quedan con los valores iniciales.
+	# int() porque al pasar por JSON los números vuelven como decimales.
+	var player: Dictionary = data.get("player", {})
+	credits = int(player.get("credits", 0))
+	max_masks = maxi(int(player.get("max_masks", START_MASKS)), 1)
+	dash_level = clampi(int(player.get("dash_level", 0)), 0, MAX_DASH_LEVEL)
+	can_double_jump = bool(player.get("can_double_jump", false))
+	can_wall_jump = bool(player.get("can_wall_jump", false))
+	vision_unlocked = bool(player.get("vision_unlocked", false))
+	nullblade_stage = clampi(int(player.get("nullblade_stage", 0)), 0, MAX_NULLBLADE_STAGE)
+	aegis_stage = clampi(int(player.get("aegis_stage", 0)), 0, MAX_AEGIS_STAGE)
+	domain_stage = clampi(int(player.get("domain_stage", 0)), 0, MAX_DOMAIN_STAGE)
 	stats_changed.emit()
+	progress_changed.emit()
 
 
 func _keys_to_strings(source: Dictionary) -> Dictionary:

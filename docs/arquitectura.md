@@ -34,7 +34,7 @@ Las carpetas se crean cuando se necesitan, no antes.
 | Nombre | Archivo | Responsabilidad |
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
-| `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. Preparado para guardar partida (`to_dict` / `from_dict`). |
+| `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. **Progreso del jugador** (créditos, habilidades, evoluciones). Preparado para guardar partida (`to_dict` / `from_dict`). |
 
 ## Resolución y pixel art
 
@@ -128,7 +128,7 @@ suelo seguro ante peligros y emite `died` al perder todas las máscaras. La sala
 
 **Peligros:** `world/hazards/spikes.gd` (`Spikes`): pinchos con ancho configurable, visibles en el editor.
 
-**HUD:** `ui/hud/combat_hud.tscn` muestra las máscaras (`MaskIcon`).
+**HUD:** `ui/hud/combat_hud.tscn` muestra las máscaras (`MaskIcon`) y los créditos (`CreditsDisplay`, con +X / −X al cambiar).
 
 **Autoloads en scripts compartidos:** `Room` y `PlayerDamage` obtienen `SceneManager` por ruta (`/root/SceneManager`)
 para que compilen también en las pruebas de línea de comandos.
@@ -142,6 +142,33 @@ para que compilen también en las pruebas de línea de comandos.
 - `world/tilesets/graybox_tileset.tres`: tiles de prueba (bloque sólido y plataforma de un sentido).
 - `world/test/combat_test_room.tscn`: sala de pruebas del prototipo (alturas, huecos, plataformas, techo bajo, caída, hueco con dash, chimenea para salto de pared y pilar de doble salto). Se edita normalmente en el editor.
 - `ui/debug/` : panel de depuración (F3) con estado, velocidad y temporizadores del jugador.
+
+## Progreso del jugador (`GameState`)
+
+Todo lo que el jugador ha adquirido vive en `GameState` y se guarda con `to_dict()` (clave `"player"`).
+El jugador **solo puede usar lo adquirido**: cada `Room` aplica el progreso al jugador al cargar
+(`Player.apply_progress()`) y de nuevo cuando cambia (señal `progress_changed`).
+
+| Campo | Inicial | Rango / significado |
+|---|---|---|
+| `credits` | 0 | Créditos del jugador para mejoras (separados del `budget` del colegio). Al morir se pierde el 10 % |
+| `max_masks` | 4 | Máscaras máximas |
+| `dash_level` | 0 | 0–3 (sin dash, Dash, Dash Fantasma, Esquiva Perfecta) |
+| `can_double_jump` / `can_wall_jump` | no | Se desbloquean con la historia |
+| `vision_unlocked` | no | Visión Digital |
+| `nullblade_stage` | 0 | 0 no obtenida · 1 .exe · 2 .zero · 3 .void · 4 .max |
+| `aegis_stage` | 0 | 0 no obtenido · 1 Pulse · 2 Bridge · 3 Sync |
+| `domain_stage` | 0 | 0 bloqueado · 1–3 Dominio Nulo I–III |
+
+Se modifica solo con funciones que limitan los valores y emiten señales: `add_credits()`, `spend_credits()`
+(devuelve `false` si no alcanza), `apply_death_penalty()`, `set_dash_level()`, `set_nullblade_stage()`,
+`set_aegis_stage()`, `set_domain_stage()`, `set_max_masks()`, `unlock_double_jump()`, `unlock_wall_jump()`, `unlock_vision()`.
+Señales: `progress_changed` y `credits_changed(credits, delta)`. Nombres para la interfaz: `DASH_NAMES`, `NULLBLADE_NAMES`, `AEGIS_NAMES`, `DOMAIN_NAMES`.
+
+**Sesión de desarrollo:** `begin_dev_session()` guarda la partida real y desbloquea todo (500 créditos, Dash Fantasma,
+doble salto, pared, visión, Nullblade.exe, Aegis Pulse, Dominio Nulo I); `end_dev_session()` restaura la partida.
+La sala de pruebas la abre al entrar y la cierra al salir. Teclas en la sala: **1** dash · **2** Nullblade · **3** Aegis ·
+**4** Dominio · **5** doble salto · **6** pared · **7** +100 créditos · **8** llenar máscaras · **9** máscaras máximas.
 
 ## Incidentes y decisiones (`systems/incidents/`)
 
@@ -189,4 +216,5 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, hueco de 6, plataforma de un sentido, reaparición y límites de cámara |
 | `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
 | `test_player_health.gd` | Máscaras, pinchos, suelo seguro, invulnerabilidad, empuje, contacto prolongado, escudo educativo, caída, muerte y niveles del dash |
+| `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas), sesión de desarrollo y restauración |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |
