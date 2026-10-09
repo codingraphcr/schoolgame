@@ -1,0 +1,47 @@
+{
+	"animations": {
+		"ataque_1": {
+			"fps": 13.9,
+			"frames": 6,
+			"loop": false
+		},
+		"caer": {
+			"fps": 4.3,
+			"frames": 3,
+			"loop": true
+		},
+		"correr": {
+			"fps": 18.7,
+			"frames": 8,
+			"loop": true
+		},
+		"dash": {
+			"fps": 13.3,
+			"frames": 3,
+			"loop": false
+		},
+		"pared": {
+			"fps": 4.4,
+			"frames": 4,
+			"loop": true
+		},
+		"quieto": {
+			"fps": 3.8,
+			"frames": 6,
+			"loop": true
+		},
+		"saltar": {
+			"fps": 6.7,
+			"frames": 3,
+			"loop": false
+		}
+	},
+	"feet": [
+		36,
+		66
+	],
+	"frame_size": [
+		72,
+		72
+	]
+}

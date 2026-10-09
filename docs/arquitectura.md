@@ -53,9 +53,11 @@ Detalle completo en [`docs/arte/guia_de_arte.md`](arte/guia_de_arte.md).
 - `assets/shaders/glitch_cercania.gdshader`: efecto de glitch (transición de la Visión Digital).
 - `prototypes/estilos/`: las 6 muestras originales (A–F) se conservan como referencia y usan los recursos de arriba.
 
-**Kai, el personaje:** diseño de Ariel (pelo blanco-lavanda medio largo, chaqueta blanca abierta, ropa oscura; ~46 px)
-con huesos pixelados. `player.tscn` usa `KaiVisual` en `Visual/Body/Kai` (acordado con el director; ver
-"Apariencia de Kai" más abajo). Las siluetas del dash son instantáneas congeladas del cuadro actual
+**Kai, el personaje:** diseño de Ariel (hoja de concepto en `docs/arte/referencias/kai_hoja_concepto.webp`).
+`player.tscn` usa `KaiVisual` en `Visual/Body/Kai` con la apariencia **CONCEPTO**: los sprites de esa hoja,
+de 96 px de alto en cuadros de 96×128 (más anchos si hay efectos), mostrados a **mitad de escala** (48 px en el
+mundo, como una puerta). Con la cámara ×2, cada píxel del dibujo cae en un píxel de pantalla. La cámara, la
+colisión (10×22) y las mecánicas no cambian. Ver "Apariencia de Kai" más abajo. Las siluetas del dash son instantáneas congeladas del cuadro actual
 (`PixelatedRig.snapshot()`), y el shader `pixel_crisp` respeta el `modulate` del nodo (parpadeo al recibir daño,
 tinte de las siluetas).
 
@@ -143,6 +145,17 @@ elige la animación según `Player.state` y mueve con resortes el pelo, los mech
 (`KaiVisual.SPRINGS`). Toma como `player` al dueño de la escena si no se le asigna uno. `attack()` reproduce el ataque
 con el Nullblade (pendiente de conectar al ataque real). Las estelas del dash usan `PixelatedRig.snapshot()`.
 Las muestras de estilo usan este Kai si `_build_player_visual()` devuelve null (D y E).
+**Apariencias (`KaiVisual.apariencia`):**
+
+| Apariencia | Qué usa | Cómo se genera |
+|---|---|---|
+| `CONCEPTO` (por defecto) | `AnimatedSprite2D` con `assets/art/characters/kai/hd/` (`kai_hd.json`: archivo, tamaño de cuadro, pies, cuadros, fps y bucle por animación; escala 0,5) | `tools/art/extraer_kai_concepto.gd` recorta las poses de la hoja de concepto, quita el fondo, usa la misma escala para todas y alinea los pies y la cabeza |
+| `HUESOS` | `kai_esqueleto.tscn` con `PixelatedRig` y resortes | `generar_esqueleto_kai.gd` |
+| `CUADROS` | Tiras de `assets/art/characters/kai/cuadros/` (72×72) | `exportar_cuadros_kai.gd` (necesita pantalla) desde el esqueleto, para retocar a mano |
+
+Con cuadros, `attack()` encadena `ataque_1` → `ataque_2` si se ataca dos veces seguidas, `PlayerDamage.hurt` muestra
+`dano` y `died` muestra `muerte`; al correr hay un rebote suave. `current_animation()` devuelve la animación visible
+(la usan las pruebas). La hoja tiene un cuadro por pose: para más fluidez, cada animación necesita más cuadros.
 Las medidas de las piezas están en `kai_piezas.gd`; `generar_esqueleto_kai.gd` regenera la escena (borra retoques manuales).
 
 ## Combate (`components/combat/`)

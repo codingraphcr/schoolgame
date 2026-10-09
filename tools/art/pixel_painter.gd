@@ -90,6 +90,22 @@ func line(x0: int, y0: int, x1: int, y1: int, color: Color, thickness := 1) -> v
 			y0 += sy
 
 
+## Rellena un polígono (sin antialiasing). Con `border` también dibuja su borde de 1 px.
+func polygon(points: PackedVector2Array, color: Color, border := Color(0, 0, 0, 0)) -> void:
+	var box := Rect2(points[0], Vector2.ZERO)
+	for p in points:
+		box = box.expand(p)
+	for y in range(floori(box.position.y), ceili(box.end.y) + 1):
+		for x in range(floori(box.position.x), ceili(box.end.x) + 1):
+			if Geometry2D.is_point_in_polygon(Vector2(x + 0.5, y + 0.5), points):
+				px(x, y, color)
+	if border.a > 0.0:
+		for i in points.size():
+			var a := points[i]
+			var b := points[(i + 1) % points.size()]
+			line(roundi(a.x), roundi(a.y), roundi(b.x), roundi(b.y), border)
+
+
 ## Contorno exterior: pinta los píxeles vacíos que tocan un píxel pintado.
 func outline(color: Color) -> void:
 	var source := image.duplicate() as Image

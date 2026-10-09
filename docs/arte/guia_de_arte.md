@@ -84,7 +84,13 @@ Archivos para importar en tu programa de dibujo:
 
 Ventaja: **cada personaje se dibuja una sola vez**. Agregar una animación nueva no requiere dibujar más.
 
-**Kai ya tiene su esqueleto armado** (pruébalo en la muestra E, con J para atacar):
+> **Kai en el juego usa los sprites de la hoja de concepto de Ariel** (`docs/arte/referencias/kai_hoja_concepto.webp`),
+> extraídos con `tools/art/extraer_kai_concepto.gd`: 96 px de alto en cuadros de 96×128, mostrados a mitad de escala
+> (48 px en el mundo). Para sumar cuadros nuevos (más fluidez), agrégalos a la hoja o dibújalos con el mismo estilo
+> y agrega su zona en `POSES` y su orden en `ANIMATIONS` dentro de la herramienta. El esqueleto (abajo) queda como
+> alternativa (`KaiVisual.apariencia = HUESOS`).
+
+**Kai también tiene un esqueleto armado** (pruébalo en la muestra E, con J para atacar):
 
 | Archivo | Para qué |
 |---|---|
@@ -167,6 +173,37 @@ También se genera `assets/art/characters/kai/aegis.png` (16×16): el Aegis **no
 
 El pelo de atrás, los mechones, el faldón y la mochila se mueven solos con física de resorte (se balancean,
 se pasan un poco y vuelven): no hace falta animarlos a mano. Es lo que da la sensación de fluidez.
+
+### 4.5.1 Cuadros para retocar a mano
+Si quieres que Kai se vea exactamente como un sprite dibujado cuadro por cuadro, el esqueleto genera
+cada animación como una tira de cuadros y tú los retocas encima:
+
+![Cuadros de Kai](img/kai_cuadros_guia.png)
+
+| Archivo (`assets/art/characters/kai/cuadros/`) | Cuadros de 72×72 |
+|---|---|
+| `kai_quieto.png` | 6 |
+| `kai_correr.png` | 8 |
+| `kai_saltar.png` | 3 |
+| `kai_caer.png` | 3 |
+| `kai_dash.png` | 3 |
+| `kai_pared.png` | 4 |
+| `kai_ataque_1.png` | 6 |
+
+**En Pixelorama:**
+1. **Archivo → Abrir** una tira (por ejemplo `kai_correr.png`). En la ventana de importación elige
+   **"Hoja de sprites (nuevo proyecto)"** (*Spritesheet*) con **cuadros horizontales = la cantidad de la tabla**
+   y verticales = 1. Así cada cuadro queda en la línea de tiempo y puedes ver la animación con ▶.
+2. Retoca cada cuadro: pelo, pliegues de la ropa, expresión… **sin mover los pies** del lugar donde están
+   (Kai pisa el suelo en esa fila).
+3. **Archivo → Exportar → Hoja de sprites**, en **1 fila**, con el mismo nombre y carpeta.
+
+**En el juego:** en `characters/player/player.tscn`, selecciona el nodo `Kai` y en **Apariencia** elige **CUADROS**
+en el Inspector. Con cuadros, el movimiento del pelo y la ropa es el que dibujes (no hay resortes).
+También puedes agregar o quitar cuadros: cambia `frames` y `fps` en `kai_cuadros.json`.
+
+> `characters/player/kai/exportar_cuadros_kai.gd` vuelve a generar las tiras desde el esqueleto
+> y **sobrescribe tus retoques**: haz una copia antes si lo vuelves a usar.
 
 ### 4.6 Diseño de Kai
 *Diseño de Ariel.*

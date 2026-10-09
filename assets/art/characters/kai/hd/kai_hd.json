@@ -1,0 +1,145 @@
+{
+	"animations": {
+		"ataque_1": {
+			"feet": [
+				76,
+				119
+			],
+			"file": "kai_hd_ataque_1.png",
+			"fps": 1.0,
+			"frame_size": [
+				152,
+				128
+			],
+			"frames": 1,
+			"loop": false
+		},
+		"ataque_2": {
+			"feet": [
+				68,
+				119
+			],
+			"file": "kai_hd_ataque_2.png",
+			"fps": 1.0,
+			"frame_size": [
+				136,
+				128
+			],
+			"frames": 1,
+			"loop": false
+		},
+		"caer": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_caer.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"correr": {
+			"feet": [
+				60,
+				119
+			],
+			"file": "kai_hd_correr.png",
+			"fps": 9.0,
+			"frame_size": [
+				120,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"dano": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_dano.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": false
+		},
+		"dash": {
+			"feet": [
+				72,
+				119
+			],
+			"file": "kai_hd_dash.png",
+			"fps": 1.0,
+			"frame_size": [
+				144,
+				128
+			],
+			"frames": 1,
+			"loop": false
+		},
+		"muerte": {
+			"feet": [
+				60,
+				119
+			],
+			"file": "kai_hd_muerte.png",
+			"fps": 1.0,
+			"frame_size": [
+				120,
+				128
+			],
+			"frames": 1,
+			"loop": false
+		},
+		"pared": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_pared.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"saltar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_saltar.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": false
+		}
+	},
+	"scale": 0.5
+}
