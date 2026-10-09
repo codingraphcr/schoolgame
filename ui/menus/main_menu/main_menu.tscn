@@ -1,8 +1,16 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/menus/main_menu/main_menu.gd" id="1_menu"]
 [ext_resource type="PackedScene" path="res://ui/components/tech_background/tech_background.tscn" id="2_bg"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/logo_shield.svg" id="3_logo"]
+
+[sub_resource type="FontVariation" id="FontVariation_title"]
+variation_embolden = 0.9
+spacing_glyph = 10
+
+[sub_resource type="FontVariation" id="FontVariation_subtitle"]
+variation_embolden = 0.5
+spacing_glyph = 9
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -45,13 +53,20 @@ stretch_mode = 5
 [node name="Title" type="Label" parent="CenterContainer/Content"]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
-text = "Escudo Escolar"
+theme_override_colors/font_color = Color(0.89, 0.85, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.56, 0.36, 1, 0.55)
+theme_override_fonts/font = SubResource("FontVariation_title")
+theme_override_font_sizes/font_size = 84
+text = "NULLVEIL"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="CenterContainer/Content"]
 layout_mode = 2
 theme_type_variation = &"SubtitleLabel"
-text = "Defensa Cibernética"
+theme_override_colors/font_color = Color(0.74, 0.68, 0.96, 1)
+theme_override_fonts/font = SubResource("FontVariation_subtitle")
+theme_override_font_sizes/font_size = 24
+text = "BEYOND THE FIREWALL"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="CenterContainer/Content"]

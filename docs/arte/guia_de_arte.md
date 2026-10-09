@@ -1,4 +1,4 @@
-# Guía de arte · Escudo Escolar: Defensa Cibernética
+# Guía de arte · Nullveil: Beyond the Firewall
 
 Documento vivo de la dirección de arte. Si algo cambia (paleta, tamaños, estilo), se actualiza aquí.
 
