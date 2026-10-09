@@ -16,7 +16,7 @@ const DARK := Color("1b2647")
 ## Si la pestaña "Cambiar contraseña" está lista para usarse (se ilumina).
 @export var tab_ready := false
 ## Si ya se sabe qué tiene la cuenta (Kai lo encontró en la terminal). Antes, los datos están ocultos.
-@export var revealed := true
+@export var revealed := false
 
 var _canvas: VectorCanvas
 

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_wpin"]
+
+[resource]
+script = ExtResource("1_wpin")
+script_text = "# Al pulsar «Cambiar contraseña» en la cuenta del profesor (H4c).
+(La pestaña «Cambiar contraseña» parpadea. Algo sale de la ventana.)
+Contraseña débil: ¿Cambiarme? Llevo seis años cuidando esta cuenta. 1, 2, 3, 4, 5, 6. ¡Nadie me ha olvidado nunca!
+Contraseña débil: ...Espera. Tú no deberías poder vernos.
+Kai [sorprendido]: ¿Una contraseña... con cara?
+(En la mano de Kai aparece una pequeña espada digital.)
+Kai [serio]: Si no se deja cambiar, habrá que convencerla."

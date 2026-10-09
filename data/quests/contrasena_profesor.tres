@@ -21,10 +21,15 @@ objective = "Usa la terminal para encontrar la configuración de la cuenta del p
 [sub_resource type="Resource" id="Resource_mltyb"]
 script = ExtResource("2_gafkn")
 id = &"cambiar_contrasena"
-objective = "Cambia la contraseña del profesor."
+objective = "Cambia la contraseña del profesor: pulsa «Cambiar contraseña» en su cuenta."
+
+[sub_resource type="Resource" id="Resource_elegir"]
+script = ExtResource("2_gafkn")
+id = &"elegir_seguridad"
+objective = "Elige la nueva contraseña del profesor y cómo proteger su cuenta."
 
 [resource]
 script = ExtResource("1_j10ej")
 id = &"contrasena_profesor"
 title = "La contraseña del profesor"
-steps = Array[ExtResource("2_gafkn")]([SubResource("Resource_j10ej"), SubResource("Resource_gafkn"), SubResource("Resource_trmnl"), SubResource("Resource_mltyb")])
+steps = Array[ExtResource("2_gafkn")]([SubResource("Resource_j10ej"), SubResource("Resource_gafkn"), SubResource("Resource_trmnl"), SubResource("Resource_mltyb"), SubResource("Resource_elegir")])

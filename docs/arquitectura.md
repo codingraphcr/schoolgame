@@ -173,6 +173,25 @@ Las medidas de las piezas están en `kai_piezas.gd`; `generar_esqueleto_kai.gd` 
 quita integridad (**un golpe enemigo vale la mitad de su daño**: uno normal quita medio cristal, `enemy_damage_scale`; los pinchos también medio cristal; los anuncios trampa y las caídas, uno entero), congela la acción (`HitStop`), empuja, da 1 s de invulnerabilidad con parpadeo, devuelve al último
 suelo seguro ante peligros y emite `died` al perder todas las máscaras. La sala (`Room`) decide dónde reaparece.
 
+**Ataque de Kai:** `characters/player/player_combat.gd` (`PlayerCombat`, nodo `Combat` del jugador; `player.combat`).
+Con J (acción `attack`) ataca hacia donde mira usando el arma equipada (`weapon`, un `WeaponData` de
+`components/combat/weapon_data.gd`: daño, alcance, preparación, tiempo activo, enfriamiento, empuje, retroceso y
+congelamiento al acertar). Sin arma no ataca. Crea su propia zona de golpe (capa 4, `once_per_activation`), dibuja
+el arco del tajo y emite `hit_landed` (para energía y combos futuros). La animación es la de Ariel: `ataque_1`
+(preparación) y `ataque_2` (tajo, justo cuando hace daño). Las etapas de Nullblade serán otros `WeaponData`.
+Armas: `data/weapons/` (`mini_espada.tres`, la del prólogo).
+
+**Enemigos:** `characters/enemies/enemy_base.gd` (`EnemyBase`, CharacterBody2D). Crea su cuerpo (capa 3), su
+`HealthComponent`, su `HurtboxComponent` (recibe golpes de la capa 4) y su golpe por contacto (capa 5). Al recibir un
+golpe: destello, empuje y aturdimiento breve (`hurt_time`). Señales `damaged` y `died`. Cada enemigo escribe su
+comportamiento en `_ai()` y sus reacciones en `_on_damaged()` / `_on_died()`. `ai_enabled = false` lo deja quieto
+(presentaciones y pruebas). Kai atraviesa a los enemigos recibiendo daño, como en Hollow Knight.
+
+**La «Contraseña débil»** (`characters/enemies/weak_password/`, `WeakPasswordEnemy`): 6 de vida, tipo de amenaza
+`credenciales`. Se agacha avisando (`TELEGRAPH`) y salta hacia Kai. Con la mitad de la vida entra en **fuerza bruta**
+(avisa menos y salta más seguido y más lejos). Cada golpe suelta una contraseña débil real (`123456`, `qwerty`…) y al
+morir se deshace en números. Dibujo vectorial provisional hasta que Ariel haga el suyo.
+
 **Peligros:** `world/hazards/spikes.gd` (`Spikes`): pinchos con ancho configurable, visibles en el editor. Quitan medio cristal.
 
 **HUD:** `ui/hud/combat_hud.tscn` muestra los **cristales de integridad** (`MaskIcon`, el Núcleo de integridad del concepto de Ariel en `docs/arte/referencias/vidas_concepto.webp`: completo, a la mitad o vacío, con un glitch al perder integridad), las **barritas de energía** con su marco (`EnergyBar`: una por cada `GameState.max_energy_cells`, empiezan 2 y suben con la historia con `set_max_energy_cells()`; para habilidades futuras: `CombatHUD.set_energy(actual, máximo)` o una señal `energy_changed` en el jugador) y los créditos (`CreditsDisplay`, con +X / −X al cambiar).
@@ -311,6 +330,12 @@ pestaña COMANDOS del Grimorio (`data/grimorio/comando_*.tres`, con `unlock_comm
 resultado y concepto relacionado. Para crear una terminal nueva: un `TerminalChallenge` en el Inspector y una `TerminalStation`
 en la sala; no hace falta programar.
 
+**Combate de la cuenta del profesor** (`world/zones/pc_profesor/password_fight.gd`, `PasswordFight`): la pestaña
+«Cambiar contraseña» (`AccountTab`, paso `cambiar_contrasena`) lo inicia. Aparece la «Contraseña débil» y dice
+«Tú no deberías poder vernos»; Kai recibe la mini espada (aviso «pulsa J para atacar»); una `ArenaBarrier`
+(`world/digital/`, un pequeño firewall) cierra la zona. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
+muere, el combate se cancela, reaparece en `RestorePointFinal` (justo antes) y puede reintentarlo con un diálogo corto.
+
 **Primera terminal** (PC del profesor, paso `revisar_configuracion`): encontrar y leer
 `~/cuenta/configuracion.txt` (contraseña 123456, sin verificación en dos pasos). Alineada con indicadores de
 décimo de la tabla del MEP 2025 (Operaciones ciberseguras): seguridad en sistemas operativos de código abierto y
@@ -326,7 +351,7 @@ conceptos básicos de gestión de contraseñas.
 | `NpcConversation` | Lo que dice un NPC en un paso concreto; con `completes_step` completa ese paso al terminar |
 | HUD | `ObjectiveDisplay` (OBJETIVO, arriba a la derecha, destella al cambiar) y `TitleCard` (título grande al completar una misión) |
 
-**La contraseña del profesor** (`contrasena_profesor.tres`): entrar a la PC → cruzar el SPAM → revisar la configuración en la terminal → cambiar la contraseña.
+**La contraseña del profesor** (`contrasena_profesor.tres`): entrar a la PC → cruzar el SPAM → revisar la configuración en la terminal → cambiar la contraseña (combate) → elegir la nueva contraseña y la verificación en dos pasos (H4d).
 
 **Prólogo** (`data/quests/prologo.tres`): buscar al profesor → revisar la computadora del laboratorio → contarle al
 profesor. Al completarlo: **«CAPÍTULO 0 · EL DESPERTAR»** y empieza **La contraseña del profesor**
@@ -425,6 +450,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
 | `test_digital_dive.gd` | La computadora absorbe a Kai (cámara, desaparición), pantalla de carga, llegada al escritorio, materialización, alma digital celeste, límites y regreso al laboratorio |
 | `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa solo saltando (bot), punto de restauración (activarlo y reaparecer ahí al morir) y llegada a la cuenta del profesor |
+| `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, mini espada, barrera, perder y reintentar, ganar y avanzar) |
 | `test_terminal.gd` | Terminal simulada: sistema de archivos, comandos y errores, autocompletado, comandos permitidos, que no toque el sistema real, y la terminal de la PC del profesor (abrir, Esc, resolver, diálogo, paso de misión, comandos aprendidos y guardados) |
 | `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

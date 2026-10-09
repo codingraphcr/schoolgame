@@ -65,6 +65,9 @@ var _springs: Array[Dictionary] = []
 var _override := &""
 var _override_left := 0.0
 var _combo_left := 0.0
+## Animación que sigue cuando termina la actual (preparación → tajo) y cuánto dura.
+var _next_override := &""
+var _next_left := 0.0
 var _time := 0.0
 var _last_velocity := Vector2.ZERO
 
@@ -94,7 +97,14 @@ func current_animation() -> StringName:
 
 
 ## Ataque con el Nullblade. Si se vuelve a atacar enseguida, encadena el segundo golpe.
-func attack() -> void:
+## Con windup y la hoja de concepto (un cuadro por pose), cada ataque muestra la preparación
+## (ataque_1) durante windup y luego el tajo (ataque_2), justo cuando el golpe hace daño.
+func attack(windup := 0.0) -> void:
+	if _sprite and windup > 0.0 and _has_animation(&"ataque_1") and _has_animation(&"ataque_2"):
+		_play_override(&"ataque_1", windup)
+		_next_override = &"ataque_2"
+		_next_left = maxf(ATTACK_TIME - windup, 0.05)
+		return
 	var second := _combo_left > 0.0 and _override == &"ataque_1"
 	_play_override(&"ataque_2" if second and _has_animation(&"ataque_2") else &"ataque_1", ATTACK_TIME)
 	_combo_left = 0.0 if second else COMBO_WINDOW
@@ -109,6 +119,8 @@ func _process(delta: float) -> void:
 		_override_left -= delta
 		if _override_left <= 0.0:
 			_override = &""
+			if _next_override != &"":
+				_play_override(_next_override, _next_left)
 	if _override == &"":
 		_play_state_animation()
 	if _sprite:
@@ -133,6 +145,7 @@ func _play_state_animation() -> void:
 
 
 func _play_override(anim: StringName, duration: float) -> void:
+	_next_override = &""
 	if not _has_animation(anim):
 		return
 	_override = anim

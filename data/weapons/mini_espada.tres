@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://components/combat/weapon_data.gd" id="1_weapon"]
+
+[resource]
+script = ExtResource("1_weapon")
+id = &"mini_espada"
+display_name = "Mini espada digital"
+damage = 1.0
+reach = Vector2(30, 22)
+offset = Vector2(20, -12)
+slash_color = Color(0.24, 0.95, 1, 1)

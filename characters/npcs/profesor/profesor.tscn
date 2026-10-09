@@ -54,6 +54,12 @@ quest_id = &"contrasena_profesor"
 step_id = &"cambiar_contrasena"
 dialogue = ExtResource("7_356nm")
 
+[sub_resource type="Resource" id="Resource_elegir"]
+script = ExtResource("3_lltp1")
+quest_id = &"contrasena_profesor"
+step_id = &"elegir_seguridad"
+dialogue = ExtResource("7_356nm")
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nk24l"]
 size = Vector2(48, 56)
 
@@ -62,7 +68,7 @@ script = ExtResource("1_xcafg")
 display_name = "Prof. Alvarado"
 dialogue = ExtResource("2_bchj4")
 repeat_dialogue = ExtResource("2_bchj4")
-conversations = Array[ExtResource("3_lltp1")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_trmnl"), SubResource("Resource_lltp1")])
+conversations = Array[ExtResource("3_lltp1")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_trmnl"), SubResource("Resource_lltp1"), SubResource("Resource_elegir")])
 idle_extra_animation = &"notas"
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1346383065]

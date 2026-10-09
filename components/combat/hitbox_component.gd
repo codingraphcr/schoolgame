@@ -6,6 +6,9 @@ extends Area2D
 ## Capas: los ataques del jugador van en la capa 4 (ataques_jugador);
 ## los de enemigos y peligros, en la capa 5 (ataques_enemigos).
 
+## Cada vez que este Hitbox golpea a un Hurtbox (para efectos del atacante: retroceso, energía).
+signal hit_dealt(hurtbox: Node2D, hit: HitData)
+
 @export var damage := 1.0
 @export var threat_type: StringName = &""
 @export var knockback_force := 200.0
@@ -42,7 +45,9 @@ func try_hit(hurtbox: Node2D) -> HitData:
 		if hurtbox in _already_hit:
 			return null
 		_already_hit.append(hurtbox)
-	return create_hit(hurtbox)
+	var hit := create_hit(hurtbox)
+	hit_dealt.emit(hurtbox, hit)
+	return hit
 
 
 func create_hit(target: Node2D) -> HitData:

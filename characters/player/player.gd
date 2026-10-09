@@ -107,6 +107,7 @@ var _afterimage_timer := 0.0
 @onready var health: HealthComponent = $Health
 @onready var hurtbox: HurtboxComponent = $Hurtbox
 @onready var damage: PlayerDamage = $Damage
+@onready var combat: PlayerCombat = $Combat
 @onready var _visual: Node2D = $Visual
 @onready var _body: Node2D = $Visual/Body
 

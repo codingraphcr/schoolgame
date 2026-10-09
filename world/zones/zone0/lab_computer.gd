@@ -58,7 +58,7 @@ func _refresh() -> void:
 	elif game_state.get_current_step(&"contrasena_profesor") == &"entrar_pc":
 		prompt_text = "E: revisar la cuenta del profesor"
 		enabled = true
-	elif game_state.get_current_step(&"contrasena_profesor") in [&"cruzar_spam", &"revisar_configuracion", &"cambiar_contrasena"]:
+	elif game_state.get_current_step(&"contrasena_profesor") in [&"cruzar_spam", &"revisar_configuracion", &"cambiar_contrasena", &"elegir_seguridad"]:
 		# Kai salió de la computadora antes de terminar: puede volver a entrar.
 		prompt_text = "E: volver a la computadora"
 		enabled = true

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_wpok"]
+
+[resource]
+script = ExtResource("1_wpok")
+script_text = "# Al vencer a la «Contraseña débil».
+(La «Contraseña débil» se deshace en números: 1... 2... 3... 4... 5... 6.)
+Prof. Alvarado [sorprendido]: ¿Qué fue todo ese ruido? ¿Ya quedó?
+Kai: Casi, profe. La contraseña vieja ya no protege nada.
+Kai [pensativo]: Ahora hay que elegir una nueva... y esta vez, una buena."

@@ -17,7 +17,9 @@ ciberseguridad: terminales con comandos reales, decisiones y combate. Estructura
 | Prólogo | Se mantiene el nuestro: Visión involuntaria → PC del profesor (SPAM, terminal, «Contraseña débil» con mini espada, 2 elecciones) → cuarto viejo con Nullblade.exe. La «Contraseña débil» dirá «Tú no deberías poder vernos». **«EL DESPERTAR»** pasa al final (al obtener Nullblade) |
 | Primera tarea | La **terminal simulada** (antes que el combate) ✅ |
 | Primera terminal | En la PC del profesor: encontrar la configuración de la cuenta (un solo objetivo) ✅ |
-| Aegis | Se obtiene en el **capítulo 2, nivel 3** (fundamentos de programación). Historia por definir (idea: un proyecto viejo llamado AEGIS que Kai completa programando) |
+| Aegis | Se obtiene en el **capítulo 2, nivel 3** (fundamentos de programación): Kai lo **repara con comandos** en una terminal. Detalle en `curriculo_mep.md` |
+| Daño | Se mantiene el cambio de Ariel: un golpe enemigo y los pinchos quitan **medio cristal** |
+| Currículo | Distribución de los 24 niveles según la tabla del MEP, aprobada: `curriculo_mep.md` |
 | Puntos de control | **Computadora segura**: con E guarda la partida, marca dónde reaparecer y llena las máscaras. Reemplazará al punto de restauración actual cuando exista el guardado |
 | Terminal | Estilo **Linux** (bash) |
 | La entidad «???» | Primera manifestación de **El Núcleo**, sin revelarlo |
@@ -38,9 +40,8 @@ Referencia: *Tabla de especificaciones para la Prueba Nacional Escrita Estandari
 Técnicas 2025 — Ciberseguridad* (código 5210). No se inventan contenidos oficiales: cada nivel cita los indicadores
 de logro que trabaja. Faltan los **programas de estudio completos** (décimo, undécimo y duodécimo, 2020).
 
-**Revisar:** en la tabla, los fundamentos de redes (modelos OSI y TCP/IP, IPv4/IPv6, Ethernet, direcciones MAC)
-parecen ser de **décimo**, pero el documento maestro los ubica en undécimo (capítulos 6 y 7). Confirmarlo con el
-programa antes de diseñar esos capítulos (el PDF pierde las columnas al leerlo).
+Los 24 niveles quedaron distribuidos según la tabla en **`curriculo_mep.md`** (aprobado). Allí están las diferencias
+con el documento maestro (p. ej. los fundamentos de redes son de décimo).
 
 ## Arquitectura
 
@@ -52,8 +53,8 @@ Se conserva lo que existe y se agrega solo lo necesario:
 | DigitalVisionManager | autoload `DigitalVision` | ✅ |
 | DialogueManager, QuestManager | `DialogueBox` + `Dialogue`; misiones en `GameState` + `QuestDB` | ✅ |
 | TerminalManager, CommandInterpreter | `TerminalStation`, `TerminalWindow`, `CommandInterpreter`, `VirtualFileSystem`, `TerminalChallenge` | ✅ |
-| PlayerCombat, NullbladeController/Data | `PlayerCombat` + recurso `NullbladeStage` (las 4 etapas son datos) | MVP |
-| Enemigos | `EnemyBase` (vida, golpe, debilidad, ficha del Grimorio) | MVP |
+| PlayerCombat, NullbladeController/Data | `PlayerCombat` + recurso `WeaponData` (la mini espada; las 4 etapas de Nullblade serán datos) | ✅ base |
+| Enemigos | `EnemyBase` (vida, golpe por contacto, reacción, muerte) + la «Contraseña débil» | ✅ base |
 | SaveManager | autoload `SaveManager`: `GameState.to_dict()` → `user://partida.json` con versión | MVP |
 | GrimoireManager, WorldMapManager | Grimorio de Ariel (`ui/menus/grimorio/`, entradas `GrimorioEntry` en `data/grimorio/`, mapa de salas visitadas). Las páginas de comandos se desbloquean al usarlos en la terminal | ✅ base · falta abrirlo con Tab dentro del juego y el minimapa |
 | Controles táctiles | `TouchControls` | MVP |
@@ -96,7 +97,7 @@ controles táctiles, exportación Windows y Android, documentación.
 
 | Bloque | Tareas |
 |---|---|
-| 1 · Terminal y prólogo | ✅ Terminal simulada · H4c combate y `EnemyBase` · H4d elecciones · H5 Nullblade.exe y «EL DESPERTAR» |
+| 1 · Terminal y prólogo | ✅ Terminal simulada · ✅ H4c combate y `EnemyBase` · H4d elecciones · H5 Nullblade.exe y «EL DESPERTAR» |
 | 2 · Guardado | `SaveManager`, computadora segura, `LevelData` |
 | 3 · Grimorio y mapa | ✅ Grimorio base (Ariel) · Tab dentro del juego, pestaña de misiones, minimapa |
 | 4 · Entrega | Controles táctiles, exportaciones, sonido, pulido, pruebas en celular, documentación |
