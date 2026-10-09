@@ -35,12 +35,12 @@ func _test_format() -> void:
 	_check(lines[0]["speaker"] == "Profesor" and lines[0]["text"] == "Hola, Kai.", "formato: «Nombre: texto»")
 	_check(lines[1]["speaker"] == "Kai" and lines[1]["text"] == "Hola: ¿qué pasó?", "formato: los «:» dentro del texto se conservan")
 	_check(lines[2]["speaker"] == "" and lines[2]["text"] == "(La pantalla parpadea.)", "formato: líneas sin orador (narración)")
-	dialogue.script_text = "Prof. Álvarez [serio]: Escucha."
+	dialogue.script_text = "Prof. Alvarado [serio]: Escucha."
 	lines = dialogue.get_lines()
-	_check(lines[0]["speaker"] == "Prof. Álvarez" and lines[0]["expression"] == "serio" and lines[0]["text"] == "Escucha.",
+	_check(lines[0]["speaker"] == "Prof. Alvarado" and lines[0]["expression"] == "serio" and lines[0]["text"] == "Escucha.",
 		"formato: «Nombre [expresión]: texto»")
 	var profesor: DialogueCharacter = load("res://data/characters/profesor.tres")
-	_check(profesor.matches("Prof. Álvarez") and profesor.matches("Profesor"), "el profesor responde a su nombre y a «Profesor»")
+	_check(profesor.matches("Prof. Alvarado") and profesor.matches("Profesor"), "el profesor responde a su nombre y a «Profesor»")
 	var serio := PlaceholderTexture2D.new()
 	var con_expresiones := DialogueCharacter.new()
 	con_expresiones.portrait = PlaceholderTexture2D.new()
@@ -64,7 +64,7 @@ func _test_first_talk(room: Room, state: Node) -> void:
 	await _frames(3)
 	_check(box.is_playing() and box.visible, "E abre el diálogo")
 	_check(player.controls_locked, "Kai no se mueve mientras habla")
-	_check(box.get_node("%Speaker").text == "Prof. Álvarez", "habla el profesor primero")
+	_check(box.get_node("%Speaker").text == "Prof. Alvarado", "habla el profesor primero")
 	_check((box.get_node("%Text") as Label).visible_ratio < 1.0, "el texto aparece letra por letra")
 	_check(profesor.get_node("Sprite").flip_h and profesor.get_node("Sprite").animation == &"talk", "el profesor mira a Kai y gesticula")
 	_check(not prompt.visible, "el aviso se oculta durante el diálogo")

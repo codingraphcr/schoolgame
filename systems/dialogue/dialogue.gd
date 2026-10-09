@@ -8,9 +8,9 @@ extends Resource
 ## Los retratos, títulos y colores de cada personaje están en data/characters/ (DialogueCharacter).
 ##
 ## Ejemplo:
-##   Prof. Álvarez: ¡Kai! Qué bueno que llegas temprano.
+##   Prof. Alvarado: ¡Kai! Qué bueno que llegas temprano.
 ##   Kai: Buenos días, profe.
-##   Prof. Álvarez [preocupado]: La computadora del laboratorio está rarísima.
+##   Prof. Alvarado [preocupado]: La computadora del laboratorio está rarísima.
 ##   # comentario para el equipo
 ##   (La pantalla parpadea.)
 

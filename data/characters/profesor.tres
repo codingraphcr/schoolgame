@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("2_4b8cp")
-display_name = "Prof. Álvarez"
-aliases = PackedStringArray("Profesor", "Álvarez")
+display_name = "Prof. Alvarado"
+aliases = PackedStringArray("Profesor", "Alvarado", "Profesor Alvarado")
 title = "Mentor · Ciencias y Tecnología"
 portrait = ExtResource("1_01ep7")
 side = 1

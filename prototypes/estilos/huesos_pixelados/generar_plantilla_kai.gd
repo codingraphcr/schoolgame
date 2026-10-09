@@ -367,7 +367,7 @@ func _save_palette() -> void:
 	raw.save("res://assets/art/paleta.png")
 	var gpl := FileAccess.open("res://assets/art/paleta.gpl", FileAccess.WRITE)
 	gpl.store_line("GIMP Palette")
-	gpl.store_line("Name: Escudo Escolar")
+	gpl.store_line("Name: Nullveil")
 	gpl.store_line("Columns: 8")
 	gpl.store_line("#")
 	for c in colors:
