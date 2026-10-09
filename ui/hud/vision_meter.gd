@@ -36,6 +36,7 @@ func _ready() -> void:
 	_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_fill)
 	_vision().denied.connect(_on_denied)
+	visible = _vision().is_unlocked()  # Sin esperar al primer _process: no aparece ni un cuadro antes de tiempo.
 
 
 func _process(delta: float) -> void:
