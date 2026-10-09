@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_1hj7e"]
+
+[resource]
+script = ExtResource("1_1hj7e")
+script_text = "# Fin del prólogo: el profesor le cuenta a Kai su contraseña.
+Profesor: ¿Y? ¿Encontraste algo raro en la computadora?
+Kai: La pantalla me mostró un mensaje... y luego vi algo extraño. Como un error.
+Profesor: Qué raro... Esa computadora tiene abierta mi cuenta del colegio.
+Profesor: Ahora que lo pienso, uso la misma contraseña desde hace años: 123456.
+Kai: ¡Profe! Esa es de las contraseñas más fáciles de adivinar.
+Profesor: ¿Me ayudarías a cambiarla? Tú sabes más de esto que yo.
+Kai: Claro. Voy a revisar su cuenta en la computadora del laboratorio."

@@ -22,6 +22,8 @@ const TRANSITION_TIME := 0.45
 @export var warning_time := 2.0
 
 var state := State.READY
+## Visión involuntaria (prólogo): se encendió sola; Q no la controla y no deja recarga.
+var involuntary := false
 var time_left := 0.0
 var cooldown_left := 0.0
 ## 0 = mundo físico, 1 = mundo digital. Cambia con una transición suave.
@@ -34,12 +36,15 @@ func _process(delta: float) -> void:
 	match state:
 		State.ACTIVE:
 			# Si la partida se reinicia (visión sin descubrir), se apaga sin recarga.
-			if not is_unlocked():
+			if not involuntary and not is_unlocked():
 				reset()
 				return
 			time_left -= delta
 			if time_left <= 0.0:
-				deactivate()
+				if involuntary:
+					_end_glitch()
+				else:
+					deactivate()
 		State.RECHARGING:
 			cooldown_left = maxf(cooldown_left - delta, 0.0)
 			if cooldown_left <= 0.0:
@@ -55,8 +60,10 @@ func is_unlocked() -> bool:
 	return game_state != null and game_state.vision_unlocked
 
 
-## Q: enciende si está lista, apaga si está activa.
+## Q: enciende si está lista, apaga si está activa. No hace nada durante una visión involuntaria.
 func toggle() -> void:
+	if involuntary:
+		return
 	if is_active():
 		deactivate()
 	else:
@@ -82,6 +89,27 @@ func activate(force := false) -> bool:
 	return true
 
 
+## Visión involuntaria (prólogo): se enciende sola unos segundos, aunque Kai todavía no sepa
+## usarla. No cuenta como uso: al terminar no hay recarga y Q no la controla.
+func glitch(seconds: float) -> void:
+	if is_active():
+		return
+	involuntary = true
+	state = State.ACTIVE
+	time_left = seconds
+	cooldown_left = 0.0
+	_animate_blend(1.0)
+	activated.emit()
+
+
+func _end_glitch() -> void:
+	involuntary = false
+	state = State.READY
+	time_left = 0.0
+	_animate_blend(0.0)
+	deactivated.emit()
+
+
 ## Apaga la Visión Digital y empieza la recarga.
 func deactivate() -> void:
 	if not is_active():
@@ -96,6 +124,7 @@ func deactivate() -> void:
 ## Vuelve al estado inicial sin recarga (partida nueva).
 func reset() -> void:
 	var was_active := is_active()
+	involuntary = false
 	state = State.READY
 	time_left = 0.0
 	cooldown_left = 0.0

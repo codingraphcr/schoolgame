@@ -8,7 +8,10 @@ signal interacted(player: Player)
 
 const PROMPT_COLOR := Color("3ef2ff")
 
-@export var prompt_text := "E: interactuar"
+@export var prompt_text := "E: interactuar":
+	set(value):
+		prompt_text = value
+		_update_prompt()
 ## Posición del aviso respecto al nodo.
 @export var prompt_offset := Vector2(-40, -56)
 @export var enabled := true:

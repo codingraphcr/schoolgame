@@ -206,7 +206,8 @@ para que compilen también en las pruebas de línea de comandos.
 ## Visión Digital (`autoload/digital_vision.gd`, `world/vision/`)
 
 Diseño de Ariel: **dura 10 s** y **se recarga en 16 s** desde que se apaga; parpadea los últimos 2 s y se puede
-apagar antes con **Q**. Solo funciona si `GameState.vision_unlocked` (se descubre en el laboratorio).
+apagar antes con **Q**. Solo funciona si `GameState.vision_unlocked`: se desbloquea al terminar la misión de la
+contraseña del profesor. En el prólogo aparece sola, como un glitch (`glitch()`).
 
 | Pieza | Responsabilidad |
 |---|---|
@@ -221,8 +222,9 @@ grupo `digital_only` (dibujos). No hace falta duplicar la sala.
 
 **Zona 0:** `DigitalLayer/Network` (`red_zona0.gd`, dibujo vectorial de Ariel: red, servidores, puente de datos y el
 pez del phishing), `DataBridge` (capa 7), `DataFragment` (+25 créditos, marca `zona0_fragmento_recogido`) y
-`LabAwakening` (`lab_awakening.gd`): junto al servidor, **E** muestra «Por fin alguien está mirando», las luces
-parpadean, se descubre la Visión Digital y se enciende sola la primera vez.
+`LabComputer` (`lab_computer.gd`, un `Interactable`): en el prólogo la pantalla se enciende sola («Por fin alguien
+está mirando»), las luces parpadean y la Visión Digital se activa **sola** unos segundos (`DigitalVision.glitch()`:
+involuntaria, sin indicador, Q no la controla y no deja recarga). En la misión del profesor, aquí Kai entrará a la PC (H4).
 
 `GameState.set_flag()` deja marcas de eventos y objetos recogidos (se guardan con la partida).
 
@@ -239,6 +241,21 @@ parpadean, se descubre la Visión Digital y se enciende sola la primera vez.
 con `tools/art/generar_npcs.gd` según la guía de Ariel (camisa, cordón con credencial y taza); Ariel lo reemplazará.
 Diálogos en `data/dialogues/prologo/`: `profesor_pedido.tres` (pide revisar la computadora del laboratorio; marca
 `prologo_profesor_pidio_ayuda`) y `profesor_recordatorio.tres`.
+
+## Misiones (`systems/quests/`)
+
+| Pieza | Responsabilidad |
+|---|---|
+| `Quest` / `QuestStep` | Recurso con pasos en orden (`id`, `objective`). `completion_title` / `completion_subtitle` (título grande al completarla) y `next_quest` (misión que empieza después) |
+| `QuestDB` | Registro id → archivo (`data/quests/`). Cada misión nueva se agrega aquí |
+| `GameState` | `start_quest()`, `get_current_step()`, `complete_step(misión, paso)` (solo si es el paso actual), `is_quest_completed()`, `get_objective_text()`. Señales `quest_started`, `quest_step_changed`, `quest_completed`. Se guarda con la partida |
+| `NpcConversation` | Lo que dice un NPC en un paso concreto; con `completes_step` completa ese paso al terminar |
+| HUD | `ObjectiveDisplay` (OBJETIVO, arriba a la derecha, destella al cambiar) y `TitleCard` (título grande al completar una misión) |
+
+**Prólogo** (`data/quests/prologo.tres`): buscar al profesor → revisar la computadora del laboratorio → contarle al
+profesor. Al completarlo: **«CAPÍTULO 0 · EL DESPERTAR»** y empieza **La contraseña del profesor**
+(`contrasena_profesor.tres`; su primer paso: revisar la cuenta del profesor en la computadora del laboratorio).
+"Jugar" empieza el prólogo. Diálogos en `data/dialogues/prologo/`.
 
 ## Progreso del jugador (`GameState`)
 
@@ -312,7 +329,8 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
 | `test_player_health.gd` | Máscaras, pinchos, suelo seguro, invulnerabilidad, empuje, contacto prolongado, escudo educativo, caída, muerte y niveles del dash |
 | `test_zone0.gd` | "Jugar" abre la Entrada con partida nueva (sin habilidades), Kai de Ariel, HUD, casilleros que se saltan, transición al Pasillo y de vuelta (entrada y orientación correctas), máscaras que se conservan, recorrido hasta el laboratorio, bandejas como plataformas y Esc al menú |
-| `test_vision.gd` | Visión Digital bloqueada, evento del laboratorio, capa digital, oscurecimiento, puente de datos (capa 7), fragmento (una sola vez), apagado manual, recarga y fin por duración |
+| `test_vision.gd` | Visión Digital bloqueada, desbloqueo, capa digital, oscurecimiento, puente de datos (capa 7), fragmento (una sola vez), apagado manual, recarga y fin por duración |
 | `test_dialogue.gd` | Formato de los diálogos, aviso «E: hablar», caja de diálogo (letra por letra, completar, avanzar, cerrar), controles bloqueados, marca del profesor y recordatorio |
+| `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
 | `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

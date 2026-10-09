@@ -33,9 +33,11 @@
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="30_wkl27"]
 [ext_resource type="Script" path="res://world/vision/data_fragment.gd" id="31_xdkrt"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="32_au1lc"]
-[ext_resource type="Script" path="res://world/zones/zone0/lab_awakening.gd" id="33_xved5"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="34_au1lc"]
+[ext_resource type="Script" path="res://world/zones/zone0/lab_computer.gd" id="34_odpsf"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/computadora_pantalla.tres" id="35_kmyuo"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="35_xved5"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/computadora_despues.tres" id="36_fttfq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ukrjd"]
 size = Vector2(1024, 80)
@@ -651,13 +653,16 @@ player = NodePath("../Player")
 ambient = NodePath("../Ambient")
 digital_layer = NodePath("../DigitalLayer/Network")
 
-[node name="LabAwakening" type="Area2D" parent="." unique_id=1593177384 node_paths=PackedStringArray("digital_world", "lights")]
+[node name="LabComputer" type="Area2D" parent="." unique_id=1320674215 node_paths=PackedStringArray("digital_world", "lights")]
 position = Vector2(716, 272)
-script = ExtResource("33_xved5")
+script = ExtResource("34_odpsf")
 digital_world = NodePath("../DigitalWorld")
 lights = NodePath("../Lights")
+screen_dialogue = ExtResource("35_kmyuo")
+after_dialogue = ExtResource("36_fttfq")
+prompt_offset = Vector2(-48, -60)
 
-[node name="Shape" type="CollisionShape2D" parent="LabAwakening" unique_id=390884246]
+[node name="Shape" type="CollisionShape2D" parent="LabComputer" unique_id=1260074529]
 shape = SubResource("RectangleShape2D_kmyuo")
 
 [node name="Entries" type="Node2D" parent="." unique_id=659946632]

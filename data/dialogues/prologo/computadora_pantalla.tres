@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_fjlxj"]
+
+[resource]
+script = ExtResource("1_fjlxj")
+script_text = "# Escena 3: la computadora del laboratorio se enciende sola.
+(La pantalla se enciende sola. Un cursor parpadea.)
+Pantalla: Por fin alguien está mirando."

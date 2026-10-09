@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_nxyl5"]
+
+[resource]
+script = ExtResource("1_nxyl5")
+script_text = "Profesor: Mi cuenta está abierta en la computadora del laboratorio. ¡Gracias, Kai!"

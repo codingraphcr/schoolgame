@@ -12,6 +12,9 @@ signal control_applied(incident: Incident, control: SecurityControl)
 signal progress_changed
 ## Cambiaron los créditos; delta es la diferencia (negativa al gastar o perder).
 signal credits_changed(credits: int, delta: int)
+signal quest_started(quest_id: StringName)
+signal quest_step_changed(quest_id: StringName)
+signal quest_completed(quest_id: StringName)
 
 const STAT_MIN := 0
 const STAT_MAX := 100
@@ -68,6 +71,12 @@ var aegis_stage := 0
 ## 0 = bloqueado · 1, 2, 3 = versiones I, II, III
 var domain_stage := 0
 
+# --- Misiones ---
+## Misión que se muestra como OBJETIVO (vacío = ninguna).
+var active_quest: StringName = &""
+## Paso actual de cada misión empezada (índice); -1 = completada.
+var _quest_progress: Dictionary[StringName, int] = {}
+
 
 ## Vuelve al estado inicial (nueva partida).
 func reset() -> void:
@@ -79,6 +88,8 @@ func reset() -> void:
 	_flags.clear()
 	_decision_log.clear()
 	_reset_progress()
+	active_quest = &""
+	_quest_progress.clear()
 	stats_changed.emit()
 	progress_changed.emit()
 
@@ -266,6 +277,63 @@ func _reset_progress() -> void:
 	domain_stage = 0
 
 
+# --- Misiones ---
+
+## Empieza una misión (registrada en QuestDB) y la vuelve la activa. false si ya se había empezado.
+func start_quest(quest_id: StringName) -> bool:
+	if _quest_progress.has(quest_id):
+		return false
+	if QuestDB.get_quest(quest_id) == null:
+		push_error("GameState: la misión '%s' no está registrada en QuestDB." % quest_id)
+		return false
+	_quest_progress[quest_id] = 0
+	active_quest = quest_id
+	quest_started.emit(quest_id)
+	return true
+
+
+## Id del paso actual de la misión ("" si no empezó o ya se completó).
+func get_current_step(quest_id: StringName) -> StringName:
+	var index: int = _quest_progress.get(quest_id, -2)
+	var quest := QuestDB.get_quest(quest_id)
+	if index < 0 or quest == null or index >= quest.steps.size():
+		return &""
+	return quest.steps[index].id
+
+
+## Completa el paso si es el actual de la misión. Al completar el último paso, la misión termina
+## (y empieza next_quest si tiene). Devuelve false si ese no era el paso actual.
+func complete_step(quest_id: StringName, step_id: StringName) -> bool:
+	if step_id == &"" or get_current_step(quest_id) != step_id:
+		return false
+	var quest := QuestDB.get_quest(quest_id)
+	var next_index: int = _quest_progress[quest_id] + 1
+	if next_index < quest.steps.size():
+		_quest_progress[quest_id] = next_index
+		quest_step_changed.emit(quest_id)
+		return true
+	_quest_progress[quest_id] = -1
+	if active_quest == quest_id:
+		active_quest = &""
+	quest_completed.emit(quest_id)
+	if quest.next_quest != &"":
+		start_quest(quest.next_quest)
+	return true
+
+
+func is_quest_completed(quest_id: StringName) -> bool:
+	return _quest_progress.get(quest_id, -2) == -1
+
+
+## Texto del objetivo actual ("" si no hay misión activa).
+func get_objective_text() -> String:
+	var quest := QuestDB.get_quest(active_quest)
+	var index: int = _quest_progress.get(active_quest, -2)
+	if quest == null or index < 0 or index >= quest.steps.size():
+		return ""
+	return quest.steps[index].objective
+
+
 # --- Guardado (preparado para más adelante) ---
 
 func to_dict() -> Dictionary:
@@ -277,6 +345,8 @@ func to_dict() -> Dictionary:
 		"found_clues": _key_list(_found_clues),
 		"flags": _key_list(_flags),
 		"decision_log": _decision_log.duplicate(true),
+		"active_quest": String(active_quest),
+		"quests": _keys_to_strings(_quest_progress),
 		"player": {
 			"credits": credits,
 			"max_masks": max_masks,
@@ -306,6 +376,10 @@ func from_dict(data: Dictionary) -> void:
 		_flags[StringName(flag)] = true
 	for entry: Dictionary in data.get("decision_log", []):
 		_decision_log.append(entry)
+	active_quest = StringName(data.get("active_quest", ""))
+	var quests: Dictionary = data.get("quests", {})
+	for quest_id: String in quests:
+		_quest_progress[StringName(quest_id)] = int(quests[quest_id])
 	# Partidas sin progreso del jugador (versiones anteriores) quedan con los valores iniciales.
 	# int() porque al pasar por JSON los números vuelven como decimales.
 	var player: Dictionary = data.get("player", {})
