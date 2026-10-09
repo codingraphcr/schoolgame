@@ -43,6 +43,8 @@ func _run() -> void:
 
 
 func _test_popups() -> void:
+	# Sin lluvia de correos: un golpe congela el juego un instante y falsea las medidas.
+	_stop_mail_rain()
 	# Fijo: se puede pisar.
 	await _drop_on(Vector2(700, 190))
 	_check(absf(player.global_position.y - 230.0) < 1.0 and player.is_on_floor(), "un pop-up fijo sostiene a Kai (y=%.0f)" % player.global_position.y)
@@ -99,7 +101,7 @@ func _test_traps_and_mail() -> void:
 	await _until_vulnerable()
 	player.health.restore_full()
 	# Dificultad: los correos caen más rápido y apuntan a donde estaba Kai hace un instante.
-	_check(spawner.fall_speed >= 140.0, "los correos caen rápido (%.0f px/s)" % spawner.fall_speed)
+	_check(spawner.fall_speed >= 200.0, "los correos caen rápido (%.0f px/s)" % spawner.fall_speed)
 	await _drop_on(Vector2(320, 280))  # lejos del anuncio trampa de x=372
 	spawner._timer = 99.0  # registra el rastro de Kai sin soltar correos
 	spawner.set_process(true)
@@ -109,6 +111,15 @@ func _test_traps_and_mail() -> void:
 	var target: float = spawner._next_x() + spawner.global_position.x
 	_check(absf(target - player.global_position.x) <= spawner.aim_spread + 0.5,
 		"si Kai se queda quieto, el correo apunta encima de él (cae en x=%.0f, Kai en x=%.0f)" % [target, player.global_position.x])
+	# Si Kai corre a 140 px/s, los correos que se adelantan caen donde va a estar.
+	var gx := spawner.global_position.x
+	spawner._clock = 0.15
+	spawner._trail = [[0.0, gx + 50.0], [0.15, gx + 71.0]]
+	spawner.lead_ratio = 1.0
+	var expected := gx + 50.0 + 140.0 * spawner.landing_time() * spawner.lead_amount
+	var led: float = spawner._next_x() + gx
+	_check(absf(led - expected) <= spawner.aim_spread + 0.5,
+		"un correo se adelanta a donde corre Kai (cae en x=%.0f, esperado x=%.0f)" % [led, expected])
 	for leftover in spawner.get_children():
 		leftover.queue_free()
 

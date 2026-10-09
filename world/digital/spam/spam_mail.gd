@@ -8,7 +8,10 @@ const MAG := Color("ff3ea5")
 var fall_speed := 90.0
 var floor_y := 304.0
 
-var _warning := 0.35
+## Segundos que el correo parpadea antes de caer (el aviso para esquivarlo).
+const WARNING_TIME := 0.35
+
+var _warning := WARNING_TIME
 var _time := 0.0
 var _origin_x := 0.0
 

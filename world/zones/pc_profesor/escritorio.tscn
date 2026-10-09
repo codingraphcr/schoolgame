@@ -261,13 +261,13 @@ is_hazard = true
 [node name="MailRainA" type="Node2D" parent="SpamMail" unique_id=311649468]
 position = Vector2(260, 64)
 script = ExtResource("7_5aedr")
-width = 280.0
-interval = 1.3
+width = 640.0
+interval = 0.75
 
 [node name="MailRainB" type="Node2D" parent="SpamMail" unique_id=2001059475]
 position = Vector2(1000, 64)
 script = ExtResource("7_5aedr")
-interval = 0.95
+interval = 0.65
 
 [node name="AccountWindow" type="Node2D" parent="." unique_id=570698044]
 position = Vector2(1396, 304)

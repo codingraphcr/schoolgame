@@ -265,7 +265,7 @@ y saltar). La salida izquierda vuelve al laboratorio (entrada `desde_pc`, tambi�
 |---|---|
 | `SpamPopup` (AnimatableBody2D) | Ventana de anuncio cuya barra de título es una plataforma de un sentido. `move_offset` / `move_time` (se mueve de ida y vuelta y lleva a Kai), `closes_when_stepped` (parpadea, se cierra al pisarla y vuelve a abrirse). Textos editables: `ad_title`, `ad_lines`, `ad_url`, `accent` |
 | `TrapAd` (HitboxComponent) | Botón "¡DESCARGAR GRATIS!": tocarlo es como pisar pinchos (1 máscara y vuelta al suelo seguro) |
-| `SpamMailSpawner` + `SpamMail` | Lluvia de correos en una franja, solo con Kai cerca. Cada correo avisa parpadeando (0,35 s), cae balanceándose (140 px/s), quita 1 máscara y empuja. El 70 % (`aimed_ratio`) cae donde estaba Kai hace 0,15 s (`aim_delay`, ±`aim_spread` px): quedarse quieto es peligroso, moverse los esquiva |
+| `SpamMailSpawner` + `SpamMail` | Lluvia de correos en una franja, solo con Kai cerca. Cada correo avisa parpadeando (0,35 s), cae balanceándose (200 px/s), quita 1 máscara y empuja. El 80 % (`aimed_ratio`) apunta a Kai: la mitad cae donde estaba hace 0,15 s (`aim_delay`) y la otra mitad (`lead_ratio`) se adelanta a donde estará si sigue corriendo igual (`lead_amount`). Quedarse quieto o correr siempre al mismo ritmo es peligroso: hay que ver el parpadeo y cambiar el paso. En la PC del profesor, la lluvia A cubre también los saltos entre pop-ups |
 
 Los anuncios usan **nombres parodia** (MineKraft, Terrarya, GTA 6 anticipado, Fortnait, Robucks, Amung Us) con señales de
 estafa reales: urgencia, premios, pedir la contraseña, "desactiva tu antivirus" y direcciones raras (`.xyz`, `.click`, `.top`).
