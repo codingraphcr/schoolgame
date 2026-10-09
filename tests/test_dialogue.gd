@@ -16,6 +16,7 @@ func _run() -> void:
 	_test_format()
 	var state := root.get_node("GameState")
 	state.reset()
+	state.start_quest(&"prologo")
 	change_scene_to_file(PASILLO)
 	await _wait(0.5)
 	var room := current_scene as Room
@@ -81,7 +82,7 @@ func _test_first_talk(room: Room, state: Node) -> void:
 	_check(not box.is_playing() and not box.visible, "el diálogo termina y la caja se cierra")
 	await _frames(3)
 	_check(not player.controls_locked, "Kai recupera los controles")
-	_check(state.has_flag(&"prologo_profesor_pidio_ayuda"), "queda marcado que el profesor pidió ayuda")
+	_check(state.get_current_step(&"prologo") == &"revisar_computadora", "hablar con el profesor avanza la misión (ahora: revisar la computadora)")
 	_check(not box.is_playing(), "la tecla que cerró el diálogo no lo vuelve a abrir")
 
 

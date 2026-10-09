@@ -1,10 +1,10 @@
 extends SceneTree
-## Prueba automática: Visión Digital (bloqueo, evento del laboratorio, duración, recarga,
+## Prueba automática: Visión Digital controlada con Q (bloqueo, desbloqueo, duración, recarga,
 ## puente de datos, fragmento oculto y capa digital) en el Pasillo + Laboratorio.
+## La visión involuntaria del prólogo se prueba en test_prologue.gd.
 ## Ejecutar: godot --headless --path . --script res://tests/test_vision.gd
 
 const PASILLO := "res://world/zones/zone0/pasillo_laboratorio.tscn"
-const SERVER := Vector2(716, 304)  # Dentro del área del evento del laboratorio
 const ABOVE_BRIDGE := Vector2(600, 130)  # El puente de datos está en y=148
 const FRAGMENT := Vector2(640, 148)
 const FRAGMENT_FLAG := &"zona0_fragmento_recogido"
@@ -37,7 +37,7 @@ func _run() -> void:
 	player = room.player
 
 	await _test_locked()
-	await _test_awakening()
+	await _test_unlocked()
 	await _test_bridge_and_fragment()
 	await _test_recharge_and_duration()
 
@@ -54,30 +54,24 @@ func _test_locked() -> void:
 	_check(not room.get_node("DigitalLayer/Network").visible, "la capa digital está oculta")
 
 
-func _test_awakening() -> void:
-	player.teleport_to(SERVER)
-	await _frames(10)
-	var event := room.get_node("LabAwakening")
-	_check(event._prompt.visible, "junto al servidor aparece «E: revisar el servidor»")
-	_action("interact")
-	await _frames(3)
-	_check(player.controls_locked, "durante el evento Kai no se mueve")
-	await _wait(2.8)
-	_check(state.vision_unlocked, "el evento descubre la Visión Digital")
-	_check(vision.is_active(), "la primera Visión Digital se enciende sola")
-	_check(not player.controls_locked, "al terminar el evento Kai recupera los controles")
-	_check(room.get_node("CombatHUD/VisionMeter").visible, "aparece el indicador de la Visión Digital")
+func _test_unlocked() -> void:
+	# En la historia se desbloquea al terminar la misión de la contraseña del profesor.
+	state.unlock_vision()
+	await _frames(2)
+	_check(room.get_node("CombatHUD/VisionMeter").visible, "al desbloquearla aparece el indicador de la Visión Digital")
+	_action("vision")
+	await _wait(0.6)
+	_check(vision.is_active() and not vision.involuntary, "Q enciende la Visión Digital")
 	_check(room.get_node("DigitalLayer/Network").visible and vision.blend > 0.9, "se ve la red (capa digital)")
 	var ambient := room.get_node("Ambient") as CanvasModulate
 	_check(ambient.color.v < 0.5, "el mundo físico se oscurece")
 	_check(player.get_collision_mask_value(7), "Kai puede pisar el mundo digital (capa 7)")
-	await _frames(5)
-	_check(not event._prompt.visible, "el evento no se repite")
 
 
 func _test_bridge_and_fragment() -> void:
 	vision.time_left = vision.duration  # Tiempo completo para esta parte
 	player.teleport_to(ABOVE_BRIDGE)
+	await _frames(2)  # El "en el suelo" del cuadro anterior todavía no se actualizó.
 	await _until_on_floor()
 	_check(absf(player.global_position.y - 148.0) < 1.0, "con la visión activa, el puente de datos sostiene a Kai (y=%.0f)" % player.global_position.y)
 	var credits_before: int = state.credits

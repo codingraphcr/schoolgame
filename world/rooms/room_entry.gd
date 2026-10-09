@@ -7,6 +7,8 @@ extends Marker2D
 @export var id: StringName = &""
 ## Hacia dónde mira Kai al entrar (1 = derecha, -1 = izquierda).
 @export_enum("Izquierda:-1", "Derecha:1") var facing := 1
+## Efecto al llegar: "" (ninguno) o "materialize" (Kai se arma desde píxeles; al salir de una computadora).
+@export_enum("Ninguno:", "Materializarse:materialize") var arrival_effect := ""
 
 
 func _draw() -> void:

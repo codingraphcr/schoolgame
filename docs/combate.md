@@ -97,8 +97,11 @@ Es el vínculo entre el combate y el contenido educativo.
 | Z4 | Visión Digital como sistema (transición, red vectorial, puente de datos, evento del laboratorio) | ✅ |
 | H1 | Transiciones entre salas + Entrada del colegio (máscaras que se conservan) | ✅ |
 | H2 | Interacción y diálogos + el profesor (NPC) | ✅ |
-| H3 | Misiones (objetivo en pantalla) + Visión Digital involuntaria del prólogo | ⏳ |
-| H4 | Dentro de la PC: nivel de plataformas, enemigo "Contraseña débil", mini espada (J) y 2 elecciones (contraseña y MFA) → desbloquea Q | ⏳ |
+| H3 | Misiones (objetivo en pantalla) + Visión Digital involuntaria del prólogo | ✅ |
+| H4a | Entrar a la PC: succión por la pantalla, pantalla de carga, materialización como alma digital y escritorio provisional | ✅ |
+| H4b | Nivel de SPAM dentro de la PC (pop-ups, anuncios trampa, correos que caen) hasta la cuenta del profesor | ✅ |
+| H4c | Combate contra la "Contraseña débil" con la mini espada (J) | ⏳ |
+| H4d | 2 elecciones (contraseña y MFA) → desbloquea Q y sale de la PC | ⏳ |
 | H5 | Habitación vieja: Nullblade.exe (dash, doble salto, ataque) + cartel "Capítulo 1" | ⏳ |
 | C3 | Nullblade.exe (datos de las 4 etapas) + sensación de impacto | ⏳ |
 | C4 | `EnemyBase` + `EnemyData` + `CombatClock` + enemigo patrullero | ⏳ |

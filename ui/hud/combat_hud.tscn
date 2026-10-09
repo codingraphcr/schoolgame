@@ -5,6 +5,8 @@
 [ext_resource type="Script" path="res://ui/hud/vision_meter.gd" id="3_vision"]
 [ext_resource type="Script" path="res://ui/hud/toast.gd" id="4_toast"]
 [ext_resource type="PackedScene" path="res://ui/dialogue/dialogue_box.tscn" id="5_dv60m"]
+[ext_resource type="Script" path="res://ui/hud/objective_display.gd" id="6_2c1qa"]
+[ext_resource type="Script" path="res://ui/hud/title_card.gd" id="7_33x7l"]
 
 [node name="CombatHUD" type="CanvasLayer" unique_id=834849493]
 layer = 40
@@ -54,3 +56,23 @@ grow_vertical = 0
 script = ExtResource("4_toast")
 
 [node name="DialogueBox" parent="." unique_id=442432687 instance=ExtResource("5_dv60m")]
+
+[node name="Objective" type="VBoxContainer" parent="." unique_id=1955666374]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -384.0
+offset_top = 56.0
+offset_right = -24.0
+offset_bottom = 120.0
+grow_horizontal = 0
+mouse_filter = 2
+script = ExtResource("6_2c1qa")
+
+[node name="TitleCard" type="Control" parent="." unique_id=807880733]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("7_33x7l")

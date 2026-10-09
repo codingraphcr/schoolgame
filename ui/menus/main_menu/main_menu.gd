@@ -27,6 +27,7 @@ func _on_play_pressed() -> void:
 	# (Cuando exista el guardado, aquí se ofrecerá continuar la partida.)
 	GameState.reset()
 	DigitalVision.reset()
+	GameState.start_quest(&"prologo")
 	SceneManager.change_scene(SceneManager.FIRST_ROOM)
 
 

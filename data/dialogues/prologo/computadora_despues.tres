@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_wooby"]
+
+[resource]
+script = ExtResource("1_wooby")
+script_text = "# Reacción de Kai después de la primera Visión Digital (involuntaria).
+Kai: ¿Qué... qué fue eso?
+Kai: Por un segundo vi algo dentro de la red. Como una criatura.
+Kai: Debe ser el sueño... Mejor le cuento al profe."

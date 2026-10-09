@@ -12,6 +12,10 @@ extends Node2D
 @export var spawn_point: Marker2D
 ## Dónde reaparece el jugador al morir (banco). Si está vacío, se usa spawn_point.
 @export var checkpoint: Marker2D
+## Tamaño de la sala si no tiene TileMapLayer (p. ej. el interior de una computadora).
+@export var room_size := Rect2()
+## Color del dibujo de Kai en esta sala (p. ej. celeste: su alma digital dentro de una computadora).
+@export var player_tint := Color.WHITE
 ## Distancia (px) bajo el borde inferior de la sala a partir de la cual el jugador reaparece.
 @export var fall_limit_margin := 64.0
 
@@ -31,6 +35,7 @@ func _ready() -> void:
 			player.health.health_changed.emit(player.health.current, player.health.max_health)
 		game_state.progress_changed.connect(_on_progress_changed)
 	if player:
+		(player.get_node("Visual") as CanvasItem).modulate = player_tint
 		player.damage.died.connect(_on_player_died)
 		player.damage.hurt.connect(_on_player_hurt)
 		player.damage.hazard_respawned.connect(_snap_camera)
@@ -72,6 +77,16 @@ func _place_player() -> void:
 	player.teleport_to(entry.global_position)
 	player.face(entry.facing)
 	_snap_camera()
+	if entry.arrival_effect == "materialize":
+		_materialize_player()
+
+
+## Llegada desde una computadora: se cierra la pantalla de carga y Kai se arma desde píxeles.
+func _materialize_player() -> void:
+	player.controls_locked = true
+	LoadingScreen.dismiss_all(get_tree())
+	await DigitalDive.materialize(player)
+	player.controls_locked = false
 
 
 func _find_entry(entry_id: StringName) -> RoomEntry:
@@ -120,6 +135,8 @@ func _snap_camera() -> void:
 
 
 func _compute_bounds() -> Rect2:
+	if (tile_layer == null or tile_layer.tile_set == null) and room_size.has_area():
+		return room_size
 	if tile_layer == null or tile_layer.tile_set == null:
 		push_warning("Room: falta el TileMapLayer; la cámara no tendrá límites.")
 		return Rect2(-100000, -100000, 200000, 200000)

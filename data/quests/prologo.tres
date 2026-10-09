@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_swvs6"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_onf2i"]
+
+[sub_resource type="Resource" id="Resource_dvwnn"]
+script = ExtResource("2_onf2i")
+id = &"hablar_profesor"
+objective = "Busca al profesor en el pasillo."
+
+[sub_resource type="Resource" id="Resource_b57hf"]
+script = ExtResource("2_onf2i")
+id = &"revisar_computadora"
+objective = "Revisa la computadora del laboratorio."
+
+[sub_resource type="Resource" id="Resource_gnj7q"]
+script = ExtResource("2_onf2i")
+id = &"volver_profesor"
+objective = "Cuéntale al profesor lo que pasó."
+
+[resource]
+script = ExtResource("1_swvs6")
+id = &"prologo"
+title = "Capítulo 0: El despertar"
+steps = Array[ExtResource("2_onf2i")]([SubResource("Resource_dvwnn"), SubResource("Resource_b57hf"), SubResource("Resource_gnj7q")])
+completion_title = "EL DESPERTAR"
+completion_subtitle = "CAPÍTULO 0"
+next_quest = &"contrasena_profesor"

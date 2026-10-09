@@ -1,10 +1,52 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://characters/npcs/npc.gd" id="1_xcafg"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_saludo.tres" id="2_bchj4"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_pedido.tres" id="2_qd3vi"]
+[ext_resource type="Script" path="res://characters/npcs/npc_conversation.gd" id="3_lltp1"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_recordatorio.tres" id="3_ug62n"]
 [ext_resource type="SpriteFrames" path="res://characters/npcs/profesor/profesor_frames.tres" id="4_8s7wa"]
 [ext_resource type="Script" path="res://components/interaction/interactable.gd" id="5_bchj4"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_contrasena.tres" id="6_kke7p"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_contrasena_recordatorio.tres" id="7_356nm"]
+
+[sub_resource type="Resource" id="Resource_n71tl"]
+script = ExtResource("3_lltp1")
+quest_id = &"prologo"
+step_id = &"hablar_profesor"
+dialogue = ExtResource("2_qd3vi")
+completes_step = true
+
+[sub_resource type="Resource" id="Resource_caeod"]
+script = ExtResource("3_lltp1")
+quest_id = &"prologo"
+step_id = &"revisar_computadora"
+dialogue = ExtResource("3_ug62n")
+
+[sub_resource type="Resource" id="Resource_pgyjs"]
+script = ExtResource("3_lltp1")
+quest_id = &"prologo"
+step_id = &"volver_profesor"
+dialogue = ExtResource("6_kke7p")
+completes_step = true
+
+[sub_resource type="Resource" id="Resource_reb7v"]
+script = ExtResource("3_lltp1")
+quest_id = &"contrasena_profesor"
+step_id = &"entrar_pc"
+dialogue = ExtResource("7_356nm")
+
+[sub_resource type="Resource" id="Resource_bchj4"]
+script = ExtResource("3_lltp1")
+quest_id = &"contrasena_profesor"
+step_id = &"cruzar_spam"
+dialogue = ExtResource("7_356nm")
+
+[sub_resource type="Resource" id="Resource_lltp1"]
+script = ExtResource("3_lltp1")
+quest_id = &"contrasena_profesor"
+step_id = &"cambiar_contrasena"
+dialogue = ExtResource("7_356nm")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nk24l"]
 size = Vector2(48, 56)
@@ -12,9 +54,9 @@ size = Vector2(48, 56)
 [node name="Profesor" type="Node2D" unique_id=1425553402]
 script = ExtResource("1_xcafg")
 display_name = "Prof. Álvarez"
-dialogue = ExtResource("2_qd3vi")
-repeat_dialogue = ExtResource("3_ug62n")
-talked_flag = &"prologo_profesor_pidio_ayuda"
+dialogue = ExtResource("2_bchj4")
+repeat_dialogue = ExtResource("2_bchj4")
+conversations = Array[ExtResource("3_lltp1")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_lltp1")])
 idle_extra_animation = &"notas"
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1346383065]
