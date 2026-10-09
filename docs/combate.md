@@ -15,7 +15,7 @@ y **defensa** (herramientas reales de ciberseguridad).
 | Capacidad | Rol | Cuándo se obtiene | Evoluciones |
 |---|---|---|---|
 | **Nullblade** | Espada digital, cuerpo a cuerpo. Carga energía al golpear | Tutorial | .exe → .zero → .void → .max |
-| **Aegis** | Núcleo flotante: disparo teledirigido manual (K), barrera, plataformas | Capítulo 5 (misión "Eco en la Red") | Pulse → Bridge → Sync |
+| **Aegis** | Núcleo flotante: disparo teledirigido manual (K), barrera, plataformas | Capítulo 2, nivel 3 (fundamentos de programación; la historia de cómo lo encuentra está por definir) | Pulse → Bridge → Sync |
 | **Expansión Digital: Dominio Nulo** | Ultimate: enemigos al 80 % de velocidad y bonificación de daño. Barra propia | Capítulo 2 | I (15 s, +10 %, 100) · II (20 s, +15 %, 115) · III (30 s, +30 %, 138) |
 | **Dash-parry** | Un dash justo antes de recibir un golpe hace el parry (no hay botón de parry). Reemplaza al Escudo MFA | Con el primer dash | Mejora con los niveles del dash |
 
@@ -26,10 +26,10 @@ Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `
 | Momento | Qué pasa | Qué tiene Kai |
 |---|---|---|
 | **Capítulo 0: Prólogo** | Entrada del colegio → pasillo (el profesor le pide revisar una computadora) → laboratorio: «Por fin alguien está mirando» y la **Visión Digital se activa sola**, como un glitch, sin pulsar nada | Caminar, saltar, interactuar (E) |
-| **Primera misión: la contraseña del profesor** | Kai entra a la PC como **alma digital**: nivel de plataformas con estética de escritorio hasta la pestaña "Cambiar contraseña" / MFA. Kai humano: «Profe, ¡aquí está el error!». Con E aparece el enemigo **"Contraseña débil"** y se vence con una **mini espada digital** (sin nombre, solo para aprender a golpear: se desbloquea **J**). Después, **2 elecciones**: la contraseña nueva más segura y un método de MFA, con explicación | + mini espada (solo en este combate) |
+| **Primera misión: la contraseña del profesor** | Kai entra a la PC como **alma digital**: nivel de plataformas con estética de escritorio hasta la pestaña "Cambiar contraseña" / MFA. Kai humano: «Profe, ¡aquí está el error!». En la **terminal** de la PC encuentra la configuración de la cuenta (`ls`, `cd`, `cat`: contraseña 123456, sin verificación en dos pasos). En la pestaña, con E aparece el enemigo **"Contraseña débil"** y se vence con una **mini espada digital** (sin nombre, solo para aprender a golpear: se desbloquea **J**). Después, **2 elecciones**: la contraseña nueva más segura y un método de MFA, con explicación | + mini espada (solo en este combate) |
 | **Recompensa** | El profesor agradece. Desde aquí la **Visión Digital se usa con Q** | + Visión Digital |
-| **La habitación vieja** | El profesor lo invita a un cuarto viejo y lleno de polvo del colegio: allí está **Nullblade.exe** | + Nullblade, **dash** (nivel 1) y **doble salto** |
-| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), Aegis (cap. 5) y mejoras con créditos |
+| **La habitación vieja** | El profesor lo invita a un cuarto viejo y lleno de polvo del colegio: allí está **Nullblade.exe**. Cierra el prólogo con el título **«EL DESPERTAR»** (se mueve aquí desde el final de la primera parte) | + Nullblade, **dash** (nivel 1) y **doble salto** |
+| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), **Aegis (cap. 2, nivel 3: fundamentos de programación)** y mejoras con créditos |
 
 **No existe una sala de pruebas dentro del juego:** cada arma y habilidad se prueba en el mapa a medida que
 se desbloquea. La sala gris (`tests/fixtures/`) solo la usan las pruebas automáticas.
@@ -100,6 +100,7 @@ Es el vínculo entre el combate y el contenido educativo.
 | H3 | Misiones (objetivo en pantalla) + Visión Digital involuntaria del prólogo | ✅ |
 | H4a | Entrar a la PC: succión por la pantalla, pantalla de carga, materialización como alma digital y escritorio provisional | ✅ |
 | H4b | Nivel de SPAM dentro de la PC (pop-ups, anuncios trampa, correos que caen) hasta la cuenta del profesor | ✅ |
+| T1 | Terminal simulada (pwd, ls, cd, cat…) + primera terminal en la PC del profesor | ✅ |
 | H4c | Combate contra la "Contraseña débil" con la mini espada (J) | ⏳ |
 | H4d | 2 elecciones (contraseña y MFA) → desbloquea Q y sale de la PC | ⏳ |
 | H5 | Habitación vieja: Nullblade.exe (dash, doble salto, ataque) + cartel "Capítulo 1" | ⏳ |

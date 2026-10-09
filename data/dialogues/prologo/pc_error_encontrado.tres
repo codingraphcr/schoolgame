@@ -5,7 +5,6 @@
 [resource]
 script = ExtResource("1_7c6tn")
 script_text = "# Al llegar a la cuenta del profesor (dentro de la PC). Kai habla con el profesor desde afuera.
-Kai: ¡Profe, aquí está el error!
-Kai: Su contraseña es 123456 y no tiene verificación en dos pasos. Cualquiera podría entrar.
-Prof. Alvarado [preocupado]: ¿Y eso cómo lo arreglamos?
-Kai: Déjemelo a mí. Voy a cambiarla."
+Kai: ¡Profe, aquí está el error! Encontré su cuenta.
+Prof. Alvarado [preocupado]: ¿Y qué tiene? ¿Está dañada?
+Kai [pensativo]: Todavía no sé. Hay una terminal aquí al lado: voy a revisar la configuración de su cuenta."

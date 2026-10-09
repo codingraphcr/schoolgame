@@ -77,6 +77,10 @@ var active_quest: StringName = &""
 ## Paso actual de cada misión empezada (índice); -1 = completada.
 var _quest_progress: Dictionary[StringName, int] = {}
 
+# --- Conocimiento ---
+## Comandos de terminal que Kai ya usó (páginas del manual del Grimorio).
+var _commands: Dictionary[StringName, bool] = {}
+
 
 ## Vuelve al estado inicial (nueva partida).
 func reset() -> void:
@@ -90,6 +94,7 @@ func reset() -> void:
 	_reset_progress()
 	active_quest = &""
 	_quest_progress.clear()
+	_commands.clear()
 	stats_changed.emit()
 	progress_changed.emit()
 
@@ -334,6 +339,24 @@ func get_objective_text() -> String:
 	return quest.steps[index].objective
 
 
+# --- Conocimiento ---
+
+## Registra un comando de terminal como aprendido. true si es nuevo.
+func learn_command(command: StringName) -> bool:
+	if _commands.has(command):
+		return false
+	_commands[command] = true
+	return true
+
+
+func has_learned_command(command: StringName) -> bool:
+	return _commands.has(command)
+
+
+func get_learned_commands() -> Array[String]:
+	return _key_list(_commands)
+
+
 # --- Guardado (preparado para más adelante) ---
 
 func to_dict() -> Dictionary:
@@ -347,6 +370,7 @@ func to_dict() -> Dictionary:
 		"decision_log": _decision_log.duplicate(true),
 		"active_quest": String(active_quest),
 		"quests": _keys_to_strings(_quest_progress),
+		"commands": _key_list(_commands),
 		"player": {
 			"credits": credits,
 			"max_masks": max_masks,
@@ -380,6 +404,8 @@ func from_dict(data: Dictionary) -> void:
 	var quests: Dictionary = data.get("quests", {})
 	for quest_id: String in quests:
 		_quest_progress[StringName(quest_id)] = int(quests[quest_id])
+	for command: String in data.get("commands", []):
+		_commands[StringName(command)] = true
 	# Partidas sin progreso del jugador (versiones anteriores) quedan con los valores iniciales.
 	# int() porque al pasar por JSON los números vuelven como decimales.
 	var player: Dictionary = data.get("player", {})

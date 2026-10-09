@@ -1,6 +1,6 @@
 extends Interactable
 ## La pestaña "Cambiar contraseña" de la cuenta del profesor. Se puede usar cuando la misión llega a
-## "cambiar_contrasena" (después de cruzar el SPAM). Allí empezará el combate contra la
+## "cambiar_contrasena" (después de cruzar el SPAM y revisar la configuración en la terminal). Allí empezará el combate contra la
 ## "Contraseña débil" con la mini espada (tarea H4c).
 
 const CYAN := Color("3ef2ff")
@@ -14,10 +14,12 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	var usable: bool = get_node("/root/GameState").get_current_step(&"contrasena_profesor") == &"cambiar_contrasena"
+	var step: StringName = get_node("/root/GameState").get_current_step(&"contrasena_profesor")
+	var usable := step == &"cambiar_contrasena"
 	enabled = usable
 	if account_window:
 		account_window.set("tab_ready", usable)
+		account_window.set("revealed", step not in [&"entrar_pc", &"cruzar_spam", &"revisar_configuracion"])
 	super(delta)
 
 

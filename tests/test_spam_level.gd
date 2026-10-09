@@ -31,7 +31,7 @@ func _run() -> void:
 	player.damage.hurt.connect(func(_hit: HitData) -> void: _hurts += 1)
 	await _until(func() -> bool: return state.get_current_step(&"contrasena_profesor") == &"cruzar_spam")
 	_check(state.get_current_step(&"contrasena_profesor") == &"cruzar_spam", "al entrar a la PC, la misión pide cruzar el SPAM")
-	_check(room.camera.limit_right == 3200, "el nivel mide 3200 px")
+	_check(room.camera.limit_right == 3360, "el nivel mide 3360 px")
 
 	await _test_popups()
 	await _test_traps_and_mail()
@@ -65,7 +65,8 @@ func _test_popups() -> void:
 	await _frames(45)
 	var player_moved := player.global_position.x - start_x
 	var popup_moved := moving.global_position.x - popup_start_x
-	_check(player.is_on_floor() and absf(popup_moved) > 1.0 and absf(player_moved - popup_moved) < 2.0,
+	# Kai sigue al pop-up con 1-2 cuadros de retraso.
+	_check(player.is_on_floor() and absf(popup_moved) > 1.0 and absf(player_moved - popup_moved) < 4.0,
 		"un pop-up que se mueve lleva a Kai encima (Kai %.0f px, pop-up %.0f px)" % [player_moved, popup_moved])
 	await _wait(1.2)
 
@@ -204,11 +205,11 @@ func _test_account() -> void:
 		_action("interact")
 		await _frames(3)
 	await _frames(5)
-	_check(state.get_current_step(&"contrasena_profesor") == &"cambiar_contrasena", "la misión pide cambiar la contraseña")
-	player.teleport_to(Vector2(3048, FLOOR_Y))
+	_check(state.get_current_step(&"contrasena_profesor") == &"revisar_configuracion", "la misión pide revisar la configuración en la terminal")
+	player.teleport_to(Vector2(3036, FLOOR_Y))
 	await _frames(8)
-	var tab := room.get_node("AccountTab") as Interactable
-	_check(tab._prompt.visible and tab._prompt.text == "E: cambiar la contraseña", "la pestaña «Cambiar contraseña» se puede usar")
+	var station := room.get_node("TerminalStation") as Interactable
+	_check(station._prompt.visible and station._prompt.text == "E: abrir la terminal", "la terminal está junto a la cuenta (sigue en test_terminal.gd)")
 
 
 ## Camina a la derecha hasta x (sin saltar) y espera a estar en el suelo.

@@ -51,4 +51,5 @@ godot --headless --path . --script res://tests/test_dialogue.gd
 godot --headless --path . --script res://tests/test_prologue.gd
 godot --headless --path . --script res://tests/test_digital_dive.gd
 godot --headless --path . --script res://tests/test_spam_level.gd
+godot --headless --path . --script res://tests/test_terminal.gd
 ```

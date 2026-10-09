@@ -17,9 +17,12 @@
 [ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="10_iofjp"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/pc_error_encontrado.tres" id="11_uw1aa"]
 [ext_resource type="Script" path="res://world/digital/restore_point.gd" id="12_rstpt"]
+[ext_resource type="Script" path="res://world/digital/terminal_station.gd" id="13_trmst"]
+[ext_resource type="Resource" path="res://data/terminals/pc_profesor_cuenta.tres" id="14_trmch"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/pc_configuracion_encontrada.tres" id="15_cfgok"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5aedr"]
-size = Vector2(3264, 80)
+size = Vector2(3424, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nr2fl"]
 size = Vector2(32, 360)
@@ -45,12 +48,12 @@ script = ExtResource("1_7ma26")
 player = NodePath("Player")
 camera = NodePath("GameCamera")
 spawn_point = NodePath("SpawnPoint")
-room_size = Rect2(0, 0, 3200, 360)
+room_size = Rect2(0, 0, 3360, 360)
 player_tint = Color(0.7, 1, 1.15, 1)
 
 [node name="Background" type="Node2D" parent="." unique_id=930290375]
 script = ExtResource("2_h6uko")
-area = Rect2(0, 0, 3200, 360)
+area = Rect2(0, 0, 3360, 360)
 construction_note = ""
 
 [node name="SpamDecor" type="Node2D" parent="." unique_id=257834936]
@@ -124,7 +127,7 @@ accent = Color(0.18431373, 0.7490196, 0.3529412, 1)
 collision_mask = 0
 
 [node name="Taskbar" type="CollisionShape2D" parent="Collisions" unique_id=1458307615]
-position = Vector2(1600, 344)
+position = Vector2(1680, 344)
 shape = SubResource("RectangleShape2D_5aedr")
 
 [node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=161144976]
@@ -132,7 +135,7 @@ position = Vector2(-16, 180)
 shape = SubResource("RectangleShape2D_nr2fl")
 
 [node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1292354208]
-position = Vector2(3216, 180)
+position = Vector2(3376, 180)
 shape = SubResource("RectangleShape2D_huro6")
 
 [node name="HintBack" type="Label" parent="." unique_id=1786122676]
@@ -493,12 +496,22 @@ interval = 0.85
 position = Vector2(1400, 304)
 script = ExtResource("12_rstpt")
 
+[node name="TerminalStation" type="Area2D" parent="." unique_id=1816087198]
+position = Vector2(3036, 304)
+script = ExtResource("13_trmst")
+challenge = ExtResource("14_trmch")
+quest_id = &"contrasena_profesor"
+step_id = &"revisar_configuracion"
+success_dialogue = ExtResource("15_cfgok")
+prompt_text = "E: abrir la terminal"
+prompt_offset = Vector2(-40, -80)
+
 [node name="AccountWindow" type="Node2D" parent="." unique_id=570698044]
-position = Vector2(2996, 304)
+position = Vector2(3120, 304)
 script = ExtResource("8_nr2fl")
 
 [node name="AccountTab" type="Area2D" parent="." unique_id=334421268 node_paths=PackedStringArray("account_window")]
-position = Vector2(3048, 272)
+position = Vector2(3172, 272)
 script = ExtResource("9_huro6")
 account_window = NodePath("../AccountWindow")
 prompt_text = "E: cambiar la contraseña"

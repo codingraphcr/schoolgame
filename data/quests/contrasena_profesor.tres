@@ -13,6 +13,11 @@ script = ExtResource("2_gafkn")
 id = &"cruzar_spam"
 objective = "Atraviesa el SPAM hasta la cuenta del profesor. ¡No hagas clic en los anuncios!"
 
+[sub_resource type="Resource" id="Resource_trmnl"]
+script = ExtResource("2_gafkn")
+id = &"revisar_configuracion"
+objective = "Usa la terminal para encontrar la configuración de la cuenta del profesor."
+
 [sub_resource type="Resource" id="Resource_mltyb"]
 script = ExtResource("2_gafkn")
 id = &"cambiar_contrasena"
@@ -22,4 +27,4 @@ objective = "Cambia la contraseña del profesor."
 script = ExtResource("1_j10ej")
 id = &"contrasena_profesor"
 title = "La contraseña del profesor"
-steps = Array[ExtResource("2_gafkn")]([SubResource("Resource_j10ej"), SubResource("Resource_gafkn"), SubResource("Resource_mltyb")])
+steps = Array[ExtResource("2_gafkn")]([SubResource("Resource_j10ej"), SubResource("Resource_gafkn"), SubResource("Resource_trmnl"), SubResource("Resource_mltyb")])

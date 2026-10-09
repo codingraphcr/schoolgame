@@ -258,7 +258,7 @@ Diálogos en `data/dialogues/prologo/`: `profesor_pedido.tres` (pide revisar la 
    cierra la pantalla de carga y Kai se arma desde píxeles (`DigitalDive.materialize()`).
 4. Las salas digitales usan `Room.player_tint` (Kai celeste: su alma digital) y `Room.room_size` (no tienen tiles).
 
-`world/zones/pc_profesor/escritorio.tscn`: **nivel de SPAM** dentro de la computadora del profesor (3200 px, solo caminar
+`world/zones/pc_profesor/escritorio.tscn`: **nivel de SPAM** dentro de la computadora del profesor (3360 px, solo caminar
 y saltar). La salida izquierda vuelve al laboratorio (entrada `desde_pc`, también con materialización).
 
 Recorrido, de izquierda a derecha:
@@ -271,7 +271,7 @@ Recorrido, de izquierda a derecha:
 | C | 1480–1830 | Escalera Stim → Pokimon GO+ (se cierra) → Clash Royal (sube y baja) sobre un foso de trampas |
 | D | 1820–2300 | Lluvia C (la más intensa) y 3 vallas cortas que hay que saltar |
 | E | 2320–2900 | Lluvia D, Fri Fayer → Valorante (se mueve) → Brawl Starz (se cierra) → Zeldo sobre un foso largo |
-| Final | 2956–3100 | «¡Profe, aquí está el error!» y la cuenta del profesor |
+| Final | 2956–3310 | «¡Profe, aquí está el error!», la **terminal** (x=3036) y la cuenta del profesor |
 
 **Componentes de SPAM** (`world/digital/spam/`, se ven también en el editor y sirven para otros niveles):
 
@@ -291,6 +291,28 @@ Al final, `AccountWindow` (cuenta del profesor: contraseña 123456, sin verifica
 **`QuestTrigger`** (`systems/quests/`): Area2D que completa un paso de misión al entrar Kai (o al cargar la sala con
 `on_ready`) y puede mostrar un diálogo antes. En la PC: `EnteredPc` (entrar_pc) y `FoundError` («¡Profe, aquí está el error!»).
 
+## Terminal simulada (`systems/terminal/`, `ui/terminal/`)
+
+Terminal educativa con comandos reales de Linux sobre un **sistema de archivos ficticio**. Es una simulación:
+no ejecuta programas del dispositivo ni lee sus archivos (`test_terminal.gd` lo comprueba).
+
+| Pieza | Qué hace |
+|---|---|
+| `VirtualFileSystem` | Carpetas (Dictionary) y archivos (String) en memoria. Rutas como en Linux: `~`, `.`, `..`, absolutas |
+| `CommandInterpreter` | Lista de comandos permitidos: `help`, `pwd`, `ls`, `cd`, `cat`, `clear`, `history`. Mensajes de error como bash (en español). Historial y autocompletado. Emite `command_run` por cada comando que funciona |
+| `TerminalChallenge` (Resource, `data/terminals/`) | Un desafío: usuario y equipo del prompt, archivos, objetivo (`goal_file`: leerlo con `cat`), comandos permitidos, pistas y retroalimentación |
+| `TerminalWindow` | Ventana encima del juego: objetivo, salida con colores y la línea de comandos. Enter ejecuta, ↑/↓ historial, Tab completa, Esc cierra. Botones rápidos para celular (`ls`, `pwd`, `cd …`, `cd ..`, `cat …`), Pista, Continuar |
+| `TerminalStation` (`world/digital/`) | Interactuable: con E abre la ventana. Con `quest_id`/`step_id` solo funciona en ese paso y al resolver muestra `success_dialogue` y completa el paso |
+
+Cada comando usado queda **aprendido** en `GameState` (`learn_command`, se guarda): serán las páginas del
+manual del Grimorio. Para crear una terminal nueva: un `TerminalChallenge` en el Inspector y una `TerminalStation`
+en la sala; no hace falta programar.
+
+**Primera terminal** (PC del profesor, paso `revisar_configuracion`): encontrar y leer
+`~/cuenta/configuracion.txt` (contraseña 123456, sin verificación en dos pasos). Alineada con indicadores de
+décimo de la tabla del MEP 2025 (Operaciones ciberseguras): seguridad en sistemas operativos de código abierto y
+conceptos básicos de gestión de contraseñas.
+
 ## Misiones (`systems/quests/`)
 
 | Pieza | Responsabilidad |
@@ -301,7 +323,7 @@ Al final, `AccountWindow` (cuenta del profesor: contraseña 123456, sin verifica
 | `NpcConversation` | Lo que dice un NPC en un paso concreto; con `completes_step` completa ese paso al terminar |
 | HUD | `ObjectiveDisplay` (OBJETIVO, arriba a la derecha, destella al cambiar) y `TitleCard` (título grande al completar una misión) |
 
-**La contraseña del profesor** (`contrasena_profesor.tres`): entrar a la PC → cruzar el SPAM → cambiar la contraseña.
+**La contraseña del profesor** (`contrasena_profesor.tres`): entrar a la PC → cruzar el SPAM → revisar la configuración en la terminal → cambiar la contraseña.
 
 **Prólogo** (`data/quests/prologo.tres`): buscar al profesor → revisar la computadora del laboratorio → contarle al
 profesor. Al completarlo: **«CAPÍTULO 0 · EL DESPERTAR»** y empieza **La contraseña del profesor**
@@ -386,6 +408,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_dialogue.gd` | Formato de los diálogos, aviso «E: hablar», caja de diálogo (letra por letra, completar, avanzar, cerrar), controles bloqueados, marca del profesor y recordatorio |
 | `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
 | `test_digital_dive.gd` | La computadora absorbe a Kai (cámara, desaparición), pantalla de carga, llegada al escritorio, materialización, alma digital celeste, límites y regreso al laboratorio |
-| `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa de 3200 px solo saltando (bot), punto de restauración (activarlo y reaparecer ahí al morir) y llegada a la cuenta del profesor |
+| `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa solo saltando (bot), punto de restauración (activarlo y reaparecer ahí al morir) y llegada a la cuenta del profesor |
+| `test_terminal.gd` | Terminal simulada: sistema de archivos, comandos y errores, autocompletado, comandos permitidos, que no toque el sistema real, y la terminal de la PC del profesor (abrir, Esc, resolver, diálogo, paso de misión, comandos aprendidos y guardados) |
 | `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

@@ -15,6 +15,8 @@ const DARK := Color("1b2647")
 			_canvas.queue_redraw()
 ## Si la pestaña "Cambiar contraseña" está lista para usarse (se ilumina).
 @export var tab_ready := false
+## Si ya se sabe qué tiene la cuenta (Kai lo encontró en la terminal). Antes, los datos están ocultos.
+@export var revealed := true
 
 var _canvas: VectorCanvas
 
@@ -44,6 +46,12 @@ func _paint(c: VectorCanvas, t: float) -> void:
 	# Estado de la cuenta.
 	var y := window.position.y + 54
 	c.crisp_text(Vector2(window.position.x + 10, y), "Usuario: profesor@colegio", 6, DARK, HORIZONTAL_ALIGNMENT_LEFT)
+	if not revealed:
+		c.crisp_text(Vector2(window.position.x + 10, y + 16), "Contraseña: ••••••", 6, DARK, HORIZONTAL_ALIGNMENT_LEFT)
+		c.crisp_text(Vector2(window.position.x + 10, y + 32), "Seguridad: ?", 6, DARK, HORIZONTAL_ALIGNMENT_LEFT)
+		c.crisp_text(Vector2(window.position.x + 10, y + 48), "Verificación en dos pasos: ?", 6, DARK, HORIZONTAL_ALIGNMENT_LEFT)
+		c.crisp_text(Vector2(window.position.x + 10, y + 64), "Última vez cambiada: ?", 5, DARK, HORIZONTAL_ALIGNMENT_LEFT)
+		return
 	c.crisp_text(Vector2(window.position.x + 10, y + 16), "Contraseña: 123456", 6, DARK, HORIZONTAL_ALIGNMENT_LEFT)
 	c.crisp_text(Vector2(window.position.x + 10, y + 32), "Seguridad: MUY DÉBIL", 6, MAG, HORIZONTAL_ALIGNMENT_LEFT)
 	c.crisp_text(Vector2(window.position.x + 10, y + 48), "Verificación en dos pasos: NO", 6, MAG, HORIZONTAL_ALIGNMENT_LEFT)

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_cfgok"]
+
+[resource]
+script = ExtResource("1_cfgok")
+script_text = "# Al resolver la terminal de la PC del profesor (configuracion.txt).
+Kai [sorprendido]: ¡Profe! Su contraseña es 123456 y no tiene activada la verificación en dos pasos.
+Kai [serio]: Es de las contraseñas más usadas del mundo. Cualquiera podría adivinarla en segundos.
+Prof. Alvarado [preocupado]: ¿Y eso cómo lo arreglamos?
+Kai: Déjemelo a mí. Voy a cambiarla."
