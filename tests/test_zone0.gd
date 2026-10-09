@@ -47,8 +47,8 @@ func _test_new_game(room: Room, player: Player) -> void:
 	_check(state.credits == 0, "partida nueva: 0 créditos")
 	_check(room.get_node("CombatHUD/Masks").get_child_count() == 4, "el HUD muestra 4 máscaras")
 	_check(player.is_on_floor() and absf(player.global_position.y - FLOOR_Y) < 1.0, "Kai aparece de pie en el pasillo")
-	var sprite := player.get_node("Visual/Body/Sprite") as AnimatedSprite2D
-	_check(sprite.visible and sprite.animation == &"idle", "Kai usa el sprite de Ariel (animación idle)")
+	var kai := player.get_node("Visual/Body/Kai") as KaiVisual
+	_check(kai != null and kai._animation.current_animation == &"quieto", "Kai es el diseño de Ariel por huesos (animación quieto)")
 	await _press("dash")
 	await _frames(2)
 	Input.action_release("dash")
@@ -62,8 +62,8 @@ func _test_layout(room: Room, player: Player) -> void:
 
 	Input.action_press("move_right")
 	await _frames(10)
-	var sprite := player.get_node("Visual/Body/Sprite") as AnimatedSprite2D
-	_check(sprite.animation == &"run", "al correr usa la animación run")
+	var kai := player.get_node("Visual/Body/Kai") as KaiVisual
+	_check(kai._animation.current_animation == &"correr", "al correr usa la animación correr")
 	var reached_lab := false
 	for i in 600:
 		await physics_frame

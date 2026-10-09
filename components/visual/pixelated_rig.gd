@@ -9,6 +9,8 @@ const CRISP_SHADER := preload("res://components/visual/pixel_crisp.gdshader")
 
 var viewport: SubViewport
 
+var _sprite: Sprite2D
+
 
 ## content: el nodo animado. size: tamaño del lienzo en píxeles.
 ## anchor: punto del lienzo que coincide con el origen de este nodo (p. ej. los pies).
@@ -34,3 +36,21 @@ func setup(content: Node2D, size: Vector2i, anchor: Vector2i, outline := true) -
 		crisp.set_shader_parameter(&"outline_color", Color(0, 0, 0, 0))
 	sprite.material = crisp
 	add_child(sprite)
+	_sprite = sprite
+
+
+## Copia congelada del cuadro actual (p. ej. para las siluetas del dash). Devuelve null si
+## no hay imagen disponible (como en las pruebas sin pantalla).
+func snapshot() -> Sprite2D:
+	# Sin pantalla (pruebas automáticas) no se dibuja nada que copiar.
+	if viewport == null or _sprite == null or DisplayServer.get_name() == "headless":
+		return null
+	var image := viewport.get_texture().get_image()
+	if image == null or image.is_empty():
+		return null
+	var copy := Sprite2D.new()
+	copy.texture = ImageTexture.create_from_image(image)
+	copy.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	copy.offset = _sprite.offset
+	copy.material = _sprite.material
+	return copy

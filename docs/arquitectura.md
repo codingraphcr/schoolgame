@@ -54,9 +54,9 @@ Detalle completo en [`docs/arte/guia_de_arte.md`](arte/guia_de_arte.md).
 
 **Kai, el personaje:** el diseño oficial es el de Ariel (pelo plateado, chaqueta clara, mochila; ~40 px), con
 huesos pixelados: `KaiVisual` (ver "Apariencia de Kai" más abajo).
-**Provisional:** hoy `player.tscn` usa `characters/player/kai_frames.tres` (el Kai de la muestra A, SpriteFrames:
-idle, run, jump, fall, dash, wall; 24×36 px) con `player_animation.gd`, que elige la animación según `Player.state`.
-Pendiente acordar el cambio a `KaiVisual` en el jugador.
+`player.tscn` usa `KaiVisual` en `Visual/Body/Kai` (acordado con el director). Las siluetas del dash son
+instantáneas congeladas del cuadro actual (`PixelatedRig.snapshot()`), y el shader `pixel_crisp` respeta el
+`modulate` del nodo (parpadeo al recibir daño, tinte de las siluetas).
 
 ## Resolución y pixel art
 

@@ -5,14 +5,16 @@ uniform vec4 outline_color : source_color = vec4(0.03, 0.04, 0.09, 1.0);
 uniform float alpha_cut : hint_range(0.0, 1.0) = 0.45;
 
 void fragment() {
+	// COLOR trae el modulate del nodo: se aplica al final (parpadeo al recibir daño, siluetas del dash).
+	vec4 tint = COLOR;
 	vec4 color = texture(TEXTURE, UV);
 	if (color.a >= alpha_cut) {
-		COLOR = vec4(color.rgb, 1.0);
+		COLOR = vec4(color.rgb, 1.0) * tint;
 	} else {
 		vec2 px = TEXTURE_PIXEL_SIZE;
 		float neighbor = max(
 			max(texture(TEXTURE, UV + vec2(px.x, 0.0)).a, texture(TEXTURE, UV - vec2(px.x, 0.0)).a),
 			max(texture(TEXTURE, UV + vec2(0.0, px.y)).a, texture(TEXTURE, UV - vec2(0.0, px.y)).a));
-		COLOR = neighbor >= alpha_cut ? outline_color : vec4(0.0);
+		COLOR = neighbor >= alpha_cut ? outline_color * vec4(1.0, 1.0, 1.0, tint.a) : vec4(0.0);
 	}
 }
