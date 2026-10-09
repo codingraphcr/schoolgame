@@ -385,3 +385,8 @@ func _point_on(path: PackedVector2Array, u: float) -> Vector2:
 	var index := clampf(u, 0.0, 1.0) * (path.size() - 1)
 	var i := mini(int(index), path.size() - 2)
 	return path[i].lerp(path[i + 1], index - i)
+
+
+## Usa el Kai oficial del jugador (huesos pixelados), no el de la muestra A.
+func _build_player_visual() -> Node2D:
+	return null

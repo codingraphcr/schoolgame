@@ -52,11 +52,9 @@ Detalle completo en [`docs/arte/guia_de_arte.md`](arte/guia_de_arte.md).
 - `assets/shaders/glitch_cercania.gdshader`: efecto de glitch (transición de la Visión Digital).
 - `prototypes/estilos/`: las 6 muestras originales (A–F) se conservan como referencia y usan los recursos de arriba.
 
-**Kai, el personaje:** el diseño oficial es el de Ariel (pelo plateado, chaqueta clara, mochila; ~40 px), con
-huesos pixelados: `KaiVisual` (ver "Apariencia de Kai" más abajo).
-**Provisional:** hoy `player.tscn` usa `characters/player/kai_frames.tres` (el Kai de la muestra A, SpriteFrames:
-idle, run, jump, fall, dash, wall; 24×36 px) con `player_animation.gd`, que elige la animación según `Player.state`.
-Pendiente acordar el cambio a `KaiVisual` en el jugador.
+**Kai, el personaje:** diseño de Ariel (pelo blanco-lavanda medio largo, chaqueta blanca abierta, ropa oscura; ~46 px)
+con huesos pixelados. `player.tscn` lo usa en `Visual/Body/Kai` (`KaiVisual`, ver "Apariencia de Kai" más abajo).
+`characters/player/kai_frames.tres` y `player_animation.gd` (el Kai de la muestra A) ya no se usan en el jugador.
 
 ## Resolución y pixel art
 
@@ -138,8 +136,10 @@ El dibujo (`Visual/Body`) se deforma al saltar/aterrizar y el dash deja una este
 **Apariencia de Kai (huesos pixelados, `characters/player/kai/`):** `KaiVisual` es el dibujo final del jugador.
 Instancia `kai_esqueleto.tscn` (`Skeleton2D` + `Bone2D` con una pieza de `assets/art/characters/kai/kai_piezas.png`
 por hueso y un `AnimationPlayer`), lo dibuja con `PixelatedRig` (`components/visual/`) a resolución de pixel art,
-elige la animación según `Player.state` y mueve el mechón y la mochila por código. Para usarlo en el jugador basta con
-agregarlo como hijo de `Visual/Body` (asignándole `player`) y ocultar los polígonos provisionales; hoy lo usa la muestra E.
+elige la animación según `Player.state` y mueve con resortes el pelo, los mechones, el faldón y la mochila
+(`KaiVisual.SPRINGS`). Toma como `player` al dueño de la escena si no se le asigna uno. `attack()` reproduce el ataque
+con el Nullblade (pendiente de conectar al ataque real). Las estelas del dash congelan su cuadro (`PixelatedRig._ready`).
+Las muestras de estilo usan este Kai si `_build_player_visual()` devuelve null (D y E).
 Las medidas de las piezas están en `kai_piezas.gd`; `generar_esqueleto_kai.gd` regenera la escena (borra retoques manuales).
 
 ## Combate (`components/combat/`)

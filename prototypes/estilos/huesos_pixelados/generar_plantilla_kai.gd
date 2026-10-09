@@ -1,6 +1,7 @@
 extends SceneTree
 ## Genera la plantilla de Kai por piezas (técnica de huesos pixelados) y las imágenes de la guía de arte.
-## Diseño de referencia: Kai de Ariel (pelo plateado, chaqueta clara con cuello alto, mochila, ~40 px).
+## Diseño: Kai de Ariel según su hoja de sprites (pelo blanco-lavanda medio largo, chaqueta blanca
+## con capucha abierta sobre camiseta negra, guantes, pantalón holgado, zapatillas; ~44 px).
 ## Ejecutar: godot --headless --path . --script res://prototypes/estilos/huesos_pixelados/generar_plantilla_kai.gd
 ##
 ## Salidas:
@@ -22,11 +23,201 @@ const JOINT := Color("ffe14d")
 const BACKGROUND := Color("1b2033")
 const LABEL := Color("c9d3ee")
 const BACK_TINT := Color(0.72, 0.72, 0.82)  # Las extremidades de atrás reutilizan la pieza, más oscura.
+## El Aegis flota junto a Kai: no lleva huesos, se anima por cuadros.
+const AEGIS_SIZE := Vector2i(16, 16)
 
 ## Medidas de las piezas (compartidas con el esqueleto): ver characters/player/kai/kai_piezas.gd.
 var pieces := KaiPiezas.PIECES
-## El Aegis flota junto a Kai: no lleva huesos, se anima por cuadros.
-const AEGIS_SIZE := Vector2i(16, 16)
+
+## Letras de los mapas de píxeles → colores de la paleta ("." = transparente).
+var ink := {
+	"o": Sprites.O, "W": Sprites.PLATA_L, "H": Sprites.PLATA, "D": Sprites.PLATA_D, "V": Sprites.VIOLETA_D,
+	"S": Sprites.SKIN, "s": Sprites.SKIN_D, "E": Sprites.VIOLETA, "e": Sprites.VIOLETA_D,
+	"C": Sprites.TELA, "c": Sprites.N3, "U": Sprites.VIOLETA, "B": Sprites.AZUL_E, "A": Sprites.AZUL_L,
+}
+
+## Piezas dibujadas píxel a píxel, mirando a la derecha. El contorno exterior se agrega solo.
+const MAPS := {
+	# Pelo voluminoso en puntas, flequillo sobre los ojos y ojo grande violeta.
+	"cabeza": [
+		"................",
+		"......W..W......",
+		"...W..WH.HW..W..",
+		"...HWWHHWHHW.HH.",
+		"..HHHWHHHHHWWHH.",
+		".DHHHHHHHHHHHHH.",
+		".DHHHHHHHHWHHHH.",
+		".DHHHHHHHHHHHHH.",
+		".DDHHHHHHSHHSHH.",
+		".VDHHHHSSSooooH.",
+		".VDDHHHSSSEEWoH.",
+		".VDDHHSSSSeEESS.",
+		"..VDDHSSSSSSSsS.",
+		"..VDDHsSSSSSS...",
+		"...VDHssSSS.....",
+		"......sss.......",
+	],
+	# Melena de atrás: cae por la nuca hasta los hombros (medio larga).
+	"pelo_atras": [
+		"..........",
+		"..DHHHHH..",
+		".DDHHHHH..",
+		".VDHHHHH..",
+		".VDDHHHH..",
+		"..VDHHH...",
+		"..VDDH....",
+		"...VD.....",
+		"...V......",
+		"..........",
+	],
+	"mechon_frente": [
+		".....",
+		".HW..",
+		".HH..",
+		"..H..",
+		"..H..",
+		"..D..",
+		".....",
+	],
+	"mechon_atras": [
+		"......",
+		".WH...",
+		"..HH..",
+		"...HH.",
+		"......",
+	],
+	# Chaqueta blanca con capucha, abierta sobre la camiseta negra con emblema violeta.
+	"torso": [
+		"................",
+		"......CCCC......",
+		"...HHHCCCCC.....",
+		"..HWHHCcUCCW....",
+		"..HHWWWWWCCWW...",
+		"..DHWWWWWCBCWW..",
+		"..DHWWWWWCCCWW..",
+		"..DHWWWWWCUCWW..",
+		"..DHWWWHWCCCWW..",
+		"..DHWWWWWCCCWW..",
+		"..DHWWWWWCCCWW..",
+		"..DDHWWWWCCCW...",
+		"..DDHWWWWCCCW...",
+		"..DDHHHHHCCCH...",
+		"...DDHHHHCCCH...",
+		"....CCCCCCCC....",
+		"................",
+	],
+	# Faldón trasero de la chaqueta (se balancea).
+	"faldon": [
+		"............",
+		".DHHHHHH....",
+		".DHHHHHH....",
+		".DDHHHHH....",
+		"..DDHHH.....",
+		"...DD.......",
+		"............",
+	],
+	"mochila": [
+		"...........",
+		"...CCCCC...",
+		"..CCCCCCC..",
+		".cCCCCCCCc.",
+		".cCCCCCCCc.",
+		".cCCCACCCc.",
+		".cCCUCUCCc.",
+		".cCCCACCCc.",
+		".cCCCCCCCc.",
+		".cCCCCCCCc.",
+		"..cCCCCCc..",
+		"...ccccc...",
+		"...........",
+	],
+	# Manga abullonada.
+	"brazo": [
+		".........",
+		"..HWWW...",
+		".HWWWWW..",
+		".HWWWWW..",
+		".DHWWWW..",
+		".DHWWWW..",
+		".DHWWWH..",
+		"..DHWWH..",
+		"..DHHHD..",
+		"..DDHHD..",
+		"...DD....",
+		".........",
+	],
+	# Puño de la manga y guante negro sin dedos.
+	"antebrazo": [
+		"........",
+		".DHWW...",
+		".DHWW...",
+		".DHHW...",
+		".CCCC...",
+		".CcBC...",
+		".CCCC...",
+		".SCCS...",
+		"..SS....",
+		"........",
+	],
+	# Pantalón holgado con correa violeta.
+	"muslo": [
+		".........",
+		".CCCCC...",
+		".CCCCcc..",
+		".CCCCcc..",
+		".CCUCCc..",
+		".CcCCCc..",
+		".CCCCCc..",
+		".CCCCcc..",
+		".CCCCcc..",
+		"..CCCc...",
+		"..CCCC...",
+		".........",
+	],
+	# Pantalón y zapatilla gruesa con suela blanca.
+	"pierna": [
+		"............",
+		"..CCCc......",
+		"..CCCc......",
+		"..CCCc......",
+		"..CCCc......",
+		"..CCCc......",
+		"..cCCC......",
+		"..cCCC......",
+		".CCUCCC.....",
+		".CCCCBCC....",
+		".CCCCCCCC...",
+		".WWWWWWWW...",
+		"............",
+	],
+	# Nullblade (primer nivel): hoja violeta con núcleo luminoso.
+	"arma": [
+		".........",
+		"....A....",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		"...UAU...",
+		".VVVVVVV.",
+		"..VUBUV..",
+		"...CCC...",
+		"...CcC...",
+		"...CCC...",
+		"...CCC...",
+		"....U....",
+		".........",
+	],
+}
 
 var images := {}
 var aegis: PixelPainter
@@ -36,7 +227,7 @@ func _initialize() -> void:
 	for piece_name: String in pieces:
 		var size: Vector2i = pieces[piece_name].size
 		var p := PixelPainter.new(size.x, size.y)
-		call("_draw_" + piece_name, p)
+		_paint_map(p, piece_name)
 		p.outline(Sprites.O)
 		images[piece_name] = p
 	aegis = PixelPainter.new(AEGIS_SIZE.x, AEGIS_SIZE.y)
@@ -52,134 +243,19 @@ func _initialize() -> void:
 	quit()
 
 
-# --- Piezas (mirando a la derecha) ---
-
-## Letras de los mapas de píxeles → colores de la paleta.
-var ink := {
-	"o": Sprites.O, "H": Sprites.PLATA, "L": Sprites.PLATA_L, "D": Sprites.PLATA_D, "V": Sprites.VIOLETA_D,
-	"S": Sprites.SKIN, "s": Sprites.SKIN_D, "E": Sprites.VIOLETA, "W": Sprites.PLATA_L,
-	"J": Sprites.PLATA_L, "j": Sprites.PLATA, "k": Sprites.PLATA_D, "C": Sprites.TELA, "c": Sprites.N3,
-	"B": Sprites.AZUL_E, "U": Sprites.VIOLETA, "A": Sprites.AZUL_L,
-}
-
-
-## Pinta un mapa de píxeles: una fila por línea, una letra por píxel ("." = transparente).
-func _paint_map(p: PixelPainter, rows: PackedStringArray) -> void:
+## Pinta el mapa de una pieza y avisa si no coincide con su tamaño.
+func _paint_map(p: PixelPainter, piece_name: String) -> void:
+	var rows: Array = MAPS[piece_name]
+	var size: Vector2i = pieces[piece_name].size
+	if rows.size() != size.y:
+		push_error("%s: el mapa tiene %d filas y la pieza mide %d" % [piece_name, rows.size(), size.y])
 	for y in rows.size():
-		for x in rows[y].length():
-			var key := rows[y][x]
-			if ink.has(key):
-				p.px(x, y, ink[key])
-
-
-## Cabeza: pelo plateado en puntas, flequillo sobre la frente y ojo grande violeta.
-func _draw_cabeza(p: PixelPainter) -> void:
-	_paint_map(p, PackedStringArray([
-		"..................",
-		".......L...H......",
-		"....H..HL.HH..H...",
-		"....HHHHLHHHH.HH..",
-		"...HHHHHLLHHHHH...",
-		"..DHHHHHHLHHHHHH..",
-		"..DHHHHHHHHHHHHHH.",
-		".DDHHHHHHHHHHHHHH.",
-		".DDHHHHHHHHHHHHHH.",
-		".DDHHHHHHHSHHSHHH.",
-		".VDDHHHHSSSooooHH.",
-		".VDDHHHSSSSSEWSHH.",
-		".VDDDHHsSSSSEESSH.",
-		"..VDDHHSSSSSSSSSS.",
-		"..VDDHHSSSSSSSsS..",
-		"...VDDHssSSSSSS...",
-		".....DHHssSSs.....",
-		"..................",
-	]))
-
-
-func _draw_mechon(p: PixelPainter) -> void:
-	p.rect(2, 1, 2, 2, Sprites.PLATA)
-	p.rect(2, 3, 2, 2, Sprites.PLATA)
-	p.rect(3, 5, 2, 2, Sprites.PLATA_D)
-	p.px(2, 1, Sprites.PLATA_L)
-
-
-## Torso: cuello alto oscuro, capucha detrás y chaqueta clara abierta sobre una camiseta con luz.
-func _draw_torso(p: PixelPainter) -> void:
-	_paint_map(p, PackedStringArray([
-		"..............",
-		".....CCCC.....",
-		"...jjCCCCC....",
-		"..jjjCCUCCJ...",
-		"..jjJJJJJCCJ..",
-		"..jjJJJJJCBJJ.",
-		"..kjJJJJJCCJJ.",
-		"..kjJJJJJCUJJ.",
-		"..kjJJjJJCCJJ.",
-		"..kjJJJJJCCJJ.",
-		"..kjJJJJJCCJ..",
-		"..kkjJJJJCCJ..",
-		"..kkjjjjjCCj..",
-		"...kkjjjjjjj..",
-		"....CCCCCCC...",
-		"..............",
-	]))
-
-
-func _draw_mochila(p: PixelPainter) -> void:
-	p.rect(2, 1, 5, 1, Sprites.TELA)
-	p.rect(1, 2, 7, 9, Sprites.TELA)
-	p.rect(1, 2, 1, 9, Sprites.N3)
-	p.px(4, 5, Sprites.AZUL_L)  # Emblema luminoso
-	p.px(3, 6, Sprites.VIOLETA)
-	p.px(5, 6, Sprites.VIOLETA)
-	p.px(4, 7, Sprites.AZUL_L)
-	p.rect(7, 3, 2, 5, Sprites.N3)  # Correa
-
-
-func _draw_brazo(p: PixelPainter) -> void:
-	p.rect(2, 1, 4, 8, Sprites.PLATA_L)
-	p.rect(2, 1, 1, 8, Sprites.PLATA)
-	p.rect(2, 7, 4, 2, Sprites.PLATA_D)
-	p.px(2, 1, Color.TRANSPARENT)
-	p.px(5, 1, Color.TRANSPARENT)
-
-
-func _draw_antebrazo(p: PixelPainter) -> void:
-	p.rect(2, 1, 4, 3, Sprites.PLATA_L)
-	p.rect(2, 1, 1, 3, Sprites.PLATA)
-	p.rect(2, 4, 4, 5, Sprites.TELA)  # Guante
-	p.px(4, 5, Sprites.AZUL_E)
-	p.px(2, 8, Color.TRANSPARENT)
-	p.px(5, 8, Color.TRANSPARENT)
-
-
-func _draw_muslo(p: PixelPainter) -> void:
-	p.rect(2, 1, 4, 8, Sprites.TELA)
-	p.rect(5, 1, 1, 8, Sprites.N3)
-	p.rect(3, 4, 2, 2, Sprites.N3)  # Bolsillo cargo
-	p.px(3, 5, Sprites.VIOLETA_D)
-
-
-func _draw_pierna(p: PixelPainter) -> void:
-	p.rect(2, 1, 4, 6, Sprites.TELA)
-	p.rect(5, 1, 1, 6, Sprites.N3)
-	p.rect(2, 6, 4, 1, Sprites.N3)
-	p.rect(2, 7, 7, 2, Sprites.N3)  # Zapatilla
-	p.px(5, 7, Sprites.VIOLETA)
-	p.px(7, 8, Sprites.AZUL_E)
-	p.rect(2, 9, 7, 1, Sprites.PLATA_L)
-
-
-## Arma provisional (Nullblade): cada nivel será una imagen distinta con el mismo pivote.
-func _draw_arma(p: PixelPainter) -> void:
-	p.px(4, 1, Sprites.PLATA_L)
-	p.rect(3, 2, 3, 12, Sprites.PLATA_L)
-	p.rect(4, 2, 1, 12, Sprites.PLATA)
-	p.rect(5, 3, 1, 10, Sprites.AZUL_L)
-	p.rect(1, 14, 7, 2, Sprites.VIOLETA_D)
-	p.px(4, 14, Sprites.AZUL_E)
-	p.rect(3, 16, 3, 4, Sprites.TELA)
-	p.px(4, 20, Sprites.VIOLETA)
+		var row: String = rows[y]
+		if row.length() != size.x:
+			push_error("%s, fila %d: %d columnas en vez de %d" % [piece_name, y, row.length(), size.x])
+		for x in row.length():
+			if ink.has(row[x]):
+				p.px(x, y, ink[row[x]])
 
 
 func _draw_aegis(p: PixelPainter) -> void:
@@ -200,30 +276,30 @@ func _save_sheet() -> void:
 		width += size.x + KaiPiezas.GAP
 		height = maxi(height, size.y)
 	var sheet := PixelPainter.new(width, height)
-	var x := 0
 	for piece_name: String in pieces:
-		sheet.paste(images[piece_name], x, 0)
-		x += int(pieces[piece_name].size.x) + KaiPiezas.GAP
+		var region := KaiPiezas.region(piece_name)
+		sheet.paste(images[piece_name], region.position.x, 0)
 	sheet.save(PIECES_OUT)
 
 
 # --- Guía ampliada: piezas con nombre y pivotes + Kai ensamblado ---
 
 func _save_guide() -> void:
-	const CELL := Vector2i(44, 34)
+	const CELL := Vector2i(62, 36)
 	const COLUMNS := 5
 	const SCALE := 5
-	const ASSEMBLED_WIDTH := 56
-	var guide := PixelPainter.new(CELL.x * COLUMNS + ASSEMBLED_WIDTH, CELL.y * 2 + 4)
+	const ASSEMBLED_WIDTH := 64
+	var names: Array[String] = []
+	names.assign(pieces.keys())
+	names.append("aegis")
+	var rows := ceili(names.size() / float(COLUMNS))
+	var guide := PixelPainter.new(CELL.x * COLUMNS + ASSEMBLED_WIDTH, CELL.y * rows + 4)
 	guide.rect(0, 0, guide.width, guide.height, BACKGROUND)
-	var cells: Array[String] = []
-	cells.assign(pieces.keys())
-	cells.append("aegis")
-	for i in cells.size():
-		var piece_name := cells[i]
+	for i in names.size():
+		var piece_name := names[i]
 		var cell := Vector2i((i % COLUMNS) * CELL.x, (i / COLUMNS) * CELL.y + 2)
 		var painter: PixelPainter = aegis if piece_name == "aegis" else images[piece_name]
-		var origin := cell + Vector2i((CELL.x - painter.width) / 2, 23 - painter.height)
+		var origin := cell + Vector2i((CELL.x - painter.width) / 2, 25 - painter.height)
 		guide.paste(painter, origin.x, origin.y)
 		if piece_name != "aegis":
 			var pivot: Vector2i = pieces[piece_name].pivot
@@ -231,52 +307,38 @@ func _save_guide() -> void:
 			for joint: String in pieces[piece_name].joints:
 				var j: Vector2i = pieces[piece_name].joints[joint]
 				guide.px(origin.x + j.x, origin.y + j.y, JOINT)
-		var label := piece_name.to_upper()
-		guide.text(cell.x + (CELL.x - label.length() * 4) / 2, cell.y + 25, label, LABEL)
+		var label := piece_name.to_upper().replace("_", " ")
+		guide.text(cell.x + (CELL.x - label.length() * 4) / 2, cell.y + 27, label, LABEL)
 
-	# Kai ensamblado: cada pivote coincide con la articulación de su pieza padre.
-	var hip := Vector2i(CELL.x * COLUMNS + 26, 50)
-	var torso_pivot: Vector2i = pieces.torso.pivot
-	var torso_at := hip - torso_pivot
-	var neck: Vector2i = torso_at + pieces.torso.joints.cuello
-	var shoulder: Vector2i = torso_at + pieces.torso.joints.hombro
-	var back: Vector2i = torso_at + pieces.torso.joints.espalda
-	var head_pivot: Vector2i = pieces.cabeza.pivot
-	var fringe: Vector2i = neck - head_pivot + pieces.cabeza.joints.flequillo
-	var limb := Vector2i(0, 6)  # Distancia pivote → articulación en brazos y piernas
-	_place(guide, "brazo", shoulder + Vector2i(-2, 0), BACK_TINT)
-	_place(guide, "antebrazo", shoulder + Vector2i(-2, 0) + limb, BACK_TINT)
-	_place(guide, "muslo", hip + Vector2i(-1, 0), BACK_TINT)
-	_place(guide, "pierna", hip + Vector2i(-1, 0) + limb, BACK_TINT)
-	_place(guide, "mochila", back)
-	_place(guide, "muslo", hip + Vector2i(1, 0))
-	_place(guide, "pierna", hip + Vector2i(1, 0) + limb)
-	_place(guide, "torso", hip)
-	_place(guide, "cabeza", neck)
-	_place(guide, "mechon", fringe)
-	_place(guide, "brazo", shoulder)
-	_place(guide, "antebrazo", shoulder + limb)
-	guide.text(CELL.x * COLUMNS + 8, CELL.y * 2 - 1, "ENSAMBLADO", LABEL)
+	# Kai ensamblado: recorre el esqueleto y pega cada pieza en la posición de su hueso.
+	var feet := Vector2(CELL.x * COLUMNS + ASSEMBLED_WIDTH / 2, CELL.y * rows - 10)
+	var positions := { "": feet }
+	var placed: Array = []
+	for entry: Dictionary in KaiPiezas.RIG:
+		var pos: Vector2 = positions[entry.parent] + KaiPiezas.bone_offset(entry)
+		positions[entry.bone] = pos
+		if entry.has("piece") and not entry.get("weapon", false):
+			placed.append([entry.get("z", 0), entry.piece, pos, entry.get("back", false)])
+	placed.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
+	for item: Array in placed:
+		_place(guide, item[1], Vector2i(item[2].round()), BACK_TINT if item[3] else Color.WHITE)
+	guide.text(CELL.x * COLUMNS + 12, CELL.y * rows - 4, "ENSAMBLADO", LABEL)
 	guide.image.resize(guide.width * SCALE, guide.height * SCALE, Image.INTERPOLATE_NEAREST)
 	guide.save(GUIDE_OUT)
 
 
-## Pega una pieza haciendo coincidir su pivote con `at`. `flip` la invierte verticalmente
-## (el arma en reposo apunta hacia abajo).
-func _place(guide: PixelPainter, piece_name: String, at: Vector2i, tint := Color.WHITE, flip := false) -> void:
+## Pega una pieza haciendo coincidir su pivote con `at`.
+func _place(guide: PixelPainter, piece_name: String, at: Vector2i, tint := Color.WHITE) -> void:
 	var source: PixelPainter = images[piece_name]
 	var piece := PixelPainter.new(source.width, source.height)
 	piece.image = source.image.duplicate()
-	var pivot: Vector2i = pieces[piece_name].pivot
-	if flip:
-		piece.image.flip_y()
-		pivot.y = source.height - 1 - pivot.y
 	if tint != Color.WHITE:
 		for y in piece.height:
 			for x in piece.width:
 				var c := piece.image.get_pixel(x, y)
 				if c.a > 0.0:
 					piece.image.set_pixel(x, y, Color(c.r * tint.r, c.g * tint.g, c.b * tint.b, c.a))
+	var pivot: Vector2i = pieces[piece_name].pivot
 	guide.paste(piece, at.x - pivot.x, at.y - pivot.y)
 
 

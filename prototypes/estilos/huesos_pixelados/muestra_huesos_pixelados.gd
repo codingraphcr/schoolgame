@@ -1,6 +1,6 @@
 extends "res://prototypes/estilos/dos_mundos/muestra_dos_mundos.gd"
 ## Muestra E: huesos pixelados + Visión Digital (estilo elegido para el juego).
-## Kai es el esqueleto real del juego (characters/player/kai/): las piezas de
+## Kai es el del jugador real (KaiVisual en player.tscn, characters/player/kai/): las piezas de
 ## assets/art/characters/kai/kai_piezas.png animadas con Skeleton2D y dibujadas como pixel art.
 ## El Anzuelo también se anima por huesos. La Visión Digital (Q) dura 10 s y se recarga en 16 s.
 
@@ -25,10 +25,10 @@ func _build_art() -> void:
 	_lure.add_child(rig)
 
 
+## Usa el Kai oficial del jugador (player.tscn) y lo guarda para la animación de ataque.
 func _build_player_visual() -> Node2D:
-	_kai_rig = KaiVisual.new()
-	_kai_rig.player = player
-	return _kai_rig
+	_kai_rig = player.get_node_or_null("Visual/Body/Kai") as KaiVisual
+	return null
 
 
 func _unhandled_input(event: InputEvent) -> void:

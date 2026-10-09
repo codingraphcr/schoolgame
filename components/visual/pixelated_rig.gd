@@ -10,6 +10,18 @@ const CRISP_SHADER := preload("res://components/visual/pixel_crisp.gdshader")
 var viewport: SubViewport
 
 
+func _ready() -> void:
+	# Al duplicar el nodo (p. ej. las estelas del dash), el sprite copiado sigue mostrando el
+	# viewport original. Se reconecta a su propio viewport para congelar su cuadro.
+	if viewport == null:
+		for child in get_children():
+			if child is SubViewport:
+				viewport = child
+		for child in get_children():
+			if child is Sprite2D and viewport:
+				(child as Sprite2D).texture = viewport.get_texture()
+
+
 ## content: el nodo animado. size: tamaño del lienzo en píxeles.
 ## anchor: punto del lienzo que coincide con el origen de este nodo (p. ej. los pies).
 ## outline: agrega un contorno de 1 px a la silueta (no hace falta si las piezas ya lo tienen).

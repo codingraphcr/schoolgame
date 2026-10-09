@@ -46,7 +46,7 @@ func _build_art() -> void:
 	pass
 
 
-## Devuelve el nodo que reemplaza el dibujo provisional del jugador.
+## Devuelve el nodo que reemplaza el dibujo del jugador (null = usar el Kai oficial del jugador).
 func _build_player_visual() -> Node2D:
 	return null
 
@@ -97,13 +97,14 @@ func _spawn_player() -> void:
 	player.can_wall_jump = true
 	player.dash_level = 2
 	add_child(player)
-	# Oculta el dibujo provisional de rectángulos y pone el de la muestra en su lugar.
+	# Si la muestra tiene su propio dibujo de Kai, oculta el del jugador y pone el suyo en su lugar.
+	# Si no (devuelve null), se ve el Kai oficial del jugador (KaiVisual en player.tscn).
 	# Al vivir dentro de Visual/Body, hereda el giro y la deformación de player.gd.
-	var body := player.get_node("Visual/Body")
-	for child in body.get_children():
-		(child as CanvasItem).visible = false
 	var visual := _build_player_visual()
 	if visual:
+		var body := player.get_node("Visual/Body")
+		for child in body.get_children():
+			(child as CanvasItem).visible = false
 		body.add_child(visual)
 
 	camera = CAMERA_SCENE.instantiate()

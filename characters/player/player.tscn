@@ -1,11 +1,10 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://characters/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://components/combat/health_component.gd" id="2_health"]
 [ext_resource type="Script" path="res://components/combat/hurtbox_component.gd" id="3_hurtbox"]
 [ext_resource type="Script" path="res://characters/player/player_damage.gd" id="4_damage"]
-[ext_resource type="SpriteFrames" path="res://characters/player/kai_frames.tres" id="5_frames"]
-[ext_resource type="Script" path="res://characters/player/player_animation.gd" id="6_anim"]
+[ext_resource type="Script" path="res://characters/player/kai/kai_visual.gd" id="5_kai"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(10, 22)
@@ -55,8 +54,5 @@ safe_ground_right = NodePath("../SafeGroundRight")
 
 [node name="Body" type="Node2D" parent="Visual"]
 
-[node name="Sprite" type="AnimatedSprite2D" parent="Visual/Body"]
-sprite_frames = ExtResource("5_frames")
-animation = &"idle"
-offset = Vector2(0, -18)
-script = ExtResource("6_anim")
+[node name="Kai" type="Node2D" parent="Visual/Body"]
+script = ExtResource("5_kai")

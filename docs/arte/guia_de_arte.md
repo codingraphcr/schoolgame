@@ -34,7 +34,7 @@ ser peligroso en la red.** Mantenerla clara en el arte es lo más importante de 
 |---|---|
 | Resolución del arte | **640×360** (la cámara tiene zoom ×2 sobre 1280×720) |
 | Tiles | **16×16 px** |
-| Kai | ~**40 px** de alto con el pelo |
+| Kai | ~**46 px** de alto con el pelo |
 | Formato | PNG con transparencia, sin compresión con pérdida |
 | Antialiasing | **Nunca** en el pixel art: bordes duros, píxeles enteros |
 | Semitransparencias | Solo en efectos (luz, vidrio, hologramas), no en personajes ni tiles |
@@ -100,14 +100,14 @@ Ventaja: **cada personaje se dibuja una sola vez**. Agregar una animación nueva
 
 | Personaje | Alto aproximado | Notas |
 |---|---|---|
-| Kai | 40 px | Protagonista (17 años) |
-| Estudiantes | 34–40 px | Variantes de las piezas de Kai (otra paleta, peinado, accesorio) |
+| Kai | 46 px | Protagonista (17 años) |
+| Estudiantes | 38–46 px | Variantes de las piezas de Kai (otra paleta, peinado, accesorio) |
 | Docentes y administrativos | 40–44 px | Proporciones de adulto: cabeza más pequeña respecto al cuerpo |
 | Enemigos comunes | 16–32 px | Siluetas simples y muy legibles |
 | Jefes | 64–128 px | Muchas piezas; aquí los huesos ahorran más trabajo |
 
 > La caja de colisión actual del jugador es 10×22 px (de la escena de tu compañero). Con Kai de
-> 40 px conviene acordar una nueva, cerca de **12×32 px**.
+> 46 px conviene acordar una nueva, cerca de **12×36 px**.
 
 ### 4.3 Kai por piezas
 
@@ -120,15 +120,18 @@ encima respetando el tamaño de cada pieza y guarda con el mismo nombre.
 
 | Pieza | Lienzo | Pivote (se une a…) | Articulaciones |
 |---|---|---|---|
-| Cabeza (pelo plateado) | 18×18 | (9, 16) → cuello del torso | flequillo (13, 7) |
-| Mechón | 7×9 | (2, 1) → flequillo de la cabeza | — *(rebota al moverse; puede haber 2–3)* |
-| Torso (chaqueta con cuello alto) | 14×16 | (7, 14) → cadera (raíz del esqueleto) | cuello (7, 1) · hombro (7, 4) · espalda (3, 6) |
-| Mochila | 10×12 | (6, 3) → espalda del torso | — |
-| Brazo (manga) | 8×11 | (3, 2) → hombro | codo (3, 8) |
+| Cabeza (pelo en puntas, flequillo, ojo) | 16×16 | (7, 15) → cuello del torso | nuca (4, 10) · flequillo (12, 8) · coronilla (4, 3) |
+| Pelo de atrás (melena) | 10×10 | (7, 1) → nuca | — *(se balancea solo)* |
+| Mechón de adelante | 5×7 | (2, 1) → flequillo | — *(se balancea solo)* |
+| Mechón de atrás | 6×5 | (4, 3) → coronilla | — *(se balancea solo)* |
+| Torso (chaqueta blanca abierta) | 16×17 | (8, 15) → cadera (raíz del esqueleto) | cuello (8, 1) · hombro (8, 4) · espalda (4, 6) · cintura (5, 13) |
+| Faldón de la chaqueta | 12×7 | (6, 1) → cintura | — *(se balancea solo)* |
+| Mochila | 11×13 | (7, 3) → espalda | — *(se balancea sola)* |
+| Brazo (manga abullonada) | 9×12 | (4, 2) → hombro | codo (4, 9) |
 | Antebrazo + guante | 8×10 | (3, 2) → codo | mano (3, 8) |
-| Muslo (pantalón cargo) | 8×11 | (3, 2) → cadera | rodilla (3, 8) |
-| Pierna + zapatilla | 11×12 | (3, 2) → rodilla | — |
-| Arma (Nullblade) | 9×22 | (4, 17) → mano, en la empuñadura | — *(ver 4.8)* |
+| Muslo (pantalón holgado) | 9×12 | (4, 2) → cadera | rodilla (4, 10) |
+| Pierna + zapatilla | 12×13 | (4, 2) → rodilla | — |
+| Arma (Nullblade) | 9×24 | (4, 19) → mano, en la empuñadura | — *(ver 4.8)* |
 
 También se genera `assets/art/characters/kai/aegis.png` (16×16): el Aegis **no va en el esqueleto** (ver 4.8).
 
@@ -138,7 +141,7 @@ También se genera `assets/art/characters/kai/aegis.png` (16×16): el Aegis **no
 3. **Solapa las piezas 1–2 px** en cada unión. Mejor que sobre a que falte.
 4. **Contorno en cada pieza,** excepto en la parte que queda tapada por la unión.
 5. **Las extremidades de atrás reutilizan la misma pieza,** solo que más oscura (el juego lo hace solo). No dibujes dos brazos.
-6. **Detalles grandes y pocos:** a 40 px, un ojo es 2×2 px. Elige 2–3 rasgos que se lean a tamaño real (en Kai: el pelo plateado, el cuello alto y la mochila con su luz) y el resto solo insinúalo.
+6. **Detalles grandes y pocos:** a 46 px, un ojo es 3×2 px. Elige 2–3 rasgos que se lean a tamaño real (en Kai: el pelo blanco-lavanda en puntas, la chaqueta blanca abierta y las zapatillas) y el resto solo insinúalo.
 7. Deja **1 px de margen** transparente alrededor de cada pieza (para el contorno).
 8. **El arma es una pieza aparte:** se dibuja apuntando hacia arriba y con la empuñadura en el pivote. Así cambiar de arma es cambiar una sola imagen.
 9. Las piezas son una guía, no una jaula: si tu diseño necesita una pieza extra (otro mechón, la capucha suelta, una correa) o un lienzo más grande, se agrega. Solo avisa para ajustar el esqueleto.
@@ -162,8 +165,8 @@ También se genera `assets/art/characters/kai/aegis.png` (16×16): el Aegis **no
 | Daño (`hurt`) | Recibir daño | No | Retroceso, parpadeo |
 | Muerte | Sin vida | No | Caer de rodillas y al suelo, con corrupción digital |
 
-El mechón, la mochila y el borde de la chaqueta se mueven solos por código (movimiento secundario):
-no hace falta animarlos a mano.
+El pelo de atrás, los mechones, el faldón y la mochila se mueven solos con física de resorte (se balancean,
+se pasan un poco y vuelven): no hace falta animarlos a mano. Es lo que da la sensación de fluidez.
 
 ### 4.6 Diseño de Kai
 *Diseño de Ariel.*
@@ -367,7 +370,7 @@ Nombres en minúsculas, sin espacios ni tildes, separados con `_`.
 
 ## 11. Por acordar en equipo
 - [x] Diseño de Kai: pelo plateado, chaqueta clara con cuello alto, mochila y poder violeta-azul (Ariel).
-- [ ] Caja de colisión del jugador con Kai de 40 px (propuesta: 12×32).
+- [ ] Caja de colisión del jugador con Kai de 46 px (propuesta: 12×36).
 - [ ] Cuántos niveles visuales tendrán el Nullblade y el Aegis (según `docs/combate.md`).
 - [ ] Formas y paletas de las amenazas (sección 7).
 - [ ] Fuente de la interfaz.
