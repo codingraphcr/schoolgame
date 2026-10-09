@@ -29,6 +29,10 @@
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="27_sepqw"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="28_xmef8"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="29_giju3"]
+[ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="30_wkl27"]
+[ext_resource type="Script" path="res://world/vision/data_fragment.gd" id="31_xdkrt"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="32_au1lc"]
+[ext_resource type="Script" path="res://world/zones/zone0/lab_awakening.gd" id="33_xved5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ukrjd"]
 size = Vector2(1024, 80)
@@ -198,6 +202,14 @@ animations = [{
 "name": &"default",
 "speed": 8.0
 }]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ce2wp"]
+size = Vector2(112, 6)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_odpsf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kmyuo"]
+size = Vector2(40, 64)
 
 [node name="PasilloLaboratorio" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
@@ -597,3 +609,42 @@ player = NodePath("../Player")
 [node name="DebugOverlay" parent="." unique_id=487004213 node_paths=PackedStringArray("player") instance=ExtResource("29_giju3")]
 visible = false
 player = NodePath("../Player")
+
+[node name="DigitalLayer" type="CanvasLayer" parent="." unique_id=824385010]
+follow_viewport_enabled = true
+
+[node name="Network" type="Node2D" parent="DigitalLayer" unique_id=1156653972 node_paths=PackedStringArray("player", "lure")]
+script = ExtResource("30_wkl27")
+player = NodePath("../../Player")
+lure = NodePath("../../Lab/PhishLure")
+
+[node name="DataBridge" type="StaticBody2D" parent="." unique_id=707098296]
+collision_layer = 64
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="DataBridge" unique_id=170252951]
+position = Vector2(612, 151)
+shape = SubResource("RectangleShape2D_ce2wp")
+one_way_collision = true
+
+[node name="DataFragment" type="Area2D" parent="." unique_id=1221983609]
+position = Vector2(640, 136)
+script = ExtResource("31_xdkrt")
+
+[node name="Shape" type="CollisionShape2D" parent="DataFragment" unique_id=2083232889]
+shape = SubResource("CircleShape2D_odpsf")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=848190948 node_paths=PackedStringArray("player", "ambient", "digital_layer")]
+script = ExtResource("32_au1lc")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+digital_layer = NodePath("../DigitalLayer/Network")
+
+[node name="LabAwakening" type="Area2D" parent="." unique_id=1593177384 node_paths=PackedStringArray("digital_world", "lights")]
+position = Vector2(716, 272)
+script = ExtResource("33_xved5")
+digital_world = NodePath("../DigitalWorld")
+lights = NodePath("../Lights")
+
+[node name="Shape" type="CollisionShape2D" parent="LabAwakening" unique_id=390884246]
+shape = SubResource("RectangleShape2D_kmyuo")

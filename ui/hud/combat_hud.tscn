@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://ui/hud/credits_display.gd" id="2_credits"]
+[ext_resource type="Script" path="res://ui/hud/vision_meter.gd" id="3_vision"]
+[ext_resource type="Script" path="res://ui/hud/toast.gd" id="4_toast"]
 
 [node name="CombatHUD" type="CanvasLayer"]
 layer = 40
@@ -22,3 +24,31 @@ offset_right = 226.0
 offset_bottom = 88.0
 mouse_filter = 2
 script = ExtResource("2_credits")
+
+[node name="VisionMeter" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -204.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = 48.0
+grow_horizontal = 0
+mouse_filter = 2
+script = ExtResource("3_vision")
+
+[node name="Toast" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -96.0
+offset_right = 340.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("4_toast")

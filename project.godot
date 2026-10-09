@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 
 SceneManager="*res://autoload/scene_manager.gd"
 GameState="*res://autoload/game_state.gd"
+DigitalVision="*res://autoload/digital_vision.gd"
 
 [display]
 

@@ -38,9 +38,13 @@ func _physics_process(_delta: float) -> void:
 		player.damage.fall_out_of_bounds()
 
 
+## Q enciende o apaga la Visión Digital (solo si ya se descubrió; si no, no hace nada).
 ## Esc vuelve al menú principal (temporal, hasta que exista el menú de pausa).
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
+	if event.is_action_pressed("vision") and not player.controls_locked:
+		get_viewport().set_input_as_handled()
+		get_node("/root/DigitalVision").toggle()
+	elif event.is_action_pressed("pause"):
 		get_viewport().set_input_as_handled()
 		var scene_manager := _scene_manager()
 		scene_manager.change_scene(scene_manager.MAIN_MENU)

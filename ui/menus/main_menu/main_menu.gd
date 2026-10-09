@@ -26,6 +26,7 @@ func _on_play_pressed() -> void:
 	# Partida nueva: Kai empieza como un alumno común, sin habilidades.
 	# (Cuando exista el guardado, aquí se ofrecerá continuar la partida.)
 	GameState.reset()
+	DigitalVision.reset()
 	SceneManager.change_scene(SceneManager.FIRST_ROOM)
 
 
