@@ -9,5 +9,4 @@ display_name = "Kai"
 aliases = PackedStringArray()
 title = "Estudiante"
 portrait = ExtResource("1_dcgjk")
-flip_portrait = true
 accent = Color(0.6431373, 0.54509807, 1, 1)
