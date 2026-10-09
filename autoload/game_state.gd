@@ -325,6 +325,20 @@ func is_quest_completed(quest_id: StringName) -> bool:
 	return _quest_progress.get(quest_id, -2) == -1
 
 
+## Verdadero si la misión ya llegó a ese paso (es el actual o ya pasó) o se completó.
+## Con step_id vacío, basta con que la misión haya empezado.
+func has_reached_step(quest_id: StringName, step_id: StringName = &"") -> bool:
+	if is_quest_completed(quest_id):
+		return true
+	var index: int = _quest_progress.get(quest_id, -2)
+	if index < 0:
+		return false
+	if step_id == &"":
+		return true
+	var quest := QuestDB.get_quest(quest_id)
+	return quest != null and index >= quest.get_step_index(step_id) and quest.get_step_index(step_id) >= 0
+
+
 ## Texto del objetivo actual ("" si no hay misión activa).
 func get_objective_text() -> String:
 	var quest := QuestDB.get_quest(active_quest)

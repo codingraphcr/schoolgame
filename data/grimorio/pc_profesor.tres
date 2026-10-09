@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 0
+order = 1
+title = "Computadora del profesor"
+subtitle = "Zona · Mundo digital"
+text = "Por dentro, la computadora del Prof. Alvarado es un escritorio enorme lleno de ventanas, correos y anuncios. Lo que afuera es un archivo, aquí es un lugar."
+facts = Dictionary[String, String]({"Mundo": "Digital", "Peligro": "Medio"})
+unlock_quest = &"contrasena_profesor"
+unlock_step = &"cruzar_spam"

@@ -27,6 +27,9 @@ func _ready() -> void:
 	if camera:
 		camera.set_limits(bounds)
 	var game_state := _game_state()
+	# Queda anotado que Kai estuvo en esta sala (el mapa del Grimorio lo usa).
+	if game_state and not scene_file_path.is_empty():
+		game_state.set_flag(StringName("visitada_" + scene_file_path.get_file().get_basename()))
 	if player and game_state:
 		player.apply_progress(game_state, true)
 		# Las máscaras se conservan entre salas (cambiar de sala no cura).

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 3
+order = 0
+title = "Firewall"
+subtitle = "Concepto · Redes"
+text = "Un firewall (cortafuegos) es una barrera que revisa lo que entra y sale de una red y bloquea lo peligroso. Más allá del firewall empieza Nullveil."
+facts = Dictionary[String, String]({"Protege": "Redes y equipos", "Funciona como": "Un guardia en la puerta"})
+

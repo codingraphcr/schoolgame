@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 3
+order = 3
+title = "SPAM"
+subtitle = "Concepto · Correo"
+text = "Mensajes enviados en masa a muchísimas personas sin que los pidan. Además de llenar el buzón, se usan para estafas y para propagar programas maliciosos."
+facts = Dictionary[String, String]({"Qué hacer": "Marcar como spam y borrar", "Nunca": "Responder ni abrir adjuntos"})
+unlock_quest = &"contrasena_profesor"
+unlock_step = &"cruzar_spam"

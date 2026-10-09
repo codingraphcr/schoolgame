@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 3
+order = 4
+title = "Punto de restauración"
+subtitle = "Concepto · Sistemas"
+text = "Una copia del estado de un sistema para volver atrás si algo falla. Dentro de la computadora, Kai reaparece en el último punto que activó."
+facts = Dictionary[String, String]({"Sirve para": "Recuperarse de errores", "Consejo": "Haz copias de seguridad"})
+unlock_quest = &"contrasena_profesor"
+unlock_step = &"cruzar_spam"

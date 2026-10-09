@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 2
+order = 2
+title = "Ventana emergente"
+subtitle = "Amenaza · Anuncio"
+text = "Anuncios que aparecen de golpe con premios, urgencias y direcciones raras. Puedes pararte sobre su barra, pero algunas se cierran solas al pisarlas."
+facts = Dictionary[String, String]({"Peligro": "Medio", "Señales": "Urgencia, premios, direcciones raras"})
+unlock_quest = &"contrasena_profesor"
+unlock_step = &"cruzar_spam"

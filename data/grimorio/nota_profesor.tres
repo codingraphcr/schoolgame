@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 4
+order = 0
+title = "Nota del Prof. Alvarado"
+subtitle = "Registro · Prólogo"
+text = "«La computadora del laboratorio está rarísima desde ayer. Se prende sola y muestra mensajes extraños. Kai sabe de computadoras... seguro puede ayudarme.»"
+facts = Dictionary[String, String]({"Autor": "Prof. Alvarado"})
+unlock_quest = &"prologo"
+unlock_step = &"hablar_profesor"

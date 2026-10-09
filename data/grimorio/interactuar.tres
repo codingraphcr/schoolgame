@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 1
+order = 1
+title = "Interactuar"
+subtitle = "Comando · Básico"
+text = "Habla con las personas y revisa objetos cuando aparezca el aviso sobre ellos. Muchas pistas solo se encuentran preguntando."
+facts = Dictionary[String, String]({"Uso": "Hablar y revisar"})
+action = &"interact"

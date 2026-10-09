@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 1
+order = 0
+title = "Moverse y saltar"
+subtitle = "Comando · Básico"
+text = "Corre a los lados y salta entre plataformas. Mantén presionado el salto para llegar más alto; suéltalo antes para un salto corto."
+facts = Dictionary[String, String]({"Uso": "Explorar"})
+action = &"jump"

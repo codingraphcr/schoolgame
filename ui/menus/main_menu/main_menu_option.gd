@@ -12,6 +12,8 @@ const FRAME_BORDER := Color(0.74, 0.64, 1.0)
 const DIAMOND_FILL := Color(0.09, 0.06, 0.2)
 ## Separación de los rombos respecto del borde del botón.
 const DIAMOND_INSET := 12.0
+## Margen del texto a cada lado (deja lugar a los rombos).
+const TEXT_MARGIN := 36.0
 
 var _empty := StyleBoxEmpty.new()
 var _frame := StyleBoxFlat.new()
@@ -21,7 +23,10 @@ func _ready() -> void:
 	_frame.bg_color = FRAME_FILL
 	_frame.border_color = FRAME_BORDER
 	_frame.set_border_width_all(2)
-	_frame.set_content_margin_all(0)
+	_frame.content_margin_left = TEXT_MARGIN
+	_frame.content_margin_right = TEXT_MARGIN
+	_empty.content_margin_left = TEXT_MARGIN
+	_empty.content_margin_right = TEXT_MARGIN
 	_frame.expand_margin_left = -DIAMOND_INSET
 	_frame.expand_margin_right = -DIAMOND_INSET
 	_frame.shadow_color = Color(0.55, 0.4, 1.0, 0.25)

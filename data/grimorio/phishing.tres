@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 3
+order = 1
+title = "Phishing"
+subtitle = "Concepto · Engaño"
+text = "Un engaño para que entregues contraseñas o datos haciéndote creer que el mensaje viene de alguien de confianza: el colegio, un banco o un amigo."
+facts = Dictionary[String, String]({"Señales": "Urgencia, errores, enlaces raros", "Qué hacer": "Verificar por otro medio"})
+unlock_quest = &"prologo"
+unlock_step = &"revisar_computadora"
