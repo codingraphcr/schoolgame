@@ -26,6 +26,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixel/packet.png" id="24_ptmhy"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/packet_bad.png" id="25_dv2hf"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="26_muj38"]
+[ext_resource type="PackedScene" path="res://characters/npcs/profesor/profesor.tscn" id="26_xved5"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="27_sepqw"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="28_xmef8"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="29_giju3"]
@@ -33,6 +34,8 @@
 [ext_resource type="Script" path="res://world/vision/data_fragment.gd" id="31_xdkrt"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="32_au1lc"]
 [ext_resource type="Script" path="res://world/zones/zone0/lab_awakening.gd" id="33_xved5"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="34_au1lc"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="35_xved5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ukrjd"]
 size = Vector2(1024, 80)
@@ -210,6 +213,9 @@ size = Vector2(112, 6)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kmyuo"]
 size = Vector2(40, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_odpsf"]
+size = Vector2(12, 256)
 
 [node name="PasilloLaboratorio" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
@@ -597,6 +603,11 @@ infected_texture = ExtResource("25_dv2hf")
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=739778107]
 position = Vector2(56, 304)
 
+[node name="Npcs" type="Node2D" parent="." unique_id=1595665627]
+
+[node name="Profesor" parent="Npcs" unique_id=1425553402 instance=ExtResource("26_xved5")]
+position = Vector2(196, 304)
+
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("26_muj38")]
 position = Vector2(56, 304)
 
@@ -648,3 +659,21 @@ lights = NodePath("../Lights")
 
 [node name="Shape" type="CollisionShape2D" parent="LabAwakening" unique_id=390884246]
 shape = SubResource("RectangleShape2D_kmyuo")
+
+[node name="Entries" type="Node2D" parent="." unique_id=659946632]
+
+[node name="FromEntrada" type="Marker2D" parent="Entries" unique_id=728004279]
+position = Vector2(40, 304)
+script = ExtResource("34_au1lc")
+id = &"desde_entrada"
+
+[node name="Exits" type="Node2D" parent="." unique_id=843824894]
+
+[node name="ToEntrada" type="Area2D" parent="Exits" unique_id=1554206632]
+position = Vector2(6, 176)
+script = ExtResource("35_xved5")
+target_scene = "res://world/zones/zone0/entrada.tscn"
+target_entry = &"desde_pasillo"
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToEntrada" unique_id=1946857122]
+shape = SubResource("RectangleShape2D_odpsf")

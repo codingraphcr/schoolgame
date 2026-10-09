@@ -184,10 +184,17 @@ para que compilen también en las pruebas de línea de comandos.
   de la muestra de Ariel y editable en Godot: tiles (`Background`, `Cables`, tileset `world/tilesets/colegio_tileset.tres`),
   colisiones como rectángulos (`Collisions`: suelo, paredes y bandejas de cables de un sentido), objetos (`Corridor`, `Lab`,
   `CableTrays`), luces (`Lights`, textura compartida `assets/art/light_soft.tres`) y paquetes de datos (`Packets`).
-  **"Jugar"** empieza aquí una partida nueva (`GameState.reset()`): Kai es un alumno común, sin habilidades.
+  Una partida nueva (`GameState.reset()`) empieza en la Entrada: Kai es un alumno común, sin habilidades.
 - `world/effects/`: comportamientos reutilizables del escenario: `flicker.gd` (parpadeo de carteles), `bob.gd`
   (flotar en píxeles enteros), `pulse_light.gd` (luz que late) y `packet_stream.gd` (paquetes por el cable que se
   "infectan" al pasar por la zona del phishing).
+- **Transiciones entre salas** (como en Hollow Knight): `RoomExit` (Area2D en un borde, con `target_scene` y
+  `target_entry`) hace un fundido y lleva a la `RoomEntry` (Marker2D con `id` y `facing`) de la otra sala.
+  `SceneManager.go_to_room(escena, entrada)` recuerda la entrada; la sala la usa al cargarse. Las máscaras actuales
+  se conservan entre salas (`GameState.current_masks`): cambiar de sala no cura.
+- `world/zones/zone0/entrada.tscn`: **Entrada del colegio** (escena 1 del prólogo; arte provisional con los tiles de
+  Ariel): puerta principal con cartel BIENVENIDOS, ayudas de controles y casilleros que hay que saltar. **"Jugar"
+  empieza aquí.** Salida derecha → Pasillo (`desde_entrada`); salida izquierda del Pasillo → Entrada (`desde_pasillo`).
 - `world/rooms/room.gd` (`Room`): calcula los límites de la cámara a partir del `TileMapLayer` y coloca al jugador en el `SpawnPoint`.
   Esc vuelve al menú (temporal, hasta que exista la pausa). Caer fuera cuenta como peligro; al morir se reaparece en `checkpoint` (o `SpawnPoint`). Sacude la cámara al recibir daño.
 - `world/camera/` (`GameCamera`): zoom ×2, suavizado, mirada hacia adelante, adelanto hacia abajo en caídas rápidas y margen vertical.
@@ -218,6 +225,20 @@ pez del phishing), `DataBridge` (capa 7), `DataFragment` (+25 créditos, marca `
 parpadean, se descubre la Visión Digital y se enciende sola la primera vez.
 
 `GameState.set_flag()` deja marcas de eventos y objetos recogidos (se guardan con la partida).
+
+## Interacción, diálogos y NPC
+
+| Pieza | Responsabilidad |
+|---|---|
+| `Interactable` (`components/interaction/`) | Area2D con una CollisionShape2D: al acercarse Kai muestra el aviso (`prompt_text`, p. ej. "E: hablar") y con **E** emite `interacted(player)`. `busy` lo desactiva mientras dura un diálogo o evento |
+| `Dialogue` (`systems/dialogue/`) | Recurso con el texto del diálogo, **una línea por intervención: `Nombre: texto`**. Las líneas sin nombre son narración; las vacías y las que empiezan con `#` se ignoran. Se edita en el Inspector |
+| `DialogueBox` (`ui/dialogue/`) | Caja de diálogo **arriba** (como en Hollow Knight, no tapa a los personajes), dentro del HUD de cada sala. Texto letra por letra; **E / Espacio** completa la línea o pasa a la siguiente. `await DialogueBox.find(self).play(dialogo)` |
+| `Npc` (`characters/npcs/npc.gd`, plantilla `npc.tscn`) | Personaje con `dialogue` (primera vez) y `repeat_dialogue` (las siguientes), animaciones `idle` / `talk`, mira hacia Kai y deja la marca `talked_flag` en `GameState` |
+
+**El profesor** (`characters/npcs/profesor/`, todavía sin nombre) está en el pasillo. Sprite **provisional** generado
+con `tools/art/generar_npcs.gd` según la guía de Ariel (camisa, cordón con credencial y taza); Ariel lo reemplazará.
+Diálogos en `data/dialogues/prologo/`: `profesor_pedido.tres` (pide revisar la computadora del laboratorio; marca
+`prologo_profesor_pidio_ayuda`) y `profesor_recordatorio.tres`.
 
 ## Progreso del jugador (`GameState`)
 
@@ -290,7 +311,8 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, hueco de 6, plataforma de un sentido, reaparición y límites de cámara |
 | `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
 | `test_player_health.gd` | Máscaras, pinchos, suelo seguro, invulnerabilidad, empuje, contacto prolongado, escudo educativo, caída, muerte y niveles del dash |
-| `test_zone0.gd` | "Jugar" abre el Pasillo + Laboratorio con partida nueva (sin habilidades), sprite de Kai, HUD, límites de cámara, recorrido hasta el laboratorio, bandejas como plataformas y Esc al menú |
+| `test_zone0.gd` | "Jugar" abre la Entrada con partida nueva (sin habilidades), Kai de Ariel, HUD, casilleros que se saltan, transición al Pasillo y de vuelta (entrada y orientación correctas), máscaras que se conservan, recorrido hasta el laboratorio, bandejas como plataformas y Esc al menú |
 | `test_vision.gd` | Visión Digital bloqueada, evento del laboratorio, capa digital, oscurecimiento, puente de datos (capa 7), fragmento (una sola vez), apagado manual, recarga y fin por duración |
+| `test_dialogue.gd` | Formato de los diálogos, aviso «E: hablar», caja de diálogo (letra por letra, completar, avanzar, cerrar), controles bloqueados, marca del profesor y recordatorio |
 | `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

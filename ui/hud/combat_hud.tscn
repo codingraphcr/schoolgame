@@ -1,15 +1,16 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://ui/hud/credits_display.gd" id="2_credits"]
 [ext_resource type="Script" path="res://ui/hud/vision_meter.gd" id="3_vision"]
 [ext_resource type="Script" path="res://ui/hud/toast.gd" id="4_toast"]
+[ext_resource type="PackedScene" path="res://ui/dialogue/dialogue_box.tscn" id="5_dv60m"]
 
-[node name="CombatHUD" type="CanvasLayer"]
+[node name="CombatHUD" type="CanvasLayer" unique_id=834849493]
 layer = 40
 script = ExtResource("1_hud")
 
-[node name="Masks" type="HBoxContainer" parent="."]
+[node name="Masks" type="HBoxContainer" parent="." unique_id=902698706]
 offset_left = 24.0
 offset_top = 20.0
 offset_right = 224.0
@@ -17,7 +18,7 @@ offset_bottom = 54.0
 mouse_filter = 2
 theme_override_constants/separation = 6
 
-[node name="Credits" type="HBoxContainer" parent="."]
+[node name="Credits" type="HBoxContainer" parent="." unique_id=610872201]
 offset_left = 26.0
 offset_top = 60.0
 offset_right = 226.0
@@ -25,7 +26,7 @@ offset_bottom = 88.0
 mouse_filter = 2
 script = ExtResource("2_credits")
 
-[node name="VisionMeter" type="Control" parent="."]
+[node name="VisionMeter" type="Control" parent="." unique_id=1104332021]
 layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
@@ -38,7 +39,7 @@ grow_horizontal = 0
 mouse_filter = 2
 script = ExtResource("3_vision")
 
-[node name="Toast" type="Label" parent="."]
+[node name="Toast" type="Label" parent="." unique_id=1369737829]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -50,5 +51,6 @@ offset_right = 340.0
 offset_bottom = -40.0
 grow_horizontal = 2
 grow_vertical = 0
-mouse_filter = 2
 script = ExtResource("4_toast")
+
+[node name="DialogueBox" parent="." unique_id=442432687 instance=ExtResource("5_dv60m")]

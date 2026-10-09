@@ -25,12 +25,22 @@ func _ready() -> void:
 	var game_state := _game_state()
 	if player and game_state:
 		player.apply_progress(game_state, true)
+		# Las máscaras se conservan entre salas (cambiar de sala no cura).
+		if game_state.current_masks >= 0.0:
+			player.health.current = clampf(game_state.current_masks, 1.0, player.health.max_health)
+			player.health.health_changed.emit(player.health.current, player.health.max_health)
 		game_state.progress_changed.connect(_on_progress_changed)
 	if player:
 		player.damage.died.connect(_on_player_died)
 		player.damage.hurt.connect(_on_player_hurt)
 		player.damage.hazard_respawned.connect(_snap_camera)
-	respawn_player()
+	_place_player()
+
+
+func _exit_tree() -> void:
+	var game_state := _game_state()
+	if player and game_state:
+		game_state.current_masks = player.health.current
 
 
 func _physics_process(_delta: float) -> void:
@@ -48,6 +58,28 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		var scene_manager := _scene_manager()
 		scene_manager.change_scene(scene_manager.MAIN_MENU)
+
+
+## Al cargar la sala: por la entrada desde la que se llega, o en el punto de aparición.
+func _place_player() -> void:
+	var entry_id: StringName = _scene_manager().take_pending_entry()
+	var entry: RoomEntry = null
+	if entry_id != &"":
+		entry = _find_entry(entry_id)
+	if entry == null or player == null:
+		respawn_player()
+		return
+	player.teleport_to(entry.global_position)
+	player.face(entry.facing)
+	_snap_camera()
+
+
+func _find_entry(entry_id: StringName) -> RoomEntry:
+	for node in find_children("*", "RoomEntry", true, false):
+		if (node as RoomEntry).id == entry_id:
+			return node
+	push_warning("Room: no existe la entrada '%s'; se usa el punto de aparición." % entry_id)
+	return null
 
 
 func respawn_player() -> void:

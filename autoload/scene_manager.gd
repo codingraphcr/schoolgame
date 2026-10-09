@@ -5,14 +5,16 @@ extends CanvasLayer
 
 const MAIN_MENU := "res://ui/menus/main_menu/main_menu.tscn"
 const SETTINGS := "res://ui/menus/settings/settings_screen.tscn"
-## Primera sala jugable: Zona 0, Pasillo + Laboratorio.
-const FIRST_ROOM := "res://world/zones/zone0/pasillo_laboratorio.tscn"
+## Primera sala jugable: Zona 0, Entrada del colegio.
+const FIRST_ROOM := "res://world/zones/zone0/entrada.tscn"
 
 const FADE_DURATION := 0.25
 const FADE_COLOR := Color(0.039, 0.067, 0.141)
 
 var _fade_rect: ColorRect
 var _is_changing := false
+## Entrada (RoomEntry.id) por la que debe aparecer el jugador en la próxima sala.
+var _pending_entry: StringName = &""
 
 
 func _ready() -> void:
@@ -49,6 +51,19 @@ func change_scene(scene_path: String) -> void:
 
 	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_is_changing = false
+
+
+## Cambia a otra sala y hace aparecer al jugador en la entrada indicada (RoomEntry.id).
+func go_to_room(scene_path: String, entry: StringName) -> void:
+	_pending_entry = entry
+	change_scene(scene_path)
+
+
+## Devuelve (y olvida) la entrada pendiente. La llama la sala al cargarse.
+func take_pending_entry() -> StringName:
+	var entry := _pending_entry
+	_pending_entry = &""
+	return entry
 
 
 ## Fundido a negro, ejecuta midpoint (p. ej. mover al jugador) y vuelve a mostrar la escena.
