@@ -1,12 +1,16 @@
+class_name GrimorioScreen
 extends Control
 ## El Grimorio: el glosario del juego con forma de libro (concepto de Ariel). Pestañas MAPA,
 ## COMANDOS, AMENAZAS, CONCEPTOS y REGISTROS. La página izquierda muestra el mapa o la lista de
 ## entradas y la derecha la entrada elegida. Las entradas son GrimorioEntry de data/grimorio/;
 ## las que todavía no se descubren aparecen como «???».
-## Se abre desde Opciones. Esc o VOLVER regresan.
+## Durante el juego se abre con G (acción "grimorio", ver CombatHUD) encima de la sala, que queda
+## en pausa: GrimorioScreen.open(nodo). G, Esc o CERRAR lo cierran.
 
 const ENTRIES_DIR := "res://data/grimorio"
-const RETURN_SCENE := "res://ui/menus/settings/settings_screen.tscn"
+const SCENE_PATH := "res://ui/menus/grimorio/grimorio.tscn"
+## Si se abre como escena suelta (sin juego detrás), al cerrar vuelve al menú.
+const RETURN_SCENE := "res://ui/menus/main_menu/main_menu.tscn"
 
 const CATEGORY_TITLES: PackedStringArray = ["MAPA", "COMANDOS", "AMENAZAS", "CONCEPTOS", "REGISTROS"]
 const CATEGORY_DESCRIPTIONS: PackedStringArray = [
@@ -22,6 +26,8 @@ const INK := Color(0.12, 0.09, 0.2)
 const INK_MUTED := Color(0.12, 0.09, 0.2, 0.45)
 const ACCENT := Color(0.29, 0.21, 0.7)
 
+## Verdadero si está abierto encima del juego (con GrimorioScreen.open).
+var overlay := false
 var _entries: Array[GrimorioEntry] = []
 var _category := 0
 var _entry_group := ButtonGroup.new()
@@ -48,6 +54,10 @@ var _tab_group := ButtonGroup.new()
 
 func _ready() -> void:
 	GameSettings.ensure_loaded()
+	# Encima del juego se ve la sala oscurecida detrás, no el fondo del menú.
+	if overlay:
+		$Background.visible = false
+		$Shade.color.a = 0.78
 	_load_entries()
 	for i in _tabs.size():
 		var tab := _tabs[i] as Button
@@ -57,7 +67,7 @@ func _ready() -> void:
 		tab.focus_entered.connect(func() -> void:
 			if _category != i:
 				select_category(i))
-	_back_button.pressed.connect(_go_back)
+	_back_button.pressed.connect(close)
 	select_category(0)
 	if not DisplayServer.is_touchscreen_available():
 		(_tabs[0] as Control).grab_focus()
@@ -70,9 +80,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed(&"grimorio"):
 		get_viewport().set_input_as_handled()
-		_go_back()
+		close()
 
 
 ## Entradas de una categoría, en orden.
@@ -231,5 +241,24 @@ func _load_entries() -> void:
 		return a.order < b.order if a.category == b.category else a.category < b.category)
 
 
-func _go_back() -> void:
-	SceneManager.change_scene(RETURN_SCENE)
+## Abre el Grimorio encima del juego y lo pone en pausa.
+static func open(from: Node) -> GrimorioScreen:
+	var layer := CanvasLayer.new()
+	layer.name = "GrimorioLayer"
+	layer.layer = 90
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	var screen := (load(SCENE_PATH) as PackedScene).instantiate() as GrimorioScreen
+	screen.overlay = true
+	layer.add_child(screen)
+	from.get_tree().root.add_child(layer)
+	from.get_tree().paused = true
+	return screen
+
+
+## Cierra el Grimorio: vuelve al juego (y quita la pausa) o, si era una escena suelta, al menú.
+func close() -> void:
+	if overlay:
+		get_tree().paused = false
+		get_parent().queue_free()
+	else:
+		get_node("/root/SceneManager").change_scene(RETURN_SCENE)

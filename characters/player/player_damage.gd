@@ -1,7 +1,7 @@
 class_name PlayerDamage
 extends Node
 ## Reacción del jugador al daño, al estilo Hollow Knight:
-## cada golpe quita integridad (medio cristal los enemigos, uno entero los peligros), congela la acción un instante, empuja y da invulnerabilidad breve
+## cada golpe quita integridad (medio cristal los enemigos y los pinchos), congela la acción un instante, empuja y da invulnerabilidad breve
 ## (el personaje parpadea). Los peligros (pinchos, vacío) devuelven al jugador al último
 ## suelo seguro. Al perder todas las máscaras emite died: la sala decide dónde reaparece.
 
@@ -22,7 +22,7 @@ signal hazard_respawned
 @export var blink_interval := 0.08
 ## Multiplicador del daño de los enemigos: un golpe enemigo normal (daño 1) quita medio cristal de
 ## integridad; uno más fuerte, proporcionalmente más. Los peligros del
-## escenario (pinchos, anuncios trampa, caídas) quitan lo que diga su golpe (uno entero).
+## escenario quitan lo que diga su golpe (pinchos: medio cristal; anuncios trampa y caídas: uno).
 @export var enemy_damage_scale := 0.5
 
 var invulnerable_timer := 0.0

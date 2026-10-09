@@ -173,7 +173,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.52, 0.9, 1)
 theme_override_fonts/font = SubResource("FontVariation_row")
 theme_override_font_sizes/font_size = 13
-text = "MÁS"
+text = "CONTROLES"
 
 [node name="ControlsRow" type="Button" parent="Options/Panel/Rows"]
 unique_name_in_owner = true
@@ -182,15 +182,6 @@ layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_row")
 theme_override_font_sizes/font_size = 17
 text = "CONFIGURAR CONTROLES"
-script = ExtResource("3_row")
-
-[node name="GrimorioRow" type="Button" parent="Options/Panel/Rows"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 38)
-layout_mode = 2
-theme_override_fonts/font = SubResource("FontVariation_row")
-theme_override_font_sizes/font_size = 17
-text = "ABRIR GRIMORIO"
 script = ExtResource("3_row")
 
 [node name="Spacer" type="Control" parent="Options/Panel/Rows"]

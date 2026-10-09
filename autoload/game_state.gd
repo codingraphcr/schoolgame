@@ -24,6 +24,9 @@ const START_SECURITY := 35
 const START_TRUST := 60
 
 const START_MASKS := 4
+## Barritas de energía al empezar (suben con la historia).
+const START_ENERGY_CELLS := 2
+const MAX_ENERGY_CELLS := 8
 const MAX_DASH_LEVEL := 3
 const MAX_NULLBLADE_STAGE := 4
 const MAX_AEGIS_STAGE := 3
@@ -59,6 +62,8 @@ var credits := 0
 var max_masks := START_MASKS
 ## Máscaras actuales al salir de una sala (-1 = llenas). Así cambiar de sala no cura.
 var current_masks := -1.0
+## Barritas de energía para habilidades (el HUD las muestra debajo de los cristales).
+var max_energy_cells := START_ENERGY_CELLS
 ## 0 = sin dash · 1 Dash · 2 Dash Fantasma · 3 Esquiva Perfecta.
 var dash_level := 0
 var can_double_jump := false
@@ -249,6 +254,12 @@ func set_domain_stage(stage: int) -> void:
 	progress_changed.emit()
 
 
+## Más barritas de energía (al avanzar en la historia).
+func set_max_energy_cells(cells: int) -> void:
+	max_energy_cells = clampi(cells, 1, MAX_ENERGY_CELLS)
+	progress_changed.emit()
+
+
 func set_max_masks(masks: int) -> void:
 	max_masks = maxi(masks, 1)
 	progress_changed.emit()
@@ -272,6 +283,7 @@ func unlock_vision(unlocked := true) -> void:
 func _reset_progress() -> void:
 	credits = 0
 	max_masks = START_MASKS
+	max_energy_cells = START_ENERGY_CELLS
 	current_masks = -1.0
 	dash_level = 0
 	can_double_jump = false
@@ -389,6 +401,7 @@ func to_dict() -> Dictionary:
 			"credits": credits,
 			"max_masks": max_masks,
 			"current_masks": current_masks,
+			"max_energy_cells": max_energy_cells,
 			"dash_level": dash_level,
 			"can_double_jump": can_double_jump,
 			"can_wall_jump": can_wall_jump,
@@ -426,6 +439,7 @@ func from_dict(data: Dictionary) -> void:
 	credits = int(player.get("credits", 0))
 	max_masks = maxi(int(player.get("max_masks", START_MASKS)), 1)
 	current_masks = float(player.get("current_masks", -1.0))
+	max_energy_cells = clampi(int(player.get("max_energy_cells", START_ENERGY_CELLS)), 1, MAX_ENERGY_CELLS)
 	dash_level = clampi(int(player.get("dash_level", 0)), 0, MAX_DASH_LEVEL)
 	can_double_jump = bool(player.get("can_double_jump", false))
 	can_wall_jump = bool(player.get("can_wall_jump", false))

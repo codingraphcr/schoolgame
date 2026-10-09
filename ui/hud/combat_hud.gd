@@ -1,7 +1,9 @@
 extends CanvasLayer
-## HUD de combate: los cristales de integridad (vidas), la barra de energía, créditos, indicador
-## de la Visión Digital y mensajes. Cada cristal vale 1 de vida: completo, a la mitad o vacío.
-## La energía se usará en habilidades futuras: set_energy() la actualiza (por ahora está llena).
+## HUD de combate: los cristales de integridad (vidas), las barritas de energía, créditos,
+## indicador de la Visión Digital y mensajes. Cada cristal vale 1 de vida: completo, a la mitad o
+## vacío. Las barritas de energía salen de GameState.max_energy_cells (suben con la historia) y se
+## gastarán en habilidades futuras: set_energy() las actualiza (por ahora están llenas).
+## Con G (acción "grimorio") se abre el Grimorio encima del juego, que queda en pausa.
 
 @export var player: Player
 
@@ -12,6 +14,11 @@ var _first_refresh := true
 
 
 func _ready() -> void:
+	GameSettings.ensure_loaded()
+	var game_state := get_node_or_null("/root/GameState")
+	if game_state:
+		game_state.progress_changed.connect(_refresh_energy_cells)
+	_refresh_energy_cells()
 	if player == null:
 		return
 	player.health.health_changed.connect(_refresh)
@@ -21,10 +28,35 @@ func _ready() -> void:
 		player.connect(&"energy_changed", set_energy)
 
 
-## Energía para habilidades (de 0 a máximo).
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"grimorio") and _can_open_grimorio():
+		get_viewport().set_input_as_handled()
+		GrimorioScreen.open(self)
+
+
+## Energía para habilidades (de 0 a máximo); se reparte entre las barritas.
 func set_energy(current: float, maximum: float) -> void:
-	var target := clampf(current / maxf(maximum, 0.001), 0.0, 1.0)
-	create_tween().tween_property(_energy, "ratio", target, 0.25)
+	var target := clampf(current / maxf(maximum, 0.001), 0.0, 1.0) * _energy.cells
+	create_tween().tween_property(_energy, "energy", target, 0.25)
+
+
+func _refresh_energy_cells() -> void:
+	var game_state := get_node_or_null("/root/GameState")
+	var cells: int = game_state.max_energy_cells if game_state else GameState.START_ENERGY_CELLS
+	var was_full := is_equal_approx(_energy.energy, _energy.cells)
+	_energy.cells = cells
+	if was_full:
+		_energy.energy = cells
+
+
+## No se abre en medio de un diálogo, de una escena con Kai sin control ni con el juego en pausa.
+func _can_open_grimorio() -> bool:
+	if get_tree().paused:
+		return false
+	var box := DialogueBox.find(self)
+	if box and box.is_playing():
+		return false
+	return player == null or not player.controls_locked
 
 
 func _refresh(current: float, maximum: float) -> void:
