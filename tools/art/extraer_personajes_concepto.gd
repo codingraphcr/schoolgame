@@ -62,7 +62,7 @@ const CHARACTERS := {
 			"muerte": { "poses": ["muerte"], "fps": 1.0, "loop": false },
 		},
 	},
-	# Prof. Álvarez: adulto, un poco más alto que Kai (112 px frente a 96).
+	# Prof. Alvarado: adulto, un poco más alto que Kai (112 px frente a 96).
 	"profesor": {
 		"source": "res://docs/arte/referencias/profesor_hoja_concepto.webp",
 		"out": "res://assets/art/characters/profesor/hd/",

@@ -6,7 +6,7 @@ extends Resource
 
 enum Side { LEFT, RIGHT }
 
-## Nombre tal como aparece en los diálogos y en la placa (p. ej. "Prof. Álvarez").
+## Nombre tal como aparece en los diálogos y en la placa (p. ej. "Prof. Alvarado").
 @export var display_name := ""
 ## Otros nombres que también lo identifican en los diálogos (p. ej. "Profesor").
 @export var aliases: PackedStringArray = []

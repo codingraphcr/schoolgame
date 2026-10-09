@@ -222,7 +222,7 @@ Se construyen **reutilizando piezas** de Kai o de un adulto base:
 
 Cada NPC importante necesita: `idle`, `talk` (gestos con los brazos) y, si camina, `walk`.
 
-> **El Prof. Álvarez ya usa su hoja de concepto** (`docs/arte/referencias/profesor_hoja_concepto.webp`), con la
+> **El Prof. Alvarado ya usa su hoja de concepto** (`docs/arte/referencias/profesor_hoja_concepto.webp`), con la
 > misma estructura que Kai: `tools/art/extraer_personajes_concepto.gd` recorta las poses (`idle`, `walk`, `talk` y
 > `notas`, que hace de vez en cuando mientras espera) y `tools/art/generar_sprite_frames.gd` crea su
 > `profesor_frames.tres`. Para un personaje nuevo: guarda su hoja en `docs/arte/referencias/`, agrega su entrada en
@@ -237,7 +237,7 @@ clara con marco del **color del personaje** (`accent` en su archivo de `data/cha
   (cabeza y torso, como el retrato del profesor); más chico se ve borroso.
 - **Fondo:** mejor **transparente** (o un fondo oscuro liso, que la herramienta borra sola). Que la cara no quede pegada al borde.
 - **Expresiones:** el mismo encuadre que el retrato normal, cambiando solo la cara (no primeros planos).
-  En el diálogo se escriben así: `Prof. Álvarez [preocupado]: texto`. Si una expresión no existe, se usa el normal.
+  En el diálogo se escriben así: `Prof. Alvarado [preocupado]: texto`. Si una expresión no existe, se usa el normal.
 - Cada personaje tiene un archivo en `data/characters/` (nombre, título, retrato, expresiones, lado y color).
   Los retratos se recortan de `docs/arte/referencias/dialogos_hoja_concepto.webp` con `tools/art/extraer_retratos.gd`.
 

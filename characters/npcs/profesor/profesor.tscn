@@ -53,7 +53,7 @@ size = Vector2(48, 56)
 
 [node name="Profesor" type="Node2D" unique_id=1425553402]
 script = ExtResource("1_xcafg")
-display_name = "Prof. Álvarez"
+display_name = "Prof. Alvarado"
 dialogue = ExtResource("2_bchj4")
 repeat_dialogue = ExtResource("2_bchj4")
 conversations = Array[ExtResource("3_lltp1")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_lltp1")])
