@@ -34,6 +34,18 @@ func _test_format() -> void:
 	_check(lines[0]["speaker"] == "Profesor" and lines[0]["text"] == "Hola, Kai.", "formato: «Nombre: texto»")
 	_check(lines[1]["speaker"] == "Kai" and lines[1]["text"] == "Hola: ¿qué pasó?", "formato: los «:» dentro del texto se conservan")
 	_check(lines[2]["speaker"] == "" and lines[2]["text"] == "(La pantalla parpadea.)", "formato: líneas sin orador (narración)")
+	dialogue.script_text = "Prof. Álvarez [serio]: Escucha."
+	lines = dialogue.get_lines()
+	_check(lines[0]["speaker"] == "Prof. Álvarez" and lines[0]["expression"] == "serio" and lines[0]["text"] == "Escucha.",
+		"formato: «Nombre [expresión]: texto»")
+	var profesor: DialogueCharacter = load("res://data/characters/profesor.tres")
+	_check(profesor.matches("Prof. Álvarez") and profesor.matches("Profesor"), "el profesor responde a su nombre y a «Profesor»")
+	var serio := PlaceholderTexture2D.new()
+	var con_expresiones := DialogueCharacter.new()
+	con_expresiones.portrait = PlaceholderTexture2D.new()
+	con_expresiones.expressions = { "serio": serio }
+	_check(con_expresiones.portrait_for("serio") == serio and con_expresiones.portrait_for("") == con_expresiones.portrait
+		and profesor.portrait_for("sonriente") == profesor.portrait, "las expresiones cambian el retrato (si no existe, queda el normal)")
 	var pedido: Dialogue = load("res://data/dialogues/prologo/profesor_pedido.tres")
 	_check(pedido.get_lines().size() == 6, "el pedido del profesor tiene 6 líneas")
 
@@ -51,7 +63,7 @@ func _test_first_talk(room: Room, state: Node) -> void:
 	await _frames(3)
 	_check(box.is_playing() and box.visible, "E abre el diálogo")
 	_check(player.controls_locked, "Kai no se mueve mientras habla")
-	_check(box.get_node("%Speaker").text == "Profesor", "habla el profesor primero")
+	_check(box.get_node("%Speaker").text == "Prof. Álvarez", "habla el profesor primero")
 	_check((box.get_node("%Text") as Label).visible_ratio < 1.0, "el texto aparece letra por letra")
 	_check(profesor.get_node("Sprite").flip_h and profesor.get_node("Sprite").animation == &"talk", "el profesor mira a Kai y gesticula")
 	_check(not prompt.visible, "el aviso se oculta durante el diálogo")
@@ -98,9 +110,11 @@ func _action(action: StringName) -> void:
 	Input.parse_input_event(release)
 
 
+## Espera cuadros de proceso: las teclas simuladas se entregan una vez por cuadro de proceso, y en
+## modo headless puede haber varios cuadros de física por cada uno.
 func _frames(count: int) -> void:
 	for i in count:
-		await physics_frame
+		await process_frame
 
 
 func _wait(seconds: float) -> void:

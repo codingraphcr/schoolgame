@@ -85,7 +85,7 @@ Archivos para importar en tu programa de dibujo:
 Ventaja: **cada personaje se dibuja una sola vez**. Agregar una animación nueva no requiere dibujar más.
 
 > **Kai en el juego usa los sprites de la hoja de concepto de Ariel** (`docs/arte/referencias/kai_hoja_concepto.webp`),
-> extraídos con `tools/art/extraer_kai_concepto.gd`: 96 px de alto en cuadros de 96×128, mostrados a mitad de escala
+> extraídos con `tools/art/extraer_personajes_concepto.gd`: 96 px de alto en cuadros de 96×128, mostrados a mitad de escala
 > (48 px en el mundo). Para sumar cuadros nuevos (más fluidez), agrégalos a la hoja o dibújalos con el mismo estilo
 > y agrega su zona en `POSES` y su orden en `ANIMATIONS` dentro de la herramienta. El esqueleto (abajo) queda como
 > alternativa (`KaiVisual.apariencia = HUESOS`).
@@ -221,6 +221,24 @@ Se construyen **reutilizando piezas** de Kai o de un adulto base:
 - **Administrativos:** chaleco o blazer, gafete, auriculares de oficina.
 
 Cada NPC importante necesita: `idle`, `talk` (gestos con los brazos) y, si camina, `walk`.
+
+> **El Prof. Álvarez ya usa su hoja de concepto** (`docs/arte/referencias/profesor_hoja_concepto.webp`), con la
+> misma estructura que Kai: `tools/art/extraer_personajes_concepto.gd` recorta las poses (`idle`, `walk`, `talk` y
+> `notas`, que hace de vez en cuando mientras espera) y `tools/art/generar_sprite_frames.gd` crea su
+> `profesor_frames.tres`. Para un personaje nuevo: guarda su hoja en `docs/arte/referencias/`, agrega su entrada en
+> `CHARACTERS` (zona de cada pose y orden de las animaciones) y en `NPCS` de la segunda herramienta.
+
+### 4.7.1 Retratos para los diálogos (estilo Hades)
+Cuando alguien habla aparece su **retrato grande** abajo, con una placa con su nombre y su título.
+**Kai va a la izquierda y los demás a la derecha**, mirando hacia el centro; el que no habla se oscurece.
+
+- **Tamaño:** se muestra a 540 px de alto en una pantalla de 1280×720. Dibújalo de **al menos 360 px de alto**
+  (cabeza y torso, como el retrato del profesor); más chico se ve borroso.
+- **Fondo:** puede tener fondo; los bordes se funden solos con el juego. Que la cara no quede pegada al borde.
+- **Expresiones:** el mismo encuadre que el retrato normal, cambiando solo la cara (no primeros planos).
+  En el diálogo se escriben así: `Prof. Álvarez [preocupado]: texto`. Si una expresión no existe, se usa el normal.
+- Cada personaje tiene un archivo en `data/characters/` (nombre, título, retrato, expresiones, lado y color).
+  Los retratos se recortan de las hojas con `tools/art/extraer_retratos.gd`.
 
 ### 4.8 Nullblade y Aegis
 Los nombres y las mejoras de cada uno están en `docs/combate.md`. Aquí solo va cómo se dibujan.

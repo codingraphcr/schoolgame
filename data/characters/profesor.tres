@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="DialogueCharacter" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/characters/profesor/retratos/profesor_retrato.png" id="1_01ep7"]
+[ext_resource type="Script" path="res://systems/dialogue/dialogue_character.gd" id="2_4b8cp"]
+
+[resource]
+script = ExtResource("2_4b8cp")
+display_name = "Prof. Álvarez"
+aliases = PackedStringArray("Profesor", "Álvarez")
+title = "Mentor · Ciencias y Tecnología"
+portrait = ExtResource("1_01ep7")
+side = 1
+accent = Color(0.9098039, 0.72156864, 0.47058824, 1)

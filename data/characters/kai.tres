@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="DialogueCharacter" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/characters/kai/retratos/kai_retrato.png" id="1_dcgjk"]
+[ext_resource type="Script" path="res://systems/dialogue/dialogue_character.gd" id="2_xafwf"]
+
+[resource]
+script = ExtResource("2_xafwf")
+display_name = "Kai"
+aliases = PackedStringArray()
+title = "Estudiante"
+portrait = ExtResource("1_dcgjk")
+flip_portrait = true
+accent = Color(0.6431373, 0.54509807, 1, 1)
