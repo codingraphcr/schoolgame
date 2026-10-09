@@ -1,7 +1,8 @@
 class_name DialogueBox
 extends Control
 ## Caja de diálogo al estilo Hades: retrato grande del que habla (Kai a la izquierda, los demás a la
-## derecha), placa con nombre y título, la caja abajo y un triángulo para continuar. El texto aparece
+## derecha), placa oscura con nombre y título, caja clara con marco del color del personaje
+## (DialogueFrameArt y DialogueNamePlate) y un triángulo para continuar. El texto aparece
 ## letra por letra; E o Espacio lo completan y, si ya está completo, pasan a la siguiente línea.
 ## Los personajes (retrato, título, color, lado) son recursos DialogueCharacter de data/characters/.
 ## Uso: await DialogueBox.find(self).play(dialogo)  (con DialogueBox.find se obtiene la de la sala).
@@ -17,14 +18,18 @@ signal finished
 @export var characters: Array[DialogueCharacter] = []
 
 ## Alto de los retratos en pantalla y separación de la caja cuando hay un retrato a un lado.
-const PORTRAIT_HEIGHT := 540.0
+const PORTRAIT_HEIGHT := 600.0
 ## Cuánto se puede agrandar un retrato chico (las expresiones son primeros planos de la cara).
 const MAX_UPSCALE := 2.5
-const BOX_SIDE_MARGIN := 70.0
-const BOX_PORTRAIT_GAP := 330.0
-const BOX_NARRATION_MARGIN := 200.0
+const BOX_SIDE_MARGIN := 110.0
+const BOX_PORTRAIT_GAP := 350.0
+const BOX_NARRATION_MARGIN := 230.0
 const SLIDE := 48.0
-const DIMMED := 0.45
+const DIMMED := 0.4
+## Cuánto se aleja hacia su borde el retrato del que no habla.
+const BACK_OFF := 26.0
+## Distancia de la placa del nombre al borde de la caja.
+const PLATE_INSET := 34.0
 const DEFAULT_ACCENT := Color(0.243, 0.949, 1.0)
 
 var _lines: Array[Dictionary] = []
@@ -36,12 +41,14 @@ var _side_character := { DialogueCharacter.Side.LEFT: null, DialogueCharacter.Si
 @onready var _dim: TextureRect = $Dim
 @onready var _portraits := { DialogueCharacter.Side.LEFT: $PortraitLeft as TextureRect, DialogueCharacter.Side.RIGHT: $PortraitRight as TextureRect }
 @onready var _frame: Control = $Frame
-@onready var _name_plate: PanelContainer = %NamePlate
+@onready var _box: DialogueFrameArt = $Frame/Box
+@onready var _name_plate: DialogueNamePlate = %NamePlate
 @onready var _speaker: Label = %Speaker
 @onready var _title: Label = %Title
 @onready var _text: Label = %Text
 @onready var _continue: Control = %Continue
 @onready var _triangle: Polygon2D = $Frame/Continue/Triangle
+@onready var _triangle_back: Polygon2D = $Frame/Continue/Back
 
 
 ## La caja de diálogo de la sala actual (vive en el HUD).
@@ -98,6 +105,7 @@ func _process(delta: float) -> void:
 	var beat := absf(sin(Time.get_ticks_msec() / 260.0))
 	_continue.modulate.a = 0.45 + 0.55 * beat
 	_triangle.position.y = 3.0 * beat
+	_triangle_back.position.y = _triangle.position.y
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -127,31 +135,34 @@ func character_for(speaker: String) -> DialogueCharacter:
 			return character
 	return null
 
-
 func _show_line(index: int) -> void:
 	_index = index
 	var line: Dictionary = _lines[index]
 	var speaker := String(line["speaker"])
 	var character := character_for(speaker)
+	var previous_speaker := _speaker.text if _name_plate.visible else ""
 	_speaker.text = character.display_name if character else speaker
 	_title.text = character.title if character else ""
 	_title.visible = not _title.text.is_empty()
 	_name_plate.visible = not speaker.is_empty()
+	# La narración (sin orador) va centrada.
+	_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER if speaker.is_empty() else HORIZONTAL_ALIGNMENT_LEFT
 	var accent := character.accent if character else DEFAULT_ACCENT
-	_speaker.add_theme_color_override(&"font_color", accent)
-	_triangle.color = accent
-	var style := _name_plate.get_theme_stylebox(&"panel").duplicate() as StyleBoxFlat
-	style.border_color = accent
-	_name_plate.add_theme_stylebox_override(&"panel", style)
-	_update_portraits(character, String(line.get("expression", "")))
+	_title.add_theme_color_override(&"font_color", accent)
+	_box.accent = accent
+	_name_plate.accent = accent
+	_triangle_back.color = accent
+	var active_side := _update_portraits(character, String(line.get("expression", "")))
+	_place_frame(active_side, index == 0 or previous_speaker != _speaker.text)
 	_text.text = line["text"]
 	_text.visible_ratio = 0.0
 	_continue.visible = false
 	line_started.emit(index)
 
 
-## Muestra el retrato del que habla en su lado y atenúa el del otro lado.
-func _update_portraits(character: DialogueCharacter, expression: String) -> void:
+## Muestra el retrato del que habla en su lado y oscurece y aleja el del otro lado.
+## Devuelve el lado del que habla (-1 si no tiene retrato).
+func _update_portraits(character: DialogueCharacter, expression: String) -> int:
 	var active_side := -1
 	if character and character.portrait:
 		active_side = character.side
@@ -163,9 +174,17 @@ func _update_portraits(character: DialogueCharacter, expression: String) -> void
 			_place_portrait(portrait, texture, active_side, character.flip_portrait)
 	for side in _portraits:
 		var portrait: TextureRect = _portraits[side]
-		(portrait.material as ShaderMaterial).set_shader_parameter(&"brightness", 1.0 if side == active_side else DIMMED)
-		portrait.z_index = 1 if side == active_side else 0
-	_place_frame(active_side)
+		var active: bool = side == active_side
+		portrait.z_index = 1 if active else 0
+		if not portrait.visible:
+			continue
+		var fade := portrait.material as ShaderMaterial
+		var outward := -1.0 if side == DialogueCharacter.Side.LEFT else 1.0
+		var tween := create_tween().set_parallel().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_method(func(value: float) -> void: fade.set_shader_parameter(&"brightness", value),
+			float(fade.get_shader_parameter(&"brightness")), 1.0 if active else DIMMED, 0.2)
+		tween.tween_property(portrait, "position:x", float(portrait.get_meta(&"base_x")) + (0.0 if active else outward * BACK_OFF), 0.25)
+	return active_side
 
 
 func _place_portrait(portrait: TextureRect, texture: Texture2D, side: int, flipped: bool) -> void:
@@ -174,20 +193,22 @@ func _place_portrait(portrait: TextureRect, texture: Texture2D, side: int, flipp
 	portrait.texture = texture
 	portrait.flip_h = flipped
 	portrait.size = shown
-	portrait.position = Vector2(x, size.y - shown.y)
+	portrait.set_meta(&"base_x", x)
 	(portrait.material as ShaderMaterial).set_shader_parameter(&"inner_at_uv_one", (side == DialogueCharacter.Side.LEFT) != flipped)
+	(portrait.material as ShaderMaterial).set_shader_parameter(&"brightness", 1.0)
 	portrait.visible = true
-	# Entra deslizándose desde su lado.
+	# Entra deslizándose desde su lado y desde abajo.
 	var from := -SLIDE if side == DialogueCharacter.Side.LEFT else SLIDE
-	portrait.position.x += from
+	portrait.position = Vector2(x + from, size.y - shown.y + 20.0)
 	portrait.modulate.a = 0.0
-	var tween := create_tween().set_parallel().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_property(portrait, "position:x", x, 0.22)
+	var tween := create_tween().set_parallel().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(portrait, "position:y", size.y - shown.y, 0.3)
 	tween.tween_property(portrait, "modulate:a", 1.0, 0.18)
 
 
-## Corre la caja hacia el lado contrario al retrato del que habla (centrada si es narración).
-func _place_frame(active_side: int) -> void:
+## Corre la caja hacia el lado contrario al retrato del que habla (centrada si es narración) y,
+## si cambió quien habla, la hace aparecer con un pequeño salto, como en Hades.
+func _place_frame(active_side: int, pop: bool) -> void:
 	var left := BOX_NARRATION_MARGIN
 	var right := BOX_NARRATION_MARGIN
 	if active_side == DialogueCharacter.Side.LEFT:
@@ -196,12 +217,25 @@ func _place_frame(active_side: int) -> void:
 	elif active_side == DialogueCharacter.Side.RIGHT:
 		left = BOX_SIDE_MARGIN
 		right = BOX_PORTRAIT_GAP
-	var tween := create_tween().set_parallel().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_property(_frame, "offset_left", left, 0.18)
-	tween.tween_property(_frame, "offset_right", -right, 0.18)
-	# La placa con el nombre va del lado del que habla.
-	_name_plate.set_anchors_preset(Control.PRESET_TOP_RIGHT if active_side == DialogueCharacter.Side.RIGHT else Control.PRESET_TOP_LEFT)
-	_name_plate.grow_horizontal = Control.GROW_DIRECTION_BEGIN if active_side == DialogueCharacter.Side.RIGHT else Control.GROW_DIRECTION_END
-	_name_plate.offset_left = -28.0 if active_side == DialogueCharacter.Side.RIGHT else 28.0
+	var mirrored := active_side == DialogueCharacter.Side.RIGHT
+	_box.mirrored = mirrored
+	_name_plate.mirrored = mirrored
+	_frame.offset_left = left
+	_frame.offset_right = -right
+	# La placa va del lado del retrato y se apoya sobre el borde de arriba de la caja.
+	_name_plate.anchor_left = 1.0 if mirrored else 0.0
+	_name_plate.anchor_right = _name_plate.anchor_left
+	_name_plate.grow_horizontal = Control.GROW_DIRECTION_BEGIN if mirrored else Control.GROW_DIRECTION_END
+	_name_plate.offset_left = -PLATE_INSET if mirrored else PLATE_INSET
 	_name_plate.offset_right = _name_plate.offset_left
-	_name_plate.offset_top = -40.0
+	if not pop:
+		return
+	_frame.pivot_offset = Vector2(_frame.size.x * (0.85 if mirrored else 0.15), _frame.size.y)
+	_frame.scale = Vector2(0.94, 0.94)
+	_frame.modulate.a = 0.4
+	var tween := create_tween().set_parallel().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(_frame, "scale", Vector2.ONE, 0.22)
+	tween.tween_property(_frame, "modulate:a", 1.0, 0.12)
+	var plate_from := 30.0 if mirrored else -30.0
+	_name_plate.position.x += plate_from
+	tween.tween_property(_name_plate, "position:x", _name_plate.position.x - plate_from, 0.25)
