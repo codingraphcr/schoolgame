@@ -1,7 +1,7 @@
 class_name PasswordFight
 extends Node2D
 ## Combate contra la «Contraseña débil» en la cuenta del profesor (H4c). Lo inicia la pestaña
-## «Cambiar contraseña» (AccountTab): aparece el enemigo, habla, Kai recibe la mini espada (J)
+## «Cambiar contraseña» (AccountTab): aparece el enemigo, habla, la Nullblade se materializa (J)
 ## y una barrera cierra la zona. Al ganar se completa el paso «cambiar_contrasena».
 ## Si Kai muere, el combate se cancela (reaparece en el punto de restauración) y se puede repetir.
 
@@ -49,10 +49,17 @@ func start(player: Player) -> void:
 	_intro_seen = true
 	if not running:
 		return
+	# La primera vez, la Nullblade se materializa frente a Kai y aparece la tarjeta de equipamiento.
+	var game_state := get_node("/root/GameState")
+	if game_state.nullblade_stage == 0:
+		await NullbladeReveal.play(player)
+		game_state.set_nullblade_stage(1)
+		if not running:
+			return
 	player.combat.weapon = weapon
 	if barrier:
 		barrier.active = true
-	get_tree().call_group(&"toast", &"show_message", "Mini espada digital: pulsa %s para atacar" % _key_for(&"attack"), 4.0)
+	get_tree().call_group(&"toast", &"show_message", "%s: pulsa %s para atacar" % [weapon.display_name, _key_for(&"attack")], 4.0)
 	player.controls_locked = false
 	enemy.ai_enabled = true
 

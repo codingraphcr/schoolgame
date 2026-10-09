@@ -1,14 +1,18 @@
 [gd_resource type="Resource" script_class="GrimorioEntry" format=3]
 
 [ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+[ext_resource type="Texture2D" path="res://assets/art/items/nullblade/nullblade_arte.png" id="2_art"]
 
 [resource]
 script = ExtResource("1_entry")
-category = 1
-order = 3
-title = "Nullblade.exe"
-subtitle = "Comando · Arma"
-text = "Una hoja hecha de código. Corta amenazas digitales y se vuelve más fuerte a medida que Kai entiende cómo funcionan los sistemas."
-facts = Dictionary[String, String]({"Uso": "Combate"})
+category = 5
+order = 0
+title = "Nullblade"
+subtitle = "Arma de integridad digital"
+text = "Una espada formada por fragmentos de código estabilizado. Su filo puede atravesar entidades corruptas y neutralizar amenazas digitales.
+
+«Incluso en un sistema al borde del colapso, siempre queda algo capaz de defenderlo»."
+facts = Dictionary[String, String]({"Tipo": "Arma", "Energía por golpe": "12,5 %"})
 action = &"attack"
+image = ExtResource("2_art")
 unlock_property = &"nullblade_stage"

@@ -201,6 +201,11 @@ func _update_heal_light(delta: float, healing: bool) -> void:
 	_heal_light.visible = _heal_light.energy > 0.01
 
 
+## Muestra una pose durante unos segundos (para escenas como la aparición de la Nullblade).
+func play_pose(anim: StringName, seconds: float) -> void:
+	_play_override(anim, seconds)
+
+
 func _play_override(anim: StringName, duration: float) -> void:
 	_next_override = &""
 	if not _has_animation(anim):

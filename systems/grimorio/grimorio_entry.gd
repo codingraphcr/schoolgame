@@ -4,7 +4,7 @@ extends Resource
 ## registro de la historia o una zona del mapa. Un .tres por entrada en data/grimorio/.
 ## Mientras no se desbloquea aparece como «???».
 
-enum Category { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS }
+enum Category { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS, ARSENAL }
 
 @export var category := Category.CONCEPTOS
 ## Orden dentro de su categoría (de menor a mayor).

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 5
+order = 1
+title = "Canalizar integridad"
+subtitle = "Habilidad · Restauración"
+text = "Kai concentra su propia energía para reparar su integridad. Mantén presionada la tecla: en el suelo se arrodilla y en el aire se queda flotando. Un golpe interrumpe la canalización."
+facts = Dictionary[String, String]({"Recupera": "1,5 cristales", "Gasta": "Media barrita de energía", "Primera": "1,1 s · luego cada 0,9 s"})
+action = &"heal"

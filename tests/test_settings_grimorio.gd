@@ -94,7 +94,7 @@ func _test_grimorio() -> void:
 	change_scene_to_file("res://ui/menus/grimorio/grimorio.tscn")
 	await _wait(0.4)
 	var grimorio := current_scene
-	_check(grimorio.get_node("%Tabs").get_child_count() == 5, "el Grimorio tiene 5 pestañas")
+	_check(grimorio.get_node("%Tabs").get_child_count() == 6, "el Grimorio tiene 6 pestañas (con ARSENAL)")
 	var firewall: GrimorioEntry = load("res://data/grimorio/firewall.tres")
 	var phishing: GrimorioEntry = load("res://data/grimorio/phishing.tres")
 	_check(grimorio.is_unlocked(firewall) and not grimorio.is_unlocked(phishing), "al empezar, Phishing está oculto")

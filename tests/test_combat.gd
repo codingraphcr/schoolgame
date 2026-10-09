@@ -1,6 +1,6 @@
 extends SceneTree
 ## Prueba automática: ataque de Kai (PlayerCombat + WeaponData), enemigo base y la «Contraseña
-## débil», y el combate de la cuenta del profesor (H4c): diálogo, mini espada, barrera, perder y
+## débil», y el combate de la cuenta del profesor (H4c): diálogo, aparición de la Nullblade, barrera, perder y
 ## reintentar, ganar y avanzar la misión.
 ## Ejecutar: godot --headless --path . --script res://tests/test_combat.gd
 
@@ -148,8 +148,17 @@ func _test_fight() -> void:
 	_check(fight.running and fight.enemy != null and not fight.enemy.ai_enabled, "aparece la «Contraseña débil» (quieta mientras habla)")
 	_check(await _dialogue_contains(box, "no deberías poder vernos"), "dice «Tú no deberías poder vernos»")
 	await _advance(box)
+	# La Nullblade se materializa y aparece la tarjeta de equipamiento (el juego queda en pausa).
+	await _until(func() -> bool: return root.get_node_or_null("EquipmentCardLayer") != null)
+	var card := root.get_node_or_null("EquipmentCardLayer/EquipmentCard")
+	_check(card != null and paused and card.get_node("%Title").text == "NULLBLADE", "aparece la tarjeta «NULLBLADE» y el juego se pausa")
+	_check(state.nullblade_stage == 0 and player.controls_locked, "mientras tanto Kai no se mueve")
+	await _wait(0.9)
+	_action("interact")
+	await _until(func() -> bool: return root.get_node_or_null("EquipmentCardLayer") == null)
 	await _frames(3)
-	_check(player.combat.weapon != null and player.combat.weapon.id == &"mini_espada", "Kai recibe la mini espada digital")
+	_check(not paused and state.nullblade_stage == 1, "al cerrar la tarjeta, Kai tiene la Nullblade")
+	_check(player.combat.weapon != null and player.combat.weapon.id == &"nullblade", "Kai pelea con la Nullblade")
 	_check(barrier.active and fight.enemy.ai_enabled and not player.controls_locked, "se cierra la barrera y empieza el combate")
 	_check(not tab._prompt.visible, "durante el combate la pestaña no se puede usar")
 
@@ -181,7 +190,7 @@ func _test_fight() -> void:
 		await _until(func() -> bool: return player.combat.is_attacking())
 		await _until(func() -> bool: return not player.combat.is_attacking())
 		await _frames(2)
-	_check(enemy.is_dead, "la mini espada derrota a la «Contraseña débil»")
+	_check(enemy.is_dead, "la Nullblade derrota a la «Contraseña débil»")
 	await _until(func() -> bool: return box.is_playing())
 	_check(await _dialogue_contains(box, "1... 2... 3"), "se deshace en números y Kai le cuenta al profesor")
 	await _advance(box)

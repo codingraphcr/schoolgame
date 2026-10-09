@@ -99,7 +99,7 @@ layout_mode = 0
 offset_left = 40.0
 offset_top = 120.0
 offset_right = 222.0
-offset_bottom = 480.0
+offset_bottom = 556.0
 theme_override_constants/separation = 12
 
 [node name="MapaTab" type="Button" parent="Book/Tabs"]
@@ -118,6 +118,15 @@ theme_override_font_sizes/font_size = 17
 text = "COMANDOS"
 script = ExtResource("4_tab")
 icon_kind = 1
+
+[node name="ArsenalTab" type="Button" parent="Book/Tabs"]
+custom_minimum_size = Vector2(182, 58)
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_tab")
+theme_override_font_sizes/font_size = 17
+text = "ARSENAL"
+script = ExtResource("4_tab")
+icon_kind = 5
 
 [node name="AmenazasTab" type="Button" parent="Book/Tabs"]
 custom_minimum_size = Vector2(182, 58)

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://components/combat/weapon_data.gd" id="1_weapon"]
+
+[resource]
+script = ExtResource("1_weapon")
+id = &"nullblade"
+display_name = "Nullblade"
+damage = 1.0
+reach = Vector2(32, 24)
+offset = Vector2(21, -12)
+slash_color = Color(0.64, 0.49, 1, 1)
+energy_gain = 0.125
+charged_energy_gain = 0.15

@@ -179,7 +179,9 @@ Con J (acción `attack`) ataca hacia donde mira usando el arma equipada (`weapon
 congelamiento al acertar). Sin arma no ataca. Crea su propia zona de golpe (capa 4, `once_per_activation`), dibuja
 el arco del tajo y emite `hit_landed` (para energía y combos futuros). La animación es la de Ariel: `ataque_1`
 (preparación) y `ataque_2` (tajo, justo cuando hace daño). Las etapas de Nullblade serán otros `WeaponData`.
-Armas: `data/weapons/` (`mini_espada.tres`, la del prólogo).
+Armas: `data/weapons/` (`nullblade.tres`, la que se obtiene en el prólogo; `mini_espada.tres` quedó sin uso).
+**Energía por golpe:** cada golpe acertado a un **enemigo válido** (`EnemyBase` en pie, sin escudo) recupera `WeaponData.energy_gain` (**12,5 %** de la energía máxima; el ataque cargado futuro, `charged_energy_gain`, **15 %**), nunca más del máximo. Paredes, objetos y el aire no dan energía; un mismo ataque golpea una vez a cada enemigo y cada enemigo distinto cuenta; derrotar no da extra. La barra hace un pulso violeta (`EnergyBar.pulse()`). El tajo es una media luna del color del arma.
+**Nullblade:** `world/effects/nullblade_reveal.gd` (`NullbladeReveal.play(jugador)`) la materializa por primera vez (activación, fragmentos de código, condensación, destello, Kai la toma) y muestra la tarjeta `ui/equipment/equipment_card.tscn` (`EquipmentCard.show_card()`, reutilizable para otros equipos; pausa el juego). Arte en `assets/art/items/nullblade/` (`tools/art/extraer_nullblade.gd`). Con `GameState.nullblade_stage > 0`, `Player.apply_progress()` la equipa en todas las salas.
 
 **Enemigos:** `characters/enemies/enemy_base.gd` (`EnemyBase`, CharacterBody2D). Crea su cuerpo (capa 3), su
 `HealthComponent`, su `HurtboxComponent` (recibe golpes de la capa 4) y su golpe por contacto (capa 5). Al recibir un
@@ -309,7 +311,7 @@ Los anuncios usan **nombres parodia** (MineKraft, Terrarya, GTA 6 anticipado, Fo
 Clash Royal, Fri Fayer, Valorante, Brawl Starz, Zeldo) con señales de
 estafa reales: urgencia, premios, pedir la contraseña, "desactiva tu antivirus" y direcciones raras (`.xyz`, `.click`, `.top`).
 Al final, `AccountWindow` (cuenta del profesor: contraseña 123456, sin verificación en dos pasos) y `AccountTab`
-("E: cambiar la contraseña"; el combate con la mini espada es H4c).
+("E: cambiar la contraseña"; el combate con la Nullblade es H4c).
 
 **`QuestTrigger`** (`systems/quests/`): Area2D que completa un paso de misión al entrar Kai (o al cargar la sala con
 `on_ready`) y puede mostrar un diálogo antes. En la PC: `EnteredPc` (entrar_pc) y `FoundError` («¡Profe, aquí está el error!»).
@@ -334,7 +336,7 @@ en la sala; no hace falta programar.
 
 **Combate de la cuenta del profesor** (`world/zones/pc_profesor/password_fight.gd`, `PasswordFight`): la pestaña
 «Cambiar contraseña» (`AccountTab`, paso `cambiar_contrasena`) lo inicia. Aparece la «Contraseña débil» y dice
-«Tú no deberías poder vernos»; Kai recibe la mini espada (aviso «pulsa J para atacar»); una `ArenaBarrier`
+«Tú no deberías poder vernos»; la Nullblade se materializa (`NullbladeReveal`) y aparece la tarjeta de equipamiento; al reintentar no se repite; una `ArenaBarrier`
 (`world/digital/`, un pequeño firewall) cierra la zona. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
 muere, el combate se cancela, reaparece en `RestorePointFinal` (justo antes) y puede reintentarlo con un diálogo corto.
 
@@ -423,7 +425,7 @@ INACTIVE ──start_incident()──▶ INVESTIGATING ──find_clue() × clue
 | Pantalla de opciones (`ui/menus/settings/`) | Estilo lila del menú. Filas `SettingRow` (hereda de `MainMenuOption`): deslizador, sí/no, opciones y tecla; ◀ ▶ cambian el valor. Subpantalla de **controles** (elige una acción y presiona la tecla nueva; Esc cancela) |
 | Quién usa los ajustes | `DialogueBox` (velocidad del texto; sin temblor de «???» si se reduce el glitch), `DigitalWorld.pulse_glitch()` (más suave) y `LabMonitor` (luz sin parpadeo) |
 | `GrimorioEntry` (`systems/grimorio/`, un `.tres` por entrada en `data/grimorio/`) | Página del Grimorio: categoría (MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS), título, texto, datos, tecla (`action`), imagen y desbloqueo (`unlock_quest` + `unlock_step`, `unlock_on_complete` o `unlock_property` de `GameState`). Bloqueada se ve como «???» |
-| Grimorio (`ui/menus/grimorio/`, `GrimorioScreen`) | Se abre con **G** durante el juego (`CombatHUD` llama a `GrimorioScreen.open()`): queda encima de la sala, que se pausa; G, Esc o CERRAR lo cierran. No se abre en diálogos ni escenas sin control. El libro (concepto de Ariel en `docs/arte/referencias/grimorio_concepto.webp`) dibujado por código (`GrimorioBook`), pestañas con íconos (`GrimorioTab`) y el mapa esquemático (`GrimorioMap`: salas de cada zona en `ZONES`, visitadas según la marca `visitada_<escena>` que deja `Room` o el paso de una misión) |
+| Grimorio (`ui/menus/grimorio/`, `GrimorioScreen`) | Se abre con **G** durante el juego (`CombatHUD` llama a `GrimorioScreen.open()`): queda encima de la sala, que se pausa; G, Esc o CERRAR lo cierran. No se abre en diálogos ni escenas sin control. El libro (concepto de Ariel en `docs/arte/referencias/grimorio_concepto.webp`) dibujado por código (`GrimorioBook`), pestañas con íconos (`GrimorioTab`; cada una abre la categoría de su `icon_kind`; ARSENAL = armas, dispositivos y habilidades) y el mapa esquemático (`GrimorioMap`: salas de cada zona en `ZONES`, visitadas según la marca `visitada_<escena>` que deja `Room` o el paso de una misión) |
 
 Para agregar una entrada al Grimorio: copiar un `.tres` de `data/grimorio/`, cambiar textos y desbloqueo. `GameState.has_reached_step(mision, paso)` dice si la misión ya llegó a ese paso.
 
@@ -453,7 +455,8 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
 | `test_digital_dive.gd` | La computadora absorbe a Kai (cámara, desaparición), pantalla de carga, llegada al escritorio, materialización, alma digital celeste, límites y regreso al laboratorio |
 | `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa solo saltando (bot), punto de restauración (activarlo y reaparecer ahí al morir) y llegada a la cuenta del profesor |
-| `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, mini espada, barrera, perder y reintentar, ganar y avanzar) |
+| `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
+| `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_terminal.gd` | Terminal simulada: sistema de archivos, comandos y errores, autocompletado, comandos permitidos, que no toque el sistema real, y la terminal de la PC del profesor (abrir, Esc, resolver, diálogo, paso de misión, comandos aprendidos y guardados) |
 | `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

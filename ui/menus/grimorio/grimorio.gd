@@ -12,13 +12,14 @@ const SCENE_PATH := "res://ui/menus/grimorio/grimorio.tscn"
 ## Si se abre como escena suelta (sin juego detrás), al cerrar vuelve al menú.
 const RETURN_SCENE := "res://ui/menus/main_menu/main_menu.tscn"
 
-const CATEGORY_TITLES: PackedStringArray = ["MAPA", "COMANDOS", "AMENAZAS", "CONCEPTOS", "REGISTROS"]
+const CATEGORY_TITLES: PackedStringArray = ["MAPA", "COMANDOS", "AMENAZAS", "CONCEPTOS", "REGISTROS", "ARSENAL"]
 const CATEGORY_DESCRIPTIONS: PackedStringArray = [
 	"Explora las áreas que has visitado y descubre nuevas rutas, secretos y conexiones.",
-	"Las habilidades de Kai y las teclas para usarlas. Las teclas se cambian en Opciones.",
+	"Cómo moverse e interactuar, y los comandos de terminal que Kai aprende.",
 	"Lo que acecha en la red: cómo ataca cada amenaza y cómo defenderte.",
 	"Ideas de ciberseguridad que Kai va entendiendo en su camino.",
 	"Notas, mensajes y recuerdos de lo que ha pasado.",
+	"Las armas, dispositivos y habilidades que Kai ha obtenido.",
 ]
 const LOCKED_TEXT := "Aún no lo descubres. Sigue avanzando en la historia para completar esta página."
 
@@ -62,11 +63,13 @@ func _ready() -> void:
 	for i in _tabs.size():
 		var tab := _tabs[i] as Button
 		tab.button_group = _tab_group
-		tab.pressed.connect(select_category.bind(i))
+		# Cada pestaña abre la categoría de su ícono (así el orden en pantalla puede ser cualquiera).
+		var category: int = (tab as GrimorioTab).icon_kind
+		tab.pressed.connect(select_category.bind(category))
 		# Con teclado o mando, la pestaña se abre al pasar por ella.
 		tab.focus_entered.connect(func() -> void:
-			if _category != i:
-				select_category(i))
+			if _category != category:
+				select_category(category))
 	_back_button.pressed.connect(close)
 	select_category(0)
 	if not DisplayServer.is_touchscreen_available():
@@ -101,7 +104,7 @@ func is_unlocked(entry: GrimorioEntry) -> bool:
 func select_category(category: int) -> void:
 	_category = category
 	for i in _tabs.size():
-		(_tabs[i] as Button).set_pressed_no_signal(i == category)
+		(_tabs[i] as Button).set_pressed_no_signal((_tabs[i] as GrimorioTab).icon_kind == category)
 	_category_title.text = CATEGORY_TITLES[category]
 	_category_description.text = CATEGORY_DESCRIPTIONS[category]
 	var is_map := category == GrimorioEntry.Category.MAPA

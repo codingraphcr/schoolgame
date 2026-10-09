@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1_entry")
-category = 1
-order = 4
+category = 5
+order = 3
 title = "Dash"
-subtitle = "Comando · Movimiento"
+subtitle = "Habilidad · Movimiento"
 text = "Un impulso rápido en la dirección en la que miras. Sirve para esquivar y para cruzar huecos que no se pueden saltar."
 facts = Dictionary[String, String]({"Uso": "Esquivar"})
 action = &"dash"

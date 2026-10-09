@@ -35,8 +35,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 ## Energía para habilidades (de 0 a máximo); se reparte entre las barritas.
+## Si sube (un golpe acertado), la barra hace un pulso violeta breve.
 func set_energy(current: float, maximum: float) -> void:
 	var target := clampf(current / maxf(maximum, 0.001), 0.0, 1.0) * _energy.cells
+	if target > _energy.energy + 0.001 and not _first_refresh:
+		_energy.pulse()
 	create_tween().tween_property(_energy, "energy", target, 0.25)
 
 

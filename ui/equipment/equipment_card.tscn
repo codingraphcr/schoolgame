@@ -1,0 +1,174 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/equipment/equipment_card.gd" id="1_card"]
+[ext_resource type="Script" path="res://ui/equipment/card_frame.gd" id="2_frame"]
+[ext_resource type="Shader" path="res://ui/equipment/soft_edges.gdshader" id="3_soft"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_art"]
+shader = ExtResource("3_soft")
+
+[sub_resource type="SystemFont" id="SystemFont_mono"]
+font_names = PackedStringArray("Consolas", "Cascadia Mono", "Courier New", "monospace")
+
+[sub_resource type="FontVariation" id="FontVariation_title"]
+variation_embolden = 1.0
+spacing_glyph = 6
+
+[sub_resource type="FontVariation" id="FontVariation_spaced"]
+variation_embolden = 0.35
+spacing_glyph = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_banner"]
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 6.0
+bg_color = Color(0.36, 0.2, 0.78, 0.55)
+border_width_left = 3
+border_width_right = 3
+border_color = Color(0.72, 0.6, 1, 0.9)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_key"]
+content_margin_left = 9.0
+content_margin_top = 1.0
+content_margin_right = 9.0
+content_margin_bottom = 2.0
+bg_color = Color(0.06, 0.03, 0.12, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.72, 1, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="EquipmentCard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_card")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.01, 0.06, 0.7)
+
+[node name="Panel" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -310.0
+offset_top = -288.0
+offset_right = 310.0
+offset_bottom = 278.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_frame")
+separator_y = 386.0
+
+[node name="Art" type="TextureRect" parent="Panel"]
+unique_name_in_owner = true
+texture_filter = 2
+material = SubResource("ShaderMaterial_art")
+layout_mode = 0
+offset_left = 10.0
+offset_top = 12.0
+offset_right = 610.0
+offset_bottom = 262.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Content" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 262.0
+offset_right = 590.0
+offset_bottom = 556.0
+theme_override_constants/separation = 6
+
+[node name="Subtitle" type="Label" parent="Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.73, 0.64, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_spaced")
+theme_override_font_sizes/font_size = 15
+text = "NUEVO EQUIPAMIENTO DESBLOQUEADO"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.97, 0.95, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.6, 0.4, 1, 0.75)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 14
+theme_override_fonts/font = SubResource("FontVariation_title")
+theme_override_font_sizes/font_size = 58
+text = "NULLBLADE"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Panel/Content"]
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+
+[node name="Description" type="Label" parent="Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.89, 0.86, 1, 1)
+theme_override_constants/line_spacing = 4
+theme_override_fonts/font = SubResource("SystemFont_mono")
+theme_override_font_sizes/font_size = 15
+text = "Descripción del objeto."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Spacer2" type="Control" parent="Panel/Content"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+
+[node name="Banner" type="Label" parent="Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.93, 0.88, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_spaced")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_banner")
+text = "¡OBTENIDO!"
+horizontal_alignment = 1
+
+[node name="HintRow" type="HBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Key" type="Label" parent="Panel/Content/HintRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.9, 1, 1)
+theme_override_fonts/font = SubResource("SystemFont_mono")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_key")
+text = "J"
+
+[node name="Hint" type="Label" parent="Panel/Content/HintRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.7, 0.9, 1)
+theme_override_fonts/font = SubResource("SystemFont_mono")
+theme_override_font_sizes/font_size = 15
+text = "Pulsa J para atacar"

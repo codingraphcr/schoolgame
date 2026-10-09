@@ -20,3 +20,7 @@ extends Resource
 ## Congelamiento breve al acertar (sensación de impacto).
 @export var hit_stop := 0.05
 @export var slash_color := Color("3ef2ff")
+## Fracción de la energía máxima que recupera cada golpe acertado a un enemigo (normal o aéreo).
+@export_range(0.0, 1.0) var energy_gain := 0.125
+## Lo mismo para el ataque cargado (cuando exista, más adelante en la historia).
+@export_range(0.0, 1.0) var charged_energy_gain := 0.15

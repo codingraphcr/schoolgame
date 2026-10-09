@@ -12,6 +12,7 @@ const BAR_BACK := Color(0.08, 0.05, 0.18, 0.85)
 const BAR_FILL := Color("8f6bff")
 const BAR_SHINE := Color("efe8ff")
 const DIAMOND_FILL := Color("130d26")
+const PULSE := Color("b48cff")
 
 ## Primera barrita: posición y tamaño; las demás van a la derecha.
 const CELL := Rect2(30, 62, 40, 8)
@@ -22,6 +23,12 @@ const CELL_GAP := 6.0
 	set(value):
 		cells = maxi(value, 1)
 		queue_redraw()
+## Brillo del pulso al recuperar energía (0 = nada). Lo anima pulse().
+var pulse_amount := 0.0:
+	set(value):
+		pulse_amount = value
+		queue_redraw()
+
 ## Energía actual, en barritas (puede ser fraccionaria: 1.5 = una llena y media).
 @export var energy := 2.0:
 	set(value):
@@ -39,12 +46,14 @@ func _draw() -> void:
 	draw_line(Vector2(6, 56), Vector2(6, CELL.get_center().y - 9.0), LINE_DIM, 1.0)
 	for i in cells:
 		var cell := Rect2(CELL.position + Vector2(i * (CELL.size.x + CELL_GAP), 0), CELL.size)
+		if pulse_amount > 0.0:
+			draw_rect(cell.grow(4), Color(PULSE, 0.35 * pulse_amount))
 		draw_rect(cell.grow(2), BAR_BACK)
 		draw_rect(cell.grow(2), LINE_DIM, false, 1.0)
 		var fill_ratio := clampf(energy - i, 0.0, 1.0)
 		if fill_ratio > 0.0:
 			var fill := Rect2(cell.position, Vector2(cell.size.x * fill_ratio, cell.size.y))
-			draw_rect(fill, BAR_FILL)
+			draw_rect(fill, BAR_FILL.lerp(BAR_SHINE, 0.5 * pulse_amount))
 			draw_rect(Rect2(fill.position, Vector2(fill.size.x, 2)), Color(BAR_SHINE, 0.8))
 
 
@@ -55,3 +64,9 @@ func _draw_diamond(center: Vector2, radius: float) -> void:
 	draw_colored_polygon(PackedVector2Array([center + Vector2(0, -inner), center + Vector2(inner, 0), center + Vector2(0, inner), center + Vector2(-inner, 0)]), DIAMOND_FILL)
 	var core := radius * 0.35
 	draw_colored_polygon(PackedVector2Array([center + Vector2(0, -core), center + Vector2(core, 0), center + Vector2(0, core), center + Vector2(-core, 0)]), BAR_SHINE)
+
+
+## Pulso violeta breve al recuperar energía (al acertar un golpe).
+func pulse() -> void:
+	pulse_amount = 1.0
+	create_tween().tween_property(self, "pulse_amount", 0.0, 0.25).set_ease(Tween.EASE_OUT)

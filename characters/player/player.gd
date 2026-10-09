@@ -17,6 +17,9 @@ signal energy_changed(current: float, maximum: float)
 
 enum State { IDLE, RUN, JUMP, FALL, DASH, WALL_SLIDE }
 
+## Arma de Kai una vez obtenida la Nullblade (GameState.nullblade_stage > 0).
+const NULLBLADE_WEAPON := "res://data/weapons/nullblade.tres"
+
 @export_group("Habilidades")
 ## 0 = sin dash · 1 = Dash (no protege del daño) · 2 = Dash Fantasma (atraviesa enemigos
 ## y ataques sin daño) · 3 = Esquiva Perfecta (pendiente, tarea C7).
@@ -173,6 +176,9 @@ func apply_progress(progress: Node, full_health := false) -> void:
 		health.health_changed.emit(health.current, health.max_health)
 	max_energy = progress.max_energy_cells
 	set_energy(max_energy if full_health else energy)
+	# Con la Nullblade obtenida, Kai la tiene equipada en todas las salas.
+	if progress.nullblade_stage > 0 and combat and combat.weapon == null:
+		combat.weapon = load(NULLBLADE_WEAPON)
 
 
 ## Fija la energía (en barritas, sin pasar del máximo) y avisa al HUD.
