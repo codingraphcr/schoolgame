@@ -2,9 +2,17 @@ extends Interactable
 ## La computadora del laboratorio (escena 3 del prólogo). Mientras el prólogo pide revisarla:
 ## la pantalla se enciende sola («Por fin alguien está mirando»), las luces parpadean y la Visión
 ## Digital se activa sola unos segundos, como un glitch que Kai no controla. Después Kai reacciona
-## y la misión avanza. En la misión del profesor, aquí Kai entrará a la computadora (tarea H4).
+## y la misión avanza. En la misión del profesor, Kai es absorbido por la pantalla (DigitalDive),
+## pasa por una pantalla de carga y aparece dentro de la computadora como alma digital.
 
 const CYAN := Color("3ef2ff")
+const PC_SCENE := "res://world/zones/pc_profesor/escritorio.tscn"
+const LOADING_LINES: PackedStringArray = [
+	"Digitalizando a Kai...",
+	"Abriendo la cuenta: profesor@colegio",
+	"Contraseña detectada: ******  (débil)",
+	"Cargando escritorio...",
+]
 
 @export var digital_world: DigitalWorld
 ## Nodo con las luces de la sala: parpadean durante el evento.
@@ -15,6 +23,8 @@ const CYAN := Color("3ef2ff")
 @export var after_dialogue: Dialogue
 ## Segundos que dura la primera visión involuntaria.
 @export var glitch_seconds := 4.0
+## Punto de la pantalla que absorbe a Kai (coordenadas del mundo).
+@export var screen_point := Vector2(714, 262)
 
 
 func _ready() -> void:
@@ -46,9 +56,7 @@ func _on_interacted(player: Player) -> void:
 	if game_state.get_current_step(&"prologo") == &"revisar_computadora":
 		await _first_glitch(player)
 	else:
-		# Provisional hasta la tarea H4 (el nivel dentro de la computadora).
-		get_tree().call_group(&"toast", &"show_message",
-			"Próximamente: Kai entrará a la computadora como alma digital (tarea H4).", 4.0, CYAN)
+		await _enter_computer(player)
 
 
 func _first_glitch(player: Player) -> void:
@@ -78,6 +86,17 @@ func _first_glitch(player: Player) -> void:
 	player.controls_locked = false
 	await get_tree().process_frame
 	busy = false
+
+
+## Kai es absorbido por la pantalla y entra a la computadora del profesor.
+func _enter_computer(player: Player) -> void:
+	busy = true
+	player.controls_locked = true
+	player.velocity = Vector2.ZERO
+	var room := owner as Room
+	await DigitalDive.dive(player, screen_point, room.camera if room else null)
+	await LoadingScreen.show_loading(self, "CONECTANDO...", LOADING_LINES, 2.8)
+	get_node("/root/SceneManager").go_to_room(PC_SCENE, &"inicio")
 
 
 func _set_lights(on: bool) -> void:

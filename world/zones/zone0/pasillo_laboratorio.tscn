@@ -672,6 +672,12 @@ position = Vector2(40, 304)
 script = ExtResource("34_au1lc")
 id = &"desde_entrada"
 
+[node name="FromPc" type="Marker2D" parent="Entries" unique_id=527922834]
+position = Vector2(686, 304)
+script = ExtResource("34_au1lc")
+id = &"desde_pc"
+arrival_effect = "materialize"
+
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 
 [node name="ToEntrada" type="Area2D" parent="Exits" unique_id=1554206632]

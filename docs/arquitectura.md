@@ -224,7 +224,8 @@ grupo `digital_only` (dibujos). No hace falta duplicar la sala.
 pez del phishing), `DataBridge` (capa 7), `DataFragment` (+25 créditos, marca `zona0_fragmento_recogido`) y
 `LabComputer` (`lab_computer.gd`, un `Interactable`): en el prólogo la pantalla se enciende sola («Por fin alguien
 está mirando»), las luces parpadean y la Visión Digital se activa **sola** unos segundos (`DigitalVision.glitch()`:
-involuntaria, sin indicador, Q no la controla y no deja recarga). En la misión del profesor, aquí Kai entrará a la PC (H4).
+involuntaria, sin indicador, Q no la controla y no deja recarga). En la misión del profesor, la pantalla **absorbe a Kai**
+(ver "Entrar a una computadora").
 
 `GameState.set_flag()` deja marcas de eventos y objetos recogidos (se guardan con la partida).
 
@@ -241,6 +242,20 @@ involuntaria, sin indicador, Q no la controla y no deja recarga). En la misión 
 con `tools/art/generar_npcs.gd` según la guía de Ariel (camisa, cordón con credencial y taza); Ariel lo reemplazará.
 Diálogos en `data/dialogues/prologo/`: `profesor_pedido.tres` (pide revisar la computadora del laboratorio; marca
 `prologo_profesor_pidio_ayuda`) y `profesor_recordatorio.tres`.
+
+## Entrar a una computadora (alma digital)
+
+1. `DigitalDive.dive(jugador, punto_de_pantalla, cámara)` (`world/effects/digital_dive.gd`): la pantalla brilla, la cámara
+   se acerca, píxeles de Kai vuelan hacia la pantalla, Kai se estira, gira y se encoge dentro, y un destello blanco cubre todo.
+2. `LoadingScreen.show_loading(nodo, título, líneas, segundos)` (`ui/transitions/`): lluvia de código, líneas de estado y barra
+   de progreso. Vive sobre la raíz, así que sigue visible mientras cambia la sala.
+3. `SceneManager.go_to_room()` a la sala de la computadora. Su `RoomEntry` tiene `arrival_effect = "materialize"`: la sala
+   cierra la pantalla de carga y Kai se arma desde píxeles (`DigitalDive.materialize()`).
+4. Las salas digitales usan `Room.player_tint` (Kai celeste: su alma digital) y `Room.room_size` (no tienen tiles).
+
+`world/zones/pc_profesor/escritorio.tscn`: el escritorio de la computadora del profesor (dibujo vectorial provisional,
+`escritorio_fondo.gd`). La salida izquierda vuelve al laboratorio (entrada `desde_pc`, también con materialización).
+El nivel completo (plataformas, enemigo "Contraseña débil", mini espada) es la tarea H4.
 
 ## Misiones (`systems/quests/`)
 
@@ -332,5 +347,6 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | `test_vision.gd` | Visión Digital bloqueada, desbloqueo, capa digital, oscurecimiento, puente de datos (capa 7), fragmento (una sola vez), apagado manual, recarga y fin por duración |
 | `test_dialogue.gd` | Formato de los diálogos, aviso «E: hablar», caja de diálogo (letra por letra, completar, avanzar, cerrar), controles bloqueados, marca del profesor y recordatorio |
 | `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
+| `test_digital_dive.gd` | La computadora absorbe a Kai (cámara, desaparición), pantalla de carga, llegada al escritorio, materialización, alma digital celeste, límites y regreso al laboratorio |
 | `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |
