@@ -1,16 +1,36 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/menus/main_menu/main_menu.gd" id="1_menu"]
-[ext_resource type="PackedScene" path="res://ui/components/tech_background/tech_background.tscn" id="2_bg"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/logo_shield.svg" id="3_logo"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu_fondo.webp" id="2_bg"]
+[ext_resource type="Script" path="res://ui/menus/main_menu/main_menu_option.gd" id="3_option"]
 
-[sub_resource type="FontVariation" id="FontVariation_title"]
-variation_embolden = 0.9
-spacing_glyph = 10
+[sub_resource type="FontVariation" id="FontVariation_option"]
+variation_embolden = 0.35
+spacing_glyph = 6
 
-[sub_resource type="FontVariation" id="FontVariation_subtitle"]
-variation_embolden = 0.5
-spacing_glyph = 9
+[sub_resource type="Gradient" id="Gradient_shade"]
+offsets = PackedFloat32Array(0, 0.55, 1)
+colors = PackedColorArray(0.02, 0.01, 0.06, 0, 0.02, 0.01, 0.06, 0.15, 0.02, 0.01, 0.06, 0.6)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_shade"]
+gradient = SubResource("Gradient_shade")
+width = 4
+height = 64
+fill_to = Vector2(0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_credits"]
+content_margin_left = 48.0
+content_margin_top = 36.0
+content_margin_right = 48.0
+content_margin_bottom = 32.0
+bg_color = Color(0.05, 0.03, 0.12, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.74, 0.64, 1, 1)
+shadow_color = Color(0.55, 0.4, 1, 0.25)
+shadow_size = 16
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -21,81 +41,139 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu")
 
-[node name="TechBackground" parent="." instance=ExtResource("2_bg")]
+[node name="Background" type="TextureRect" parent="."]
+unique_name_in_owner = true
+texture_filter = 2
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="CenterContainer" type="CenterContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Content" type="VBoxContainer" parent="CenterContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="Logo" type="TextureRect" parent="CenterContainer/Content"]
-custom_minimum_size = Vector2(120, 120)
-layout_mode = 2
-size_flags_horizontal = 4
-texture = ExtResource("3_logo")
+mouse_filter = 2
+texture = ExtResource("2_bg")
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 6
 
-[node name="Title" type="Label" parent="CenterContainer/Content"]
+[node name="Shade" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_shade")
+expand_mode = 1
+
+[node name="Buttons" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.665
+anchor_right = 0.5
+offset_left = -160.0
+offset_right = 160.0
+offset_bottom = 200.0
+grow_horizontal = 2
+theme_override_constants/separation = 4
+
+[node name="PlayButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 46)
 layout_mode = 2
-theme_type_variation = &"TitleLabel"
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 20
+text = "INICIAR"
+script = ExtResource("3_option")
+
+[node name="SettingsButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 46)
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 20
+text = "OPCIONES"
+script = ExtResource("3_option")
+
+[node name="CreditsButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 46)
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 20
+text = "CRÉDITOS"
+script = ExtResource("3_option")
+
+[node name="QuitButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 46)
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 20
+text = "SALIR"
+script = ExtResource("3_option")
+
+[node name="Credits" type="CenterContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Credits"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_credits")
+
+[node name="Content" type="VBoxContainer" parent="Credits/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Credits/Panel/Content"]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.89, 0.85, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 30
+text = "CRÉDITOS"
+horizontal_alignment = 1
+
+[node name="DevelopedBy" type="Label" parent="Credits/Panel/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.92, 1)
+theme_override_font_sizes/font_size = 16
+text = "Desarrollado por"
+horizontal_alignment = 1
+
+[node name="Studio" type="Label" parent="Credits/Panel/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.97, 0.95, 1, 1)
 theme_override_colors/font_shadow_color = Color(0.56, 0.36, 1, 0.55)
-theme_override_fonts/font = SubResource("FontVariation_title")
-theme_override_font_sizes/font_size = 84
-text = "NULLVEIL"
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 34
+text = "CODINGRAPH"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="CenterContainer/Content"]
+[node name="Engine" type="Label" parent="Credits/Panel/Content"]
 layout_mode = 2
-theme_type_variation = &"SubtitleLabel"
-theme_override_colors/font_color = Color(0.74, 0.68, 0.96, 1)
-theme_override_fonts/font = SubResource("FontVariation_subtitle")
-theme_override_font_sizes/font_size = 24
-text = "BEYOND THE FIREWALL"
+theme_override_colors/font_color = Color(0.7, 0.65, 0.92, 1)
+theme_override_font_sizes/font_size = 16
+text = "Hecho con Godot 4.7"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="CenterContainer/Content"]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-
-[node name="Buttons" type="VBoxContainer" parent="CenterContainer/Content"]
+[node name="CreditsBackButton" type="Button" parent="Credits/Panel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 46)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 16
-
-[node name="PlayButton" type="Button" parent="CenterContainer/Content/Buttons"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(340, 64)
-layout_mode = 2
-theme_type_variation = &"PrimaryButton"
-text = "Jugar"
-
-[node name="SettingsButton" type="Button" parent="CenterContainer/Content/Buttons"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(340, 64)
-layout_mode = 2
-text = "Configuración"
-
-[node name="QuitButton" type="Button" parent="CenterContainer/Content/Buttons"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(340, 64)
-layout_mode = 2
-text = "Salir"
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 20
+text = "VOLVER"
+script = ExtResource("3_option")
 
 [node name="VersionLabel" type="Label" parent="."]
 unique_name_in_owner = true
@@ -106,11 +184,12 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -224.0
-offset_top = -48.0
-offset_right = -24.0
-offset_bottom = -20.0
+offset_top = -40.0
+offset_right = -20.0
+offset_bottom = -14.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_type_variation = &"HintLabel"
+theme_override_colors/font_color = Color(0.62, 0.56, 0.86, 0.8)
+theme_override_font_sizes/font_size = 16
 text = "v0.1.0"
 horizontal_alignment = 2

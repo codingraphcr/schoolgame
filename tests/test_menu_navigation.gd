@@ -16,6 +16,13 @@ func _run() -> void:
 	await _wait(0.5)
 	_expect_scene("MainMenu")
 
+	_press("CreditsButton")
+	await _wait(0.2)
+	_check(current_scene.get_node("%Credits").visible and not current_scene.get_node("%Buttons").visible, "Créditos se abre")
+	_press("CreditsBackButton")
+	await _wait(0.2)
+	_check(not current_scene.get_node("%Credits").visible and current_scene.get_node("%Buttons").visible, "Volver cierra los créditos")
+
 	_press("SettingsButton")
 	await _wait(1.0)
 	_expect_scene("SettingsScreen")
