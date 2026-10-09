@@ -19,6 +19,7 @@ func _run() -> void:
 	_test_settings()
 	await _test_settings_screen()
 	await _test_grimorio()
+	await _test_in_game()
 	GameSettings.reset_controls()
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(GameSettings.path))
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
@@ -84,9 +85,6 @@ func _test_settings_screen() -> void:
 	_check(screen.get_node("%Options").visible, "Volver regresa a las opciones")
 	GameSettings.master_volume = before
 	GameSettings.apply_audio()
-	screen.get_node("%GrimorioRow").pressed.emit()
-	await _wait(1.0)
-	_check(current_scene != null and current_scene.name == "Grimorio", "«Abrir grimorio» abre el Grimorio")
 
 
 func _test_grimorio() -> void:
@@ -133,3 +131,42 @@ func _check(condition: bool, message: String) -> void:
 	if not condition:
 		_failures += 1
 	print("%s %s" % ["OK  " if condition else "FAIL", message])
+
+
+## En una sala: G abre el Grimorio encima del juego (en pausa) y lo cierra; barritas de energía.
+func _test_in_game() -> void:
+	var state := root.get_node("GameState")
+	state.reset()
+	change_scene_to_file("res://world/zones/zone0/entrada.tscn")
+	await _wait(0.6)
+	var room := current_scene as Room
+	var energy := room.get_node("CombatHUD/EnergyBar") as EnergyBar
+	_check(energy.cells == 2 and is_equal_approx(energy.energy, 2.0), "la energía empieza con 2 barritas llenas")
+	state.set_max_energy_cells(3)
+	_check(energy.cells == 3 and is_equal_approx(energy.energy, 3.0), "con la historia suben las barritas (ahora 3)")
+	state.set_max_energy_cells(GameState.START_ENERGY_CELLS)
+	_check(InputMap.has_action(&"grimorio") and GameSettings.key_name(&"grimorio") == "G", "la tecla del Grimorio es G")
+	_action(&"grimorio")
+	await _frames(3)
+	var screen := root.get_node_or_null("GrimorioLayer/Grimorio") as GrimorioScreen
+	_check(screen != null and paused, "G abre el Grimorio y pausa el juego")
+	_check(current_scene == room, "la sala sigue debajo del Grimorio")
+	_action(&"grimorio")
+	await _frames(3)
+	_check(root.get_node_or_null("GrimorioLayer") == null and not paused, "G otra vez lo cierra y el juego sigue")
+
+
+func _action(action: StringName) -> void:
+	var press := InputEventAction.new()
+	press.action = action
+	press.pressed = true
+	Input.parse_input_event(press)
+	var release := InputEventAction.new()
+	release.action = action
+	release.pressed = false
+	Input.parse_input_event(release)
+
+
+func _frames(count: int) -> void:
+	for i in count:
+		await process_frame

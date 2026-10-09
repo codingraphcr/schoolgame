@@ -59,7 +59,7 @@ func _test_floor_spikes() -> void:
 			break
 	Input.action_release("move_right")
 	_check(_hurts == hurts_before + 1, "los pinchos dañan al tocarlos")
-	_check(player.health.current == 3.0, "pierde 1 máscara (quedan %d)" % player.health.current)
+	_check(player.health.current == 3.5, "pierde medio cristal (quedan %.1f)" % player.health.current)
 	_check(player.is_invulnerable(), "queda invulnerable tras el golpe")
 	await _wait(1.0)
 	var x := player.global_position.x
@@ -156,8 +156,8 @@ func _test_fall_out() -> void:
 
 func _test_death() -> void:
 	player.health.restore_full()
-	player.health.take_damage(3.0)
-	_check(player.health.current == 1.0, "preparación: queda 1 máscara")
+	player.health.take_damage(3.5)
+	_check(player.health.current == 0.5, "preparación: queda medio cristal")
 	await _reset_at(BEFORE_FLOOR_SPIKES)
 	var deaths_before := _deaths
 	Input.action_press("move_right")

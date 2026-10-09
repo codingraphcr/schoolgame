@@ -2,9 +2,9 @@
 class_name EnergyBar
 extends Control
 ## Marco de integridad del HUD (concepto de Ariel): un corchete a la izquierda con marcas, un rombo
-## abajo y la barra de energía debajo de los cristales de vida. La energía se gastará en
-## habilidades futuras; por ahora se muestra llena hasta que exista ese sistema
-## (CombatHUD.set_energy(actual, máximo) la actualiza).
+## abajo y las barritas de energía debajo de los cristales de vida. Hay una barrita por cada celda
+## de energía (GameState.max_energy_cells: empiezan 2 y suben con la historia). La energía se
+## gastará en habilidades futuras; por ahora está llena (CombatHUD.set_energy la actualiza).
 
 const LINE := Color(0.62, 0.5, 1.0, 0.85)
 const LINE_DIM := Color(0.62, 0.5, 1.0, 0.35)
@@ -13,13 +13,19 @@ const BAR_FILL := Color("8f6bff")
 const BAR_SHINE := Color("efe8ff")
 const DIAMOND_FILL := Color("130d26")
 
-## Rectángulo de la barra dentro del control.
-const BAR := Rect2(30, 62, 190, 8)
+## Primera barrita: posición y tamaño; las demás van a la derecha.
+const CELL := Rect2(30, 62, 40, 8)
+const CELL_GAP := 6.0
 
-## Energía de 0 a 1.
-@export_range(0.0, 1.0) var ratio := 1.0:
+## Cantidad de barritas.
+@export_range(1, 8) var cells := 2:
 	set(value):
-		ratio = clampf(value, 0.0, 1.0)
+		cells = maxi(value, 1)
+		queue_redraw()
+## Energía actual, en barritas (puede ser fraccionaria: 1.5 = una llena y media).
+@export var energy := 2.0:
+	set(value):
+		energy = clampf(value, 0.0, cells)
 		queue_redraw()
 
 
@@ -29,19 +35,17 @@ func _draw() -> void:
 	draw_line(Vector2(6, 2), Vector2(6, 56), LINE, 2.0)
 	for y in range(12, 52, 8):
 		draw_line(Vector2(10, y), Vector2(13, y), LINE_DIM, 1.0)
-	_draw_diamond(Vector2(14, BAR.get_center().y), 8.0)
-	draw_line(Vector2(6, 56), Vector2(6, BAR.get_center().y - 9.0), LINE_DIM, 1.0)
-	# Barra de energía.
-	draw_rect(BAR.grow(2), BAR_BACK)
-	draw_rect(BAR.grow(2), LINE_DIM, false, 1.0)
-	var fill := Rect2(BAR.position, Vector2(BAR.size.x * ratio, BAR.size.y))
-	if fill.size.x > 0.0:
-		draw_rect(fill, BAR_FILL)
-		draw_rect(Rect2(fill.position, Vector2(fill.size.x, 2)), Color(BAR_SHINE, 0.8))
-	# Marcas cada cuarto.
-	for i in range(1, 4):
-		var x := BAR.position.x + BAR.size.x * i / 4.0
-		draw_line(Vector2(x, BAR.position.y), Vector2(x, BAR.end.y), Color(DIAMOND_FILL, 0.6), 1.0)
+	_draw_diamond(Vector2(14, CELL.get_center().y), 8.0)
+	draw_line(Vector2(6, 56), Vector2(6, CELL.get_center().y - 9.0), LINE_DIM, 1.0)
+	for i in cells:
+		var cell := Rect2(CELL.position + Vector2(i * (CELL.size.x + CELL_GAP), 0), CELL.size)
+		draw_rect(cell.grow(2), BAR_BACK)
+		draw_rect(cell.grow(2), LINE_DIM, false, 1.0)
+		var fill_ratio := clampf(energy - i, 0.0, 1.0)
+		if fill_ratio > 0.0:
+			var fill := Rect2(cell.position, Vector2(cell.size.x * fill_ratio, cell.size.y))
+			draw_rect(fill, BAR_FILL)
+			draw_rect(Rect2(fill.position, Vector2(fill.size.x, 2)), Color(BAR_SHINE, 0.8))
 
 
 func _draw_diamond(center: Vector2, radius: float) -> void:

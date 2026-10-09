@@ -95,9 +95,11 @@ tinte de las siluetas).
 | `ultimate` (Dominio Nulo) | R | RT |
 | `heal` (mantener) | L | LT |
 | `aegis_platform` | F | Clic del stick derecho |
+| `grimorio` (abrir el Grimorio) | G | — |
 | `pause` | Esc | Start |
 
-Las teclas usan **código físico**: funcionan igual en teclados en español o inglés.
+Las teclas usan **código físico**: funcionan igual en teclados en español o inglés. Todas se pueden cambiar en
+Opciones → Configurar controles. `grimorio` todavía no está en `project.godot`: `GameSettings` la registra al cargar.
 Los controles táctiles se agregarán en la tarea C12.
 
 ## Jugador (`characters/player/`)
@@ -168,12 +170,12 @@ Las medidas de las piezas están en `kai_piezas.gd`; `generar_esqueleto_kai.gd` 
 | `HealthComponent` | Node | Vida: máscaras del jugador o puntos de vida de enemigos. Señales `health_changed`, `damaged`, `died` |
 
 **Jugador:** `characters/player/player_damage.gd` (`PlayerDamage`, nodo `Damage`) aplica las reglas de Hollow Knight:
-quita integridad (**un golpe enemigo vale la mitad de su daño**: uno normal quita medio cristal, `enemy_damage_scale`; los peligros quitan un cristal entero), congela la acción (`HitStop`), empuja, da 1 s de invulnerabilidad con parpadeo, devuelve al último
+quita integridad (**un golpe enemigo vale la mitad de su daño**: uno normal quita medio cristal, `enemy_damage_scale`; los pinchos también medio cristal; los anuncios trampa y las caídas, uno entero), congela la acción (`HitStop`), empuja, da 1 s de invulnerabilidad con parpadeo, devuelve al último
 suelo seguro ante peligros y emite `died` al perder todas las máscaras. La sala (`Room`) decide dónde reaparece.
 
-**Peligros:** `world/hazards/spikes.gd` (`Spikes`): pinchos con ancho configurable, visibles en el editor.
+**Peligros:** `world/hazards/spikes.gd` (`Spikes`): pinchos con ancho configurable, visibles en el editor. Quitan medio cristal.
 
-**HUD:** `ui/hud/combat_hud.tscn` muestra los **cristales de integridad** (`MaskIcon`, el Núcleo de integridad del concepto de Ariel en `docs/arte/referencias/vidas_concepto.webp`: completo, a la mitad o vacío, con un glitch al perder integridad), la **barra de energía** con su marco (`EnergyBar`, para habilidades futuras: `CombatHUD.set_energy(actual, máximo)` o una señal `energy_changed` en el jugador) y los créditos (`CreditsDisplay`, con +X / −X al cambiar).
+**HUD:** `ui/hud/combat_hud.tscn` muestra los **cristales de integridad** (`MaskIcon`, el Núcleo de integridad del concepto de Ariel en `docs/arte/referencias/vidas_concepto.webp`: completo, a la mitad o vacío, con un glitch al perder integridad), las **barritas de energía** con su marco (`EnergyBar`: una por cada `GameState.max_energy_cells`, empiezan 2 y suben con la historia con `set_max_energy_cells()`; para habilidades futuras: `CombatHUD.set_energy(actual, máximo)` o una señal `energy_changed` en el jugador) y los créditos (`CreditsDisplay`, con +X / −X al cambiar).
 
 **Autoloads en scripts compartidos:** `Room` y `PlayerDamage` obtienen `SceneManager` por ruta (`/root/SceneManager`)
 para que compilen también en las pruebas de línea de comandos.
@@ -368,10 +370,10 @@ INACTIVE ──start_incident()──▶ INVESTIGATING ──find_clue() × clue
 | Pieza | Responsabilidad |
 |---|---|
 | `GameSettings` (`systems/settings/game_settings.gd`) | Clase **estática** (sin autoload) con los ajustes del jugador: volumen general / música / efectos (buses `Master`, `Music`, `SFX`, que crea si no existen), pantalla completa, velocidad del texto (`text_speed_factor()`, 0 = instantáneo), reducción de glitch (`glitch_factor()`, `reduce_glitch`) y teclas (`remap()`, `reset_controls()`, `key_name()`). Se guarda en `user://ajustes.cfg`; `ensure_loaded()` lo carga y aplica (lo llama el menú principal) |
-| Pantalla de opciones (`ui/menus/settings/`) | Estilo lila del menú. Filas `SettingRow` (hereda de `MainMenuOption`): deslizador, sí/no, opciones y tecla; ◀ ▶ cambian el valor. Subpantalla de **controles** (elige una acción y presiona la tecla nueva; Esc cancela) y botón **Abrir grimorio** |
+| Pantalla de opciones (`ui/menus/settings/`) | Estilo lila del menú. Filas `SettingRow` (hereda de `MainMenuOption`): deslizador, sí/no, opciones y tecla; ◀ ▶ cambian el valor. Subpantalla de **controles** (elige una acción y presiona la tecla nueva; Esc cancela) |
 | Quién usa los ajustes | `DialogueBox` (velocidad del texto; sin temblor de «???» si se reduce el glitch), `DigitalWorld.pulse_glitch()` (más suave) y `LabMonitor` (luz sin parpadeo) |
 | `GrimorioEntry` (`systems/grimorio/`, un `.tres` por entrada en `data/grimorio/`) | Página del Grimorio: categoría (MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS), título, texto, datos, tecla (`action`), imagen y desbloqueo (`unlock_quest` + `unlock_step`, `unlock_on_complete` o `unlock_property` de `GameState`). Bloqueada se ve como «???» |
-| Grimorio (`ui/menus/grimorio/`) | El libro (concepto de Ariel en `docs/arte/referencias/grimorio_concepto.webp`) dibujado por código (`GrimorioBook`), pestañas con íconos (`GrimorioTab`) y el mapa esquemático (`GrimorioMap`: salas de cada zona en `ZONES`, visitadas según la marca `visitada_<escena>` que deja `Room` o el paso de una misión) |
+| Grimorio (`ui/menus/grimorio/`, `GrimorioScreen`) | Se abre con **G** durante el juego (`CombatHUD` llama a `GrimorioScreen.open()`): queda encima de la sala, que se pausa; G, Esc o CERRAR lo cierran. No se abre en diálogos ni escenas sin control. El libro (concepto de Ariel en `docs/arte/referencias/grimorio_concepto.webp`) dibujado por código (`GrimorioBook`), pestañas con íconos (`GrimorioTab`) y el mapa esquemático (`GrimorioMap`: salas de cada zona en `ZONES`, visitadas según la marca `visitada_<escena>` que deja `Room` o el paso de una misión) |
 
 Para agregar una entrada al Grimorio: copiar un `.tres` de `data/grimorio/`, cambiar textos y desbloqueo. `GameState.has_reached_step(mision, paso)` dice si la misión ya llegó a ese paso.
 

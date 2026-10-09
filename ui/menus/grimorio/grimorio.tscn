@@ -155,7 +155,7 @@ offset_right = 212.0
 offset_bottom = 642.0
 theme_override_fonts/font = SubResource("FontVariation_tab")
 theme_override_font_sizes/font_size = 16
-text = "VOLVER"
+text = "CERRAR"
 script = ExtResource("6_option")
 
 [node name="LeftPage" type="Control" parent="Book"]

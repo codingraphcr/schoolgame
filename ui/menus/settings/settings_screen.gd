@@ -1,9 +1,8 @@
 extends Control
 ## Pantalla de opciones, con el estilo lila del menú principal: volumen (general, música, efectos),
-## pantalla completa, reducción de efectos glitch, velocidad del texto, controles configurables y
-## el Grimorio. Cada cambio se aplica y se guarda al momento (GameSettings).
+## pantalla completa, reducción de efectos glitch, velocidad del texto y controles configurables.
+## Cada cambio se aplica y se guarda al momento (GameSettings). El Grimorio se abre con G en el juego.
 
-const GRIMORIO := "res://ui/menus/grimorio/grimorio.tscn"
 
 @onready var back_button: Button = %BackButton
 @onready var _options: Control = %Options
@@ -15,7 +14,6 @@ const GRIMORIO := "res://ui/menus/grimorio/grimorio.tscn"
 @onready var _glitch_row: SettingRow = %GlitchRow
 @onready var _text_speed_row: SettingRow = %TextSpeedRow
 @onready var _controls_row: SettingRow = %ControlsRow
-@onready var _grimorio_row: SettingRow = %GrimorioRow
 @onready var _key_rows: VBoxContainer = %KeyRows
 @onready var _hint: Label = %Hint
 @onready var _reset_controls_button: Button = %ResetControlsButton
@@ -44,7 +42,6 @@ func _ready() -> void:
 	_glitch_row.value_changed.connect(_on_glitch_changed)
 	_text_speed_row.value_changed.connect(_on_text_speed_changed)
 	_controls_row.pressed.connect(_show_controls.bind(true))
-	_grimorio_row.pressed.connect(func() -> void: SceneManager.change_scene(GRIMORIO))
 	back_button.pressed.connect(_go_back)
 	_reset_controls_button.pressed.connect(_on_reset_controls)
 	_controls_back_button.pressed.connect(_show_controls.bind(false))

@@ -1,7 +1,8 @@
 @tool
 class_name Spikes
 extends HitboxComponent
-## Pinchos: peligro del escenario. Quitan 1 máscara y devuelven al jugador al último suelo seguro.
+## Pinchos: peligro del escenario. Quitan medio cristal de integridad y devuelven al jugador al último
+## suelo seguro.
 ## El origen es la esquina inferior izquierda, apoyada sobre el suelo. Se ven también en el editor.
 
 @export var width := 32.0:
@@ -18,6 +19,7 @@ var _shape: CollisionShape2D
 
 func _init() -> void:
 	is_hazard = true
+	damage = 0.5
 	collision_layer = 16  # Capa 5: ataques_enemigos
 	collision_mask = 0
 

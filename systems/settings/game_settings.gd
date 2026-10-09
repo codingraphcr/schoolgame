@@ -28,6 +28,7 @@ const REMAPPABLE: Array[Array] = [
 	[&"aegis_platform", "Plataforma Aegis"],
 	[&"heal", "Curarse"],
 	[&"ultimate", "Dominio Nulo"],
+	[&"grimorio", "Abrir grimorio"],
 	[&"pause", "Pausa"],
 ]
 
@@ -56,6 +57,7 @@ static func ensure_loaded() -> void:
 	if _loaded:
 		return
 	_loaded = true
+	_register_extra_actions()
 	for entry in REMAPPABLE:
 		var key := _first_key(entry[0])
 		if key:
@@ -188,3 +190,13 @@ static func _set_bus_volume(bus_name: StringName, volume: float) -> void:
 		return
 	AudioServer.set_bus_mute(index, volume <= 0.001)
 	AudioServer.set_bus_volume_db(index, linear_to_db(maxf(volume, 0.001)))
+
+
+## Acciones nuevas que todavía no están en project.godot (se registran al cargar los ajustes).
+## grimorio: G abre el Grimorio durante el juego.
+static func _register_extra_actions() -> void:
+	if not InputMap.has_action(&"grimorio"):
+		InputMap.add_action(&"grimorio")
+		var key := InputEventKey.new()
+		key.physical_keycode = KEY_G
+		InputMap.action_add_event(&"grimorio", key)
