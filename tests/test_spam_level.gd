@@ -98,6 +98,19 @@ func _test_traps_and_mail() -> void:
 	_check(player.global_position.distance_to(before) < 80.0, "el correo empuja pero no hace reaparecer")
 	await _until_vulnerable()
 	player.health.restore_full()
+	# Dificultad: los correos caen más rápido y apuntan a donde estaba Kai hace un instante.
+	_check(spawner.fall_speed >= 140.0, "los correos caen rápido (%.0f px/s)" % spawner.fall_speed)
+	await _drop_on(Vector2(320, 280))  # lejos del anuncio trampa de x=372
+	spawner._timer = 99.0  # registra el rastro de Kai sin soltar correos
+	spawner.set_process(true)
+	spawner.aimed_ratio = 1.0
+	await _frames(20)
+	spawner.set_process(false)
+	var target: float = spawner._next_x() + spawner.global_position.x
+	_check(absf(target - player.global_position.x) <= spawner.aim_spread + 0.5,
+		"si Kai se queda quieto, el correo apunta encima de él (cae en x=%.0f, Kai en x=%.0f)" % [target, player.global_position.x])
+	for leftover in spawner.get_children():
+		leftover.queue_free()
 
 
 ## El nivel se puede cruzar solo caminando y saltando: un "bot" salta de pop-up en pop-up.

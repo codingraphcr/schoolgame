@@ -48,6 +48,7 @@ func _run() -> void:
 func _test_locked() -> void:
 	_check(not state.vision_unlocked, "partida nueva: la Visión Digital no está descubierta")
 	_action("vision")
+	await _until(func() -> bool: return _denied.has(&"locked"))
 	await _frames(3)
 	_check(not vision.is_active() and _denied.has(&"locked"), "Q no hace nada antes de descubrirla")
 	_check(not room.get_node("CombatHUD/VisionMeter").visible, "el indicador está oculto mientras no se descubre")
@@ -57,10 +58,10 @@ func _test_locked() -> void:
 func _test_unlocked() -> void:
 	# En la historia se desbloquea al terminar la misión de la contraseña del profesor.
 	state.unlock_vision()
-	await _frames(2)
+	await _until(func() -> bool: return room.get_node("CombatHUD/VisionMeter").visible)
 	_check(room.get_node("CombatHUD/VisionMeter").visible, "al desbloquearla aparece el indicador de la Visión Digital")
 	_action("vision")
-	await _wait(0.6)
+	await _until(func() -> bool: return vision.is_active() and vision.blend > 0.9)
 	_check(vision.is_active() and not vision.involuntary, "Q enciende la Visión Digital")
 	_check(room.get_node("DigitalLayer/Network").visible and vision.blend > 0.9, "se ve la red (capa digital)")
 	var ambient := room.get_node("Ambient") as CanvasModulate
@@ -123,6 +124,14 @@ func _until_on_floor() -> void:
 		await physics_frame
 		if player.is_on_floor():
 			return
+
+
+## Espera (en cuadros de física) a que se cumpla la condición, hasta unos 10 s de juego.
+func _until(condition: Callable) -> void:
+	for i in 600:
+		if condition.call():
+			return
+		await physics_frame
 
 
 func _frames(count: int) -> void:
