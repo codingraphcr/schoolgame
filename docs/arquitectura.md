@@ -222,8 +222,10 @@ grupo `digital_only` (dibujos). No hace falta duplicar la sala.
 
 **Zona 0:** `DigitalLayer/Network` (`red_zona0.gd`, dibujo vectorial de Ariel: red, servidores, puente de datos y el
 pez del phishing), `DataBridge` (capa 7), `DataFragment` (+25 créditos, marca `zona0_fragmento_recogido`) y
-`LabComputer` (`lab_computer.gd`, un `Interactable`): en el prólogo la pantalla se enciende sola («Por fin alguien
-está mirando»), las luces parpadean y la Visión Digital se activa **sola** unos segundos (`DigitalVision.glitch()`:
+`LabComputer` (`lab_computer.gd`, un `Interactable`): en el prólogo el **monitor de pared** (`LabMonitor`, pixel art por
+código) se enciende solo con interferencia, muestra el **ojo de la entidad «???»** mientras habla en magenta con escritura
+irregular («Por fin alguien está mirando», «Te estoy observando»), parpadea y se apaga un momento. Después
+las luces parpadean y la Visión Digital se activa **sola** unos segundos (`DigitalVision.glitch()`:
 involuntaria, sin indicador, Q no la controla y no deja recarga). En la misión del profesor, la pantalla **absorbe a Kai**
 (ver "Entrar a una computadora").
 

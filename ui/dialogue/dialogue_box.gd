@@ -41,6 +41,8 @@ var _is_playing := false
 var _glitch := false
 ## Posición normal del texto (el temblor lo mueve alrededor de ella).
 var _text_rest := Vector2.ZERO
+## Pausa que le queda a la escritura irregular antes de seguir (con glitch).
+var _type_pause := 0.0
 ## Personaje que ocupa cada lado (o null).
 var _side_character := { DialogueCharacter.Side.LEFT: null, DialogueCharacter.Side.RIGHT: null }
 
@@ -105,8 +107,7 @@ func _process(delta: float) -> void:
 	if not _is_playing:
 		return
 	if _text.visible_ratio < 1.0:
-		var total := maxi(_text.text.length(), 1)
-		_text.visible_ratio = minf(_text.visible_ratio + characters_per_second * delta / total, 1.0)
+		_type(delta)
 	_continue.visible = _text.visible_ratio >= 1.0
 	# El triángulo late y sube y baja un poco.
 	var beat := absf(sin(Time.get_ticks_msec() / 260.0))
@@ -168,6 +169,7 @@ func _show_line(index: int) -> void:
 	_place_frame(active_side, index == 0 or previous_speaker != _speaker.text)
 	_text.text = line["text"]
 	_text.visible_ratio = 0.0
+	_type_pause = 0.0
 	_continue.visible = false
 	line_started.emit(index)
 
@@ -251,6 +253,28 @@ func _place_frame(active_side: int, pop: bool) -> void:
 	var plate_from := 30.0 if mirrored else -30.0
 	_name_plate.position.x += plate_from
 	tween.tween_property(_name_plate, "position:x", _name_plate.position.x - plate_from, 0.25)
+
+
+## Escribe el texto letra por letra. Con glitch la escritura es irregular: cambia de velocidad,
+## se traba en pausas cortas y a veces escupe varias letras de golpe.
+func _type(delta: float) -> void:
+	var total := maxi(_text.text.length(), 1)
+	if not _glitch:
+		_text.visible_ratio = minf(_text.visible_ratio + characters_per_second * delta / total, 1.0)
+		return
+	if _type_pause > 0.0:
+		_type_pause -= delta
+		return
+	var before := _text.visible_characters
+	var speed := characters_per_second * randf_range(0.25, 1.6)
+	_text.visible_ratio = minf(_text.visible_ratio + speed * delta / total, 1.0)
+	if _text.visible_characters == before or _text.visible_ratio >= 1.0:
+		return
+	var roll := randf()
+	if roll < 0.12:
+		_type_pause = randf_range(0.12, 0.4)
+	elif roll < 0.18:
+		_text.visible_characters = mini(_text.visible_characters + randi_range(2, 4), total)
 
 
 ## Interferencia: el texto salta un par de píxeles y parpadea de vez en cuando.

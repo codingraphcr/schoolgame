@@ -90,8 +90,22 @@ func _test_involuntary_vision(room: Room, player: Player, computer: Interactable
 	_action("interact")
 	await _frames(3)
 	var box := room.get_node("CombatHUD/DialogueBox") as DialogueBox
+	var monitor := room.get_node("Lab/LabMonitor") as LabMonitor
+	_check(player.controls_locked and not box.is_playing() and monitor.state != LabMonitor.State.OFF,
+		"el monitor se enciende solo con interferencia antes del mensaje")
+	await _until(func() -> bool: return box.is_playing())
 	_check(box.is_playing() and player.controls_locked, "la pantalla muestra su mensaje y Kai no se mueve")
+	# Pasa la narración hasta que habla «???».
+	for i in 10:
+		if box.get_node("%Speaker").text == "???" and box.get_node("%NamePlate").visible:
+			break
+		_action("interact")
+		await _frames(3)
+	await _until(func() -> bool: return monitor.state == LabMonitor.State.EYE)
+	_check(monitor.state == LabMonitor.State.EYE, "mientras habla «???» el monitor muestra el ojo")
 	await _advance_dialogue(box)
+	await _until(func() -> bool: return monitor.state == LabMonitor.State.OFF)
+	_check(monitor.state == LabMonitor.State.OFF, "después del mensaje el monitor parpadea y se apaga")
 	await _until(func() -> bool: return vision.is_active())
 	await _until(func() -> bool: return vision.blend > 0.9)
 	_check(vision.is_active() and vision.involuntary, "la Visión Digital se activa sola")
@@ -106,6 +120,7 @@ func _test_involuntary_vision(room: Room, player: Player, computer: Interactable
 		"se apaga sola y no deja recarga")
 	await _until(func() -> bool: return box.is_playing())
 	_check(box.is_playing() and box.get_node("%Speaker").text == "Kai", "Kai reacciona a lo que vio")
+	_check(monitor.state == LabMonitor.State.IDLE, "el monitor vuelve a la pantalla normal")
 	await _advance_dialogue(box)
 	await _frames(5)
 	_check(state.get_current_step(&"prologo") == &"volver_profesor" and not player.controls_locked,

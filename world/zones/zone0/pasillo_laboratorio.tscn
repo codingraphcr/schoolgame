@@ -38,6 +38,7 @@
 [ext_resource type="Resource" path="res://data/dialogues/prologo/computadora_pantalla.tres" id="35_kmyuo"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="35_xved5"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/computadora_despues.tres" id="36_fttfq"]
+[ext_resource type="Script" path="res://world/zones/zone0/lab_monitor.gd" id="37_monitor"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ukrjd"]
 size = Vector2(1024, 80)
@@ -572,6 +573,10 @@ sprite_frames = SubResource("SpriteFrames_7r6to")
 autoplay = "default"
 centered = false
 
+[node name="LabMonitor" type="Node2D" parent="Lab"]
+position = Vector2(703, 202)
+script = ExtResource("37_monitor")
+
 [node name="LabDoor" type="Sprite2D" parent="Lab" unique_id=1531204428]
 position = Vector2(780, 256)
 texture = ExtResource("19_umm4e")
@@ -653,13 +658,15 @@ player = NodePath("../Player")
 ambient = NodePath("../Ambient")
 digital_layer = NodePath("../DigitalLayer/Network")
 
-[node name="LabComputer" type="Area2D" parent="." unique_id=1320674215 node_paths=PackedStringArray("digital_world", "lights")]
+[node name="LabComputer" type="Area2D" parent="." unique_id=1320674215 node_paths=PackedStringArray("digital_world", "lights", "monitor")]
 position = Vector2(716, 272)
 script = ExtResource("34_odpsf")
 digital_world = NodePath("../DigitalWorld")
 lights = NodePath("../Lights")
 screen_dialogue = ExtResource("35_kmyuo")
 after_dialogue = ExtResource("36_fttfq")
+screen_point = Vector2(729, 218)
+monitor = NodePath("../Lab/LabMonitor")
 prompt_offset = Vector2(-48, -60)
 
 [node name="Shape" type="CollisionShape2D" parent="LabComputer" unique_id=1260074529]
