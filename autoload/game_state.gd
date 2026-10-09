@@ -166,6 +166,11 @@ func has_flag(flag: StringName) -> bool:
 	return _flags.has(flag)
 
 
+## Deja una marca (decisiones, eventos de la historia, objetos ya recogidos). Se guarda con la partida.
+func set_flag(flag: StringName) -> void:
+	_flags[flag] = true
+
+
 func get_decision_log() -> Array[Dictionary]:
 	return _decision_log.duplicate(true)
 

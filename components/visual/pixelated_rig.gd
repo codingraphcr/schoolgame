@@ -9,17 +9,7 @@ const CRISP_SHADER := preload("res://components/visual/pixel_crisp.gdshader")
 
 var viewport: SubViewport
 
-
-func _ready() -> void:
-	# Al duplicar el nodo (p. ej. las estelas del dash), el sprite copiado sigue mostrando el
-	# viewport original. Se reconecta a su propio viewport para congelar su cuadro.
-	if viewport == null:
-		for child in get_children():
-			if child is SubViewport:
-				viewport = child
-		for child in get_children():
-			if child is Sprite2D and viewport:
-				(child as Sprite2D).texture = viewport.get_texture()
+var _sprite: Sprite2D
 
 
 ## content: el nodo animado. size: tamaño del lienzo en píxeles.
@@ -46,3 +36,21 @@ func setup(content: Node2D, size: Vector2i, anchor: Vector2i, outline := true) -
 		crisp.set_shader_parameter(&"outline_color", Color(0, 0, 0, 0))
 	sprite.material = crisp
 	add_child(sprite)
+	_sprite = sprite
+
+
+## Copia congelada del cuadro actual (p. ej. para las siluetas del dash). Devuelve null si
+## no hay imagen disponible (como en las pruebas sin pantalla).
+func snapshot() -> Sprite2D:
+	# Sin pantalla (pruebas automáticas) no se dibuja nada que copiar.
+	if viewport == null or _sprite == null or DisplayServer.get_name() == "headless":
+		return null
+	var image := viewport.get_texture().get_image()
+	if image == null or image.is_empty():
+		return null
+	var copy := Sprite2D.new()
+	copy.texture = ImageTexture.create_from_image(image)
+	copy.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	copy.offset = _sprite.offset
+	copy.material = _sprite.material
+	return copy

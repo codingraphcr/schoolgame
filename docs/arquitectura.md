@@ -35,6 +35,7 @@ Las carpetas se crean cuando se necesitan, no antes.
 | Nombre | Archivo | Responsabilidad |
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
+| `DigitalVision` | `autoload/digital_vision.gd` | Estado de la Visión Digital (lista, activa, recargando), duración, recarga y `blend` para los efectos. Ver "Visión Digital". |
 | `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. **Progreso del jugador** (créditos, habilidades, evoluciones). Preparado para guardar partida (`to_dict` / `from_dict`). |
 
 ## Estilo visual oficial: muestra E de Ariel (huesos pixelados + Visión Digital)
@@ -53,8 +54,10 @@ Detalle completo en [`docs/arte/guia_de_arte.md`](arte/guia_de_arte.md).
 - `prototypes/estilos/`: las 6 muestras originales (A–F) se conservan como referencia y usan los recursos de arriba.
 
 **Kai, el personaje:** diseño de Ariel (pelo blanco-lavanda medio largo, chaqueta blanca abierta, ropa oscura; ~46 px)
-con huesos pixelados. `player.tscn` lo usa en `Visual/Body/Kai` (`KaiVisual`, ver "Apariencia de Kai" más abajo).
-`characters/player/kai_frames.tres` y `player_animation.gd` (el Kai de la muestra A) ya no se usan en el jugador.
+con huesos pixelados. `player.tscn` usa `KaiVisual` en `Visual/Body/Kai` (acordado con el director; ver
+"Apariencia de Kai" más abajo). Las siluetas del dash son instantáneas congeladas del cuadro actual
+(`PixelatedRig.snapshot()`), y el shader `pixel_crisp` respeta el `modulate` del nodo (parpadeo al recibir daño,
+tinte de las siluetas).
 
 ## Resolución y pixel art
 
@@ -138,7 +141,7 @@ Instancia `kai_esqueleto.tscn` (`Skeleton2D` + `Bone2D` con una pieza de `assets
 por hueso y un `AnimationPlayer`), lo dibuja con `PixelatedRig` (`components/visual/`) a resolución de pixel art,
 elige la animación según `Player.state` y mueve con resortes el pelo, los mechones, el faldón y la mochila
 (`KaiVisual.SPRINGS`). Toma como `player` al dueño de la escena si no se le asigna uno. `attack()` reproduce el ataque
-con el Nullblade (pendiente de conectar al ataque real). Las estelas del dash congelan su cuadro (`PixelatedRig._ready`).
+con el Nullblade (pendiente de conectar al ataque real). Las estelas del dash usan `PixelatedRig.snapshot()`.
 Las muestras de estilo usan este Kai si `_build_player_visual()` devuelve null (D y E).
 Las medidas de las piezas están en `kai_piezas.gd`; `generar_esqueleto_kai.gd` regenera la escena (borra retoques manuales).
 
@@ -164,13 +167,44 @@ para que compilen también en las pruebas de línea de comandos.
 
 ## Salas (`world/`)
 
+- `world/zones/zone0/pasillo_laboratorio.tscn`: **primera sala real** (Zona 0, Pasillo + Laboratorio), creada a partir
+  de la muestra de Ariel y editable en Godot: tiles (`Background`, `Cables`, tileset `world/tilesets/colegio_tileset.tres`),
+  colisiones como rectángulos (`Collisions`: suelo, paredes y bandejas de cables de un sentido), objetos (`Corridor`, `Lab`,
+  `CableTrays`), luces (`Lights`, textura compartida `assets/art/light_soft.tres`) y paquetes de datos (`Packets`).
+  **"Jugar"** empieza aquí una partida nueva (`GameState.reset()`): Kai es un alumno común, sin habilidades.
+- `world/effects/`: comportamientos reutilizables del escenario: `flicker.gd` (parpadeo de carteles), `bob.gd`
+  (flotar en píxeles enteros), `pulse_light.gd` (luz que late) y `packet_stream.gd` (paquetes por el cable que se
+  "infectan" al pasar por la zona del phishing).
 - `world/rooms/room.gd` (`Room`): calcula los límites de la cámara a partir del `TileMapLayer` y coloca al jugador en el `SpawnPoint`.
-  Caer fuera cuenta como peligro; al morir se reaparece en `checkpoint` (o `SpawnPoint`). Sacude la cámara al recibir daño.
+  Esc vuelve al menú (temporal, hasta que exista la pausa). Caer fuera cuenta como peligro; al morir se reaparece en `checkpoint` (o `SpawnPoint`). Sacude la cámara al recibir daño.
 - `world/camera/` (`GameCamera`): zoom ×2, suavizado, mirada hacia adelante, adelanto hacia abajo en caídas rápidas y margen vertical.
 - `world/effects/ring_burst.gd` (`RingBurst`): anillo que se expande; efecto reutilizable (doble salto, impactos).
 - `world/tilesets/graybox_tileset.tres`: tiles de prueba (bloque sólido y plataforma de un sentido).
 - `tests/fixtures/combat_test_room.tscn`: sala gris **solo para pruebas automáticas** (alturas, huecos, plataformas, techo bajo, caída, pinchos, hueco con dash, chimenea y pilar de doble salto). No es accesible desde el juego.
 - `ui/debug/` : panel de depuración (F3) con estado, velocidad y temporizadores del jugador.
+
+## Visión Digital (`autoload/digital_vision.gd`, `world/vision/`)
+
+Diseño de Ariel: **dura 10 s** y **se recarga en 16 s** desde que se apaga; parpadea los últimos 2 s y se puede
+apagar antes con **Q**. Solo funciona si `GameState.vision_unlocked` (se descubre en el laboratorio).
+
+| Pieza | Responsabilidad |
+|---|---|
+| `DigitalVision` (autoload) | Estado (`READY` / `ACTIVE` / `RECHARGING`), `toggle()`, `activate(force)`, `deactivate()`, `reset()`, `blend` (0 físico → 1 digital, con transición). Señales `activated`, `deactivated`, `denied(reason, segundos)` |
+| `DigitalWorld` (uno por sala) | Oscurece el ambiente, muestra la capa digital (`digital_layer`) y los nodos del grupo `digital_only` (oculta `physical_only`), activa la **capa de colisión 7 (mundo_digital)** en el jugador, ilumina a Kai y hace el glitch de pantalla |
+| `DataFragment` | Objeto oculto que solo se recoge con la visión activa: da créditos y deja una marca en `GameState` |
+| `Room` | Q llama a `DigitalVision.toggle()` |
+| HUD | `VisionMeter` (LISTA / ACTIVA / RECARGANDO, arriba a la derecha) y `Toast` (mensajes: `get_tree().call_group(&"toast", &"show_message", texto)`) |
+
+**Para que algo exista solo en el mundo digital:** ponerlo en la capa de colisión 7 (puentes, plataformas) o en el
+grupo `digital_only` (dibujos). No hace falta duplicar la sala.
+
+**Zona 0:** `DigitalLayer/Network` (`red_zona0.gd`, dibujo vectorial de Ariel: red, servidores, puente de datos y el
+pez del phishing), `DataBridge` (capa 7), `DataFragment` (+25 créditos, marca `zona0_fragmento_recogido`) y
+`LabAwakening` (`lab_awakening.gd`): junto al servidor, **E** muestra «Por fin alguien está mirando», las luces
+parpadean, se descubre la Visión Digital y se enciende sola la primera vez.
+
+`GameState.set_flag()` deja marcas de eventos y objetos recogidos (se guardan con la partida).
 
 ## Progreso del jugador (`GameState`)
 
@@ -243,5 +277,7 @@ Cada prueba imprime `OK`/`FAIL` por comprobación y termina con código 0 si tod
 | `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, hueco de 6, plataforma de un sentido, reaparición y límites de cámara |
 | `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
 | `test_player_health.gd` | Máscaras, pinchos, suelo seguro, invulnerabilidad, empuje, contacto prolongado, escudo educativo, caída, muerte y niveles del dash |
+| `test_zone0.gd` | "Jugar" abre el Pasillo + Laboratorio con partida nueva (sin habilidades), sprite de Kai, HUD, límites de cámara, recorrido hasta el laboratorio, bandejas como plataformas y Esc al menú |
+| `test_vision.gd` | Visión Digital bloqueada, evento del laboratorio, capa digital, oscurecimiento, puente de datos (capa 7), fragmento (una sola vez), apagado manual, recarga y fin por duración |
 | `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

@@ -54,5 +54,6 @@ safe_ground_right = NodePath("../SafeGroundRight")
 
 [node name="Body" type="Node2D" parent="Visual"]
 
-[node name="Kai" type="Node2D" parent="Visual/Body"]
+[node name="Kai" type="Node2D" parent="Visual/Body" node_paths=PackedStringArray("player")]
 script = ExtResource("5_kai")
+player = NodePath("../../..")

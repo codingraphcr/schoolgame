@@ -80,7 +80,6 @@ Es el vínculo entre el combate y el contenido educativo.
 ## Pendiente de definir
 
 - Dash-parry (C7): qué se puede parrear (proyectiles, ataques cuerpo a cuerpo) y la recompensa exacta (energía, carga del Dominio, devolver proyectiles).
-- Si la Visión Digital tendrá un límite de uso.
 
 ## Plan de implementación
 
@@ -93,8 +92,8 @@ Es el vínculo entre el combate y el contenido educativo.
 | C2 | `GameState`: progreso de combate y créditos (pérdida al morir) | ✅ |
 | Z1 | Retirar la sala de desarrollo (la sala gris queda solo para pruebas automáticas) | ✅ |
 | Z2 | Arte oficial de Ariel (estilo D) en el proyecto + Kai como personaje | ✅ |
-| Z3 | Primera sala real: Pasillo + Laboratorio (Zona 0) | ⏳ |
-| Z4 | Visión Digital como sistema (transición, red vectorial, puente de datos, evento del laboratorio) | ⏳ |
+| Z3 | Primera sala real: Pasillo + Laboratorio (Zona 0) | ✅ |
+| Z4 | Visión Digital como sistema (transición, red vectorial, puente de datos, evento del laboratorio) | ✅ |
 | C3 | Nullblade.exe (datos de las 4 etapas) + sensación de impacto | ⏳ |
 | C4 | `EnemyBase` + `EnemyData` + `CombatClock` + enemigo patrullero | ⏳ |
 | C5 | Energía (curación con L) + carga del Dominio | ⏳ |

@@ -380,17 +380,36 @@ func _end_dash() -> void:
 	velocity.x = _dash_direction * max_speed if not is_on_wall() else 0.0
 
 
+## Copia congelada del dibujo actual. Con personajes por huesos (PixelatedRig) usa una
+## instantánea; con dibujos simples, duplica Visual y lo congela.
+func _make_afterimage() -> Node2D:
+	var rigs := _visual.find_children("*", "PixelatedRig", true, false)
+	if rigs.is_empty():
+		var copy := _visual.duplicate() as Node2D
+		copy.process_mode = Node.PROCESS_MODE_DISABLED
+		copy.top_level = true
+		copy.global_transform = _visual.global_transform
+		return copy
+	var rig := rigs[0] as PixelatedRig
+	var snap := rig.snapshot()
+	if snap == null:
+		return null
+	snap.top_level = true
+	snap.global_transform = rig.global_transform
+	return snap
+
+
 ## Silueta que se desvanece detrás del jugador durante el dash.
 func _spawn_afterimage() -> void:
 	var parent := get_parent()
 	if parent == null:
 		return
-	var ghost := _visual.duplicate() as Node2D
-	# La silueta queda congelada en el cuadro actual de la animación.
-	ghost.process_mode = Node.PROCESS_MODE_DISABLED
+	var ghost := _make_afterimage()
+	if ghost == null:
+		return
 	parent.add_child(ghost)
-	ghost.global_position = _visual.global_position
-	ghost.z_index = -1
+	# Justo detrás del jugador y delante del escenario.
+	parent.move_child(ghost, get_index())
 	ghost.modulate = Color(0.4, 0.9, 1.0, 0.55)
 	var tween := create_tween()
 	tween.tween_property(ghost, "modulate:a", 0.0, 0.2)
