@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 2
+order = 1
+title = "Correo SPAM"
+subtitle = "Amenaza · Correo"
+text = "Correos que llueven sin que nadie los pida. Algunos solo molestan; otros esconden estafas o enlaces peligrosos. Parpadean un instante antes de caer: esa es tu señal para moverte."
+facts = Dictionary[String, String]({"Peligro": "Medio", "Ataque": "Cae sobre Kai", "Defensa": "No abrir y marcar como spam"})
+unlock_quest = &"contrasena_profesor"
+unlock_step = &"cruzar_spam"

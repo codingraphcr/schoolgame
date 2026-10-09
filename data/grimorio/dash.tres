@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 1
+order = 4
+title = "Dash"
+subtitle = "Comando · Movimiento"
+text = "Un impulso rápido en la dirección en la que miras. Sirve para esquivar y para cruzar huecos que no se pueden saltar."
+facts = Dictionary[String, String]({"Uso": "Esquivar"})
+action = &"dash"
+unlock_property = &"dash_level"

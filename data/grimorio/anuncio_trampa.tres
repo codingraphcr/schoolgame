@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 2
+order = 3
+title = "Anuncio trampa"
+subtitle = "Amenaza · Descarga falsa"
+text = "«¡DESCARGAR GRATIS!» Tocarlo duele. Los botones de descarga falsos suelen instalar programas maliciosos en vez de lo que prometen."
+facts = Dictionary[String, String]({"Peligro": "Alto", "Defensa": "Descargar solo de sitios oficiales"})
+unlock_quest = &"contrasena_profesor"
+unlock_step = &"cruzar_spam"

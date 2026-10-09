@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 4
+order = 1
+title = "Registro: ???"
+subtitle = "Registro · Sin identificar"
+text = "Mensaje recibido en el monitor del laboratorio:\n«Por fin alguien está mirando.»\n«Te estoy observando.»\nOrigen desconocido. La señal no vino de ninguna computadora del colegio."
+facts = Dictionary[String, String]({"Origen": "???", "Estado": "Sin identificar"})
+unlock_quest = &"prologo"
+unlock_step = &"volver_profesor"

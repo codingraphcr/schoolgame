@@ -7,24 +7,35 @@
 [ext_resource type="PackedScene" path="res://ui/dialogue/dialogue_box.tscn" id="5_dv60m"]
 [ext_resource type="Script" path="res://ui/hud/objective_display.gd" id="6_2c1qa"]
 [ext_resource type="Script" path="res://ui/hud/title_card.gd" id="7_33x7l"]
+[ext_resource type="Script" path="res://ui/hud/energy_bar.gd" id="8_energy"]
 
 [node name="CombatHUD" type="CanvasLayer" unique_id=834849493]
 layer = 40
 script = ExtResource("1_hud")
 
+[node name="EnergyBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 14.0
+offset_top = 12.0
+offset_right = 254.0
+offset_bottom = 86.0
+mouse_filter = 2
+script = ExtResource("8_energy")
+
 [node name="Masks" type="HBoxContainer" parent="." unique_id=902698706]
-offset_left = 24.0
-offset_top = 20.0
-offset_right = 224.0
-offset_bottom = 54.0
+offset_left = 40.0
+offset_top = 16.0
+offset_right = 250.0
+offset_bottom = 60.0
 mouse_filter = 2
 theme_override_constants/separation = 6
 
 [node name="Credits" type="HBoxContainer" parent="." unique_id=610872201]
 offset_left = 26.0
-offset_top = 60.0
+offset_top = 96.0
 offset_right = 226.0
-offset_bottom = 88.0
+offset_bottom = 124.0
 mouse_filter = 2
 script = ExtResource("2_credits")
 

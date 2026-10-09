@@ -115,7 +115,9 @@ func _test_knockback_and_contact() -> void:
 			break
 	await _frames(8)  # Tras el congelamiento del impacto
 	_check(_hurts == hurts_before + 1 and player.velocity.x < 0.0, "un golpe enemigo empuja hacia atrás (vx=%.0f)" % player.velocity.x)
-	_check(player.health.current == 3.0, "el golpe enemigo quita 1 máscara")
+	_check(player.health.current == 3.5, "el golpe enemigo quita medio cristal (quedan %.1f)" % player.health.current)
+	await _wait(0.6)
+	_check(is_equal_approx((room.get_node("CombatHUD/Masks").get_child(3) as MaskIcon).amount, 0.5), "el HUD muestra el último cristal a la mitad")
 	_check(player.global_position.distance_to(Vector2(300, FLOOR_Y)) < 60.0, "un golpe enemigo no hace reaparecer")
 	await _wait(1.2)
 	_check(_hurts == hurts_before + 2, "el contacto prolongado vuelve a dañar al terminar la invulnerabilidad")

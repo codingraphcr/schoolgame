@@ -97,7 +97,7 @@ func _test_traps_and_mail() -> void:
 		if _hurts > 0:
 			break
 	await _frames(8)
-	_check(_hurts == 1 and player.health.current == 3.0, "un correo SPAM que cae quita 1 máscara")
+	_check(_hurts == 1 and player.health.current == 3.5, "un correo SPAM que cae quita medio cristal")
 	_check(player.global_position.distance_to(before) < 80.0, "el correo empuja pero no hace reaparecer")
 	await _until_vulnerable()
 	player.health.restore_full()

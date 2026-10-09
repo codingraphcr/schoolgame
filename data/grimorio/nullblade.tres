@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 1
+order = 3
+title = "Nullblade.exe"
+subtitle = "Comando · Arma"
+text = "Una hoja hecha de código. Corta amenazas digitales y se vuelve más fuerte a medida que Kai entiende cómo funcionan los sistemas."
+facts = Dictionary[String, String]({"Uso": "Combate"})
+action = &"attack"
+unlock_property = &"nullblade_stage"

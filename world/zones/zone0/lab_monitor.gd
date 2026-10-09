@@ -52,7 +52,7 @@ func _process(delta: float) -> void:
 	if state in [State.STATIC, State.EYE, State.IDLE]:
 		queue_redraw()
 	if state == State.STATIC and _light:
-		_light.energy = randf_range(0.3, 1.0)
+		_light.energy = 0.6 if not Engine.is_editor_hint() and GameSettings.reduce_glitch else randf_range(0.3, 1.0)
 
 
 ## Cambia de estado al instante y corta cualquier animación que esté corriendo.

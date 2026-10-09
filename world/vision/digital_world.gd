@@ -45,6 +45,8 @@ func _process(_delta: float) -> void:
 
 ## Golpe de glitch en pantalla (al cambiar de mundo o en eventos de la historia).
 func pulse_glitch(peak := 0.9) -> void:
+	# Más suave si en las opciones se reducen los efectos glitch.
+	peak *= GameSettings.glitch_factor()
 	var tween := create_tween()
 	tween.tween_method(_set_glitch, 0.0, peak, 0.12)
 	tween.tween_method(_set_glitch, peak, 0.0, 0.3)

@@ -257,16 +257,21 @@ func _place_frame(active_side: int, pop: bool) -> void:
 
 ## Escribe el texto letra por letra. Con glitch la escritura es irregular: cambia de velocidad,
 ## se traba en pausas cortas y a veces escupe varias letras de golpe.
+## La velocidad depende de las opciones (GameSettings): en "instantánea" la línea aparece entera.
 func _type(delta: float) -> void:
 	var total := maxi(_text.text.length(), 1)
+	var factor := GameSettings.text_speed_factor()
+	if factor <= 0.0:
+		_text.visible_ratio = 1.0
+		return
 	if not _glitch:
-		_text.visible_ratio = minf(_text.visible_ratio + characters_per_second * delta / total, 1.0)
+		_text.visible_ratio = minf(_text.visible_ratio + characters_per_second * factor * delta / total, 1.0)
 		return
 	if _type_pause > 0.0:
 		_type_pause -= delta
 		return
 	var before := _text.visible_characters
-	var speed := characters_per_second * randf_range(0.25, 1.6)
+	var speed := characters_per_second * factor * randf_range(0.25, 1.6)
 	_text.visible_ratio = minf(_text.visible_ratio + speed * delta / total, 1.0)
 	if _text.visible_characters == before or _text.visible_ratio >= 1.0:
 		return
@@ -277,10 +282,11 @@ func _type(delta: float) -> void:
 		_text.visible_characters = mini(_text.visible_characters + randi_range(2, 4), total)
 
 
-## Interferencia: el texto salta un par de píxeles y parpadea de vez en cuando.
+## Interferencia: el texto salta un par de píxeles y parpadea de vez en cuando
+## (no pasa si en las opciones se reducen los efectos glitch).
 func _update_glitch() -> void:
 	var rest := _text_rest
-	if not _glitch or randf() > 0.12:
+	if not _glitch or GameSettings.reduce_glitch or randf() > 0.12:
 		_text.position = rest
 		_text.modulate.a = 1.0
 		_name_plate.modulate.a = 1.0

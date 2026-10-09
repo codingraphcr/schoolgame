@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu_concepto.webp" id="2_img"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_colegio"]
+atlas = ExtResource("2_img")
+region = Rect2(975, 455, 520, 290)
+
+[resource]
+script = ExtResource("1_entry")
+category = 0
+order = 0
+title = "Colegio"
+subtitle = "Zona · Mundo físico"
+text = "El lugar donde todo comenzó. De día es un colegio común, pero bajo la superficie se ocultan sistemas, secretos y conexiones con Nullveil."
+facts = Dictionary[String, String]({"Mundo": "Físico", "Peligro": "Bajo... por ahora"})
+image = SubResource("AtlasTexture_colegio")

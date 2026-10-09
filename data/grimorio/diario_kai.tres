@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 4
+order = 2
+title = "Diario de Kai: El despertar"
+subtitle = "Registro · Prólogo"
+text = "Hoy la computadora del laboratorio se encendió sola. Por un segundo vi algo dentro de la red, como una criatura. Y esa voz... ¿me estaba hablando a mí?"
+facts = Dictionary[String, String]({"Autor": "Kai"})
+unlock_quest = &"prologo"
+unlock_on_complete = true

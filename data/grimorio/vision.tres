@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 1
+order = 2
+title = "Visión Digital"
+subtitle = "Comando · Habilidad"
+text = "Deja ver la red escondida detrás del mundo: datos, conexiones y amenazas que a simple vista no existen. Algunos caminos solo aparecen con ella."
+facts = Dictionary[String, String]({"Duración": "10 s", "Recarga": "16 s"})
+action = &"vision"
+unlock_property = &"vision_unlocked"
