@@ -149,7 +149,7 @@ Las muestras de estilo usan este Kai si `_build_player_visual()` devuelve null (
 
 | Apariencia | Qué usa | Cómo se genera |
 |---|---|---|
-| `CONCEPTO` (por defecto) | `AnimatedSprite2D` con `assets/art/characters/kai/hd/` (`kai_hd.json`: archivo, tamaño de cuadro, pies, cuadros, fps y bucle por animación; escala 0,5) | `tools/art/extraer_kai_concepto.gd` recorta las poses de la hoja de concepto, quita el fondo, usa la misma escala para todas y alinea los pies y la cabeza |
+| `CONCEPTO` (por defecto) | `AnimatedSprite2D` con `assets/art/characters/kai/hd/` (`kai_hd.json`: archivo, tamaño de cuadro, pies, cuadros, fps y bucle por animación; escala 0,5) | `tools/art/extraer_personajes_concepto.gd` recorta las poses de la hoja de concepto, quita el fondo, usa la misma escala para todas y alinea los pies y la cabeza |
 | `HUESOS` | `kai_esqueleto.tscn` con `PixelatedRig` y resortes | `generar_esqueleto_kai.gd` |
 | `CUADROS` | Tiras de `assets/art/characters/kai/cuadros/` (72×72) | `exportar_cuadros_kai.gd` (necesita pantalla) desde el esqueleto, para retocar a mano |
 
@@ -234,12 +234,15 @@ involuntaria, sin indicador, Q no la controla y no deja recarga). En la misión 
 | Pieza | Responsabilidad |
 |---|---|
 | `Interactable` (`components/interaction/`) | Area2D con una CollisionShape2D: al acercarse Kai muestra el aviso (`prompt_text`, p. ej. "E: hablar") y con **E** emite `interacted(player)`. `busy` lo desactiva mientras dura un diálogo o evento |
-| `Dialogue` (`systems/dialogue/`) | Recurso con el texto del diálogo, **una línea por intervención: `Nombre: texto`**. Las líneas sin nombre son narración; las vacías y las que empiezan con `#` se ignoran. Se edita en el Inspector |
-| `DialogueBox` (`ui/dialogue/`) | Caja de diálogo **arriba** (como en Hollow Knight, no tapa a los personajes), dentro del HUD de cada sala. Texto letra por letra; **E / Espacio** completa la línea o pasa a la siguiente. `await DialogueBox.find(self).play(dialogo)` |
-| `Npc` (`characters/npcs/npc.gd`, plantilla `npc.tscn`) | Personaje con `dialogue` (primera vez) y `repeat_dialogue` (las siguientes), animaciones `idle` / `talk`, mira hacia Kai y deja la marca `talked_flag` en `GameState` |
+| `Dialogue` (`systems/dialogue/`) | Recurso con el texto del diálogo, **una línea por intervención: `Nombre: texto`** u opcionalmente **`Nombre [expresión]: texto`**. Las líneas sin nombre son narración; las vacías y las que empiezan con `#` se ignoran. Se edita en el Inspector |
+| `DialogueCharacter` (`systems/dialogue/`, uno por personaje en `data/characters/`) | Nombre, otros nombres (`aliases`, p. ej. "Profesor"), título, retrato, expresiones, lado de la pantalla y color de acento |
+| `DialogueBox` (`ui/dialogue/`) | Caja de diálogo **estilo Hades**, dentro del HUD de cada sala: oscurece la pantalla, muestra el **retrato grande** del que habla (Kai a la izquierda, los demás a la derecha; el otro queda atenuado), placa con nombre y título, la caja abajo y un triángulo para continuar. Sin retrato (narración) la caja va centrada. Carga sola los personajes de `data/characters/`. Texto letra por letra; **E / Espacio** completa la línea o pasa a la siguiente. `await DialogueBox.find(self).play(dialogo)` |
+| `Npc` (`characters/npcs/npc.gd`, plantilla `npc.tscn`) | Personaje con `dialogue` (primera vez) y `repeat_dialogue` (las siguientes), animaciones `idle` / `talk`, mira hacia Kai y deja la marca `talked_flag` en `GameState`. Opcional: `idle_extra_animation`, que hace de vez en cuando mientras espera |
 
-**El profesor** (`characters/npcs/profesor/`, todavía sin nombre) está en el pasillo. Sprite **provisional** generado
-con `tools/art/generar_npcs.gd` según la guía de Ariel (camisa, cordón con credencial y taza); Ariel lo reemplazará.
+**El Prof. Álvarez** (`characters/npcs/profesor/`) está en el pasillo, con los sprites de la hoja de concepto de Ariel
+(`idle`, `walk`, `talk` y `notas`), la misma estructura que Kai: `tools/art/extraer_personajes_concepto.gd` →
+`assets/art/characters/profesor/hd/` → `tools/art/generar_sprite_frames.gd` → `profesor_frames.tres` (Sprite con
+escala 0,5 y offset (0, -55)). Retrato en `data/characters/profesor.tres`.
 Diálogos en `data/dialogues/prologo/`: `profesor_pedido.tres` (pide revisar la computadora del laboratorio; marca
 `prologo_profesor_pidio_ayuda`) y `profesor_recordatorio.tres`.
 

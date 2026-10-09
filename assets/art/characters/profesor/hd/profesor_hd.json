@@ -1,0 +1,61 @@
+{
+	"animations": {
+		"idle": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "profesor_hd_idle.png",
+			"fps": 3.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"notas": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "profesor_hd_notas.png",
+			"fps": 3.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"talk": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "profesor_hd_talk.png",
+			"fps": 4.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"walk": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "profesor_hd_walk.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 5,
+			"loop": true
+		}
+	},
+	"scale": 0.5
+}

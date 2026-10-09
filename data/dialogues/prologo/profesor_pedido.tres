@@ -5,9 +5,9 @@
 [resource]
 script = ExtResource("1_aebu7")
 script_text = "# Escena 2 del prólogo: el profesor le pide ayuda a Kai.
-Profesor: ¡Kai! Qué bueno que llegas temprano.
+Prof. Álvarez [sonriente]: ¡Kai! Qué bueno que llegas temprano.
 Kai: Buenos días, profe. ¿Pasó algo?
-Profesor: La computadora del laboratorio está rarísima desde ayer. Se prende sola y muestra mensajes extraños.
-Profesor: Tú sabes de computadoras... ¿me ayudas a revisarla?
-Profesor: Está al fondo del pasillo, en el laboratorio.
+Prof. Álvarez [preocupado]: La computadora del laboratorio está rarísima desde ayer. Se prende sola y muestra mensajes extraños.
+Prof. Álvarez [pensativo]: Tú sabes de computadoras... ¿me ayudas a revisarla?
+Prof. Álvarez: Está al fondo del pasillo, en el laboratorio.
 Kai: Claro, profe. Voy a echarle un vistazo."
