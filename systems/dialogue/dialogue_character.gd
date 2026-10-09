@@ -21,6 +21,10 @@ enum Side { LEFT, RIGHT }
 @export var flip_portrait := false
 ## Color del nombre y del borde de la placa.
 @export var accent := Color(0.243, 0.949, 1.0)
+## Color del texto de sus líneas (transparente = el color normal de la caja).
+@export var text_color := Color(0, 0, 0, 0)
+## Si su texto tiembla como una señal con interferencia (para presencias misteriosas).
+@export var glitch := false
 
 
 func matches(speaker: String) -> bool:

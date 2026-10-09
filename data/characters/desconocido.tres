@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DialogueCharacter" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue_character.gd" id="1_desc"]
+
+[resource]
+script = ExtResource("1_desc")
+display_name = "???"
+aliases = PackedStringArray("Pantalla", "Desconocido")
+accent = Color(1, 0.24, 0.72, 1)
+text_color = Color(0.83, 0.07, 0.56, 1)
+glitch = true

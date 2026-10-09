@@ -31,10 +31,16 @@ const BACK_OFF := 26.0
 ## Distancia de la placa del nombre al borde de la caja.
 const PLATE_INSET := 34.0
 const DEFAULT_ACCENT := Color(0.243, 0.949, 1.0)
+## Color normal del texto (sobre la caja clara).
+const TEXT_COLOR := Color(0.1, 0.09, 0.11)
 
 var _lines: Array[Dictionary] = []
 var _index := -1
 var _is_playing := false
+## Si el texto de la línea actual tiembla (DialogueCharacter.glitch).
+var _glitch := false
+## Posición normal del texto (el temblor lo mueve alrededor de ella).
+var _text_rest := Vector2.ZERO
 ## Personaje que ocupa cada lado (o null).
 var _side_character := { DialogueCharacter.Side.LEFT: null, DialogueCharacter.Side.RIGHT: null }
 
@@ -62,6 +68,7 @@ func _ready() -> void:
 	for portrait: TextureRect in _portraits.values():
 		portrait.material = (portrait.material as ShaderMaterial).duplicate()
 	_load_characters()
+	_text_rest = Vector2(_text.offset_left, _text.offset_top)
 
 
 ## Agrega los personajes de characters_dir (un .tres por personaje).
@@ -106,6 +113,7 @@ func _process(delta: float) -> void:
 	_continue.modulate.a = 0.45 + 0.55 * beat
 	_triangle.position.y = 3.0 * beat
 	_triangle_back.position.y = _triangle.position.y
+	_update_glitch()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -152,6 +160,10 @@ func _show_line(index: int) -> void:
 	_box.accent = accent
 	_name_plate.accent = accent
 	_triangle_back.color = accent
+	var text_color := character.text_color if character and character.text_color.a > 0.0 else TEXT_COLOR
+	_text.add_theme_color_override(&"font_color", text_color)
+	_glitch = character != null and character.glitch
+	_update_glitch()
 	var active_side := _update_portraits(character, String(line.get("expression", "")))
 	_place_frame(active_side, index == 0 or previous_speaker != _speaker.text)
 	_text.text = line["text"]
@@ -239,3 +251,16 @@ func _place_frame(active_side: int, pop: bool) -> void:
 	var plate_from := 30.0 if mirrored else -30.0
 	_name_plate.position.x += plate_from
 	tween.tween_property(_name_plate, "position:x", _name_plate.position.x - plate_from, 0.25)
+
+
+## Interferencia: el texto salta un par de píxeles y parpadea de vez en cuando.
+func _update_glitch() -> void:
+	var rest := _text_rest
+	if not _glitch or randf() > 0.12:
+		_text.position = rest
+		_text.modulate.a = 1.0
+		_name_plate.modulate.a = 1.0
+		return
+	_text.position = rest + Vector2(randf_range(-3.0, 3.0), randf_range(-1.0, 1.0))
+	_text.modulate.a = randf_range(0.55, 0.9)
+	_name_plate.modulate.a = randf_range(0.6, 1.0)

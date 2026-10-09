@@ -47,6 +47,9 @@ func _test_format() -> void:
 	con_expresiones.expressions = { "serio": serio }
 	_check(con_expresiones.portrait_for("serio") == serio and con_expresiones.portrait_for("") == con_expresiones.portrait
 		and profesor.portrait_for("sonriente") == profesor.portrait, "las expresiones cambian el retrato (si no existe, queda el normal)")
+	var desconocido: DialogueCharacter = load("res://data/characters/desconocido.tres")
+	_check(desconocido.display_name == "???" and desconocido.matches("Pantalla") and desconocido.text_color.a > 0.0,
+		"la presencia de la computadora se llama «???» y habla en otro color")
 	var pedido: Dialogue = load("res://data/dialogues/prologo/profesor_pedido.tres")
 	_check(pedido.get_lines().size() == 6, "el pedido del profesor tiene 6 líneas")
 
