@@ -26,6 +26,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixel/packet.png" id="24_ptmhy"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/packet_bad.png" id="25_dv2hf"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="26_muj38"]
+[ext_resource type="PackedScene" path="res://characters/npcs/profesor/profesor.tscn" id="26_xved5"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="27_sepqw"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="28_xmef8"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="29_giju3"]
@@ -601,6 +602,11 @@ infected_texture = ExtResource("25_dv2hf")
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=739778107]
 position = Vector2(56, 304)
+
+[node name="Npcs" type="Node2D" parent="." unique_id=1595665627]
+
+[node name="Profesor" parent="Npcs" unique_id=1425553402 instance=ExtResource("26_xved5")]
+position = Vector2(196, 304)
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("26_muj38")]
 position = Vector2(56, 304)

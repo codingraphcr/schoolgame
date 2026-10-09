@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_aebu7"]
+
+[resource]
+script = ExtResource("1_aebu7")
+script_text = "# Escena 2 del prólogo: el profesor le pide ayuda a Kai.
+Profesor: ¡Kai! Qué bueno que llegas temprano.
+Kai: Buenos días, profe. ¿Pasó algo?
+Profesor: La computadora del laboratorio está rarísima desde ayer. Se prende sola y muestra mensajes extraños.
+Profesor: Tú sabes de computadoras... ¿me ayudas a revisarla?
+Profesor: Está al fondo del pasillo, en el laboratorio.
+Kai: Claro, profe. Voy a echarle un vistazo."

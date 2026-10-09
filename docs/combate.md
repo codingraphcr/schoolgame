@@ -96,7 +96,7 @@ Es el vínculo entre el combate y el contenido educativo.
 | Z3 | Primera sala real: Pasillo + Laboratorio (Zona 0) | ✅ |
 | Z4 | Visión Digital como sistema (transición, red vectorial, puente de datos, evento del laboratorio) | ✅ |
 | H1 | Transiciones entre salas + Entrada del colegio (máscaras que se conservan) | ✅ |
-| H2 | Interacción y diálogos + el profesor (NPC) | ⏳ |
+| H2 | Interacción y diálogos + el profesor (NPC) | ✅ |
 | H3 | Misiones (objetivo en pantalla) + Visión Digital involuntaria del prólogo | ⏳ |
 | H4 | Dentro de la PC: nivel de plataformas, enemigo "Contraseña débil", mini espada (J) y 2 elecciones (contraseña y MFA) → desbloquea Q | ⏳ |
 | H5 | Habitación vieja: Nullblade.exe (dash, doble salto, ataque) + cartel "Capítulo 1" | ⏳ |

@@ -1,0 +1,45 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/characters/profesor/profesor_idle.png" id="1_tqha2"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/profesor/profesor_talk.png" id="2_w7poe"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fymmr"]
+atlas = ExtResource("1_tqha2")
+region = Rect2(0, 0, 28, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tppoa"]
+atlas = ExtResource("1_tqha2")
+region = Rect2(28, 0, 28, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qjv03"]
+atlas = ExtResource("2_w7poe")
+region = Rect2(0, 0, 28, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3v0nr"]
+atlas = ExtResource("2_w7poe")
+region = Rect2(28, 0, 28, 50)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fymmr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tppoa")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qjv03")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3v0nr")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 3.0
+}]
