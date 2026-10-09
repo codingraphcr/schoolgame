@@ -12,6 +12,8 @@ signal double_jumped
 signal wall_jumped
 signal dashed
 signal landed
+## Cambió la energía (en barritas): la muestra el HUD.
+signal energy_changed(current: float, maximum: float)
 
 enum State { IDLE, RUN, JUMP, FALL, DASH, WALL_SLIDE }
 
@@ -85,6 +87,9 @@ var is_wall_sliding := false
 var dash_cooldown_timer := 0.0
 ## Bloquea los controles (reaparición, cinemáticas). La gravedad sigue actuando.
 var controls_locked := false
+## Energía para habilidades, en barritas (la curación gasta media). El máximo sale de GameState.
+var energy := 2.0
+var max_energy := 2.0
 
 var jump_velocity: float:
 	get:
@@ -107,6 +112,7 @@ var _afterimage_timer := 0.0
 @onready var health: HealthComponent = $Health
 @onready var hurtbox: HurtboxComponent = $Hurtbox
 @onready var damage: PlayerDamage = $Damage
+@onready var heal: PlayerHeal = $Heal
 @onready var _visual: Node2D = $Visual
 @onready var _body: Node2D = $Visual/Body
 
@@ -120,10 +126,18 @@ func _physics_process(delta: float) -> void:
 	var was_on_floor := is_on_floor()
 	_update_timers(delta, was_on_floor)
 
-	if is_dashing:
+	if heal.active:
+		# Curándose: quieto en el suelo o flotando en el aire.
+		heal.update(delta, _action_pressed("heal"))
+		velocity = Vector2.ZERO
+		move_and_slide()
+	elif is_dashing:
 		_process_dash(delta)
 	elif _action_just_pressed("dash") and _can_start_dash():
 		_start_dash()
+	elif _action_pressed("heal") and heal.can_start():
+		heal.start()
+		velocity = Vector2.ZERO
 	else:
 		_apply_gravity(delta)
 		_handle_jump()
@@ -156,6 +170,27 @@ func apply_progress(progress: Node, full_health := false) -> void:
 		health.restore_full()
 	else:
 		health.health_changed.emit(health.current, health.max_health)
+	max_energy = progress.max_energy_cells
+	set_energy(max_energy if full_health else energy)
+
+
+## Fija la energía (en barritas, sin pasar del máximo) y avisa al HUD.
+func set_energy(value: float) -> void:
+	energy = clampf(value, 0.0, max_energy)
+	energy_changed.emit(energy, max_energy)
+
+
+## Suma energía (para habilidades y recompensas futuras).
+func add_energy(amount: float) -> void:
+	set_energy(energy + amount)
+
+
+## Gasta energía si alcanza. Devuelve false si no había suficiente.
+func spend_energy(amount: float) -> bool:
+	if energy + 0.0001 < amount:
+		return false
+	set_energy(energy - amount)
+	return true
 
 
 ## Hace que Kai mire hacia un lado (1 = derecha, -1 = izquierda).

@@ -22,7 +22,7 @@ const RUN_STRIDE_SPEED := 100.0
 
 ## Carpeta y archivo de descripción de cada apariencia por cuadros.
 const FRAME_SETS := {
-	Apariencia.CONCEPTO: ["res://assets/art/characters/kai/hd/", "kai_hd.json"],
+	Apariencia.CONCEPTO: ["res://assets/art/characters/kai/hd/", "kai_hd.json", "kai_hd_curacion.json"],
 	Apariencia.CUADROS: ["res://assets/art/characters/kai/cuadros/", "kai_cuadros.json"],
 }
 ## Cuánto dura cada golpe del combo y el margen para encadenar el segundo.
@@ -30,6 +30,9 @@ const ATTACK_TIME := 0.3
 const COMBO_WINDOW := 0.45
 const HURT_TIME := 0.35
 const DEATH_TIME := 1.2
+## Cuánto dura la pose final de la curación (se levanta o empieza a bajar).
+const HEAL_END_TIME := 0.35
+const HEAL_COLOR := Color("8a5cff")
 ## Rebote al correr con la apariencia por cuadros (en píxeles del dibujo).
 const RUN_BOB := 2.0
 
@@ -67,6 +70,9 @@ var _override_left := 0.0
 var _combo_left := 0.0
 var _time := 0.0
 var _last_velocity := Vector2.ZERO
+## Brillo lila mientras Kai se cura.
+var _heal_light: PointLight2D
+var _heal_flash := 0.0
 
 
 func _ready() -> void:
@@ -79,7 +85,12 @@ func _ready() -> void:
 		var damage := player.get_node("Damage") as PlayerDamage
 		damage.hurt.connect(func(_hit: HitData) -> void: _play_override(&"dano", HURT_TIME))
 		damage.died.connect(func() -> void: _play_override(&"muerte", DEATH_TIME))
-	if FRAME_SETS.has(apariencia) and _build_frames(FRAME_SETS[apariencia][0], FRAME_SETS[apariencia][1]):
+	if player and player.has_node("Heal"):
+		var heal := player.get_node("Heal") as PlayerHeal
+		heal.started.connect(_on_heal_started)
+		heal.healed.connect(func(_amount: float) -> void: _heal_flash = 1.0)
+		heal.finished.connect(_on_heal_finished)
+	if FRAME_SETS.has(apariencia) and _build_frames(FRAME_SETS[apariencia][0], FRAME_SETS[apariencia].slice(1)):
 		return
 	_build_skeleton()
 
@@ -109,8 +120,12 @@ func _process(delta: float) -> void:
 		_override_left -= delta
 		if _override_left <= 0.0:
 			_override = &""
-	if _override == &"":
+	var healing := player.has_node("Heal") and (player.get_node("Heal") as PlayerHeal).active
+	if healing:
+		_play_heal_animation(player.get_node("Heal") as PlayerHeal)
+	elif _override == &"":
 		_play_state_animation()
+	_update_heal_light(delta, healing)
 	if _sprite:
 		_update_sprite_motion()
 	else:
@@ -130,6 +145,48 @@ func _play_state_animation() -> void:
 	# La zancada avanza unos RUN_STRIDE_SPEED px/s a velocidad 1: así los pies no patinan.
 	var speed := clampf(absf(player.velocity.x) / RUN_STRIDE_SPEED, 0.6, 1.6)
 	_animation.speed_scale = speed if wanted == &"correr" else 1.0
+
+
+## Curación: se arrodilla (suelo) o se detiene flotando (aire) y luego canaliza en bucle.
+func _play_heal_animation(heal: PlayerHeal) -> void:
+	if _sprite == null:
+		return
+	var base := &"curar_aire" if heal.in_air else &"curar_suelo"
+	var wanted := StringName(String(base) + "_inicio") if heal.is_starting() else base
+	if _sprite.animation != wanted and _has_animation(wanted):
+		_play_sprite(wanted)
+	_sprite.speed_scale = 1.0
+
+
+func _on_heal_started(_in_air: bool) -> void:
+	_override = &""
+	_override_left = 0.0
+
+
+## Al terminar se levanta (suelo) o empieza a bajar (aire).
+func _on_heal_finished(_completed: bool) -> void:
+	var heal := player.get_node("Heal") as PlayerHeal
+	_play_override(&"curar_aire_fin" if heal.in_air else &"curar_suelo_fin", HEAL_END_TIME)
+
+
+## Brillo lila bajo Kai: crece mientras canaliza y destella en cada curación.
+func _update_heal_light(delta: float, healing: bool) -> void:
+	_heal_flash = maxf(_heal_flash - delta * 3.0, 0.0)
+	if not healing and _heal_light == null:
+		return
+	if _heal_light == null:
+		_heal_light = PointLight2D.new()
+		_heal_light.texture = load("res://assets/art/light_soft.tres")
+		_heal_light.color = HEAL_COLOR
+		_heal_light.texture_scale = 1.2
+		_heal_light.position = Vector2(0, -20)
+		add_child(_heal_light)
+	var target := 0.0
+	if healing:
+		var heal := player.get_node("Heal") as PlayerHeal
+		target = 0.5 + heal.progress() * 0.9 + sin(_time * 14.0) * 0.08
+	_heal_light.energy = move_toward(_heal_light.energy, target + _heal_flash * 1.5, delta * 6.0) if not healing else target + _heal_flash * 1.5
+	_heal_light.visible = _heal_light.energy > 0.01
 
 
 func _play_override(anim: StringName, duration: float) -> void:
@@ -153,15 +210,33 @@ func _has_animation(anim: StringName) -> bool:
 
 # --- Apariencia por cuadros (CONCEPTO y CUADROS) ---
 
-## Crea un AnimatedSprite2D con las tiras descritas en el JSON. Devuelve false si no existen.
-func _build_frames(directory: String, json_name: String) -> bool:
-	var file := FileAccess.open(directory + json_name, FileAccess.READ)
-	if file == null:
-		push_warning("KaiVisual: no hay cuadros en %s; se usa el esqueleto." % directory)
-		return false
-	var data: Dictionary = JSON.parse_string(file.get_as_text())
+## Crea un AnimatedSprite2D con las tiras descritas en los JSON (el primero es el principal; los
+## demás suman animaciones, como la curación). Devuelve false si no existe el principal.
+func _build_frames(directory: String, json_names: Array) -> bool:
 	var frames := SpriteFrames.new()
 	frames.remove_animation(&"default")
+	var scale_factor := 1.0
+	for index in json_names.size():
+		var file := FileAccess.open(directory + String(json_names[index]), FileAccess.READ)
+		if file == null:
+			if index == 0:
+				push_warning("KaiVisual: no hay cuadros en %s; se usa el esqueleto." % directory)
+				return false
+			continue
+		var data: Dictionary = JSON.parse_string(file.get_as_text())
+		if index == 0:
+			scale_factor = float(data.get("scale", 1.0))
+		_add_animations(frames, directory, data)
+	_sprite = AnimatedSprite2D.new()
+	_sprite.sprite_frames = frames
+	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_sprite.scale = Vector2.ONE * scale_factor
+	add_child(_sprite)
+	_play_sprite(&"quieto")
+	return true
+
+
+func _add_animations(frames: SpriteFrames, directory: String, data: Dictionary) -> void:
 	for anim_name: String in data.animations:
 		var info: Dictionary = data.animations[anim_name]
 		var texture: Texture2D = load(directory + info.get("file", "kai_%s.png" % anim_name))
@@ -180,13 +255,6 @@ func _build_frames(directory: String, json_name: String) -> bool:
 			frames.add_frame(anim_name, atlas)
 		# Los pies quedan en el origen del jugador.
 		_sprite_offsets[StringName(anim_name)] = size * 0.5 - Vector2(feet_values[0], feet_values[1])
-	_sprite = AnimatedSprite2D.new()
-	_sprite.sprite_frames = frames
-	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_sprite.scale = Vector2.ONE * float(data.get("scale", 1.0))
-	add_child(_sprite)
-	_play_sprite(&"quieto")
-	return true
 
 
 func _play_sprite(anim: StringName) -> void:

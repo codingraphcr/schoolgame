@@ -36,6 +36,9 @@ func _ready() -> void:
 		if game_state.current_masks >= 0.0:
 			player.health.current = clampf(game_state.current_masks, 1.0, player.health.max_health)
 			player.health.health_changed.emit(player.health.current, player.health.max_health)
+		# La energía también se conserva.
+		if game_state.current_energy >= 0.0:
+			player.set_energy(game_state.current_energy)
 		game_state.progress_changed.connect(_on_progress_changed)
 	if player:
 		(player.get_node("Visual") as CanvasItem).modulate = player_tint
@@ -49,6 +52,7 @@ func _exit_tree() -> void:
 	var game_state := _game_state()
 	if player and game_state:
 		game_state.current_masks = player.health.current
+		game_state.current_energy = player.energy
 
 
 func _physics_process(_delta: float) -> void:
