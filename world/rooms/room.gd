@@ -10,8 +10,8 @@ extends Node2D
 @export var player: Player
 @export var camera: GameCamera
 @export var spawn_point: Marker2D
-## Dónde reaparece el jugador al morir (banco). Si está vacío, se usa spawn_point.
-@export var checkpoint: Marker2D
+## Dónde reaparece el jugador al morir (banco o RestorePoint). Si está vacío, se usa spawn_point.
+@export var checkpoint: Node2D
 ## Tamaño de la sala si no tiene TileMapLayer (p. ej. el interior de una computadora).
 @export var room_size := Rect2()
 ## Color del dibujo de Kai en esta sala (p. ej. celeste: su alma digital dentro de una computadora).
@@ -117,7 +117,7 @@ func _on_progress_changed() -> void:
 
 
 func _respawn_at_checkpoint() -> void:
-	var target := checkpoint if checkpoint else spawn_point
+	var target: Node2D = checkpoint if checkpoint else spawn_point
 	if target:
 		player.teleport_to(target.global_position)
 	player.damage.revive()

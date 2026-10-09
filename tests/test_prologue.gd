@@ -132,6 +132,7 @@ func _until(condition: Callable) -> void:
 	for i in 600:
 		if condition.call():
 			return
+		await process_frame
 		await physics_frame
 
 
@@ -163,6 +164,7 @@ func _action(action: StringName) -> void:
 
 func _frames(count: int) -> void:
 	for i in count:
+		await process_frame  # Teclas y HUD se procesan en cuadros de dibujo.
 		await physics_frame
 
 

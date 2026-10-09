@@ -16,9 +16,10 @@
 [ext_resource type="Script" path="res://world/zones/pc_profesor/account_tab.gd" id="9_huro6"]
 [ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="10_iofjp"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/pc_error_encontrado.tres" id="11_uw1aa"]
+[ext_resource type="Script" path="res://world/digital/restore_point.gd" id="12_rstpt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5aedr"]
-size = Vector2(1664, 80)
+size = Vector2(3264, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nr2fl"]
 size = Vector2(32, 360)
@@ -44,12 +45,12 @@ script = ExtResource("1_7ma26")
 player = NodePath("Player")
 camera = NodePath("GameCamera")
 spawn_point = NodePath("SpawnPoint")
-room_size = Rect2(0, 0, 1600, 360)
+room_size = Rect2(0, 0, 3200, 360)
 player_tint = Color(0.7, 1, 1.15, 1)
 
 [node name="Background" type="Node2D" parent="." unique_id=930290375]
 script = ExtResource("2_h6uko")
-area = Rect2(0, 0, 1600, 360)
+area = Rect2(0, 0, 3200, 360)
 construction_note = ""
 
 [node name="SpamDecor" type="Node2D" parent="." unique_id=257834936]
@@ -86,11 +87,44 @@ ad_lines = PackedStringArray("Todas las skins", "gratis y sin baneo")
 ad_url = "skins-gratis.top"
 accent = Color(0.5411765, 0.30980393, 1, 1)
 
+[node name="Decor4" type="AnimatableBody2D" parent="SpamDecor" unique_id=355808012]
+modulate = Color(1, 1, 1, 0.55)
+position = Vector2(1640, 120)
+collision_layer = 0
+script = ExtResource("3_5lg4o")
+size = Vector2(120, 48)
+ad_title = "¡CUENTA BLOQUEADA!"
+ad_lines = PackedStringArray("Confirma tus datos hoy", "o pierdes todo")
+ad_url = "banco-seguro.click"
+accent = Color(0.8392157, 0.2, 0.2901961, 1)
+
+[node name="Decor5" type="AnimatableBody2D" parent="SpamDecor" unique_id=786087736]
+modulate = Color(1, 1, 1, 0.55)
+position = Vector2(2080, 104)
+collision_layer = 0
+script = ExtResource("3_5lg4o")
+size = Vector2(110, 48)
+ad_title = "¡GANASTE UN CELULAR!"
+ad_lines = PackedStringArray("Solo paga el envío", "de $2 con tu tarjeta")
+ad_url = "celu-gratis.top"
+accent = Color(0.95, 0.75, 0.15, 1)
+
+[node name="Decor6" type="AnimatableBody2D" parent="SpamDecor" unique_id=1179144365]
+modulate = Color(1, 1, 1, 0.55)
+position = Vector2(2570, 112)
+collision_layer = 0
+script = ExtResource("3_5lg4o")
+size = Vector2(110, 48)
+ad_title = "GANA $500 AL DÍA"
+ad_lines = PackedStringArray("Desde casa, sin hacer", "nada · ¡Únete ya!")
+ad_url = "dinero-facil.xyz"
+accent = Color(0.18431373, 0.7490196, 0.3529412, 1)
+
 [node name="Collisions" type="StaticBody2D" parent="." unique_id=1958732500]
 collision_mask = 0
 
 [node name="Taskbar" type="CollisionShape2D" parent="Collisions" unique_id=1458307615]
-position = Vector2(800, 344)
+position = Vector2(1600, 344)
 shape = SubResource("RectangleShape2D_5aedr")
 
 [node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=161144976]
@@ -98,7 +132,7 @@ position = Vector2(-16, 180)
 shape = SubResource("RectangleShape2D_nr2fl")
 
 [node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1292354208]
-position = Vector2(1616, 180)
+position = Vector2(3216, 180)
 shape = SubResource("RectangleShape2D_huro6")
 
 [node name="HintBack" type="Label" parent="." unique_id=1786122676]
@@ -184,6 +218,75 @@ ad_url = "robucks-gen.click"
 accent = Color(0.8392157, 0.2, 0.2901961, 1)
 closes_when_stepped = true
 
+[node name="Popup6" type="AnimatableBody2D" parent="SpamPopups" unique_id=2142992638]
+position = Vector2(1480, 246)
+script = ExtResource("3_5lg4o")
+size = Vector2(96, 38)
+ad_title = "Stim: TARJETA $100"
+ad_lines = PackedStringArray("Regalo de un amigo", "Inicia sesión aquí")
+ad_url = "stim-regalo.xyz"
+accent = Color(0.1764706, 0.43529412, 0.83137256, 1)
+
+[node name="Popup7" type="AnimatableBody2D" parent="SpamPopups" unique_id=1199130909]
+position = Vector2(1600, 226)
+script = ExtResource("3_5lg4o")
+size = Vector2(96, 38)
+ad_title = "Pokimon GO+"
+ad_lines = PackedStringArray("Pokébolas infinitas", "Comparte tu ubicación")
+ad_url = "pokimon-plus.click"
+accent = Color(0.95, 0.75, 0.15, 1)
+closes_when_stepped = true
+
+[node name="Popup8" type="AnimatableBody2D" parent="SpamPopups" unique_id=1489847499]
+position = Vector2(1720, 236)
+script = ExtResource("3_5lg4o")
+size = Vector2(96, 38)
+ad_title = "Clash Royal GEMAS"
+ad_lines = PackedStringArray("999.999 gemas gratis", "Verifica tu cuenta")
+ad_url = "gemas-ya.top"
+accent = Color(0.5411765, 0.30980393, 1, 1)
+move_offset = Vector2(0, -36)
+move_time = 1.5
+
+[node name="Popup9" type="AnimatableBody2D" parent="SpamPopups" unique_id=1946837192]
+position = Vector2(2320, 248)
+script = ExtResource("3_5lg4o")
+size = Vector2(96, 38)
+ad_title = "Fri Fayer DIAMANTES"
+ad_lines = PackedStringArray("Diamantes al instante", "Solo tu número y PIN")
+ad_url = "diamantes-fri.xyz"
+accent = Color(1, 0.54901963, 0.16470589, 1)
+
+[node name="Popup10" type="AnimatableBody2D" parent="SpamPopups" unique_id=2146445860]
+position = Vector2(2440, 238)
+script = ExtResource("3_5lg4o")
+size = Vector2(96, 38)
+ad_title = "Valorante PUNTOS"
+ad_lines = PackedStringArray("Skins de cuchillo gratis", "Desactiva el antivirus")
+ad_url = "vp-gratis.click"
+accent = Color(0.8392157, 0.2, 0.2901961, 1)
+move_offset = Vector2(110, 0)
+move_time = 1.8
+
+[node name="Popup11" type="AnimatableBody2D" parent="SpamPopups" unique_id=320410946]
+position = Vector2(2660, 230)
+script = ExtResource("3_5lg4o")
+size = Vector2(96, 38)
+ad_title = "Brawl Starz"
+ad_lines = PackedStringArray("Todos los brawlers", "Paga solo el envío")
+ad_url = "brawl-regalo.top"
+accent = Color(0.18431373, 0.7490196, 0.3529412, 1)
+closes_when_stepped = true
+
+[node name="Popup12" type="AnimatableBody2D" parent="SpamPopups" unique_id=1998632805]
+position = Vector2(2780, 240)
+script = ExtResource("3_5lg4o")
+size = Vector2(110, 38)
+ad_title = "Zeldo PIRATA"
+ad_lines = PackedStringArray("Descarga sin pagar", "Ejecuta instalador.exe")
+ad_url = "zeldo-free.xyz"
+accent = Color(0.1764706, 0.43529412, 0.83137256, 1)
+
 [node name="TrapAds" type="Node2D" parent="." unique_id=1055946313]
 
 [node name="Trap1" type="Area2D" parent="TrapAds" unique_id=947909244]
@@ -256,6 +359,111 @@ size = Vector2(80, 14)
 label = "CLIC AQUÍ"
 is_hazard = true
 
+[node name="Trap9" type="Area2D" parent="TrapAds" unique_id=579499921]
+position = Vector2(1500, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(100, 14)
+label = "VER OFERTA"
+is_hazard = true
+
+[node name="Trap10" type="Area2D" parent="TrapAds" unique_id=2021583681]
+position = Vector2(1600, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(100, 14)
+is_hazard = true
+
+[node name="Trap11" type="Area2D" parent="TrapAds" unique_id=1390703502]
+position = Vector2(1700, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(100, 14)
+label = "¡GANASTE!"
+is_hazard = true
+
+[node name="Trap12" type="Area2D" parent="TrapAds" unique_id=1434626946]
+position = Vector2(1900, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(36, 14)
+label = "CLIC AQUÍ"
+is_hazard = true
+
+[node name="Trap13" type="Area2D" parent="TrapAds" unique_id=1295201396]
+position = Vector2(2030, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(36, 14)
+label = "DESCARGAR"
+is_hazard = true
+
+[node name="Trap14" type="Area2D" parent="TrapAds" unique_id=1003263729]
+position = Vector2(2160, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(36, 14)
+label = "CLIC AQUÍ"
+is_hazard = true
+
+[node name="Trap16" type="Area2D" parent="TrapAds" unique_id=1329582151]
+position = Vector2(2360, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(88, 14)
+label = "INSTALAR YA"
+is_hazard = true
+
+[node name="Trap17" type="Area2D" parent="TrapAds" unique_id=1276416139]
+position = Vector2(2448, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(88, 14)
+is_hazard = true
+
+[node name="Trap18" type="Area2D" parent="TrapAds" unique_id=1909043942]
+position = Vector2(2536, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(88, 14)
+label = "RECLAMAR PREMIO"
+is_hazard = true
+
+[node name="Trap19" type="Area2D" parent="TrapAds" unique_id=1668820540]
+position = Vector2(2624, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(88, 14)
+label = "VER OFERTA"
+is_hazard = true
+
+[node name="Trap20" type="Area2D" parent="TrapAds" unique_id=1767676916]
+position = Vector2(2712, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(88, 14)
+is_hazard = true
+
+[node name="Trap21" type="Area2D" parent="TrapAds" unique_id=1749515103]
+position = Vector2(2800, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(80, 14)
+label = "CLIC AQUÍ"
+is_hazard = true
+
 [node name="SpamMail" type="Node2D" parent="." unique_id=2065767524]
 
 [node name="MailRainA" type="Node2D" parent="SpamMail" unique_id=311649468]
@@ -269,12 +477,28 @@ position = Vector2(1000, 64)
 script = ExtResource("7_5aedr")
 interval = 0.65
 
+[node name="MailRainC" type="Node2D" parent="SpamMail" unique_id=1154209172]
+position = Vector2(1820, 64)
+script = ExtResource("7_5aedr")
+width = 480.0
+interval = 0.6
+
+[node name="MailRainD" type="Node2D" parent="SpamMail" unique_id=1712815966]
+position = Vector2(2400, 64)
+script = ExtResource("7_5aedr")
+width = 480.0
+interval = 0.85
+
+[node name="RestorePoint" type="Area2D" parent="." unique_id=1760161149]
+position = Vector2(1400, 304)
+script = ExtResource("12_rstpt")
+
 [node name="AccountWindow" type="Node2D" parent="." unique_id=570698044]
-position = Vector2(1396, 304)
+position = Vector2(2996, 304)
 script = ExtResource("8_nr2fl")
 
 [node name="AccountTab" type="Area2D" parent="." unique_id=334421268 node_paths=PackedStringArray("account_window")]
-position = Vector2(1448, 272)
+position = Vector2(3048, 272)
 script = ExtResource("9_huro6")
 account_window = NodePath("../AccountWindow")
 prompt_text = "E: cambiar la contraseña"
@@ -296,7 +520,7 @@ on_ready = true
 shape = SubResource("RectangleShape2D_13a7j")
 
 [node name="FoundError" type="Area2D" parent="QuestTriggers" unique_id=613482183]
-position = Vector2(1356, 176)
+position = Vector2(2956, 176)
 script = ExtResource("10_iofjp")
 quest_id = &"contrasena_profesor"
 step_id = &"cruzar_spam"

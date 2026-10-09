@@ -175,6 +175,7 @@ func _press(action: String) -> void:
 
 func _frames(count: int) -> void:
 	for i in count:
+		await process_frame  # Teclas y HUD se procesan en cuadros de dibujo.
 		await physics_frame
 
 

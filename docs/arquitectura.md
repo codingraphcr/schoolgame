@@ -196,7 +196,7 @@ para que compilen también en las pruebas de línea de comandos.
   Ariel): puerta principal con cartel BIENVENIDOS, ayudas de controles y casilleros que hay que saltar. **"Jugar"
   empieza aquí.** Salida derecha → Pasillo (`desde_entrada`); salida izquierda del Pasillo → Entrada (`desde_pasillo`).
 - `world/rooms/room.gd` (`Room`): calcula los límites de la cámara a partir del `TileMapLayer` y coloca al jugador en el `SpawnPoint`.
-  Esc vuelve al menú (temporal, hasta que exista la pausa). Caer fuera cuenta como peligro; al morir se reaparece en `checkpoint` (o `SpawnPoint`). Sacude la cámara al recibir daño.
+  Esc vuelve al menú (temporal, hasta que exista la pausa). Caer fuera cuenta como peligro; al morir se reaparece en `checkpoint` (un Node2D: banco o `RestorePoint`; si no hay, `SpawnPoint`). Sacude la cámara al recibir daño.
 - `world/camera/` (`GameCamera`): zoom ×2, suavizado, mirada hacia adelante, adelanto hacia abajo en caídas rápidas y margen vertical.
 - `world/effects/ring_burst.gd` (`RingBurst`): anillo que se expande; efecto reutilizable (doble salto, impactos).
 - `world/tilesets/graybox_tileset.tres`: tiles de prueba (bloque sólido y plataforma de un sentido).
@@ -258,8 +258,20 @@ Diálogos en `data/dialogues/prologo/`: `profesor_pedido.tres` (pide revisar la 
    cierra la pantalla de carga y Kai se arma desde píxeles (`DigitalDive.materialize()`).
 4. Las salas digitales usan `Room.player_tint` (Kai celeste: su alma digital) y `Room.room_size` (no tienen tiles).
 
-`world/zones/pc_profesor/escritorio.tscn`: **nivel de SPAM** dentro de la computadora del profesor (1600 px, solo caminar
+`world/zones/pc_profesor/escritorio.tscn`: **nivel de SPAM** dentro de la computadora del profesor (3200 px, solo caminar
 y saltar). La salida izquierda vuelve al laboratorio (entrada `desde_pc`, también con materialización).
+
+Recorrido, de izquierda a derecha:
+
+| Zona | x | Obstáculos |
+|---|---|---|
+| A | 260–940 | Lluvia de correos A, trampa suelta y escalera MineKraft → Terrarya → GTA 6 (se cierra) sobre trampas |
+| B | 940–1300 | Lluvia B, Fortnait (se mueve) y Robucks (se cierra) sobre trampas |
+| — | 1400 | **Punto de restauración** (`RestorePoint`) |
+| C | 1480–1830 | Escalera Stim → Pokimon GO+ (se cierra) → Clash Royal (sube y baja) sobre un foso de trampas |
+| D | 1820–2300 | Lluvia C (la más intensa) y 3 vallas cortas que hay que saltar |
+| E | 2320–2900 | Lluvia D, Fri Fayer → Valorante (se mueve) → Brawl Starz (se cierra) → Zeldo sobre un foso largo |
+| Final | 2956–3100 | «¡Profe, aquí está el error!» y la cuenta del profesor |
 
 **Componentes de SPAM** (`world/digital/spam/`, se ven también en el editor y sirven para otros niveles):
 
@@ -267,9 +279,11 @@ y saltar). La salida izquierda vuelve al laboratorio (entrada `desde_pc`, tambi�
 |---|---|
 | `SpamPopup` (AnimatableBody2D) | Ventana de anuncio cuya barra de título es una plataforma de un sentido. `move_offset` / `move_time` (se mueve de ida y vuelta y lleva a Kai), `closes_when_stepped` (parpadea, se cierra al pisarla y vuelve a abrirse). Textos editables: `ad_title`, `ad_lines`, `ad_url`, `accent` |
 | `TrapAd` (HitboxComponent) | Botón "¡DESCARGAR GRATIS!": tocarlo es como pisar pinchos (1 máscara y vuelta al suelo seguro) |
+| `RestorePoint` (`world/digital/`, Area2D) | Punto de restauración: al pasar Kai pasa a ser el `checkpoint` de la sala (si muere reaparece ahí). No cura. Muestra «Punto de restauración creado» |
 | `SpamMailSpawner` + `SpamMail` | Lluvia de correos en una franja, solo con Kai cerca. Cada correo avisa parpadeando (0,35 s), cae balanceándose (200 px/s), quita 1 máscara y empuja. El 80 % (`aimed_ratio`) apunta a Kai: la mitad cae donde estaba hace 0,15 s (`aim_delay`) y la otra mitad (`lead_ratio`) se adelanta a donde estará si sigue corriendo igual (`lead_amount`). Quedarse quieto o correr siempre al mismo ritmo es peligroso: hay que ver el parpadeo y cambiar el paso. En la PC del profesor, la lluvia A cubre también los saltos entre pop-ups |
 
-Los anuncios usan **nombres parodia** (MineKraft, Terrarya, GTA 6 anticipado, Fortnait, Robucks, Amung Us) con señales de
+Los anuncios usan **nombres parodia** (MineKraft, Terrarya, GTA 6 anticipado, Fortnait, Robucks, Amung Us, Stim, Pokimon GO+,
+Clash Royal, Fri Fayer, Valorante, Brawl Starz, Zeldo) con señales de
 estafa reales: urgencia, premios, pedir la contraseña, "desactiva tu antivirus" y direcciones raras (`.xyz`, `.click`, `.top`).
 Al final, `AccountWindow` (cuenta del profesor: contraseña 123456, sin verificación en dos pasos) y `AccountTab`
 ("E: cambiar la contraseña"; el combate con la mini espada es H4c).
@@ -372,6 +386,6 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_dialogue.gd` | Formato de los diálogos, aviso «E: hablar», caja de diálogo (letra por letra, completar, avanzar, cerrar), controles bloqueados, marca del profesor y recordatorio |
 | `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
 | `test_digital_dive.gd` | La computadora absorbe a Kai (cámara, desaparición), pantalla de carga, llegada al escritorio, materialización, alma digital celeste, límites y regreso al laboratorio |
-| `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa solo saltando (bot) y llegada a la cuenta del profesor |
+| `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa de 3200 px solo saltando (bot), punto de restauración (activarlo y reaparecer ahí al morir) y llegada a la cuenta del profesor |
 | `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

@@ -31,7 +31,7 @@ func _run() -> void:
 	player.damage.hurt.connect(func(_hit: HitData) -> void: _hurts += 1)
 	await _until(func() -> bool: return state.get_current_step(&"contrasena_profesor") == &"cruzar_spam")
 	_check(state.get_current_step(&"contrasena_profesor") == &"cruzar_spam", "al entrar a la PC, la misión pide cruzar el SPAM")
-	_check(room.camera.limit_right == 1600, "el nivel mide 1600 px")
+	_check(room.camera.limit_right == 3200, "el nivel mide 3200 px")
 
 	await _test_popups()
 	await _test_traps_and_mail()
@@ -150,11 +150,47 @@ func _test_route() -> void:
 	await _hop(1110.0, 226.0, "Fortnait → Robucks")
 	await _hop(1268.0, FLOOR_Y, "Robucks → suelo después de las trampas", 0.0)
 	_check(player.global_position.x > 1300.0 and _hurts == 0, "la segunda zona de trampas se cruza sin daño (x=%.0f)" % player.global_position.x)
+	# Punto de restauración: desde aquí, morir ya no devuelve al principio.
+	var restore := room.get_node("RestorePoint") as RestorePoint
+	await _walk_to(1410.0)
+	_check(room.checkpoint == restore and restore.active, "pasar por el punto de restauración lo activa")
+	# Zona C: escalera de pop-ups (el último sube y baja) sobre un foso de trampas.
+	_hurts = 0
+	await _hop(1474.0, 246.0, "suelo → Stim")
+	await _hop(1568.0, 226.0, "Stim → Pokimon (se cierra)")
+	await _hop(1688.0, 218.0, "Pokimon → Clash Royal (sube y baja)", 18.0)
+	await _walk_to(1830.0)
+	_check(player.global_position.x > 1800.0 and player.is_on_floor() and _hurts == 0,
+		"la tercera zona de trampas se cruza sin daño (x=%.0f)" % player.global_position.x)
+	# Zona D: vallas cortas (bajo la lluvia de correos en el juego).
+	_hurts = 0
+	for trap_x in [1900.0, 2030.0, 2160.0]:
+		await _hop(trap_x - 32.0, FLOOR_Y, "valla en x=%.0f" % trap_x, 0.0)
+	_check(_hurts == 0, "las vallas se saltan sin daño (x=%.0f)" % player.global_position.x)
+	# Zona E: foso largo con un pop-up que se mueve y otro que se cierra.
+	_hurts = 0
+	await _hop(2296.0, 248.0, "suelo → Fri Fayer")
+	var sliding := room.get_node("SpamPopups/Popup10") as SpamPopup
+	for i in 400:
+		await physics_frame
+		if sliding.global_position.x < 2448.0:
+			break
+	await _hop(2408.0, 238.0, "Fri Fayer → Valorante (se mueve)")
+	await _hop(2560.0, 230.0, "Valorante → Brawl Starz (se cierra)")
+	await _hop(2748.0, 240.0, "Brawl Starz → Zeldo")
+	await _walk_to(2920.0)
+	_check(player.global_position.x > 2880.0 and player.is_on_floor() and _hurts == 0,
+		"el foso largo se cruza sin daño (x=%.0f)" % player.global_position.x)
+	# Morir después del punto de restauración devuelve a él, no al principio.
+	player.damage.died.emit()
+	await _until(func() -> bool: return absf(player.global_position.x - restore.global_position.x) < 2.0)
+	_check(absf(player.global_position.x - restore.global_position.x) < 2.0, "al morir, Kai reaparece en el punto de restauración")
+	await _until(func() -> bool: return not player.damage.is_respawning and not player.controls_locked)
 
 
 func _test_account() -> void:
 	var box := room.get_node("CombatHUD/DialogueBox") as DialogueBox
-	player.teleport_to(Vector2(1320, FLOOR_Y))
+	player.teleport_to(Vector2(2920, FLOOR_Y))
 	Input.action_press("move_right")
 	for i in 120:
 		await physics_frame
@@ -169,10 +205,22 @@ func _test_account() -> void:
 		await _frames(3)
 	await _frames(5)
 	_check(state.get_current_step(&"contrasena_profesor") == &"cambiar_contrasena", "la misión pide cambiar la contraseña")
-	player.teleport_to(Vector2(1448, FLOOR_Y))
+	player.teleport_to(Vector2(3048, FLOOR_Y))
 	await _frames(8)
 	var tab := room.get_node("AccountTab") as Interactable
 	_check(tab._prompt.visible and tab._prompt.text == "E: cambiar la contraseña", "la pestaña «Cambiar contraseña» se puede usar")
+
+
+## Camina a la derecha hasta x (sin saltar) y espera a estar en el suelo.
+func _walk_to(x: float) -> void:
+	Input.action_press("move_right")
+	for i in 400:
+		await physics_frame
+		if player.global_position.x >= x:
+			break
+	Input.action_release("move_right")
+	await _until(func() -> bool: return player.is_on_floor())
+	await _frames(2)
 
 
 ## Salta en jump_at_x corriendo a la derecha y comprueba que aterriza a la altura expected_y.
@@ -192,7 +240,7 @@ func _hop(jump_at_x: float, expected_y: float, description: String, tolerance :=
 	Input.action_release("move_right")
 	await _frames(2)
 	var ok := absf(player.global_position.y - expected_y) <= maxf(tolerance, 1.0)
-	_check(ok, "ruta: %s (y=%.0f)" % [description, player.global_position.y])
+	_check(ok, "ruta: %s (x=%.0f, y=%.0f)" % [description, player.global_position.x, player.global_position.y])
 
 
 ## Espera (en cuadros de física) a que se cumpla la condición, hasta unos 10 s de juego.
@@ -200,6 +248,7 @@ func _until(condition: Callable) -> void:
 	for i in 600:
 		if condition.call():
 			return
+		await process_frame
 		await physics_frame
 
 
@@ -252,6 +301,7 @@ func _action(action: StringName) -> void:
 
 func _frames(count: int) -> void:
 	for i in count:
+		await process_frame  # Teclas y HUD se procesan en cuadros de dibujo.
 		await physics_frame
 
 

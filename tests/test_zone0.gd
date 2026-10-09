@@ -58,6 +58,7 @@ func _test_new_game(room: Room, player: Player) -> void:
 	_check(not state.vision_unlocked and state.nullblade_stage == 0, "partida nueva: sin Visión Digital ni Nullblade")
 	_check(state.credits == 0, "partida nueva: 0 créditos")
 	_check(room.get_node("CombatHUD/Masks").get_child_count() == 4, "el HUD muestra 4 máscaras")
+	await _until(func() -> bool: return player.is_on_floor())
 	_check(player.is_on_floor() and absf(player.global_position.y - FLOOR_Y) < 1.0, "Kai aparece de pie en la entrada")
 	var kai := player.get_node("Visual/Body/Kai") as KaiVisual
 	_check(kai != null and kai.current_animation() == &"quieto", "Kai es el diseño de Ariel (animación quieto)")
@@ -153,8 +154,18 @@ func _press(action: String) -> void:
 	Input.action_press(action)
 
 
+## Espera (en cuadros de física) a que se cumpla la condición, hasta unos 10 s de juego.
+func _until(condition: Callable) -> void:
+	for i in 600:
+		if condition.call():
+			return
+		await process_frame
+		await physics_frame
+
+
 func _frames(count: int) -> void:
 	for i in count:
+		await process_frame  # Teclas y HUD se procesan en cuadros de dibujo.
 		await physics_frame
 
 

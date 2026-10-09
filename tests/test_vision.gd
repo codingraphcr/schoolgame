@@ -65,6 +65,7 @@ func _test_unlocked() -> void:
 	_check(vision.is_active() and not vision.involuntary, "Q enciende la Visión Digital")
 	_check(room.get_node("DigitalLayer/Network").visible and vision.blend > 0.9, "se ve la red (capa digital)")
 	var ambient := room.get_node("Ambient") as CanvasModulate
+	await _until(func() -> bool: return ambient.color.v < 0.5)
 	_check(ambient.color.v < 0.5, "el mundo físico se oscurece")
 	_check(player.get_collision_mask_value(7), "Kai puede pisar el mundo digital (capa 7)")
 
@@ -104,7 +105,7 @@ func _test_recharge_and_duration() -> void:
 	player.teleport_to(FRAGMENT)
 	await _frames(10)
 	_check(state.credits == credits_before, "el fragmento no se puede recoger dos veces")
-	await _wait(3.3)
+	await _until(func() -> bool: return not vision.is_active())
 	_check(not vision.is_active() and vision.state == vision.State.RECHARGING, "se apaga sola al terminar su duración")
 
 
@@ -131,11 +132,13 @@ func _until(condition: Callable) -> void:
 	for i in 600:
 		if condition.call():
 			return
+		await process_frame
 		await physics_frame
 
 
 func _frames(count: int) -> void:
 	for i in count:
+		await process_frame  # Teclas y HUD se procesan en cuadros de dibujo.
 		await physics_frame
 
 
