@@ -54,6 +54,8 @@ var _decision_log: Array[Dictionary] = []
 ## Créditos del jugador (mejoras de habilidades). Se pierde una parte al morir.
 var credits := 0
 var max_masks := START_MASKS
+## Máscaras actuales al salir de una sala (-1 = llenas). Así cambiar de sala no cura.
+var current_masks := -1.0
 ## 0 = sin dash · 1 Dash · 2 Dash Fantasma · 3 Esquiva Perfecta.
 var dash_level := 0
 var can_double_jump := false
@@ -254,6 +256,7 @@ func unlock_vision(unlocked := true) -> void:
 func _reset_progress() -> void:
 	credits = 0
 	max_masks = START_MASKS
+	current_masks = -1.0
 	dash_level = 0
 	can_double_jump = false
 	can_wall_jump = false
@@ -277,6 +280,7 @@ func to_dict() -> Dictionary:
 		"player": {
 			"credits": credits,
 			"max_masks": max_masks,
+			"current_masks": current_masks,
 			"dash_level": dash_level,
 			"can_double_jump": can_double_jump,
 			"can_wall_jump": can_wall_jump,
@@ -307,6 +311,7 @@ func from_dict(data: Dictionary) -> void:
 	var player: Dictionary = data.get("player", {})
 	credits = int(player.get("credits", 0))
 	max_masks = maxi(int(player.get("max_masks", START_MASKS)), 1)
+	current_masks = float(player.get("current_masks", -1.0))
 	dash_level = clampi(int(player.get("dash_level", 0)), 0, MAX_DASH_LEVEL)
 	can_double_jump = bool(player.get("can_double_jump", false))
 	can_wall_jump = bool(player.get("can_wall_jump", false))

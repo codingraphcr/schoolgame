@@ -1,10 +1,12 @@
 extends SceneTree
-## Prueba automática: primera sala real (Zona 0: Pasillo + Laboratorio) con el arte de Ariel.
+## Prueba automática: salas del prólogo (Entrada y Pasillo + Laboratorio) con el arte de Ariel,
+## partida nueva, transiciones entre salas y máscaras que se conservan al cambiar de sala.
 ## Ejecutar: godot --headless --path . --script res://tests/test_zone0.gd
 
 const MENU := "res://ui/menus/main_menu/main_menu.tscn"
 const FLOOR_Y := 304.0
 const TRAY_1 := Vector2(488, 304)  # Bajo la primera bandeja de cables (superficie en y=256)
+const OBSTACLE_LEFT := 424.0  # Casilleros de la entrada que hay que saltar
 
 var _failures := 0
 var state: Node
@@ -26,14 +28,24 @@ func _run() -> void:
 	current_scene.get_node("%PlayButton").pressed.emit()
 	await create_timer(1.2, true, false, true).timeout
 	var room := current_scene as Room
-	_check(room != null and room.name == "PasilloLaboratorio", "Jugar abre el Pasillo + Laboratorio")
+	_check(room != null and room.name == "Entrada", "Jugar abre la Entrada del colegio")
 	if room == null:
 		quit(1)
 		return
 	var player := room.player
 
 	await _test_new_game(room, player)
+	await _test_entrada(room, player)
+	room = current_scene as Room
+	_check(room != null and room.name == "PasilloLaboratorio", "la salida derecha lleva al Pasillo + Laboratorio")
+	if room == null:
+		quit(1)
+		return
+	player = room.player
+	_check(absf(player.global_position.x - 40.0) < 16.0 and player.facing == 1, "Kai aparece por la entrada del pasillo, mirando a la derecha (x=%.0f)" % player.global_position.x)
+	_check(player.health.current == 3.0, "las máscaras se conservan al cambiar de sala (quedan %d)" % player.health.current)
 	await _test_layout(room, player)
+	await _test_back_to_entrada(player)
 	await _test_back_to_menu()
 
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
@@ -46,13 +58,55 @@ func _test_new_game(room: Room, player: Player) -> void:
 	_check(not state.vision_unlocked and state.nullblade_stage == 0, "partida nueva: sin Visión Digital ni Nullblade")
 	_check(state.credits == 0, "partida nueva: 0 créditos")
 	_check(room.get_node("CombatHUD/Masks").get_child_count() == 4, "el HUD muestra 4 máscaras")
-	_check(player.is_on_floor() and absf(player.global_position.y - FLOOR_Y) < 1.0, "Kai aparece de pie en el pasillo")
+	_check(player.is_on_floor() and absf(player.global_position.y - FLOOR_Y) < 1.0, "Kai aparece de pie en la entrada")
 	var kai := player.get_node("Visual/Body/Kai") as KaiVisual
 	_check(kai != null and kai._animation.current_animation == &"quieto", "Kai es el diseño de Ariel por huesos (animación quieto)")
 	await _press("dash")
 	await _frames(2)
 	Input.action_release("dash")
 	_check(not player.is_dashing, "sin dash adquirido, Shift no hace nada")
+
+
+func _test_entrada(room: Room, player: Player) -> void:
+	var camera := room.camera
+	_check(camera.limit_right == 800 and camera.limit_bottom == 368, "límites de cámara de la entrada (0, 0, %d, %d)" % [camera.limit_right, camera.limit_bottom])
+	Input.action_press("move_right")
+	# Camina hasta quedar frenado contra los casilleros.
+	await _frames(30)
+	for i in 300:
+		await physics_frame
+		if player.global_position.x > OBSTACLE_LEFT - 40.0 and is_zero_approx(player.get_real_velocity().x):
+			break
+	_check(player.global_position.x < OBSTACLE_LEFT and player.global_position.x > OBSTACLE_LEFT - 12.0,
+		"los casilleros bloquean el paso caminando (x=%.0f)" % player.global_position.x)
+	await _press("jump")
+	await _frames(45)
+	Input.action_release("jump")
+	await _frames(30)
+	_check(player.global_position.x > OBSTACLE_LEFT + 40.0, "saltando se pasan los casilleros (x=%.0f)" % player.global_position.x)
+	player.health.take_damage(1.0)
+	for i in 300:
+		await physics_frame
+		if current_scene == null or current_scene.name != "Entrada":
+			break
+	Input.action_release("move_right")
+	await create_timer(1.0, true, false, true).timeout
+
+
+func _test_back_to_entrada(player: Player) -> void:
+	player.teleport_to(Vector2(60, FLOOR_Y))
+	Input.action_press("move_left")
+	for i in 200:
+		await physics_frame
+		if current_scene == null or current_scene.name != "PasilloLaboratorio":
+			break
+	Input.action_release("move_left")
+	await create_timer(1.0, true, false, true).timeout
+	var room := current_scene as Room
+	_check(room != null and room.name == "Entrada", "la salida izquierda del pasillo vuelve a la entrada")
+	if room:
+		_check(absf(room.player.global_position.x - 760.0) < 16.0 and room.player.facing == -1,
+			"Kai aparece junto a la salida, mirando a la izquierda (x=%.0f)" % room.player.global_position.x)
 
 
 func _test_layout(room: Room, player: Player) -> void:

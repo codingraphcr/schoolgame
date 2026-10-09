@@ -153,6 +153,11 @@ func apply_progress(progress: Node, full_health := false) -> void:
 		health.health_changed.emit(health.current, health.max_health)
 
 
+## Hace que Kai mire hacia un lado (1 = derecha, -1 = izquierda).
+func face(direction: int) -> void:
+	_set_facing(1 if direction >= 0 else -1)
+
+
 ## Empuje al recibir un golpe: interrumpe el dash y bloquea la dirección un instante.
 func apply_knockback(force: Vector2) -> void:
 	if is_dashing:

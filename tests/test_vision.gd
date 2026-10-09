@@ -3,7 +3,7 @@ extends SceneTree
 ## puente de datos, fragmento oculto y capa digital) en el Pasillo + Laboratorio.
 ## Ejecutar: godot --headless --path . --script res://tests/test_vision.gd
 
-const MENU := "res://ui/menus/main_menu/main_menu.tscn"
+const PASILLO := "res://world/zones/zone0/pasillo_laboratorio.tscn"
 const SERVER := Vector2(716, 304)  # Dentro del área del evento del laboratorio
 const ABOVE_BRIDGE := Vector2(600, 130)  # El puente de datos está en y=148
 const FRAGMENT := Vector2(640, 148)
@@ -29,10 +29,10 @@ func _run() -> void:
 	vision.duration = 3.0
 	vision.cooldown = 1.0
 
-	change_scene_to_file(MENU)
-	await _frames(20)
-	current_scene.get_node("%PlayButton").pressed.emit()
-	await _wait(1.2)
+	state.reset()
+	vision.reset()
+	change_scene_to_file(PASILLO)
+	await _wait(0.5)
 	room = current_scene as Room
 	player = room.player
 
