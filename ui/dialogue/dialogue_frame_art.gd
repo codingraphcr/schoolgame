@@ -14,8 +14,8 @@ extends Control
 	set(value):
 		mirrored = value
 		queue_redraw()
-## Cuánto más bajo es el lado del retrato (en píxeles).
-@export var tilt := 34.0:
+## Cuánto más bajo es el lado del retrato, en píxeles (0 = caja recta, como en la hoja de Ariel).
+@export var tilt := 0.0:
 	set(value):
 		tilt = value
 		queue_redraw()

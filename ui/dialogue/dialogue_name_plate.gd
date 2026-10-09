@@ -48,13 +48,22 @@ func _draw() -> void:
 		edge.append(point + Vector2(-5 if mirrored else 5, 5))
 	draw_colored_polygon(edge, dark)
 	draw_polygon(plate, PackedColorArray([PLATE_TOP, PLATE_TOP, PLATE_BOTTOM, PLATE_BOTTOM]))
-	# Borde de color arriba y en el lado de afuera; línea fina abajo.
+	# Borde fino de color alrededor, más grueso arriba y en el lado de afuera.
+	var outline := plate.duplicate()
+	outline.append(plate[0])
+	draw_polyline(outline, accent, 2.0)
 	draw_line(plate[0], plate[1], accent, 3.0)
 	if mirrored:
 		draw_line(plate[0], plate[3], accent, 3.0)
 	else:
 		draw_line(plate[1], plate[2], accent, 3.0)
-	draw_line(plate[3] + Vector2(0, -2), plate[2] + Vector2(0, -2), Color(accent, 0.45), 1.0)
+	# Terminal de circuito en la punta de afuera (como en la hoja de Ariel).
+	var tip := plate[3] if mirrored else plate[2]
+	var away := -1.0 if mirrored else 1.0
+	var trace := PackedVector2Array([tip + Vector2(away * 4.0, -6.0), tip + Vector2(away * 14.0, -6.0), tip + Vector2(away * 22.0, 2.0)])
+	draw_polyline(trace, accent, 2.0)
+	draw_circle(trace[2], 3.5, accent)
+	draw_circle(trace[2], 1.5, PLATE_BOTTOM)
 	# Emblema hexagonal.
 	var center := Vector2(w - EMBLEM_SPACE * 0.5 - 4.0, h * 0.5) if mirrored else Vector2(EMBLEM_SPACE * 0.5 + 4.0, h * 0.5)
 	var radius := minf(h * 0.62, 30.0)

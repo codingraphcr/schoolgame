@@ -1,13 +1,13 @@
 shader_type canvas_item;
-// Funde los bordes del retrato con el juego (los retratos conservan el fondo de la ilustración).
+// Suaviza los bordes donde el retrato está cortado (sobre todo el que mira al centro de la pantalla).
 // El borde que mira hacia el centro de la pantalla se desvanece más; abajo queda sólido
 // porque lo tapa la caja de diálogo.
 
 // true si el borde que mira al centro está en UV.x = 1 (depende del lado y de si está volteado).
 uniform bool inner_at_uv_one = true;
-uniform float inner_fade : hint_range(0.0, 1.0) = 0.32;
-uniform float outer_fade : hint_range(0.0, 1.0) = 0.06;
-uniform float top_fade : hint_range(0.0, 1.0) = 0.16;
+uniform float inner_fade : hint_range(0.0, 1.0) = 0.14;
+uniform float outer_fade : hint_range(0.0, 1.0) = 0.02;
+uniform float top_fade : hint_range(0.0, 1.0) = 0.02;
 // 1 = hablando; menos = atenuado (el otro personaje habla).
 uniform float brightness : hint_range(0.0, 1.0) = 1.0;
 

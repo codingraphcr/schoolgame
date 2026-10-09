@@ -235,11 +235,11 @@ clara con marco del **color del personaje** (`accent` en su archivo de `data/cha
 
 - **Tamaño:** se muestra a 600 px de alto en una pantalla de 1280×720. Dibújalo de **al menos 360 px de alto**
   (cabeza y torso, como el retrato del profesor); más chico se ve borroso.
-- **Fondo:** puede tener fondo; los bordes se funden solos con el juego. Que la cara no quede pegada al borde.
+- **Fondo:** mejor **transparente** (o un fondo oscuro liso, que la herramienta borra sola). Que la cara no quede pegada al borde.
 - **Expresiones:** el mismo encuadre que el retrato normal, cambiando solo la cara (no primeros planos).
   En el diálogo se escriben así: `Prof. Álvarez [preocupado]: texto`. Si una expresión no existe, se usa el normal.
 - Cada personaje tiene un archivo en `data/characters/` (nombre, título, retrato, expresiones, lado y color).
-  Los retratos se recortan de las hojas con `tools/art/extraer_retratos.gd`.
+  Los retratos se recortan de `docs/arte/referencias/dialogos_hoja_concepto.webp` con `tools/art/extraer_retratos.gd`.
 
 ### 4.8 Nullblade y Aegis
 Los nombres y las mejoras de cada uno están en `docs/combate.md`. Aquí solo va cómo se dibujan.
