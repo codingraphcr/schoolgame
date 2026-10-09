@@ -40,9 +40,10 @@ func _ready() -> void:
 	_apply_weapon()
 
 
+## No se ataca durante el dash ni mientras Kai se cura (como en Hollow Knight).
 func can_attack() -> bool:
 	return weapon != null and player != null and not player.controls_locked and not player.is_dashing \
-		and _cooldown <= 0.0 and not is_attacking()
+		and not player.heal.active and _cooldown <= 0.0 and not is_attacking()
 
 
 func is_attacking() -> bool:

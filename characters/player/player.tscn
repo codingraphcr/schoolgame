@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://characters/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://components/combat/health_component.gd" id="2_health"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://characters/player/player_damage.gd" id="4_damage"]
 [ext_resource type="Script" path="res://characters/player/kai/kai_visual.gd" id="5_kai"]
 [ext_resource type="Script" path="res://characters/player/player_combat.gd" id="6_combat"]
+[ext_resource type="Script" path="res://characters/player/player_heal.gd" id="6_heal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(10, 22)
@@ -53,6 +54,10 @@ safe_ground_right = NodePath("../SafeGroundRight")
 
 [node name="Combat" type="Node" parent="."]
 script = ExtResource("6_combat")
+
+[node name="Heal" type="Node" parent="." node_paths=PackedStringArray("health")]
+script = ExtResource("6_heal")
+health = NodePath("../Health")
 
 [node name="Visual" type="Node2D" parent="."]
 

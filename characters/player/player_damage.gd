@@ -75,6 +75,7 @@ func fall_out_of_bounds() -> void:
 ## Devuelve al jugador a la vida tras morir (lo llama la sala al reaparecer).
 func revive() -> void:
 	health.restore_full()
+	player.set_energy(player.max_energy)
 	last_safe_position = player.global_position
 	_safe_history.clear()
 	is_respawning = false

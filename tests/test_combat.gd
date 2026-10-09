@@ -48,6 +48,10 @@ func _test_attack() -> void:
 	await _frames(2)
 	_check(player.get_node("Visual/Body/Kai").current_animation() == &"ataque_2", "cuando el golpe hace daño, Kai muestra el tajo de Ariel (ataque_2)")
 	_check(not combat.attack(), "no se puede atacar otra vez hasta que termina el golpe")
+	await _until(func() -> bool: return combat.can_attack())
+	player.heal.active = true
+	_check(not combat.can_attack(), "no se puede atacar mientras Kai se cura")
+	player.heal.active = false
 	var start_x := enemy.global_position.x
 	await _until(func() -> bool: return not combat.is_attacking())
 	await _frames(6)

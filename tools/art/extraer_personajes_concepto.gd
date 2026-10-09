@@ -23,7 +23,8 @@ const OUTLINE := Color("0a0d1c")
 
 ## Configuración por personaje.
 ##   reference/height: la pose de referencia queda con ese alto (fija la escala de todas).
-##   poses: zona de cada pose en la hoja. anchor_x (opcional): columna del centro del cuerpo si el
+##   poses: zona de cada pose en la hoja. feet_y (opcional): fila de los pies, si debajo hay efectos.
+##          anchor_x (opcional): columna del centro del cuerpo si el
 ##          cálculo automático (centro de la cabeza) no sirve. only_body: conserva solo la figura
 ##          principal (descarta, por ejemplo, un globo de diálogo que quedó dentro de la zona).
 ##   animations: poses en orden, cuadros por segundo y si se repiten.
@@ -94,6 +95,39 @@ const CHARACTERS := {
 			"notas": { "poses": ["notas_1", "notas_2", "notas_3", "notas_2"], "fps": 3.0, "loop": true },
 		},
 	},
+	# Curación de Kai (hoja de Ariel): en el suelo se arrodilla; en el aire se queda flotando.
+	# La pose "reposo" (de pie) solo fija la escala, para que quede del mismo tamaño que el resto.
+	# feet_y: fila de los pies en la hoja (los efectos de abajo no empujan a Kai hacia arriba).
+	"kai_curacion": {
+		"source": "res://docs/arte/referencias/kai_curacion_concepto.webp",
+		"out": "res://assets/art/characters/kai/hd/",
+		"prefix": "kai_hd_curacion",
+		"background": Color("010614"),
+		"tolerance": 0.06,
+		"remove_glow": true,
+		"reference": "reposo",
+		"height": 96,
+		"poses": {
+			"reposo": { "rect": Rect2i(1095, 135, 95, 180) },
+			"suelo_inicio": { "rect": Rect2i(60, 180, 130, 140), "feet_y": 310 },
+			"suelo_canalizar": { "rect": Rect2i(285, 135, 175, 185), "feet_y": 310 },
+			"suelo_restaurar": { "rect": Rect2i(515, 95, 235, 225), "feet_y": 310 },
+			"suelo_completar": { "rect": Rect2i(835, 140, 145, 180), "feet_y": 310 },
+			"aire_inicio": { "rect": Rect2i(45, 545, 150, 200), "feet_y": 735 },
+			"aire_canalizar": { "rect": Rect2i(285, 550, 155, 195), "feet_y": 730 },
+			"aire_restaurar": { "rect": Rect2i(525, 520, 225, 240), "feet_y": 735 },
+			"aire_completar": { "rect": Rect2i(820, 555, 160, 200), "feet_y": 745 },
+			"aire_descenso": { "rect": Rect2i(1060, 555, 135, 195), "feet_y": 745 },
+		},
+		"animations": {
+			"curar_suelo_inicio": { "poses": ["suelo_inicio"], "fps": 1.0, "loop": false },
+			"curar_suelo": { "poses": ["suelo_canalizar", "suelo_restaurar"], "fps": 5.0, "loop": true },
+			"curar_suelo_fin": { "poses": ["suelo_completar"], "fps": 1.0, "loop": false },
+			"curar_aire_inicio": { "poses": ["aire_inicio"], "fps": 1.0, "loop": false },
+			"curar_aire": { "poses": ["aire_canalizar", "aire_restaurar"], "fps": 5.0, "loop": true },
+			"curar_aire_fin": { "poses": ["aire_completar", "aire_descenso"], "fps": 6.0, "loop": false },
+		},
+	},
 }
 
 var _config: Dictionary
@@ -141,7 +175,7 @@ func _extract_character(character: String) -> void:
 		for i in anim.poses.size():
 			var frame: Dictionary = frames[anim.poses[i]]
 			var image: Image = frame.image
-			var at := Vector2i(i * width + width / 2 - frame.anchor_x, FEET_Y + 1 - image.get_height())
+			var at := Vector2i(i * width + width / 2 - frame.anchor_x, FEET_Y + 1 - frame.bottom)
 			strip.blend_rect(image, Rect2i(Vector2i.ZERO, image.get_size()), at)
 		var file_name := "%s_%s.png" % [_config.prefix, anim_name]
 		strip.save_png(out + file_name)
@@ -173,7 +207,9 @@ func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 		anchor = pose.anchor_x - rect.position.x - box.position.x
 	else:
 		anchor = _head_center(image)
-	return { "image": image, "anchor_x": anchor }
+	# Fila de los pies dentro del recorte (-1 = el borde de abajo).
+	var bottom: float = pose.feet_y - rect.position.y - box.position.y if pose.has("feet_y") else -1.0
+	return { "image": image, "anchor_x": anchor, "bottom": bottom }
 
 
 ## Centro horizontal de la cabeza: marca dónde está el cuerpo aunque la pose tenga un arma o una
@@ -239,7 +275,7 @@ func _scaled(cutout: Dictionary) -> Dictionary:
 	_clean_edges(padded)
 	var anchor := roundi(cutout.anchor_x * _scale) + 1
 	return {
-		"image": padded, "anchor_x": anchor,
+		"image": padded, "anchor_x": anchor, "bottom": padded.get_height() if cutout.bottom < 0.0 else roundi(cutout.bottom * _scale) + 1,
 		"half_width": maxi(anchor, padded.get_width() - anchor) + 2,
 	}
 
@@ -297,8 +333,16 @@ func _remove_background(img: Image) -> void:
 			continue
 		seen[p.y * w + p.x] = 1
 		var c := img.get_pixelv(p)
-		if Vector3(c.r - background.r, c.g - background.g, c.b - background.b).length() > tolerance:
+		if Vector3(c.r - background.r, c.g - background.g, c.b - background.b).length() > tolerance and not _is_glow(c):
 			continue
 		img.set_pixelv(p, Color(0, 0, 0, 0))
 		for step in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:
 			stack.append(p + step)
+
+
+## Resplandor lila oscuro alrededor de los efectos (solo si el personaje tiene "remove_glow"):
+## se borra si está pegado al fondo. La ropa negra no cuenta: es mucho más oscura (o gris).
+func _is_glow(c: Color) -> bool:
+	if not _config.get("remove_glow", false):
+		return false
+	return c.v > 0.15 and c.v < 0.5 and c.b - maxf(c.r, c.g) > 0.12

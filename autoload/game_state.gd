@@ -64,6 +64,8 @@ var max_masks := START_MASKS
 var current_masks := -1.0
 ## Barritas de energía para habilidades (el HUD las muestra debajo de los cristales).
 var max_energy_cells := START_ENERGY_CELLS
+## Energía al salir de una sala, en barritas (-1 = llena). Así cambiar de sala no la recarga.
+var current_energy := -1.0
 ## 0 = sin dash · 1 Dash · 2 Dash Fantasma · 3 Esquiva Perfecta.
 var dash_level := 0
 var can_double_jump := false
@@ -284,6 +286,7 @@ func _reset_progress() -> void:
 	credits = 0
 	max_masks = START_MASKS
 	max_energy_cells = START_ENERGY_CELLS
+	current_energy = -1.0
 	current_masks = -1.0
 	dash_level = 0
 	can_double_jump = false
@@ -402,6 +405,7 @@ func to_dict() -> Dictionary:
 			"max_masks": max_masks,
 			"current_masks": current_masks,
 			"max_energy_cells": max_energy_cells,
+			"current_energy": current_energy,
 			"dash_level": dash_level,
 			"can_double_jump": can_double_jump,
 			"can_wall_jump": can_wall_jump,
@@ -440,6 +444,7 @@ func from_dict(data: Dictionary) -> void:
 	max_masks = maxi(int(player.get("max_masks", START_MASKS)), 1)
 	current_masks = float(player.get("current_masks", -1.0))
 	max_energy_cells = clampi(int(player.get("max_energy_cells", START_ENERGY_CELLS)), 1, MAX_ENERGY_CELLS)
+	current_energy = float(player.get("current_energy", -1.0))
 	dash_level = clampi(int(player.get("dash_level", 0)), 0, MAX_DASH_LEVEL)
 	can_double_jump = bool(player.get("can_double_jump", false))
 	can_wall_jump = bool(player.get("can_wall_jump", false))

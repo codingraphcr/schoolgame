@@ -13,6 +13,9 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	# Velocidad normal del texto, sin importar lo que el jugador eligió en Opciones (no se guarda).
+	GameSettings.ensure_loaded()
+	GameSettings.text_speed = 1
 	_test_format()
 	var state := root.get_node("GameState")
 	state.reset()

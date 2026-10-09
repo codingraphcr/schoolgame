@@ -93,7 +93,7 @@ tinte de las siluetas).
 | `vision` (Visión Digital) | Q | LB |
 | `interact` | E | B |
 | `ultimate` (Dominio Nulo) | R | RT |
-| `heal` (mantener) | L | LT |
+| `heal` (mantener: curarse) | L | LT |
 | `aegis_platform` | F | Clic del stick derecho |
 | `grimorio` (abrir el Grimorio) | G | — |
 | `pause` | Esc | Start |
@@ -191,6 +191,8 @@ comportamiento en `_ai()` y sus reacciones en `_on_damaged()` / `_on_died()`. `a
 `credenciales`. Se agacha avisando (`TELEGRAPH`) y salta hacia Kai. Con la mitad de la vida entra en **fuerza bruta**
 (avisa menos y salta más seguido y más lejos). Cada golpe suelta una contraseña débil real (`123456`, `qwerty`…) y al
 morir se deshace en números. Dibujo vectorial provisional hasta que Ariel haga el suyo.
+
+**Curación:** `characters/player/player_heal.gd` (`PlayerHeal`, nodo `Heal`): manteniendo **L**, Kai canaliza su energía. Cada curación gasta **media barrita** (`Player.energy`, máximo `GameState.max_energy_cells`) y devuelve **1,5 cristales**. La primera tarda **1,141 s** (incluye **0,30 s** de inicio); manteniendo L y con energía, cada una más tarda **0,9 s**. Soltar antes cancela sin gastar; un golpe la corta; para volver a curarse hay que soltar y presionar L. En el suelo Kai se arrodilla y en el aire queda flotando (animaciones `curar_suelo*` / `curar_aire*` de `assets/art/characters/kai/hd/kai_hd_curacion.json`, extraídas de `docs/arte/referencias/kai_curacion_concepto.webp` con `tools/art/extraer_personajes_concepto.gd -- kai_curacion`). La energía se conserva entre salas (`GameState.current_energy`), se llena al reaparecer y `Player.add_energy()` queda para recompensas futuras.
 
 **Peligros:** `world/hazards/spikes.gd` (`Spikes`): pinchos con ancho configurable, visibles en el editor. Quitan medio cristal.
 
@@ -443,6 +445,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_player_movement.gd` | Correr y frenar, salto completo y corto, coyote time, jump buffer, hueco de 6, plataforma de un sentido, reaparición y límites de cámara |
 | `test_player_abilities.gd` | Dash (suelo, aire, reutilización, invulnerabilidad), doble salto, deslizamiento y salto de pared, bloqueo de habilidades no desbloqueadas |
 | `test_player_health.gd` | Máscaras, pinchos, suelo seguro, invulnerabilidad, empuje, contacto prolongado, escudo educativo, caída, muerte y niveles del dash |
+| `test_heal.gd` | Curación con L: no cura con la vida llena, tiempos (1,141 s y 0,9 s), 1,5 cristales por media barrita, quieto en el suelo, animaciones, cancelar al soltar, sin energía, flotando en el aire, un golpe la corta y el HUD de energía |
 | `test_zone0.gd` | "Jugar" abre la Entrada con partida nueva (sin habilidades), Kai de Ariel, HUD, casilleros que se saltan, transición al Pasillo y de vuelta (entrada y orientación correctas), máscaras que se conservan, recorrido hasta el laboratorio, bandejas como plataformas y Esc al menú |
 | `test_vision.gd` | Visión Digital bloqueada, desbloqueo, capa digital, oscurecimiento, puente de datos (capa 7), fragmento (una sola vez), apagado manual, recarga y fin por duración |
 | `test_dialogue.gd` | Formato de los diálogos, aviso «E: hablar», caja de diálogo (letra por letra, completar, avanzar, cerrar), controles bloqueados, marca del profesor y recordatorio |

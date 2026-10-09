@@ -1,0 +1,89 @@
+{
+	"animations": {
+		"curar_aire": {
+			"feet": [
+				64,
+				119
+			],
+			"file": "kai_hd_curacion_curar_aire.png",
+			"fps": 5.0,
+			"frame_size": [
+				128,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"curar_aire_fin": {
+			"feet": [
+				60,
+				119
+			],
+			"file": "kai_hd_curacion_curar_aire_fin.png",
+			"fps": 6.0,
+			"frame_size": [
+				120,
+				128
+			],
+			"frames": 2,
+			"loop": false
+		},
+		"curar_aire_inicio": {
+			"feet": [
+				60,
+				119
+			],
+			"file": "kai_hd_curacion_curar_aire_inicio.png",
+			"fps": 1.0,
+			"frame_size": [
+				120,
+				128
+			],
+			"frames": 1,
+			"loop": false
+		},
+		"curar_suelo": {
+			"feet": [
+				72,
+				119
+			],
+			"file": "kai_hd_curacion_curar_suelo.png",
+			"fps": 5.0,
+			"frame_size": [
+				144,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"curar_suelo_fin": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_curacion_curar_suelo_fin.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": false
+		},
+		"curar_suelo_inicio": {
+			"feet": [
+				52,
+				119
+			],
+			"file": "kai_hd_curacion_curar_suelo_inicio.png",
+			"fps": 1.0,
+			"frame_size": [
+				104,
+				128
+			],
+			"frames": 1,
+			"loop": false
+		}
+	},
+	"scale": 0.5
+}
