@@ -168,12 +168,12 @@ Las medidas de las piezas están en `kai_piezas.gd`; `generar_esqueleto_kai.gd` 
 | `HealthComponent` | Node | Vida: máscaras del jugador o puntos de vida de enemigos. Señales `health_changed`, `damaged`, `died` |
 
 **Jugador:** `characters/player/player_damage.gd` (`PlayerDamage`, nodo `Damage`) aplica las reglas de Hollow Knight:
-quita máscaras, congela la acción (`HitStop`), empuja, da 1 s de invulnerabilidad con parpadeo, devuelve al último
+quita integridad (**un golpe enemigo vale la mitad de su daño**: uno normal quita medio cristal, `enemy_damage_scale`; los peligros quitan un cristal entero), congela la acción (`HitStop`), empuja, da 1 s de invulnerabilidad con parpadeo, devuelve al último
 suelo seguro ante peligros y emite `died` al perder todas las máscaras. La sala (`Room`) decide dónde reaparece.
 
 **Peligros:** `world/hazards/spikes.gd` (`Spikes`): pinchos con ancho configurable, visibles en el editor.
 
-**HUD:** `ui/hud/combat_hud.tscn` muestra las máscaras (`MaskIcon`) y los créditos (`CreditsDisplay`, con +X / −X al cambiar).
+**HUD:** `ui/hud/combat_hud.tscn` muestra los **cristales de integridad** (`MaskIcon`, el Núcleo de integridad del concepto de Ariel en `docs/arte/referencias/vidas_concepto.webp`: completo, a la mitad o vacío, con un glitch al perder integridad), la **barra de energía** con su marco (`EnergyBar`, para habilidades futuras: `CombatHUD.set_energy(actual, máximo)` o una señal `energy_changed` en el jugador) y los créditos (`CreditsDisplay`, con +X / −X al cambiar).
 
 **Autoloads en scripts compartidos:** `Room` y `PlayerDamage` obtienen `SceneManager` por ruta (`/root/SceneManager`)
 para que compilen también en las pruebas de línea de comandos.
@@ -280,7 +280,7 @@ Recorrido, de izquierda a derecha:
 | `SpamPopup` (AnimatableBody2D) | Ventana de anuncio cuya barra de título es una plataforma de un sentido. `move_offset` / `move_time` (se mueve de ida y vuelta y lleva a Kai), `closes_when_stepped` (parpadea, se cierra al pisarla y vuelve a abrirse). Textos editables: `ad_title`, `ad_lines`, `ad_url`, `accent` |
 | `TrapAd` (HitboxComponent) | Botón "¡DESCARGAR GRATIS!": tocarlo es como pisar pinchos (1 máscara y vuelta al suelo seguro) |
 | `RestorePoint` (`world/digital/`, Area2D) | Punto de restauración: al pasar Kai pasa a ser el `checkpoint` de la sala (si muere reaparece ahí). No cura. Muestra «Punto de restauración creado» |
-| `SpamMailSpawner` + `SpamMail` | Lluvia de correos en una franja, solo con Kai cerca. Cada correo avisa parpadeando (0,35 s), cae balanceándose (200 px/s), quita 1 máscara y empuja. El 80 % (`aimed_ratio`) apunta a Kai: la mitad cae donde estaba hace 0,15 s (`aim_delay`) y la otra mitad (`lead_ratio`) se adelanta a donde estará si sigue corriendo igual (`lead_amount`). Quedarse quieto o correr siempre al mismo ritmo es peligroso: hay que ver el parpadeo y cambiar el paso. En la PC del profesor, la lluvia A cubre también los saltos entre pop-ups |
+| `SpamMailSpawner` + `SpamMail` | Lluvia de correos en una franja, solo con Kai cerca. Cada correo avisa parpadeando (0,35 s), cae balanceándose (200 px/s), quita medio cristal (es un enemigo) y empuja. El 80 % (`aimed_ratio`) apunta a Kai: la mitad cae donde estaba hace 0,15 s (`aim_delay`) y la otra mitad (`lead_ratio`) se adelanta a donde estará si sigue corriendo igual (`lead_amount`). Quedarse quieto o correr siempre al mismo ritmo es peligroso: hay que ver el parpadeo y cambiar el paso. En la PC del profesor, la lluvia A cubre también los saltos entre pop-ups |
 
 Los anuncios usan **nombres parodia** (MineKraft, Terrarya, GTA 6 anticipado, Fortnait, Robucks, Amung Us, Stim, Pokimon GO+,
 Clash Royal, Fri Fayer, Valorante, Brawl Starz, Zeldo) con señales de
