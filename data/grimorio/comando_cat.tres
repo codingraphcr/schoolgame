@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 1
+order = 13
+title = "cat"
+subtitle = "Comando de terminal · Linux"
+text = "Muestra el contenido de un archivo de texto. Así se revisan configuraciones y registros sin modificarlos."
+facts = Dictionary[String, String]({"Sintaxis": "cat archivo", "Ejemplo": "cat configuracion.txt", "Resultado": "El texto del archivo", "Relacionado": "Configuración segura"})
+unlock_command = &"cat"

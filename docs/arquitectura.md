@@ -304,8 +304,9 @@ no ejecuta programas del dispositivo ni lee sus archivos (`test_terminal.gd` lo 
 | `TerminalWindow` | Ventana encima del juego: objetivo, salida con colores y la línea de comandos. Enter ejecuta, ↑/↓ historial, Tab completa, Esc cierra. Botones rápidos para celular (`ls`, `pwd`, `cd …`, `cd ..`, `cat …`), Pista, Continuar |
 | `TerminalStation` (`world/digital/`) | Interactuable: con E abre la ventana. Con `quest_id`/`step_id` solo funciona en ese paso y al resolver muestra `success_dialogue` y completa el paso |
 
-Cada comando usado queda **aprendido** en `GameState` (`learn_command`, se guarda): serán las páginas del
-manual del Grimorio. Para crear una terminal nueva: un `TerminalChallenge` en el Inspector y una `TerminalStation`
+Cada comando usado queda **aprendido** en `GameState` (`learn_command`, se guarda) y desbloquea su página en la
+pestaña COMANDOS del Grimorio (`data/grimorio/comando_*.tres`, con `unlock_command`): función, sintaxis, ejemplo,
+resultado y concepto relacionado. Para crear una terminal nueva: un `TerminalChallenge` en el Inspector y una `TerminalStation`
 en la sala; no hace falta programar.
 
 **Primera terminal** (PC del profesor, paso `revisar_configuracion`): encontrar y leer

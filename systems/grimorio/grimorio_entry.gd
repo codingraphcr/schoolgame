@@ -28,12 +28,16 @@ enum Category { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS }
 @export var unlock_on_complete := false
 ## Propiedad de GameState que tiene que ser verdadera o mayor que 0 (p. ej. vision_unlocked).
 @export var unlock_property: StringName = &""
+## Comando de terminal que Kai tiene que haber usado (p. ej. &"ls"): la página del manual de comandos.
+@export var unlock_command: StringName = &""
 
 
 func is_unlocked(game_state: Node) -> bool:
 	if game_state == null:
-		return unlock_quest == &"" and unlock_property == &""
+		return unlock_quest == &"" and unlock_property == &"" and unlock_command == &""
 	if unlock_property != &"" and not game_state.get(unlock_property):
+		return false
+	if unlock_command != &"" and not game_state.has_learned_command(unlock_command):
 		return false
 	if unlock_quest == &"":
 		return true

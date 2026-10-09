@@ -55,7 +55,7 @@ Se conserva lo que existe y se agrega solo lo necesario:
 | PlayerCombat, NullbladeController/Data | `PlayerCombat` + recurso `NullbladeStage` (las 4 etapas son datos) | MVP |
 | Enemigos | `EnemyBase` (vida, golpe, debilidad, ficha del Grimorio) | MVP |
 | SaveManager | autoload `SaveManager`: `GameState.to_dict()` → `user://partida.json` con versión | MVP |
-| GrimoireManager, WorldMapManager | `GrimoireUI` (Tab) + recursos `RoomData`; lo desbloqueado vive en `GameState` | MVP |
+| GrimoireManager, WorldMapManager | Grimorio de Ariel (`ui/menus/grimorio/`, entradas `GrimorioEntry` en `data/grimorio/`, mapa de salas visitadas). Las páginas de comandos se desbloquean al usarlos en la terminal | ✅ base · falta abrirlo con Tab dentro del juego y el minimapa |
 | Controles táctiles | `TouchControls` | MVP |
 | EnergyComponent, Aegis, Dominio Nulo, Salto de Nexo | — | Después |
 
@@ -87,7 +87,7 @@ El mismo dibujador sirve para el mapa general (zonas), el de zona (salas) y el m
 ## Alcance del MVP
 
 **Entra:** prólogo completo (H4c, H4d, H5), 1 enemigo común, terminal simulada con su primer desafío ✅, Grimorio
-básico (comandos, misiones, glosario, mapa de 3 a 5 salas y minimapa), guardado y carga, computadora segura,
+básico (✅ base de Ariel; falta Tab en el juego, misiones y minimapa), guardado y carga, computadora segura,
 controles táctiles, exportación Windows y Android, documentación.
 
 **No entra:** Aegis, Dominio Nulo, Salto de Nexo, Nullblade después de .exe, jefes, los 24 niveles, Steam.
@@ -98,5 +98,5 @@ controles táctiles, exportación Windows y Android, documentación.
 |---|---|
 | 1 · Terminal y prólogo | ✅ Terminal simulada · H4c combate y `EnemyBase` · H4d elecciones · H5 Nullblade.exe y «EL DESPERTAR» |
 | 2 · Guardado | `SaveManager`, computadora segura, `LevelData` |
-| 3 · Grimorio y mapa | Grimorio (comandos, misiones, glosario), `RoomData`, mapa y minimapa |
+| 3 · Grimorio y mapa | ✅ Grimorio base (Ariel) · Tab dentro del juego, pestaña de misiones, minimapa |
 | 4 · Entrega | Controles táctiles, exportaciones, sonido, pulido, pruebas en celular, documentación |

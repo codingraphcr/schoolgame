@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 1
+order = 11
+title = "ls"
+subtitle = "Comando de terminal · Linux"
+text = "Lista lo que hay dentro de una carpeta. Las carpetas aparecen con / al final. Es lo primero que conviene escribir al llegar a un sistema."
+facts = Dictionary[String, String]({"Sintaxis": "ls [carpeta]", "Ejemplo": "ls cuenta", "Resultado": "configuracion.txt", "Relacionado": "Carpetas y archivos"})
+unlock_command = &"ls"

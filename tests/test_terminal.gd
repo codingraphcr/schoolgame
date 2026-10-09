@@ -17,6 +17,8 @@ func _initialize() -> void:
 
 func _run() -> void:
 	state = root.get_node("GameState")
+	state.reset()
+	_check(not (load("res://data/grimorio/comando_cd.tres") as GrimorioEntry).is_unlocked(state), "partida nueva: la página de cd está bloqueada")
 	_test_file_system()
 	_test_commands()
 	_test_completion_and_limits()
@@ -154,6 +156,10 @@ func _test_in_game() -> void:
 		"la misión avanza: cambiar la contraseña")
 	_check(state.has_learned_command(&"pwd") and state.has_learned_command(&"cd") and state.has_learned_command(&"cat"),
 		"los comandos usados quedan aprendidos (%s)" % ", ".join(state.get_learned_commands()))
+	var page_cat: GrimorioEntry = load("res://data/grimorio/comando_cat.tres")
+	var page_ls: GrimorioEntry = load("res://data/grimorio/comando_ls.tres")
+	_check(page_cat.is_unlocked(state) and not page_ls.is_unlocked(state),
+		"en el Grimorio se desbloquean las páginas de los comandos usados (cat sí; ls no, porque no se usó)")
 	var saved: Dictionary = JSON.parse_string(JSON.stringify(state.to_dict()))
 	state.reset()
 	state.from_dict(saved)

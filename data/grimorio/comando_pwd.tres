@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 1
+order = 10
+title = "pwd"
+subtitle = "Comando de terminal · Linux"
+text = "Muestra la ruta de la carpeta en la que estás (print working directory). Úsalo cuando no sepas dónde estás."
+facts = Dictionary[String, String]({"Sintaxis": "pwd", "Ejemplo": "pwd", "Resultado": "/home/alvarado", "Relacionado": "Rutas absolutas"})
+unlock_command = &"pwd"
