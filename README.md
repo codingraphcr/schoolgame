@@ -45,4 +45,5 @@ godot --headless --path . --script res://tests/test_player_abilities.gd
 godot --headless --path . --script res://tests/test_decision_system.gd
 godot --headless --path . --script res://tests/test_player_health.gd
 godot --headless --path . --script res://tests/test_progress.gd
+godot --headless --path . --script res://tests/test_zone0.gd
 ```

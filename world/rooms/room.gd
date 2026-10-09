@@ -38,6 +38,14 @@ func _physics_process(_delta: float) -> void:
 		player.damage.fall_out_of_bounds()
 
 
+## Esc vuelve al menú principal (temporal, hasta que exista el menú de pausa).
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		get_viewport().set_input_as_handled()
+		var scene_manager := _scene_manager()
+		scene_manager.change_scene(scene_manager.MAIN_MENU)
+
+
 func respawn_player() -> void:
 	if player == null or spawn_point == null:
 		return
