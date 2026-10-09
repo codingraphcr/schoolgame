@@ -53,6 +53,7 @@ func _run() -> void:
 	player.teleport_to(NEAR_PROFESOR)
 	await _frames(8)
 	await _talk(room)
+	await _until(func() -> bool: return state.is_quest_completed(&"prologo"))
 	_check(state.is_quest_completed(&"prologo"), "contarle al profesor completa el prólogo")
 	var title := room.get_node("CombatHUD/TitleCard") as TitleCard
 	_check(title.is_showing() and title._title.text == "EL DESPERTAR", "aparece el título «EL DESPERTAR»")
@@ -91,7 +92,8 @@ func _test_involuntary_vision(room: Room, player: Player, computer: Interactable
 	var box := room.get_node("CombatHUD/DialogueBox") as DialogueBox
 	_check(box.is_playing() and player.controls_locked, "la pantalla muestra su mensaje y Kai no se mueve")
 	await _advance_dialogue(box)
-	await _wait(1.3)
+	await _until(func() -> bool: return vision.is_active())
+	await _until(func() -> bool: return vision.blend > 0.9)
 	_check(vision.is_active() and vision.involuntary, "la Visión Digital se activa sola")
 	_check(not state.vision_unlocked and not room.get_node("CombatHUD/VisionMeter").visible,
 		"no se desbloquea ni aparece el indicador: es un glitch")
@@ -99,14 +101,23 @@ func _test_involuntary_vision(room: Room, player: Player, computer: Interactable
 	_action("vision")
 	await _frames(3)
 	_check(vision.is_active(), "Q no la apaga: Kai todavía no la controla")
-	await _wait(4.0)
+	await _until(func() -> bool: return not vision.is_active())
 	_check(not vision.is_active() and vision.state == vision.State.READY and vision.cooldown_left == 0.0,
 		"se apaga sola y no deja recarga")
+	await _until(func() -> bool: return box.is_playing())
 	_check(box.is_playing() and box.get_node("%Speaker").text == "Kai", "Kai reacciona a lo que vio")
 	await _advance_dialogue(box)
 	await _frames(5)
 	_check(state.get_current_step(&"prologo") == &"volver_profesor" and not player.controls_locked,
 		"la misión avanza: contarle al profesor")
+
+
+## Espera (en cuadros de física) a que se cumpla la condición, hasta unos 10 s de juego.
+func _until(condition: Callable) -> void:
+	for i in 600:
+		if condition.call():
+			return
+		await physics_frame
 
 
 func _talk(room: Room) -> void:

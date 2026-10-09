@@ -3,13 +3,23 @@
 [ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_j10ej"]
 [ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_gafkn"]
 
-[sub_resource type="Resource" id="Resource_mltyb"]
+[sub_resource type="Resource" id="Resource_j10ej"]
 script = ExtResource("2_gafkn")
 id = &"entrar_pc"
 objective = "Revisa la cuenta del profesor en la computadora del laboratorio."
+
+[sub_resource type="Resource" id="Resource_gafkn"]
+script = ExtResource("2_gafkn")
+id = &"cruzar_spam"
+objective = "Atraviesa el SPAM hasta la cuenta del profesor. ¡No hagas clic en los anuncios!"
+
+[sub_resource type="Resource" id="Resource_mltyb"]
+script = ExtResource("2_gafkn")
+id = &"cambiar_contrasena"
+objective = "Cambia la contraseña del profesor."
 
 [resource]
 script = ExtResource("1_j10ej")
 id = &"contrasena_profesor"
 title = "La contraseña del profesor"
-steps = Array[ExtResource("2_gafkn")]([SubResource("Resource_mltyb")])
+steps = Array[ExtResource("2_gafkn")]([SubResource("Resource_j10ej"), SubResource("Resource_gafkn"), SubResource("Resource_mltyb")])

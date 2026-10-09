@@ -56,7 +56,7 @@ func _run() -> void:
 	_check(not player.controls_locked, "y recupera los controles")
 	var visual := player.get_node("Visual") as CanvasItem
 	_check(visual.modulate.b > visual.modulate.r, "dentro de la PC, Kai es un alma digital (brillo celeste)")
-	_check(room.camera.limit_right == 960, "la sala de la PC tiene sus límites (960 px)")
+	_check(room.camera.limit_right == 1600, "la sala de la PC tiene sus límites (1600 px)")
 	_check(room.get_node("CombatHUD/Objective")._text.text.contains("cuenta del profesor"), "el objetivo sigue a la vista")
 
 	Input.action_press("move_left")

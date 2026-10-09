@@ -111,6 +111,11 @@ var _afterimage_timer := 0.0
 @onready var _body: Node2D = $Visual/Body
 
 
+func _ready() -> void:
+	# Así otros sistemas encuentran a Kai sin conocer la sala (p. ej. la lluvia de correos SPAM).
+	add_to_group(&"player")
+
+
 func _physics_process(delta: float) -> void:
 	var was_on_floor := is_on_floor()
 	_update_timers(delta, was_on_floor)

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_7c6tn"]
+
+[resource]
+script = ExtResource("1_7c6tn")
+script_text = "# Al llegar a la cuenta del profesor (dentro de la PC). Kai habla con el profesor desde afuera.
+Kai: ¡Profe, aquí está el error!
+Kai: Su contraseña es 123456 y no tiene verificación en dos pasos. Cualquiera podría entrar.
+Profesor: ¿Y eso cómo lo arreglamos?
+Kai: Déjemelo a mí. Voy a cambiarla."

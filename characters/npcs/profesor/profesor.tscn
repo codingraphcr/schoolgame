@@ -36,6 +36,18 @@ quest_id = &"contrasena_profesor"
 step_id = &"entrar_pc"
 dialogue = ExtResource("7_356nm")
 
+[sub_resource type="Resource" id="Resource_bchj4"]
+script = ExtResource("3_lltp1")
+quest_id = &"contrasena_profesor"
+step_id = &"cruzar_spam"
+dialogue = ExtResource("7_356nm")
+
+[sub_resource type="Resource" id="Resource_lltp1"]
+script = ExtResource("3_lltp1")
+quest_id = &"contrasena_profesor"
+step_id = &"cambiar_contrasena"
+dialogue = ExtResource("7_356nm")
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nk24l"]
 size = Vector2(48, 50)
 
@@ -44,7 +56,7 @@ script = ExtResource("1_xcafg")
 display_name = "Profesor"
 dialogue = ExtResource("2_bchj4")
 repeat_dialogue = ExtResource("2_bchj4")
-conversations = Array[ExtResource("3_lltp1")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v")])
+conversations = Array[ExtResource("3_lltp1")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_lltp1")])
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1346383065]
 sprite_frames = ExtResource("4_8s7wa")
