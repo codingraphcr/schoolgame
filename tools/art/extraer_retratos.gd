@@ -15,6 +15,12 @@ const CUTOUTS := {
 	KAI + "kai_retrato.png": Rect2i(6, 48, 348, 438),
 	PROFESOR + "profesor_retrato.png": Rect2i(850, 48, 344, 440),
 }
+## Silueta del cuerpo (coordenadas dentro del recorte) que el borrado del fondo no puede atravesar:
+## la ropa negra de Kai es casi del color del fondo y, sin esto, se borraba por partes.
+const KEEP := {
+	KAI + "kai_retrato.png": [Vector2(95, 205), Vector2(150, 225), Vector2(240, 225), Vector2(300, 215),
+		Vector2(348, 245), Vector2(348, 438), Vector2(40, 438), Vector2(48, 330), Vector2(60, 270), Vector2(95, 240)],
+}
 ## Diferencia de color máxima con el fondo para borrarlo, y la más floja para el halo.
 const TOLERANCE := 0.075
 const HALO_TOLERANCE := 0.16
@@ -40,7 +46,7 @@ func _initialize() -> void:
 	sheet.convert(Image.FORMAT_RGBA8)
 	for out: String in CUTOUTS:
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out.get_base_dir()))
-		_cut_out(sheet.get_region(CUTOUTS[out])).save_png(out)
+		_cut_out(sheet.get_region(CUTOUTS[out]), PackedVector2Array(KEEP.get(out, []))).save_png(out)
 		print(out.get_file())
 	for dir: String in EXPRESSIONS:
 		var prefix := "kai_" if dir == KAI else "profesor_"
@@ -51,7 +57,7 @@ func _initialize() -> void:
 	quit()
 
 
-func _cut_out(image: Image) -> Image:
+func _cut_out(image: Image, keep: PackedVector2Array) -> Image:
 	var w := image.get_width()
 	var h := image.get_height()
 	var background := image.get_pixel(2, 2)
@@ -67,7 +73,7 @@ func _cut_out(image: Image) -> Image:
 		var p: Vector2i = stack.pop_back()
 		if p.x < 0 or p.y < 0 or p.x >= w or p.y >= h or done[p.y * w + p.x]:
 			continue
-		if _distance(image.get_pixelv(p), background) > TOLERANCE:
+		if _distance(image.get_pixelv(p), background) > TOLERANCE or _kept(p, keep):
 			continue
 		done[p.y * w + p.x] = 1
 		image.set_pixelv(p, Color(0, 0, 0, 0))
@@ -78,7 +84,7 @@ func _cut_out(image: Image) -> Image:
 		for y in range(1, h - 1):
 			for x in range(1, w - 1):
 				var color := image.get_pixel(x, y)
-				if color.a == 0.0 or _distance(color, background) > HALO_TOLERANCE:
+				if color.a == 0.0 or _distance(color, background) > HALO_TOLERANCE or _kept(Vector2i(x, y), keep):
 					continue
 				if image.get_pixel(x + 1, y).a == 0.0 or image.get_pixel(x - 1, y).a == 0.0 \
 						or image.get_pixel(x, y + 1).a == 0.0 or image.get_pixel(x, y - 1).a == 0.0:
@@ -90,3 +96,7 @@ func _cut_out(image: Image) -> Image:
 
 func _distance(a: Color, b: Color) -> float:
 	return (absf(a.r - b.r) + absf(a.g - b.g) + absf(a.b - b.b)) / 3.0
+
+
+func _kept(p: Vector2i, keep: PackedVector2Array) -> bool:
+	return keep.size() >= 3 and Geometry2D.is_point_in_polygon(Vector2(p), keep)

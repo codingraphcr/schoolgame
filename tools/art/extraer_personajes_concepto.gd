@@ -24,6 +24,7 @@ const OUTLINE := Color("0a0d1c")
 ## Configuración por personaje.
 ##   reference/height: la pose de referencia queda con ese alto (fija la escala de todas).
 ##   poses: zona de cada pose en la hoja. feet_y (opcional): fila de los pies, si debajo hay efectos.
+##          body (opcional): zona del cuerpo que el borrado del resplandor no toca.
 ##          anchor_x (opcional): columna del centro del cuerpo si el
 ##          cálculo automático (centro de la cabeza) no sirve. only_body: conserva solo la figura
 ##          principal (descarta, por ejemplo, un globo de diálogo que quedó dentro de la zona).
@@ -109,15 +110,15 @@ const CHARACTERS := {
 		"height": 96,
 		"poses": {
 			"reposo": { "rect": Rect2i(1095, 135, 95, 180) },
-			"suelo_inicio": { "rect": Rect2i(60, 180, 130, 140), "feet_y": 310 },
-			"suelo_canalizar": { "rect": Rect2i(285, 135, 175, 185), "feet_y": 310 },
-			"suelo_restaurar": { "rect": Rect2i(515, 95, 235, 225), "feet_y": 310 },
-			"suelo_completar": { "rect": Rect2i(835, 140, 145, 180), "feet_y": 310 },
-			"aire_inicio": { "rect": Rect2i(45, 545, 150, 200), "feet_y": 735 },
-			"aire_canalizar": { "rect": Rect2i(285, 550, 155, 195), "feet_y": 730 },
-			"aire_restaurar": { "rect": Rect2i(525, 520, 225, 240), "feet_y": 735 },
-			"aire_completar": { "rect": Rect2i(820, 555, 160, 200), "feet_y": 745 },
-			"aire_descenso": { "rect": Rect2i(1060, 555, 135, 195), "feet_y": 745 },
+			"suelo_inicio": { "rect": Rect2i(60, 180, 130, 140), "feet_y": 310, "body": Rect2i(62, 188, 122, 128) },
+			"suelo_canalizar": { "rect": Rect2i(285, 135, 175, 185), "feet_y": 310, "body": Rect2i(306, 196, 128, 120) },
+			"suelo_restaurar": { "rect": Rect2i(515, 95, 235, 225), "feet_y": 310, "body": Rect2i(561, 196, 142, 120) },
+			"suelo_completar": { "rect": Rect2i(835, 140, 145, 180), "feet_y": 310, "body": Rect2i(836, 196, 128, 120) },
+			"aire_inicio": { "rect": Rect2i(45, 545, 150, 200), "feet_y": 735, "body": Rect2i(48, 548, 145, 198) },
+			"aire_canalizar": { "rect": Rect2i(285, 550, 155, 195), "feet_y": 730, "body": Rect2i(288, 556, 152, 190) },
+			"aire_restaurar": { "rect": Rect2i(525, 520, 225, 240), "feet_y": 735, "body": Rect2i(540, 556, 182, 205) },
+			"aire_completar": { "rect": Rect2i(820, 555, 160, 200), "feet_y": 745, "body": Rect2i(846, 566, 136, 190) },
+			"aire_descenso": { "rect": Rect2i(1060, 555, 135, 195), "feet_y": 745, "body": Rect2i(1062, 558, 134, 192) },
 		},
 		"animations": {
 			"curar_suelo_inicio": { "poses": ["suelo_inicio"], "fps": 1.0, "loop": false },
@@ -194,6 +195,7 @@ func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 	var rect: Rect2i = pose.rect
 	var region := sheet.get_region(rect)
 	_remove_background(region)
+	_remove_glow(region, pose)
 	if pose.get("only_body", false):
 		var body := _largest_component(region)
 		var kept := Image.create_empty(region.get_width(), region.get_height(), false, Image.FORMAT_RGBA8)
@@ -333,7 +335,7 @@ func _remove_background(img: Image) -> void:
 			continue
 		seen[p.y * w + p.x] = 1
 		var c := img.get_pixelv(p)
-		if Vector3(c.r - background.r, c.g - background.g, c.b - background.b).length() > tolerance and not _is_glow(c):
+		if Vector3(c.r - background.r, c.g - background.g, c.b - background.b).length() > tolerance:
 			continue
 		img.set_pixelv(p, Color(0, 0, 0, 0))
 		for step in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:
@@ -341,8 +343,50 @@ func _remove_background(img: Image) -> void:
 
 
 ## Resplandor lila oscuro alrededor de los efectos (solo si el personaje tiene "remove_glow"):
-## se borra si está pegado al fondo. La ropa negra no cuenta: es mucho más oscura (o gris).
-func _is_glow(c: Color) -> bool:
+## se borra de a capas desde el fondo. Algunas partes de la ropa negra de Kai tienen el mismo tono,
+## así que dentro del óvalo del cuerpo de la pose ("body", en coordenadas de la hoja) solo se borra
+## el resplandor más intenso.
+const GLOW_MAX_PASSES := 80
+
+
+func _remove_glow(img: Image, pose: Dictionary) -> void:
 	if not _config.get("remove_glow", false):
+		return
+	var w := img.get_width()
+	var h := img.get_height()
+	var body := Rect2()
+	if pose.has("body"):
+		var rect: Rect2i = pose.rect
+		body = Rect2(pose.body.position - rect.position, pose.body.size)
+	for pass_index in GLOW_MAX_PASSES:
+		var layer: Array[Vector2i] = []
+		for y in h:
+			for x in w:
+				var c := img.get_pixel(x, y)
+				if c.a == 0.0 or not _is_glow(c, _in_body(Vector2(x, y), body)):
+					continue
+				for n in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:
+					var q: Vector2i = Vector2i(x, y) + n
+					if q.x < 0 or q.y < 0 or q.x >= w or q.y >= h or img.get_pixelv(q).a == 0.0:
+						layer.append(Vector2i(x, y))
+						break
+		if layer.is_empty():
+			return
+		for p in layer:
+			img.set_pixelv(p, Color(0, 0, 0, 0))
+
+
+## Dentro del óvalo inscrito en el rectángulo del cuerpo.
+func _in_body(p: Vector2, body: Rect2) -> bool:
+	if body.size == Vector2.ZERO:
 		return false
-	return c.v > 0.15 and c.v < 0.5 and c.b - maxf(c.r, c.g) > 0.12
+	var d := (p - body.get_center()) / (body.size * 0.5)
+	return d.length_squared() <= 1.0
+
+
+## Dentro del cuerpo solo cuenta el resplandor más intenso (el pantalón más lila de Kai llega a
+## 0,14 de "azul de más"; el resplandor, a 0,18 o más).
+func _is_glow(c: Color, inside_body := false) -> bool:
+	if inside_body:
+		return c.v > 0.2 and c.v < 0.5 and c.b - maxf(c.r, c.g) > 0.17
+	return c.v > 0.08 and c.v < 0.5 and c.b - maxf(c.r, c.g) > 0.08
