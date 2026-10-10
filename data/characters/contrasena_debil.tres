@@ -8,3 +8,5 @@ display_name = "Contraseña débil"
 title = "Amenaza · Credenciales"
 side = 1
 accent = Color(1, 0.24, 0.65, 1)
+voice = &"voice_amenaza"
+voice_variation = 0.12

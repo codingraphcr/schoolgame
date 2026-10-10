@@ -26,6 +26,17 @@ enum Side { LEFT, RIGHT }
 ## Si su texto tiembla como una señal con interferencia (para presencias misteriosas).
 @export var glitch := false
 
+@export_group("Voz")
+## Voz al hablar, como los personajes de Zelda: un sonido de Sfx (p. ej. &"voice_kai") que suena
+## cada pocas letras mientras se escribe el texto. Vacío = habla en silencio.
+@export var voice: StringName = &""
+## Tono de la voz (1 = como el sonido; más alto = más agudo).
+@export var voice_pitch := 1.0
+## Cuánto cambia el tono de una sílaba a otra (para que suene a frases y no a un pitido fijo).
+@export var voice_variation := 0.08
+## Cada cuántas letras suena (más = habla más pausado).
+@export_range(1, 6) var voice_every := 2
+
 
 func matches(speaker: String) -> bool:
 	return speaker == display_name or speaker in aliases

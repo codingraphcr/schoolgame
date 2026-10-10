@@ -11,3 +11,6 @@ title = "Mentor · Ciencias y Tecnología"
 portrait = ExtResource("1_01ep7")
 side = 1
 accent = Color(0.9098039, 0.72156864, 0.47058824, 1)
+voice = &"voice_profesor"
+voice_variation = 0.06
+voice_every = 3

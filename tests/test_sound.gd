@@ -89,9 +89,34 @@ func _run() -> void:
 	var ambient := Music.stream_for(&"computadora") as AudioStreamWAV
 	_check(ambient != null and ambient.loop_mode == AudioStreamWAV.LOOP_FORWARD, "la música provisional de la computadora existe y se repite")
 	_check((current_scene as Room).footstep == &"step_digital", "dentro de la computadora los pasos son digitales")
-
+	await _test_voices()
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
+
+
+## Voces de diálogo estilo Zelda: cada personaje habla con su voz mientras se escribe el texto.
+func _test_voices() -> void:
+	GameSettings.text_speed = 1
+	var box := DialogueBox.find(current_scene)
+	var dialogue := Dialogue.new()
+	dialogue.script_text = "Kai: Hola, ¿qué es esto?\nProfesor: Tranquilo, Kai. Te explico.\n???: te veo\n(La pantalla parpadea.)"
+	var voiced := { 0: &"voice_kai", 1: &"voice_profesor" }
+	var heard: Array[Array] = []
+	Sfx.history.clear()
+	box.play(dialogue)
+	for index in 4:
+		await _until(func() -> bool: return (box.get_node("%Text") as Label).visible_ratio >= 1.0)
+		heard.append(Sfx.history.duplicate())
+		Sfx.history.clear()
+		box.advance()
+		await _frames(1)
+	var kai_count := heard[0].count(&"voice_kai")
+	_check(kai_count >= 4 and not &"voice_profesor" in heard[0], "Kai habla con su voz electrónica (%d sílabas)" % kai_count)
+	var prof_count := heard[1].count(&"voice_profesor")
+	_check(prof_count >= 4 and prof_count < kai_count * 2 and not &"voice_kai" in heard[1], "el profesor habla con su voz grave, más pausada (%d sílabas)" % prof_count)
+	_check(&"entity_whisper" in heard[2] and not voiced.values().any(func(v: StringName) -> bool: return v in heard[2]), "la entidad no tiene voz: susurra")
+	_check(not voiced.values().any(func(v: StringName) -> bool: return v in heard[3]), "la narración no tiene voz")
+	_check(not box.is_playing(), "el diálogo de prueba termina")
 
 
 func _action(action: StringName) -> void:

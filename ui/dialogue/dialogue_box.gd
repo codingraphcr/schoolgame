@@ -4,7 +4,8 @@ extends Control
 ## derecha), placa oscura con nombre y título, caja clara con marco del color del personaje
 ## (DialogueFrameArt y DialogueNamePlate) y un triángulo para continuar. El texto aparece
 ## letra por letra; E o Espacio lo completan y, si ya está completo, pasan a la siguiente línea.
-## Los personajes (retrato, título, color, lado) son recursos DialogueCharacter de data/characters/.
+## Cada personaje habla con su voz mientras se escribe (estilo Zelda, ver _speak).
+## Los personajes (retrato, título, color, lado, voz) son recursos DialogueCharacter de data/characters/.
 ## Uso: await DialogueBox.find(self).play(dialogo)  (con DialogueBox.find se obtiene la de la sala).
 
 signal line_started(index: int)
@@ -43,6 +44,11 @@ var _glitch := false
 var _text_rest := Vector2.ZERO
 ## Pausa que le queda a la escritura irregular antes de seguir (con glitch).
 var _type_pause := 0.0
+## Personaje cuya voz suena mientras se escribe la línea (o null: narración, sin voz o la entidad).
+var _voice: DialogueCharacter
+## Hasta qué letra ya se "dijo" y cuántas letras (sin espacios ni signos) van en la línea.
+var _voiced_upto := 0
+var _voiced_letters := 0
 ## Personaje que ocupa cada lado (o null).
 var _side_character := { DialogueCharacter.Side.LEFT: null, DialogueCharacter.Side.RIGHT: null }
 
@@ -167,6 +173,9 @@ func _show_line(index: int) -> void:
 	# La entidad no habla con voz: susurra, distorsionada.
 	if _glitch:
 		Sfx.play(&"entity_whisper", randf_range(0.88, 1.04))
+	_voice = character if character and not character.glitch and not character.voice.is_empty() else null
+	_voiced_upto = 0
+	_voiced_letters = 0
 	_update_glitch()
 	var active_side := _update_portraits(character, String(line.get("expression", "")))
 	_place_frame(active_side, index == 0 or previous_speaker != _speaker.text)
@@ -269,6 +278,7 @@ func _type(delta: float) -> void:
 		return
 	if not _glitch:
 		_text.visible_ratio = minf(_text.visible_ratio + characters_per_second * factor * delta / total, 1.0)
+		_speak()
 		return
 	if _type_pause > 0.0:
 		_type_pause -= delta
@@ -283,6 +293,29 @@ func _type(delta: float) -> void:
 		_type_pause = randf_range(0.12, 0.4)
 	elif roll < 0.18:
 		_text.visible_characters = mini(_text.visible_characters + randi_range(2, 4), total)
+
+
+## Voz estilo Zelda: mientras se escribe, cada pocas letras suena una "sílaba" con la voz del
+## personaje. El tono depende de la letra, así la misma frase suena siempre igual y no como un
+## pitido fijo. Los espacios y signos no suenan; completar la línea con E la deja en silencio.
+func _speak() -> void:
+	if _voice == null:
+		return
+	var text := _text.text
+	var shown := _text.visible_characters if _text.visible_characters >= 0 else text.length()
+	var syllable := ""
+	while _voiced_upto < mini(shown, text.length()):
+		var letter := text[_voiced_upto]
+		_voiced_upto += 1
+		if letter.to_lower() == letter.to_upper() and not letter.is_valid_int():
+			continue
+		if _voiced_letters % _voice.voice_every == 0:
+			syllable = letter
+		_voiced_letters += 1
+	if syllable.is_empty():
+		return
+	var step := float(syllable.to_lower().unicode_at(0) % 5) / 2.0 - 1.0
+	Sfx.play(_voice.voice, _voice.voice_pitch * (1.0 + _voice.voice_variation * step))
 
 
 ## Interferencia: el texto salta un par de píxeles y parpadea de vez en cuando
