@@ -86,6 +86,8 @@ func _run() -> void:
 	change_scene_to_file("res://world/zones/pc_profesor/escritorio.tscn")
 	await _wait(0.8)
 	_check(Music.current == &"computadora", "la computadora pide su música")
+	var ambient := Music.stream_for(&"computadora") as AudioStreamWAV
+	_check(ambient != null and ambient.loop_mode == AudioStreamWAV.LOOP_FORWARD, "la música provisional de la computadora existe y se repite")
 	_check((current_scene as Room).footstep == &"step_digital", "dentro de la computadora los pasos son digitales")
 
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)

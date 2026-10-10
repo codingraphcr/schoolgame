@@ -16,43 +16,45 @@ const VOICES := 16
 ##   dur (s) · attack (s) · volume · vibrato: [profundidad Hz, velocidad Hz] · noise: mezcla de ruido
 ##   arp: [[tiempo (0-1), multiplicador], ...] cambia el tono en esos momentos (0 = silencio)
 ##   crush: reduce la resolución (más alto = más "roto") · duty: ancho del pulso (square)
+##   lowpass: filtro (Hz) que suaviza lo chillón · type "whisper": susurro (ver _whisper)
 const RECIPES := {
-	# Kai
-	&"jump": { "wave": "square", "freq": 300.0, "freq_end": 620.0, "dur": 0.12, "volume": 0.35, "duty": 0.4 },
-	&"double_jump": { "wave": "square", "freq": 450.0, "freq_end": 900.0, "dur": 0.14, "volume": 0.32, "arp": [[0.5, 1.5]] },
-	&"wall_jump": { "wave": "square", "freq": 380.0, "freq_end": 760.0, "dur": 0.1, "volume": 0.32 },
-	&"land": { "wave": "noise", "freq": 900.0, "freq_end": 300.0, "dur": 0.08, "volume": 0.3 },
-	&"step_school": { "wave": "noise", "freq": 1400.0, "freq_end": 600.0, "dur": 0.035, "volume": 0.16 },
-	&"step_digital": { "wave": "square", "freq": 1100.0, "freq_end": 800.0, "dur": 0.03, "volume": 0.12, "duty": 0.25 },
-	&"dash": { "wave": "noise", "freq": 5000.0, "freq_end": 700.0, "dur": 0.18, "volume": 0.32, "noise": 0.7 },
-	&"hurt": { "wave": "saw", "freq": 520.0, "freq_end": 110.0, "dur": 0.24, "volume": 0.4, "noise": 0.35, "crush": 6.0 },
-	&"crystal_crack": { "wave": "triangle", "freq": 2600.0, "freq_end": 1500.0, "dur": 0.18, "volume": 0.3, "noise": 0.3, "arp": [[0.3, 0.8], [0.6, 1.2]] },
-	&"death": { "wave": "saw", "freq": 420.0, "freq_end": 35.0, "dur": 0.95, "volume": 0.45, "vibrato": [30.0, 9.0], "crush": 10.0, "noise": 0.2 },
-	&"heal_charge": { "wave": "sine", "freq": 260.0, "freq_end": 880.0, "dur": 1.1, "attack": 0.6, "volume": 0.3, "vibrato": [12.0, 7.0] },
-	&"heal_done": { "wave": "triangle", "freq": 880.0, "dur": 0.4, "volume": 0.38, "arp": [[0.0, 1.0], [0.25, 1.5], [0.5, 2.0]] },
-	# Nullblade
-	&"slash": { "wave": "noise", "freq": 6000.0, "freq_end": 1400.0, "dur": 0.12, "volume": 0.3, "noise": 0.6 },
-	&"hit": { "wave": "square", "freq": 220.0, "freq_end": 70.0, "dur": 0.1, "volume": 0.4, "noise": 0.5 },
-	&"energy_gain": { "wave": "sine", "freq": 1500.0, "freq_end": 2300.0, "dur": 0.07, "volume": 0.22 },
-	&"reveal_gather": { "wave": "saw", "freq": 90.0, "freq_end": 900.0, "dur": 1.6, "attack": 1.2, "volume": 0.28, "vibrato": [8.0, 11.0], "noise": 0.25 },
-	&"reveal_flash": { "wave": "triangle", "freq": 1046.0, "freq_end": 700.0, "dur": 0.7, "volume": 0.4, "noise": 0.15, "arp": [[0.0, 1.0], [0.1, 1.25], [0.2, 1.5]] },
-	&"fanfare": { "wave": "square", "freq": 523.0, "dur": 0.75, "volume": 0.3, "duty": 0.3, "arp": [[0.0, 1.0], [0.18, 1.25], [0.36, 1.5], [0.54, 2.0]] },
+	# Kai: sutil, como en Hollow Knight (soplidos de aire y roces, sin pitidos).
+	&"jump": { "wave": "noise", "freq": 2200.0, "freq_end": 3600.0, "dur": 0.13, "attack": 0.02, "volume": 0.09, "lowpass": 2600.0 },
+	&"double_jump": { "wave": "noise", "freq": 2800.0, "freq_end": 4600.0, "dur": 0.16, "attack": 0.02, "volume": 0.1, "lowpass": 3400.0 },
+	&"wall_jump": { "wave": "noise", "freq": 2400.0, "freq_end": 3800.0, "dur": 0.12, "attack": 0.01, "volume": 0.09, "lowpass": 2800.0 },
+	&"land": { "wave": "noise", "freq": 600.0, "freq_end": 220.0, "dur": 0.07, "volume": 0.12, "lowpass": 700.0 },
+	&"step_school": { "wave": "noise", "freq": 900.0, "freq_end": 500.0, "dur": 0.03, "volume": 0.06, "lowpass": 1100.0 },
+	&"step_digital": { "wave": "sine", "freq": 760.0, "freq_end": 620.0, "dur": 0.025, "volume": 0.045 },
+	&"dash": { "wave": "noise", "freq": 4200.0, "freq_end": 1300.0, "dur": 0.17, "attack": 0.02, "volume": 0.13, "lowpass": 3200.0 },
+	&"hurt": { "wave": "triangle", "freq": 340.0, "freq_end": 110.0, "dur": 0.2, "volume": 0.2, "noise": 0.4, "crush": 7.0, "lowpass": 2400.0 },
+	&"crystal_crack": { "wave": "triangle", "freq": 2400.0, "freq_end": 1500.0, "dur": 0.14, "volume": 0.12, "noise": 0.25, "arp": [[0.3, 0.8], [0.6, 1.2]], "lowpass": 5000.0 },
+	&"death": { "wave": "saw", "freq": 300.0, "freq_end": 35.0, "dur": 0.95, "volume": 0.22, "vibrato": [20.0, 9.0], "crush": 9.0, "noise": 0.2, "lowpass": 1800.0 },
+	&"heal_charge": { "wave": "sine", "freq": 260.0, "freq_end": 720.0, "dur": 1.1, "attack": 0.6, "volume": 0.14, "vibrato": [8.0, 6.0] },
+	&"heal_done": { "wave": "triangle", "freq": 880.0, "dur": 0.4, "volume": 0.18, "arp": [[0.0, 1.0], [0.25, 1.5], [0.5, 2.0]], "lowpass": 4000.0 },
+	# Nullblade: tajo digital con glitch (entrecortado y "roto").
+	&"slash": { "wave": "saw", "freq": 1800.0, "freq_end": 500.0, "dur": 0.15, "volume": 0.16, "noise": 0.55, "crush": 11.0, "lowpass": 6000.0, "arp": [[0.0, 1.0], [0.18, 0.0], [0.26, 1.6], [0.42, 0.0], [0.5, 0.8], [0.68, 0.0], [0.74, 1.3]] },
+	&"hit": { "wave": "square", "freq": 180.0, "freq_end": 60.0, "dur": 0.09, "volume": 0.17, "noise": 0.5, "crush": 8.0, "lowpass": 2200.0 },
+	&"energy_gain": { "wave": "sine", "freq": 1500.0, "freq_end": 2100.0, "dur": 0.06, "volume": 0.08 },
+	&"reveal_gather": { "wave": "saw", "freq": 90.0, "freq_end": 700.0, "dur": 1.6, "attack": 1.2, "volume": 0.16, "vibrato": [6.0, 11.0], "noise": 0.25, "lowpass": 2000.0 },
+	&"reveal_flash": { "wave": "triangle", "freq": 1046.0, "freq_end": 700.0, "dur": 0.7, "volume": 0.22, "noise": 0.15, "arp": [[0.0, 1.0], [0.1, 1.25], [0.2, 1.5]], "lowpass": 5000.0 },
+	&"fanfare": { "wave": "triangle", "freq": 523.0, "dur": 0.8, "volume": 0.2, "arp": [[0.0, 1.0], [0.18, 1.25], [0.36, 1.5], [0.54, 2.0]] },
 	# BITS y cofres
-	&"bit_pickup": { "wave": "square", "freq": 1568.0, "dur": 0.09, "volume": 0.22, "duty": 0.3, "arp": [[0.4, 1.5]] },
-	&"chest_open": { "wave": "square", "freq": 392.0, "dur": 0.45, "volume": 0.3, "noise": 0.1, "arp": [[0.0, 0.5], [0.15, 1.0], [0.3, 1.5], [0.45, 2.0]] },
+	&"bit_pickup": { "wave": "sine", "freq": 1568.0, "dur": 0.08, "volume": 0.1, "arp": [[0.4, 1.5]] },
+	&"chest_open": { "wave": "triangle", "freq": 392.0, "dur": 0.45, "volume": 0.16, "noise": 0.1, "arp": [[0.0, 0.5], [0.15, 1.0], [0.3, 1.5], [0.45, 2.0]], "lowpass": 4000.0 },
 	# Enemigos
-	&"enemy_hit": { "wave": "square", "freq": 320.0, "freq_end": 140.0, "dur": 0.09, "volume": 0.32, "noise": 0.4 },
-	&"brute_force": { "wave": "saw", "freq": 130.0, "freq_end": 85.0, "dur": 0.55, "volume": 0.38, "vibrato": [18.0, 13.0], "crush": 8.0 },
-	&"enemy_death": { "wave": "noise", "freq": 3000.0, "freq_end": 180.0, "dur": 0.55, "volume": 0.36, "noise": 0.6, "arp": [[0.2, 0.75], [0.4, 0.5]] },
-	&"mail_ding": { "wave": "sine", "freq": 1760.0, "dur": 0.22, "volume": 0.2, "arp": [[0.0, 1.0], [0.4, 0.75]] },
-	&"popup_open": { "wave": "square", "freq": 600.0, "freq_end": 1200.0, "dur": 0.07, "volume": 0.2 },
-	&"popup_close": { "wave": "square", "freq": 1200.0, "freq_end": 500.0, "dur": 0.08, "volume": 0.2 },
-	&"error": { "wave": "square", "freq": 220.0, "dur": 0.3, "volume": 0.3, "arp": [[0.0, 1.0], [0.4, 0.0], [0.55, 1.0]] },
+	&"enemy_hit": { "wave": "square", "freq": 260.0, "freq_end": 120.0, "dur": 0.08, "volume": 0.14, "noise": 0.45, "crush": 6.0, "lowpass": 2500.0 },
+	&"brute_force": { "wave": "saw", "freq": 120.0, "freq_end": 80.0, "dur": 0.55, "volume": 0.2, "vibrato": [16.0, 13.0], "crush": 8.0, "lowpass": 1600.0 },
+	&"enemy_death": { "wave": "noise", "freq": 2600.0, "freq_end": 180.0, "dur": 0.5, "volume": 0.17, "crush": 6.0, "arp": [[0.2, 0.75], [0.4, 0.5]], "lowpass": 3500.0 },
+	&"mail_ding": { "wave": "sine", "freq": 1760.0, "dur": 0.2, "volume": 0.08, "arp": [[0.0, 1.0], [0.4, 0.75]] },
+	&"popup_open": { "wave": "sine", "freq": 600.0, "freq_end": 1100.0, "dur": 0.07, "volume": 0.09 },
+	&"popup_close": { "wave": "sine", "freq": 1100.0, "freq_end": 500.0, "dur": 0.08, "volume": 0.09 },
+	&"error": { "wave": "square", "freq": 220.0, "dur": 0.28, "volume": 0.12, "arp": [[0.0, 1.0], [0.4, 0.0], [0.55, 1.0]], "lowpass": 2000.0 },
 	# La entidad
-	&"monitor_static": { "wave": "noise", "freq": 9000.0, "dur": 0.9, "volume": 0.22, "crush": 4.0 },
-	&"monitor_off": { "wave": "square", "freq": 900.0, "freq_end": 40.0, "dur": 0.28, "volume": 0.32, "noise": 0.3 },
-	&"eye_heartbeat": { "wave": "sine", "freq": 60.0, "freq_end": 45.0, "dur": 0.42, "volume": 0.45, "arp": [[0.0, 1.0], [0.25, 0.0], [0.4, 0.9]] },
-	&"eye_blink": { "wave": "noise", "freq": 2000.0, "dur": 0.025, "volume": 0.18 },
+	&"monitor_static": { "wave": "noise", "freq": 9000.0, "dur": 0.9, "volume": 0.12, "crush": 4.0, "lowpass": 6000.0 },
+	&"monitor_off": { "wave": "square", "freq": 700.0, "freq_end": 40.0, "dur": 0.28, "volume": 0.16, "noise": 0.3, "lowpass": 2500.0 },
+	&"eye_heartbeat": { "wave": "sine", "freq": 58.0, "freq_end": 44.0, "dur": 0.42, "volume": 0.35, "arp": [[0.0, 1.0], [0.25, 0.0], [0.4, 0.9]] },
+	&"eye_blink": { "wave": "noise", "freq": 1500.0, "dur": 0.025, "volume": 0.08, "lowpass": 2000.0 },
+	&"entity_whisper": { "type": "whisper", "dur": 1.9, "volume": 0.5, "syllables": 7 },
 	# Interfaz
 	&"ui_move": { "wave": "square", "freq": 1000.0, "dur": 0.03, "volume": 0.16, "duty": 0.25 },
 	&"ui_accept": { "wave": "square", "freq": 700.0, "freq_end": 1400.0, "dur": 0.08, "volume": 0.22 },
@@ -172,6 +174,8 @@ func _stream(id: StringName) -> AudioStream:
 
 ## Genera un sonido provisional a partir de una receta (16 bits, mono, 22 050 Hz).
 static func synth(recipe: Dictionary) -> AudioStreamWAV:
+	if recipe.get("type", "") == "whisper":
+		return _whisper(recipe)
 	var wave: String = recipe.get("wave", "square")
 	var freq: float = recipe.get("freq", 440.0)
 	var freq_end: float = recipe.get("freq_end", freq)
@@ -183,6 +187,9 @@ static func synth(recipe: Dictionary) -> AudioStreamWAV:
 	var arp: Array = recipe.get("arp", [])
 	var crush: float = recipe.get("crush", 0.0)
 	var duty: float = recipe.get("duty", 0.5)
+	var lowpass: float = recipe.get("lowpass", 0.0)
+	var lp_alpha := 1.0 - exp(-TAU * lowpass / RATE) if lowpass > 0.0 else 1.0
+	var lp_value := 0.0
 	var count := int(dur * RATE)
 	var data := PackedByteArray()
 	data.resize(count * 2)
@@ -225,9 +232,73 @@ static func synth(recipe: Dictionary) -> AudioStreamWAV:
 			sample = 0.0
 		if crush > 0.0:
 			sample = roundf(sample * (16.0 - crush)) / (16.0 - crush)
+		if lowpass > 0.0:
+			lp_value += lp_alpha * (sample - lp_value)
+			sample = lp_value
 		# Envolvente: subida (attack) y caída hasta el final.
 		var env := minf(t / maxf(attack, 0.001), 1.0) * pow(1.0 - k, 1.6)
 		var value := clampi(int(sample * env * volume * 32767.0), -32768, 32767)
+		data.encode_s16(i * 2, value)
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = RATE
+	stream.stereo = false
+	stream.data = data
+	return stream
+
+
+## Susurro distorsionado de la entidad: ruido filtrado por dos "formantes" (como las vocales de
+## una voz) que cambian en cada sílaba, en ráfagas, con modulación de anillo y bitcrush.
+static func _whisper(recipe: Dictionary) -> AudioStreamWAV:
+	var dur: float = recipe.get("dur", 1.8)
+	var volume: float = recipe.get("volume", 0.4)
+	var syllables: int = recipe.get("syllables", 6)
+	var count := int(dur * RATE)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7331
+	# Sílabas: inicio, largo y "vocal" (dos formantes).
+	var parts: Array[Dictionary] = []
+	var t := 0.08
+	for i in syllables:
+		var length := rng.randf_range(0.12, 0.26)
+		parts.append({ "start": t, "end": t + length, "f1": rng.randf_range(350.0, 800.0), "f2": rng.randf_range(1100.0, 2600.0) })
+		t += length + rng.randf_range(0.03, 0.14)
+		if t > dur - 0.2:
+			break
+	var data := PackedByteArray()
+	data.resize(count * 2)
+	var bands := [[0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]  # x1, x2, y1, y2 por formante
+	for i in count:
+		var time := float(i) / RATE
+		var env := 0.0
+		var f1 := 500.0
+		var f2 := 1500.0
+		for p in parts:
+			if time >= p.start and time <= p.end:
+				var k: float = (time - p.start) / (p.end - p.start)
+				env = sin(PI * k)
+				f1 = p.f1 * (1.0 + 0.15 * k)
+				f2 = p.f2 * (1.0 - 0.1 * k)
+		var x := rng.randf_range(-1.0, 1.0)
+		var sample := 0.0
+		for b in 2:
+			var f := f1 if b == 0 else f2
+			var w0 := TAU * f / RATE
+			var alpha := sin(w0) / (2.0 * 4.0)
+			var a0 := 1.0 + alpha
+			var state: Array = bands[b]
+			var y: float = (alpha * x - alpha * float(state[1]) + 2.0 * cos(w0) * float(state[2]) - (1.0 - alpha) * float(state[3])) / a0
+			state[1] = state[0]
+			state[0] = x
+			state[3] = state[2]
+			state[2] = y
+			sample += y * (1.0 if b == 0 else 0.7)
+		# Distorsión: modulación de anillo lenta, un tono grave que se arrastra y bitcrush.
+		sample *= 0.55 + 0.45 * sin(TAU * 38.0 * time)
+		sample += 0.25 * sin(TAU * (96.0 - 18.0 * time / dur) * time) * env
+		sample = roundf(sample * 7.0) / 7.0
+		var fade := minf(time / 0.05, 1.0) * minf((dur - time) / 0.15, 1.0)
+		var value := clampi(int(sample * env * fade * volume * 32767.0), -32768, 32767)
 		data.encode_s16(i * 2, value)
 	var stream := AudioStreamWAV.new()
 	stream.format = AudioStreamWAV.FORMAT_16_BITS

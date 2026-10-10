@@ -39,6 +39,8 @@ var _collapse := 1.0
 var _placed := false
 ## Segundos hasta el próximo latido (el ojo late mientras vigila).
 var _next_beat := 1.0
+## Segundos hasta el próximo susurro (el primero, apenas aparece).
+var _next_whisper := 0.6
 
 
 func _ready() -> void:
@@ -63,6 +65,10 @@ func _process(delta: float) -> void:
 		if _next_beat <= 0.0:
 			_next_beat = 1.8
 			Sfx.play(&"eye_heartbeat", 1.0, -6.0)
+		_next_whisper -= delta
+		if _next_whisper <= 0.0:
+			_next_whisper = randf_range(8.0, 13.0)
+			Sfx.play(&"entity_whisper", randf_range(0.85, 1.0), -4.0)
 		_update_blink(delta)
 	elif state == State.CLOSING:
 		openness = move_toward(openness, 0.0, delta * 3.0)

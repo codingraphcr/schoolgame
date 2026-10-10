@@ -164,6 +164,9 @@ func _show_line(index: int) -> void:
 	var text_color := character.text_color if character and character.text_color.a > 0.0 else TEXT_COLOR
 	_text.add_theme_color_override(&"font_color", text_color)
 	_glitch = character != null and character.glitch
+	# La entidad no habla con voz: susurra, distorsionada.
+	if _glitch:
+		Sfx.play(&"entity_whisper", randf_range(0.88, 1.04))
 	_update_glitch()
 	var active_side := _update_portraits(character, String(line.get("expression", "")))
 	_place_frame(active_side, index == 0 or previous_speaker != _speaker.text)
