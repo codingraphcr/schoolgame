@@ -287,6 +287,8 @@ Diálogos en `data/dialogues/prologo/`: `profesor_pedido.tres` (pide revisar la 
 `world/zones/pc_profesor/escritorio.tscn`: **nivel de SPAM** dentro de la computadora del profesor (3360 px, solo caminar
 y saltar). La salida izquierda vuelve al laboratorio (entrada `desde_pc`, también con materialización).
 
+**Aspecto del escritorio (concepto de Ariel, `docs/arte/referencias/escritorio_entidad_concepto.webp`):** `escritorio_fondo.gd` dibuja una pantalla clara invadida por la entidad, en rosa: columnas de binario que caen y cambian, código hex, terminales que se escriben solas, paneles «ANALIZANDO», circuitos con pulsos y cuadritos; solo dibuja lo que está en pantalla. Los íconos del escritorio están corruptos (glitch de color, franjas y nombres dañados). `entity_eye.gd` (`EntityEye`): el ojo de la entidad en un monitor con el panel «OBSERVANDO»; acompaña a la cámara, mira hacia Kai y a veces hacia otros lados, parpadea, y al acercarse Kai a la terminal se cierra y desaparece; desde el paso `cambiar_contrasena` ya no está. El brillo `SoulGlow` de Kai se bajó a 0,35 para el fondo claro.
+
 Recorrido, de izquierda a derecha:
 
 | Zona | x | Obstáculos |
@@ -459,6 +461,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_bits.gd` | Reparto en monedas, BITS según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |
+| `test_entity_eye.gd` | El ojo de la entidad: vigila al entrar, sigue a la cámara, parpadea, se cierra y desaparece en la terminal y no vuelve después de resolverla |
 | `test_terminal.gd` | Terminal simulada: sistema de archivos, comandos y errores, autocompletado, comandos permitidos, que no toque el sistema real, y la terminal de la PC del profesor (abrir, Esc, resolver, diálogo, paso de misión, comandos aprendidos y guardados) |
 | `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |
