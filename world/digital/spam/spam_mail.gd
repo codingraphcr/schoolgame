@@ -32,6 +32,8 @@ func _ready() -> void:
 	shape.shape = rect
 	add_child(shape)
 	_origin_x = position.x
+	# Aviso: una notificación justo antes de caer.
+	Sfx.play(&"mail_ding", randf_range(0.95, 1.1), -6.0)
 
 
 func _physics_process(delta: float) -> void:

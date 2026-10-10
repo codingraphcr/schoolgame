@@ -70,6 +70,7 @@ func _change(direction: int) -> void:
 			value = posmod(int(value) + direction, choices.size())
 		_:
 			return
+	Sfx.play(&"ui_move", 1.0 + 0.1 * float(direction))
 	value_changed.emit(value)
 
 

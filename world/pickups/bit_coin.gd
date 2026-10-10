@@ -21,6 +21,10 @@ const PICKUP_RADIUS := 8.0
 ## Segundos antes de poder recogerlo (para que se vea la explosión).
 const PICKUP_DELAY := 0.35
 
+## Recoger varios BITS seguidos suena cada vez un poco más agudo.
+static var _combo := 0
+static var _last_pickup_ms := 0
+
 ## Flag que queda al recoger el primer BIT (desbloquea su página del Grimorio).
 const DISCOVERED_FLAG := &"bits_descubiertos"
 
@@ -144,7 +148,15 @@ func _collect() -> void:
 	if game_state:
 		game_state.add_credits(value)
 		game_state.set_flag(DISCOVERED_FLAG)
+	_pickup_sound()
 	# Desaparición: se deshace en cuadritos.
 	var burst := PixelBurst.spawn(get_parent(), global_position, [VIOLET, LIGHT, BRIGHT], 6, 40.0)
 	burst.z_index = z_index
 	queue_free()
+
+
+func _pickup_sound() -> void:
+	var now := Time.get_ticks_msec()
+	_combo = mini(_combo + 1, 12) if now - _last_pickup_ms < 450 else 0
+	_last_pickup_ms = now
+	Sfx.play(&"bit_pickup", 1.0 + _combo * 0.06 + (0.15 if value >= 5 else 0.0))

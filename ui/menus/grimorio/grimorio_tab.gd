@@ -25,6 +25,10 @@ func _ready() -> void:
 	focus_entered.connect(queue_redraw)
 	focus_exited.connect(queue_redraw)
 	toggled.connect(func(_on: bool) -> void: queue_redraw())
+	var born := Time.get_ticks_msec()
+	focus_entered.connect(func() -> void:
+		if Time.get_ticks_msec() - born > 400:
+			Sfx.play(&"book_page", randf_range(0.95, 1.1)))
 	var normal := _style(DARK, DARK_BORDER)
 	var lit := _style(LIT, LIT_BORDER)
 	lit.shadow_color = Color(LIT_BORDER, 0.35)

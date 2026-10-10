@@ -37,6 +37,8 @@ var _shake := Vector2.ZERO
 var _collapse := 1.0
 ## Si ya se ubicó una vez junto a la cámara (en el primer cuadro la cámara aún no está lista).
 var _placed := false
+## Segundos hasta el próximo latido (el ojo late mientras vigila).
+var _next_beat := 1.0
 
 
 func _ready() -> void:
@@ -57,6 +59,10 @@ func _process(delta: float) -> void:
 		if terminal and player and player.global_position.distance_to(terminal.global_position) < close_distance:
 			close()
 		_update_gaze(delta, player)
+		_next_beat -= delta
+		if _next_beat <= 0.0:
+			_next_beat = 1.8
+			Sfx.play(&"eye_heartbeat", 1.0, -6.0)
 		_update_blink(delta)
 	elif state == State.CLOSING:
 		openness = move_toward(openness, 0.0, delta * 3.0)
@@ -72,6 +78,7 @@ func _process(delta: float) -> void:
 func close() -> void:
 	if state == State.WATCHING:
 		state = State.CLOSING
+		Sfx.play(&"monitor_off")
 
 
 func _follow_camera(instant: bool, delta: float) -> void:
@@ -103,6 +110,7 @@ func _update_blink(delta: float) -> void:
 	_next_blink -= delta
 	if _next_blink <= 0.0 and _blink <= 0.0:
 		_blink = 0.28
+		Sfx.play(&"eye_blink", 1.0, -4.0)
 		_next_blink = randf_range(2.5, 5.5)
 	if _blink > 0.0:
 		_blink -= delta

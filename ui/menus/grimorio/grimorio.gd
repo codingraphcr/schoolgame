@@ -74,6 +74,7 @@ func _ready() -> void:
 	select_category(0)
 	if not DisplayServer.is_touchscreen_available():
 		(_tabs[0] as Control).grab_focus()
+	Sfx.play(&"book_open")
 	# El libro se abre con un pequeño acercamiento.
 	_book.scale = Vector2.ONE * 0.96
 	_book.modulate.a = 0.0
@@ -260,6 +261,7 @@ static func open(from: Node) -> GrimorioScreen:
 
 ## Cierra el Grimorio: vuelve al juego (y quita la pausa) o, si era una escena suelta, al menú.
 func close() -> void:
+	Sfx.play(&"book_close")
 	if overlay:
 		get_tree().paused = false
 		get_parent().queue_free()

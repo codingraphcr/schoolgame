@@ -432,6 +432,17 @@ INACTIVE ──start_incident()──▶ INVESTIGATING ──find_clue() × clue
 
 Para agregar una entrada al Grimorio: copiar un `.tres` de `data/grimorio/`, cambiar textos y desbloqueo. `GameState.has_reached_step(mision, paso)` dice si la misión ya llegó a ese paso.
 
+## Sonido (`systems/audio/`)
+
+| Pieza | Responsabilidad |
+|---|---|
+| `Sfx` (`sfx.gd`) | `Sfx.play(&"nombre", tono, volumen_db)`. Si existe `assets/audio/sfx/<nombre>.wav/.ogg/.mp3` usa ese archivo; si no, genera un **sonido provisional** por código (`RECIPES`: onda, barrido de tono, arpegio, vibrato, ruido, bitcrush). Bus `SFX` (volumen de Efectos), suena también en pausa, 16 voces. Se crea solo con el primer `play()`; no es autoload. `Sfx.history` guarda los últimos (pruebas) |
+| `Music` (`music.gd`) | `Music.play(&"pista")`: busca `assets/audio/music/<pista>.ogg` y la reproduce en bucle con fundido por el bus `Music`; si no existe, silencio. Pistas: `menu`, `colegio`, `computadora`, `pelea`. `Room.music_track` la pide al entrar a la sala |
+| `PlayerSounds` (`characters/player/player_sounds.gd`, nodo `Sounds`) | Pasos (`Room.footstep`: `step_school` o `step_digital`), salto, doble salto, salto de pared, caída, dash, daño + crujido del cristal (+ error con un anuncio trampa), muerte, curación (carga y cada curación), tajo, golpe y energía |
+| Otros ganchos | Enemigo herido / desintegración (`EnemyBase`), «fuerza bruta», aviso del correo SPAM, ventanas que se cierran y abren, BITS (más agudo si se recogen seguidos), cofre, aparición de la Nullblade, tarjeta de equipamiento (fanfarria), monitor del laboratorio (estática, apagón), ojo de la entidad (latido, parpadeo, cierre), menús (moverse, aceptar, volver), Grimorio (abrir, página, cerrar) y terminal (teclas, enter, error, objetivo cumplido). Los diálogos no tienen sonido |
+
+Para reemplazar un sonido: dejar el archivo con el mismo nombre en `assets/audio/sfx/` (ver `assets/audio/LEEME.md`).
+
 ## Pruebas automáticas
 
 Scripts en `tests/` que se ejecutan sin abrir el editor:
@@ -455,6 +466,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_vision.gd` | Visión Digital bloqueada, desbloqueo, capa digital, oscurecimiento, puente de datos (capa 7), fragmento (una sola vez), apagado manual, recarga y fin por duración |
 | `test_dialogue.gd` | Formato de los diálogos, aviso «E: hablar», caja de diálogo (letra por letra, completar, avanzar, cerrar), controles bloqueados, marca del profesor y recordatorio |
 | `test_settings_grimorio.gd` | Ajustes (buses de audio, velocidad del texto, glitch, cambiar y restablecer teclas, guardado), pantalla de opciones (◀ ▶, controles, abrir grimorio) y Grimorio (pestañas, desbloqueo por la historia, «???», mapa) |
+| `test_sound.gd` | Los 40 sonidos provisionales se generan, bus de Efectos, salto, caída, pasos, tajo, golpe, enemigo, BITS, curación, daño y la música y los pasos de la computadora |
 | `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
 | `test_digital_dive.gd` | La computadora absorbe a Kai (cámara, desaparición), pantalla de carga, llegada al escritorio, materialización, alma digital celeste, límites y regreso al laboratorio |
 | `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa solo saltando (bot), punto de restauración (activarlo y reaparecer ahí al morir) y llegada a la cuenta del profesor |

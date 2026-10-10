@@ -58,6 +58,8 @@ camera = NodePath("GameCamera")
 spawn_point = NodePath("SpawnPoint")
 room_size = Rect2(0, 0, 3360, 360)
 player_tint = Color(0.7, 1, 1.15, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
 
 [node name="Background" type="Node2D" parent="." unique_id=930290375]
 script = ExtResource("2_h6uko")

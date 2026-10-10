@@ -63,6 +63,7 @@ func _ready() -> void:
 	var tween := create_tween().set_parallel().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(_panel, "scale", Vector2.ONE, 0.35)
 	tween.tween_property(self, "modulate:a", 1.0, 0.2)
+	Sfx.play(&"fanfare")
 
 
 func _process(delta: float) -> void:
@@ -82,6 +83,7 @@ func _input(event: InputEvent) -> void:
 	if close:
 		get_viewport().set_input_as_handled()
 		set_process_input(false)
+		Sfx.play(&"ui_accept")
 		var tween := create_tween()
 		tween.tween_property(self, "modulate:a", 0.0, 0.15)
 		tween.tween_callback(closed.emit)

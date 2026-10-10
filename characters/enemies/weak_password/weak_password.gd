@@ -78,6 +78,7 @@ func _on_damaged(_hit: HitData) -> void:
 	_popups += 1
 	if not brute_force and health.current <= max_health / 2.0:
 		brute_force = true
+		Sfx.play(&"brute_force")
 		_popup("¡FUERZA BRUTA!", Color("ffd84a"), Vector2(0, -44))
 
 

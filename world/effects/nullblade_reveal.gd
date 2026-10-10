@@ -70,6 +70,7 @@ func _ready() -> void:
 	_light.texture_scale = 1.4
 	add_child(_light)
 	_kai_pose(&"curar_suelo_inicio", ACTIVATION + 1.6)
+	Sfx.play(&"reveal_gather")
 
 
 func _process(delta: float) -> void:
@@ -94,6 +95,7 @@ func _process(delta: float) -> void:
 			_phase = 4
 			_flash = 1.0
 			_burst(28)
+			Sfx.play(&"reveal_flash")
 			_shake()
 		_sword.scale = Vector2(0.5, 0.5)
 		_sword.modulate = Color(1, 1, 1, 1).lerp(Color(2, 2, 2, 1), _flash)

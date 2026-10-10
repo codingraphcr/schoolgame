@@ -110,6 +110,7 @@ func _on_hit_received(hit: HitData) -> void:
 	if is_dead:
 		return
 	health.take_damage(hit.damage)
+	Sfx.play(&"enemy_hit", randf_range(0.92, 1.08))
 	damaged.emit(hit.damage)
 	# Destello blanco.
 	modulate = Color(2.5, 2.5, 2.5)
@@ -131,6 +132,7 @@ func _die() -> void:
 	hurtbox.set_physics_process(false)
 	collision_layer = 0
 	velocity = Vector2.ZERO
+	Sfx.play(&"enemy_death")
 	died.emit()
 	_on_died()
 	# Se desintegra en píxeles y deja caer sus BITS.

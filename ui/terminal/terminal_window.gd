@@ -52,7 +52,10 @@ func _ready() -> void:
 ## Ejecuta una línea como si el jugador la hubiera escrito.
 func submit(line: String) -> void:
 	_print_line("[color=#%s]%s[/color] %s" % [CYAN.to_html(false), _escape(interpreter.prompt()), _escape(line)], TEXT, false)
+	Sfx.play(&"terminal_enter")
 	var result := interpreter.execute(line)
+	if not result["ok"]:
+		Sfx.play(&"error", 1.0, -6.0)
 	if result["clear"]:
 		_output.clear()
 	elif not String(result["output"]).is_empty():
@@ -78,6 +81,7 @@ func _on_command_run(command: String, _args: PackedStringArray, target: String) 
 	if is_solved or not challenge.is_goal(interpreter, command, target):
 		return
 	is_solved = true
+	Sfx.play(&"terminal_ok")
 	_objective.text = "✔ " + challenge.objective
 	_objective.add_theme_color_override("font_color", GREEN)
 	# La salida del comando se imprime después de esta señal: el mensaje va un instante más tarde.
@@ -104,6 +108,7 @@ func _on_input_key(event: InputEvent) -> void:
 	var key := event as InputEventKey
 	if key == null or not key.pressed:
 		return
+	Sfx.play(&"terminal_key", randf_range(0.85, 1.15))
 	match key.keycode:
 		KEY_TAB:
 			_line.text = interpreter.complete(_line.text)

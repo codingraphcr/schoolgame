@@ -18,12 +18,18 @@ extends Node2D
 @export var player_tint := Color.WHITE
 ## Distancia (px) bajo el borde inferior de la sala a partir de la cual el jugador reaparece.
 @export var fall_limit_margin := 64.0
+## Sonido de los pasos de Kai en esta sala (step_school en el colegio, step_digital en una computadora).
+@export var footstep: StringName = &"step_school"
+## Música de la sala (vacío = sigue la que estaba). Ver Music.
+@export var music_track: StringName = &""
 
 var bounds: Rect2
 
 
 func _ready() -> void:
 	bounds = _compute_bounds()
+	if music_track != &"":
+		Music.play(music_track)
 	if camera:
 		camera.set_limits(bounds)
 	var game_state := _game_state()

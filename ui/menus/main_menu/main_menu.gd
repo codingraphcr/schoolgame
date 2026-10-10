@@ -20,6 +20,7 @@ const BACKGROUND_CYCLE := 18.0
 func _ready() -> void:
 	# Ajustes guardados del jugador (volumen, pantalla, teclas).
 	GameSettings.ensure_loaded()
+	Music.play(&"menu")
 	play_button.pressed.connect(_on_play_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	credits_button.pressed.connect(_show_credits.bind(true))

@@ -59,6 +59,7 @@ func open() -> void:
 	var game_state := get_node_or_null("/root/GameState")
 	if game_state:
 		game_state.set_flag(flag())
+	Sfx.play(&"chest_open")
 	var tween := create_tween()
 	tween.tween_property(self, "_open_amount", 1.0, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	var parent := get_parent()

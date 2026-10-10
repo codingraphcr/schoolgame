@@ -37,6 +37,7 @@ size = Vector2(12, 256)
 [node name="Entrada" type="Node2D" unique_id=476933876 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
 script = ExtResource("1_7xiul")
+music_track = &"colegio"
 tile_layer = NodePath("Background")
 player = NodePath("Player")
 camera = NodePath("GameCamera")

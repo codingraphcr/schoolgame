@@ -17,6 +17,8 @@ const TEXT_MARGIN := 36.0
 
 var _empty := StyleBoxEmpty.new()
 var _frame := StyleBoxFlat.new()
+## Momento en que apareció (el foco inicial de una pantalla no suena).
+var _born_ms := 0
 
 
 func _ready() -> void:
@@ -38,7 +40,10 @@ func _ready() -> void:
 	add_theme_color_override(&"font_hover_color", TEXT_SELECTED)
 	add_theme_color_override(&"font_pressed_color", TEXT_SELECTED)
 	add_theme_color_override(&"font_hover_pressed_color", TEXT_SELECTED)
+	_born_ms = Time.get_ticks_msec()
 	focus_entered.connect(_update_selected)
+	focus_entered.connect(_on_focus_sound)
+	pressed.connect(_on_press_sound)
 	focus_exited.connect(_update_selected)
 	mouse_entered.connect(_on_mouse_entered)
 	visibility_changed.connect(_update_selected)
@@ -78,3 +83,12 @@ func _draw_diamond(center: Vector2) -> void:
 func _diamond(center: Vector2, radius: float) -> PackedVector2Array:
 	return PackedVector2Array([center + Vector2(0, -radius), center + Vector2(radius, 0),
 		center + Vector2(0, radius), center + Vector2(-radius, 0)])
+
+
+func _on_focus_sound() -> void:
+	if Time.get_ticks_msec() - _born_ms > 250:
+		Sfx.play(&"ui_move")
+
+
+func _on_press_sound() -> void:
+	Sfx.play(&"ui_back" if text in ["VOLVER", "CERRAR"] else &"ui_accept")

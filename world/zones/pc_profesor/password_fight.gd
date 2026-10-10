@@ -57,6 +57,7 @@ func start(player: Player) -> void:
 		if not running:
 			return
 	player.combat.weapon = weapon
+	Music.play(&"pelea")
 	if barrier:
 		barrier.active = true
 	get_tree().call_group(&"toast", &"show_message", "%s: pulsa %s para atacar" % [weapon.display_name, _key_for(&"attack")], 4.0)
@@ -76,6 +77,7 @@ func _end(won: bool) -> void:
 	if not running:
 		return
 	running = false
+	Music.play(&"computadora")
 	if enemy.died.is_connected(_on_enemy_died):
 		enemy.died.disconnect(_on_enemy_died)
 	if _player.damage.died.is_connected(_on_player_died):

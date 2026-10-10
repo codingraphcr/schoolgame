@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://characters/player/kai/kai_visual.gd" id="5_kai"]
 [ext_resource type="Script" path="res://characters/player/player_combat.gd" id="6_combat"]
 [ext_resource type="Script" path="res://characters/player/player_heal.gd" id="6_heal"]
+[ext_resource type="Script" path="res://characters/player/player_sounds.gd" id="7_sounds"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(10, 22)
@@ -58,6 +59,9 @@ script = ExtResource("6_combat")
 [node name="Heal" type="Node" parent="." node_paths=PackedStringArray("health")]
 script = ExtResource("6_heal")
 health = NodePath("../Health")
+
+[node name="Sounds" type="Node" parent="."]
+script = ExtResource("7_sounds")
 
 [node name="Visual" type="Node2D" parent="."]
 

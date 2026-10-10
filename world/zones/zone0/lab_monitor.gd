@@ -72,6 +72,7 @@ func power_on_with_static(seconds := 1.0) -> void:
 	if sequence != _sequence:
 		return
 	state = State.STATIC
+	Sfx.play(&"monitor_static")
 	await get_tree().create_timer(seconds).timeout
 
 
@@ -97,6 +98,7 @@ func flicker_off() -> void:
 		await get_tree().create_timer(wait).timeout
 		if sequence != _sequence:
 			return
+	Sfx.play(&"monitor_off")
 	state = State.OFF
 
 

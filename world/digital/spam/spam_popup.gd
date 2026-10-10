@@ -84,6 +84,7 @@ func _on_stepped(body: Node) -> void:
 	await get_tree().create_timer(close_delay).timeout
 	blink.kill()
 	_closed = true
+	Sfx.play(&"popup_close", 1.0, -4.0)
 	_closing = false
 	_shape.set_deferred(&"disabled", true)
 	var close := create_tween()
@@ -91,6 +92,7 @@ func _on_stepped(body: Node) -> void:
 	await get_tree().create_timer(reopen_delay).timeout
 	_shape.set_deferred(&"disabled", false)
 	_closed = false
+	Sfx.play(&"popup_open", 1.0, -4.0)
 	var reopen := create_tween()
 	reopen.tween_property(_canvas, "scale", Vector2.ONE, 0.15).set_trans(Tween.TRANS_BACK)
 	_canvas.modulate.a = 1.0
