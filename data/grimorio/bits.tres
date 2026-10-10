@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+[ext_resource type="Texture2D" path="res://assets/art/items/bits/bits_arte.png" id="2_art"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 5
+order = 4
+title = "BITS"
+subtitle = "Recurso · Datos recuperados"
+text = "Fragmentos de información recuperados de amenazas digitales neutralizadas. Tras la destrucción de una entidad corrupta, parte de sus datos se estabiliza y adopta la forma de pequeñas monedas luminosas conocidas como BITS.
+
+«Incluso los datos corruptos pueden conservar algo de valor»."
+facts = Dictionary[String, String]({"Obtención": "Al derrotar enemigos y recuperar sus datos residuales", "Utilidad": "Pueden intercambiarse por mejoras, objetos y otros recursos durante la aventura"})
+image = ExtResource("2_art")
+unlock_flag = &"bits_descubiertos"

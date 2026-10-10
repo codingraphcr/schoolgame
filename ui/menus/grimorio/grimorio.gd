@@ -19,7 +19,7 @@ const CATEGORY_DESCRIPTIONS: PackedStringArray = [
 	"Lo que acecha en la red: cómo ataca cada amenaza y cómo defenderte.",
 	"Ideas de ciberseguridad que Kai va entendiendo en su camino.",
 	"Notas, mensajes y recuerdos de lo que ha pasado.",
-	"Las armas, dispositivos y habilidades que Kai ha obtenido.",
+	"Las armas, dispositivos, habilidades y recursos que Kai ha obtenido.",
 ]
 const LOCKED_TEXT := "Aún no lo descubres. Sigue avanzando en la historia para completar esta página."
 

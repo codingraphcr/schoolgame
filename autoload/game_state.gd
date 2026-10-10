@@ -335,6 +335,8 @@ func complete_step(quest_id: StringName, step_id: StringName) -> bool:
 	_quest_progress[quest_id] = -1
 	if active_quest == quest_id:
 		active_quest = &""
+	if quest.bits_reward > 0:
+		add_credits(quest.bits_reward)
 	quest_completed.emit(quest_id)
 	if quest.next_quest != &"":
 		start_quest(quest.next_quest)

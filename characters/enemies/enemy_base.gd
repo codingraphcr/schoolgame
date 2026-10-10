@@ -27,6 +27,10 @@ signal died
 @export var hurt_time := 0.25
 ## Si es false no se mueve ni ataca (escenas, presentaciones, pruebas).
 @export var ai_enabled := true
+## BITS que suelta al ser derrotado (-1 = según su fuerza: 3 por cada punto de vida máxima).
+@export var bits_reward := -1
+## Colores de los píxeles en que se desintegra al morir.
+@export var death_colors: Array[Color] = [Color("ff3d8a"), Color("ff7ab8"), Color("8a2be2")]
 
 var health: HealthComponent
 var hurtbox: HurtboxComponent
@@ -129,6 +133,13 @@ func _die() -> void:
 	velocity = Vector2.ZERO
 	died.emit()
 	_on_died()
+	# Se desintegra en píxeles y deja caer sus BITS.
+	var center := global_position + Vector2(0, -body_size.y / 2.0)
+	PixelBurst.spawn(get_parent(), global_position, death_colors, 36, 110.0, body_size, 0.7)
+	# Al final del cuadro: no se agregan cuerpos físicos en medio de un choque.
+	var room := get_parent()
+	var reward := get_bits_reward()
+	(func() -> void: BitCoin.spawn_burst(room, center, reward)).call_deferred()
 	var tween := create_tween().set_parallel()
 	tween.tween_property(self, "scale", Vector2(1.4, 0.2), 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "modulate:a", 0.0, 0.25)
@@ -151,3 +162,8 @@ func _rect(size: Vector2) -> RectangleShape2D:
 	var rect := RectangleShape2D.new()
 	rect.size = size
 	return rect
+
+
+## BITS que vale derrotarlo (más fuerte = más BITS).
+func get_bits_reward() -> int:
+	return bits_reward if bits_reward >= 0 else roundi(max_health * 3.0)

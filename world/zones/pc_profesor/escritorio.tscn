@@ -26,6 +26,7 @@
 [ext_resource type="Resource" path="res://data/dialogues/prologo/contrasena_debil_aparece.tres" id="19_wpin"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/contrasena_debil_reintento.tres" id="20_wpre"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/contrasena_debil_derrotada.tres" id="21_wpok"]
+[ext_resource type="Script" path="res://world/pickups/bit_chest.gd" id="40_chest"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5aedr"]
 size = Vector2(3424, 80)
@@ -501,6 +502,11 @@ interval = 0.85
 [node name="RestorePoint" type="Area2D" parent="." unique_id=1760161149]
 position = Vector2(1400, 304)
 script = ExtResource("12_rstpt")
+
+[node name="BitChest" type="Area2D" parent="."]
+position = Vector2(1462, 304)
+script = ExtResource("40_chest")
+chest_id = &"pc_profesor_restauracion"
 
 [node name="TerminalStation" type="Area2D" parent="." unique_id=1816087198]
 position = Vector2(3036, 304)

@@ -30,12 +30,16 @@ enum Category { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS, ARSENAL }
 @export var unlock_property: StringName = &""
 ## Comando de terminal que Kai tiene que haber usado (p. ej. &"ls"): la página del manual de comandos.
 @export var unlock_command: StringName = &""
+## Marca de GameState que tiene que existir (p. ej. &"bits_descubiertos").
+@export var unlock_flag: StringName = &""
 
 
 func is_unlocked(game_state: Node) -> bool:
 	if game_state == null:
-		return unlock_quest == &"" and unlock_property == &"" and unlock_command == &""
+		return unlock_quest == &"" and unlock_property == &"" and unlock_command == &"" and unlock_flag == &""
 	if unlock_property != &"" and not game_state.get(unlock_property):
+		return false
+	if unlock_flag != &"" and not game_state.has_flag(unlock_flag):
 		return false
 	if unlock_command != &"" and not game_state.has_learned_command(unlock_command):
 		return false

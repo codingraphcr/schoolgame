@@ -32,4 +32,5 @@ objective = "Elige la nueva contraseña del profesor y cómo proteger su cuenta.
 script = ExtResource("1_j10ej")
 id = &"contrasena_profesor"
 title = "La contraseña del profesor"
+bits_reward = 100
 steps = Array[ExtResource("2_gafkn")]([SubResource("Resource_j10ej"), SubResource("Resource_gafkn"), SubResource("Resource_trmnl"), SubResource("Resource_mltyb"), SubResource("Resource_elegir")])
