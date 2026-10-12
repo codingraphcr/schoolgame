@@ -24,9 +24,10 @@ ciberseguridad: terminales con comandos reales, decisiones y combate. Estructura
 | Nullblade en el combate | Se mantiene la de Ariel, pero como **destello**: aparece en la pelea y se apaga al terminar la misión; la oficial se obtiene en el cuarto viejo |
 | Primera tarea | La **terminal simulada** (antes que el combate) ✅ |
 | Primera terminal | En la PC del profesor: encontrar la configuración de la cuenta (un solo objetivo) ✅ |
-| Aegis | Se obtiene en el **capítulo 2, nivel 3** (fundamentos de programación): Kai lo **repara con comandos** en una terminal. Detalle en `curriculo_mep.md` |
+| Aegis | Aparece en la misión especial **«Eco en la Red»** (décimo, capítulo 3): Kai lo rescata y lo **repara con comandos** (Biblia Narrativa). Detalle en `curriculo_mep.md` |
+| Nombres | **Oficiales:** *Nullveil: Beyond the Firewall*, **Kai** y **Prof. Alvarado** |
 | Daño | Se mantiene el cambio de Ariel: un golpe enemigo y los pinchos quitan **medio cristal** |
-| Currículo | Distribución de los 24 niveles según la tabla del MEP, aprobada: `curriculo_mep.md` |
+| Currículo | Los 24 niveles combinan la Biblia (títulos e historia) y la tabla del MEP (contenidos): `curriculo_mep.md` |
 | Puntos de control | **Computadora segura**: con E guarda la partida, marca dónde reaparecer y llena las máscaras. Reemplazará al punto de restauración actual cuando exista el guardado |
 | Terminal | Estilo **Linux** (bash) |
 | La entidad «???» | Primera manifestación de **El Núcleo**, sin revelarlo |

@@ -16,7 +16,7 @@ y **defensa** (herramientas reales de ciberseguridad).
 | Capacidad | Rol | Cuándo se obtiene | Evoluciones |
 |---|---|---|---|
 | **Nullblade** | Espada digital, cuerpo a cuerpo. Carga energía al golpear | Tutorial | .exe → .zero → .void → .max |
-| **Aegis** | Núcleo flotante: disparo teledirigido manual (K), barrera, plataformas | Capítulo 2, nivel 3 (fundamentos de programación; la historia de cómo lo encuentra está por definir) | Pulse → Bridge → Sync |
+| **Aegis** | Núcleo flotante: disparo teledirigido manual (K), barrera, plataformas | Capítulo 3, misión especial «Eco en la Red»: Kai lo rescata y lo repara con comandos | Pulse → Bridge → Sync |
 | **Expansión Digital: Dominio Nulo** | Ultimate: enemigos al 80 % de velocidad y bonificación de daño. Barra propia | Capítulo 2 | I (15 s, +10 %, 100) · II (20 s, +15 %, 115) · III (30 s, +30 %, 138) |
 | **Dash-parry** | Un dash justo antes de recibir un golpe hace el parry (no hay botón de parry). Reemplaza al Escudo MFA | Con el primer dash | Mejora con los niveles del dash |
 
@@ -31,7 +31,7 @@ Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `
 | **Combate** | En la pelea contra la «Contraseña débil» la **Nullblade aparece como un destello** (animación de Ariel) y Kai pelea con ella. No queda obtenida | Nullblade (solo en la PC) |
 | **Recompensa** | El jugador **crea su propia contraseña** para el profesor (con un medidor que explica cada regla; se guarda solo su huella y tendrá que recordarla en el capítulo 4 y en misiones extra) y elige el segundo paso (aplicación de autenticación), con explicación de cada opción. El profesor agradece, la **Visión Digital se usa con Q** desde aquí, el destello de la Nullblade **se apaga** y Kai vuelve al laboratorio (+100 BITS) | + Visión Digital |
 | **La habitación vieja** | El profesor lo invita a visitar unas instalaciones: un pasillo donde está el cuarto viejo. Para entrar hay un desafío de **Visión Digital + terminal** (con Q se ven pistas ocultas; con ellas se resuelve el acceso en una terminal; tema del MEP: control de acceso). Adentro está la **Nullblade oficial**: con ella llegan el **dash** y el **doble salto**, la tarjeta «NUEVO EQUIPAMIENTO» y el título **«EL DESPERTAR»** | + Nullblade (para siempre), **dash** (nivel 1) y **doble salto** |
-| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), **Aegis (cap. 2, nivel 3: fundamentos de programación)** y mejoras con Ecos |
+| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), **Aegis (cap. 3, «Eco en la Red»)** y mejoras con Ecos |
 
 **No existe una sala de pruebas dentro del juego:** cada arma y habilidad se prueba en el mapa a medida que
 se desbloquea. La sala gris (`tests/fixtures/`) solo la usan las pruebas automáticas.

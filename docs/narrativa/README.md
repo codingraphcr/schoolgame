@@ -1,7 +1,8 @@
 # Narrativa del videojuego
 
 **[`BIBLIA_NARRATIVA.md`](BIBLIA_NARRATIVA.md) es la fuente principal de referencia** para desarrollar la historia, las
-misiones, los diálogos, los personajes y el mundo del juego (versión 1.0, incorporada el 12 de octubre de 2026).
+misiones, los diálogos, los personajes y el mundo del juego (versión 1.0 incorporada el 12 de octubre de 2026;
+versión actual 1.1, con su registro de cambios al final).
 
 Contiene la premisa, los acontecimientos anteriores al juego, el protagonista, el profesor, Aegis, el antagonista, la
 Visión Digital, Nullblade, el Grimorio, los Ecos, los personajes secundarios, la cronología de los tres años y de los
@@ -23,18 +24,21 @@ Visión Digital, Nullblade, el Grimorio, los Ecos, los personajes secundarios, l
 La Biblia no reemplaza la documentación técnica (`../arquitectura.md`, `../estructura_del_proyecto.md`) ni el plan del
 MVP (`../plan_mvp.md`).
 
-## Diferencias con lo que ya está en el juego (pendientes de decisión)
+## Decisiones tomadas sobre las diferencias (Biblia v1.1, 12 de octubre de 2026)
 
-Lo implementado antes de la Biblia usa algunos nombres y decisiones que la Biblia marca como **pendientes** o resuelve de
-otra forma. **No se cambió nada del juego**: quedan anotadas para que el equipo decida.
+| Tema | Decisión del equipo |
+|---|---|
+| Nombres | **Oficiales:** el juego *Nullveil: Beyond the Firewall*, el protagonista **Kai** y el profesor **Prof. Alvarado** (ya incorporados a la Biblia) |
+| Aegis | Aparece en la misión especial **«Eco en la Red»** (décimo, capítulo 3), donde Kai lo rescata y lo repara con comandos |
+| Temas de los niveles | Se combinan: los títulos e historia de los 24 niveles de la Biblia, con los contenidos de la tabla del MEP ubicados en cada uno (`../curriculo_mep.md`) |
 
-| Tema | En el juego y la documentación actual | En la Biblia v1.0 |
+## Diferencias que siguen abiertas
+
+Lo implementado antes de la Biblia que todavía no coincide del todo. **No se cambió nada del juego**: quedan anotadas para
+que el equipo decida.
+
+| Tema | En el juego y la documentación actual | En la Biblia |
 |---|---|---|
-| Nombre del juego | «Nullveil: Beyond the Firewall» (menú, proyecto) | Pendiente; nombre provisional del proyecto de origen: «Proyecto Génesis» |
-| Protagonista | «Kai» (arte, diálogos, Grimorio) | Nombre pendiente |
-| Profesor | «Prof. Alvarado» (diálogos, retratos, terminal `alvarado@…`, reglas de contraseña) | Nombre y personalidad concreta pendientes |
-| Cuándo se obtiene Aegis | Capítulo 2, nivel 3, reparado con comandos (`../curriculo_mep.md`, `../plan_mvp.md`) | Capítulo 3, misión especial «Eco en la Red» (rescate y reparación con comandos); Aegis Bridge en el capítulo 4 |
-| Temas de los niveles | Distribución según la tabla del MEP (`../curriculo_mep.md`): redes en décimo (cap. 4) | Distribución narrativa propia, provisional: contraseñas en el nivel 7 («Identidad robada»), redes en undécimo (cap. 6 y 7) |
 | La entidad «???» | `../plan_mvp.md` la anota como primera manifestación de «El Núcleo» | Relación entre «El Núcleo» y el «Proyecto Génesis», y el nombre del antagonista (AXIOM es propuesta), pendientes |
 | Origen de Nullblade | En el plan, la Nullblade oficial se encuentra en el cuarto viejo al que invita el profesor (H5) | Origen pendiente: no asumir que la creó el profesor ni que su nombre la vincula al antagonista |
 | Detonante de la Visión Digital | Implementado: el mensaje de la computadora la activa sola, como un glitch | Detonante preciso pendiente |

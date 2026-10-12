@@ -1,8 +1,8 @@
 # BIBLIA NARRATIVA DEL VIDEOJUEGO
 
-**Versión:** 1.0 — Documento maestro de historia  
+**Versión:** 1.1 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
 **Estado:** Base narrativa de referencia; algunas decisiones siguen abiertas.  
-**Nombre oficial del videojuego:** Pendiente.  
+**Nombre oficial del videojuego:** Nullveil: Beyond the Firewall.  
 **Nombre provisional del proyecto de origen:** Proyecto Génesis.  
 **Género:** Aventura 2D, metroidvania-lite, misterio, ciencia ficción y ciberseguridad educativa.  
 **Ambientación:** Colegio técnico y ciudad ficticia inspirados en Costa Rica.  
@@ -58,6 +58,8 @@ El protagonista crece sin conocer su naturaleza. El profesor trabaja como docent
 
 ## III. El protagonista
 
+**Nombre:** Kai.
+
 **Identidad pública:** Estudiante que inicia décimo de Ciberseguridad, con una familia, compañeros y aspiraciones propias.
 
 **Identidad verdadera:** Organismo artificial de biomateria con arquitectura de percepción digital avanzada, desarrollado como una posible respuesta a las consecuencias del proyecto original.
@@ -74,7 +76,7 @@ El protagonista crece sin conocer su naturaleza. El profesor trabaja como docent
 
 ## IV. El profesor
 
-**Nombre:** Pendiente.  
+**Nombre:** Prof. Alvarado.  
 **Rol público:** Profesor de especialidad técnica.  
 **Rol secreto:** Creador del proyecto original y del protagonista.
 
@@ -348,9 +350,7 @@ El libro se cierra. Comienzan los créditos.
 
 ## XVI. Decisiones pendientes
 
-- Nombre oficial del videojuego.
-- Nombre del protagonista.
-- Nombre y personalidad concreta del profesor.
+- Personalidad concreta del profesor.
 - Nombre y diseño definitivo del antagonista (AXIOM es propuesta).
 - Nombre del colegio y de la ciudad.
 - Identidad y trayectoria de los tres amigos.
@@ -377,6 +377,17 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
 
 ---
 
-**FIN — BIBLIA NARRATIVA V1.0**
+## Registro de cambios
+
+**v1.1 — 12 de octubre de 2026** (aprobado por el equipo):
+
+- **Nombres oficiales:** el videojuego se llama **Nullveil: Beyond the Firewall**, el protagonista **Kai** y el profesor
+  **Prof. Alvarado**. Se quitaron de las decisiones pendientes (sigue pendiente la personalidad concreta del profesor).
+- **Aegis** se confirma en la misión especial **«Eco en la Red»** (décimo, capítulo 3), como ya decía esta Biblia.
+- **Temas de los niveles:** los títulos y la historia de los 24 niveles de la sección XII se mantienen; los contenidos
+  de la tabla del MEP se ubican dentro de ellos (`docs/curriculo_mep.md`). Sigue siendo una distribución provisional
+  hasta validarla con los programas completos del MEP.
+
+**FIN — BIBLIA NARRATIVA V1.1**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.

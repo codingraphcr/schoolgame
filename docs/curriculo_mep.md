@@ -5,12 +5,10 @@ Técnicas 2025 — Ciberseguridad* (MEP, código DGEC 5210). La tabla no incluye
 tengamos los **programas de estudio de décimo, undécimo y duodécimo (2020)** hay que revisar esta distribución con
 ellos. No se inventan contenidos oficiales: cada nivel cita los indicadores de logro que trabaja.
 
-**Distribución aprobada por el equipo** (octubre 2026). Se mantienen los nombres de capítulo del documento maestro;
-solo se reubica el contenido según la tabla.
+**Distribución combinada MEP + Biblia Narrativa** (decisión del equipo, 12 de octubre de 2026): se mantienen los
+títulos y la historia de los 24 niveles de la Biblia (`narrativa/BIBLIA_NARRATIVA.md`, sección XII) y dentro de cada uno
+se ubican los contenidos de la tabla del MEP. Sigue siendo provisional hasta validarla con los programas completos.
 
-> La **Biblia Narrativa v1.0** (`narrativa/BIBLIA_NARRATIVA.md`) propone otra distribución narrativa de los niveles,
-> también provisional (por ejemplo, Aegis en el capítulo 3 y las redes en undécimo). Las diferencias están en
-> `narrativa/README.md`, pendientes de decisión del equipo.
 
 ## Contenidos por grado (según la tabla)
 
@@ -22,41 +20,41 @@ solo se reubica el contenido según la tabla.
 
 ## Los 24 niveles
 
-| Cap. | Nivel | Contenido |
+| Cap. | Nivel (título de la Biblia) | Contenidos del MEP que trabaja |
 |---|---|---|
-| **1** El origen digital | 1 | Principios de ciberseguridad, ética y leyes de los datos, internet de todo |
-| | 2 | Primer incidente: contraseñas, control de acceso, Linux (empieza en el prólogo: terminal y «Contraseña débil») |
-| **2** Los primeros códigos | 3 | Condicionales, ciclos, funciones, clases y objetos. **Aegis**: Kai lo **repara con comandos** en una terminal |
-| | 4 | Control de flujo, estructuras de datos, errores y desarrollo seguro (SGSI) |
-| **3** Amenazas invisibles | 5 | Malware y tipos de ataques |
-| | 6 | Autenticación, criptografía y registros SIEM |
-| **4** Guardianes de la información | 7 | Redes: LAN/WAN, OSI y TCP/IP, Ethernet y MAC. Aquí el jugador vuelve a necesitar **la contraseña que creó** para el profesor (y su código de respaldo si la olvidó) |
-| | 8 | Desafío final de décimo: IPv4/IPv6 y TCP/UDP |
-| **5** El sistema desconocido | 9 | Sistemas operativos libres y licenciados |
-| | 10 | Compatibilidad y virtualización |
-| **6** Conexiones perdidas | 11 | Configuración de dispositivos de red y conmutación |
-| | 12 | VLAN y conmutador de capa 3 |
-| **7** Rutas invisibles | 13 | Árboles de expansión y redundancia |
-| | 14 | Automatización robotizada y energía sostenible |
-| **8** Bajo la superficie | 15 | Hackeo ético: conceptos, tipos, ventajas y desventajas |
-| | 16 | Plan de hackeo ético (desafío final de undécimo) |
-| **9** Sistemas comprometidos | 17 | Aplicaciones web y móviles, OWASP |
-| | 18 | Arquitecturas seguras y phishing en móviles |
-| **10** La nube fragmentada | 19 | Nube (IaaS/PaaS/SaaS) y cifrado |
-| | 20 | Bases de datos, minería de datos y gobernanza |
-| **11** Ecos del incidente | 21 | Redes seguras: DHCP, LAN, inalámbricas, IoT |
-| | 22 | Monitoreo, criptografía y SOC |
-| **12** Protocolo final | 23 | Malware y análisis forense |
-| | 24 | Confrontación con El Núcleo (todo lo aprendido) |
+| **1** El origen digital | 1 · El primer incidente | Principios de ciberseguridad, ética y leyes de los datos, internet de todo |
+| | 2 · Algo no está bien | Protección e integridad de la información, tipos de ataques, control de acceso, primeros comandos de Linux |
+| **2** Los primeros códigos | 3 · El lenguaje de las máquinas | Condicionales, ciclos, funciones, clases y objetos |
+| | 4 · Código fuera de control | Control de flujo, estructuras de datos, errores y excepciones, desarrollo seguro (SGSI). Recompensa: Dominio Nulo I |
+| **3** Amenazas invisibles | 5 · Contagio digital | Malware y código malicioso; protección de equipos |
+| | 6 · La señal perdida | Redes: LAN/WAN, protocolos, modelos OSI y TCP/IP, registros (SIEM). Misión especial **«Eco en la Red»**: Kai rescata a **Aegis** y lo **repara con comandos** (Aegis Pulse) |
+| **4** Guardianes de la información | 7 · Identidad robada | Contraseñas, autenticación, criptografía (huellas/hash) y acceso. Kai vuelve a necesitar **la contraseña que creó** para el profesor (o su código de respaldo). Aegis Bridge |
+| | 8 · El último día | Integra el año: direccionamiento IPv4/IPv6, Ethernet y MAC, TCP/UDP. Misión especial «Los nodos olvidados»: Salto de Nexo |
+| **5** El sistema desconocido | 9 · Un nuevo comienzo | Sistemas operativos libres y licenciados, compatibilidad |
+| | 10 · Sistemas paralelos | Virtualización e instalación segura de sistemas operativos |
+| **6** Conexiones perdidas | 11 · Conexión interrumpida | Configuración básica de dispositivos de red y conmutación |
+| | 12 · Direcciones perdidas | VLAN, conmutador de capa 3 y diagnóstico de conectividad |
+| **7** Rutas invisibles | 13 · La ciudad desconectada | Automatización robotizada y energía sostenible en la infraestructura de la ciudad |
+| | 14 · Paquetes fantasma | Árboles de expansión, redundancia, seguridad y monitoreo de redes |
+| **8** Bajo la superficie | 15 · Dentro de la máquina | Hackeo ético: conceptos, tipos, ventajas y desventajas |
+| | 16 · El origen de la señal | Plan de hackeo ético por fases (desafío final de undécimo) |
+| **9** Sistemas comprometidos | 17 · Puertas invisibles | Vulnerabilidades de aplicaciones web y móviles (OWASP) |
+| | 18 · Acceso restringido | Arquitecturas y desarrollo seguro, capas de protección, phishing en móviles |
+| **10** La nube fragmentada | 19 · Sobre las nubes | Nube (IaaS/PaaS/SaaS), modelos de entrega y cifrado |
+| | 20 · Datos fragmentados | Seguridad de bases de datos, minería de datos, inteligencia de negocios y gobernanza |
+| **11** Ecos del incidente | 21 · Huellas del pasado | Análisis forense; malware y herramientas antimalware |
+| | 22 · Alerta máxima | Monitoreo, criptografía y operaciones de un SOC |
+| **12** El último protocolo | 23 · El protocolo desconocido | Respuesta integral: DHCP, seguridad LAN e inalámbrica, IoT y lo aprendido en los tres años |
+| | 24 · La tercera respuesta | Confrontación final (todo lo aprendido) |
 
 **Emprendimiento** (undécimo): misiones secundarias en la zona comercial de la ciudad.
 
-## Aegis: la reparación (capítulo 2, nivel 3)
+## Aegis: «Eco en la Red» (capítulo 3)
 
-Kai encuentra a Aegis averiado (idea: un proyecto viejo y abandonado del laboratorio de programación). Para
-repararlo usa la **terminal**: revisa sus archivos con los comandos que ya conoce (`ls`, `cd`, `cat`) y aprende otros
-nuevos para corregir su programa. Así el nivel trabaja los fundamentos de programación (condicionales, ciclos,
-funciones) aplicados, no como cuestionario. Historia y comandos exactos por definir con el equipo.
+Misión especial del capítulo 3 (Biblia, secciones V y XII): Kai sigue una señal de auxilio hasta una instalación
+restringida y encuentra a Aegis dañado. Para repararlo consulta el Grimorio, analiza registros en terminales simuladas,
+ejecuta comandos educativos y protege puntos vulnerables. Recompensa: **Aegis Pulse**. Aegis no recuerda todo su pasado
+(regla de coherencia 5). Comandos exactos por definir con el equipo.
 
 ## Diferencias con el documento maestro (resueltas en la tabla de arriba)
 
