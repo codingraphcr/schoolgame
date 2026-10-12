@@ -351,6 +351,15 @@ func _handle_jump() -> void:
 		double_jumped.emit()
 
 
+## Rebote del ataque hacia abajo (pogo, como en Hollow Knight): impulso hacia arriba de altura fija
+## (no se corta al soltar el salto) y recupera el doble salto y el dash en el aire.
+func pogo(height: float) -> void:
+	_jump(_velocity_for_height(height))
+	_is_jump_rising = false
+	_restore_air_moves()
+	_squash(Vector2(0.8, 1.2))
+
+
 func _jump(vertical_speed: float) -> void:
 	velocity.y = -vertical_speed
 	jump_buffer_timer = 0.0

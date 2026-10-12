@@ -29,6 +29,8 @@ const FRAME_SETS := {
 const ATTACK_TIME := 0.3
 const COMBO_WINDOW := 0.45
 const HURT_TIME := 0.35
+## Cuánto dura la pose de aterrizaje ("caer", agachado) al tocar el suelo.
+const LAND_TIME := 0.1
 const DEATH_TIME := 1.2
 ## Cuánto dura la pose final de la curación (se levanta o empieza a bajar).
 const HEAL_END_TIME := 0.35
@@ -93,6 +95,8 @@ func _ready() -> void:
 		heal.started.connect(_on_heal_started)
 		heal.healed.connect(func(_amount: float) -> void: _heal_flash = 1.0)
 		heal.finished.connect(_on_heal_finished)
+	if player and apariencia == Apariencia.CONCEPTO:
+		player.landed.connect(_on_landed)
 	if FRAME_SETS.has(apariencia) and _build_frames(FRAME_SETS[apariencia][0], FRAME_SETS[apariencia].slice(1)):
 		return
 	_build_skeleton()
@@ -146,6 +150,10 @@ func _process(delta: float) -> void:
 
 func _play_state_animation() -> void:
 	var wanted: StringName = ANIMATIONS.get(player.state, &"quieto")
+	# En la hoja de Ariel, "caer" está dibujada agachada (es el aterrizaje): en el aire se usa la
+	# pose de salto, y "caer" solo un instante al tocar el suelo (LAND_TIME).
+	if wanted == &"caer" and apariencia == Apariencia.CONCEPTO:
+		wanted = &"saltar"
 	if _sprite:
 		if _sprite.animation != wanted or not _sprite.is_playing():
 			_play_sprite(wanted)
@@ -199,6 +207,12 @@ func _update_heal_light(delta: float, healing: bool) -> void:
 		target = 0.5 + heal.progress() * 0.9 + sin(_time * 14.0) * 0.08
 	_heal_light.energy = move_toward(_heal_light.energy, target + _heal_flash * 1.5, delta * 6.0) if not healing else target + _heal_flash * 1.5
 	_heal_light.visible = _heal_light.energy > 0.01
+
+
+## Al tocar el suelo, un instante agachado (la pose "caer" de la hoja), si no hay otra animación.
+func _on_landed() -> void:
+	if _override.is_empty():
+		_play_override(&"caer", LAND_TIME)
 
 
 ## Muestra una pose durante unos segundos (para escenas como la aparición de la Nullblade).

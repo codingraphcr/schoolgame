@@ -2,7 +2,8 @@
 class_name Spikes
 extends HitboxComponent
 ## Pinchos: peligro del escenario. Quitan medio cristal de integridad y devuelven al jugador al último
-## suelo seguro.
+## suelo seguro. Como en Hollow Knight, sirven para rebotar con el ataque hacia abajo (tienen una
+## zona que recibe los ataques de Kai: PlayerCombat rebota al golpearla).
 ## El origen es la esquina inferior izquierda, apoyada sobre el suelo. Se ven también en el editor.
 
 @export var width := 32.0:
@@ -15,6 +16,8 @@ const SPIKE_WIDTH := 8.0
 const SPIKE_HEIGHT := 8.0
 
 var _shape: CollisionShape2D
+var _pogo: HurtboxComponent
+var _pogo_shape: CollisionShape2D
 
 
 func _init() -> void:
@@ -27,6 +30,14 @@ func _init() -> void:
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		super._ready()
+		# Zona de rebote: detecta los ataques de Kai (capa 4). Se crea al jugar (no queda en la escena).
+		_pogo = HurtboxComponent.new()
+		_pogo.name = "PogoZone"
+		_pogo.collision_layer = 0
+		_pogo.collision_mask = 8  # Capa 4: ataques_jugador
+		_pogo_shape = CollisionShape2D.new()
+		_pogo.add_child(_pogo_shape)
+		add_child(_pogo)
 	_rebuild()
 
 
@@ -44,6 +55,11 @@ func _rebuild() -> void:
 	rect.size = Vector2(width - 4.0, SPIKE_HEIGHT - 2.0)
 	_shape.shape = rect
 	_shape.position = Vector2(width / 2.0, -(SPIKE_HEIGHT - 2.0) / 2.0)
+	if _pogo_shape:
+		var pogo_rect := RectangleShape2D.new()
+		pogo_rect.size = Vector2(width, SPIKE_HEIGHT)
+		_pogo_shape.shape = pogo_rect
+		_pogo_shape.position = Vector2(width / 2.0, -SPIKE_HEIGHT / 2.0)
 	queue_redraw()
 
 

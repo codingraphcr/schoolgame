@@ -42,6 +42,7 @@ func _test_attack() -> void:
 	var enemy := _spawn_enemy(room, player.global_position + Vector2(24, -4))
 	await _until(func() -> bool: return enemy.is_on_floor())
 	player.face(1)
+	var start_x := enemy.global_position.x
 	_action("attack")
 	await _until(func() -> bool: return combat.hitbox.active)
 	_check(combat.hitbox.active and combat.hitbox.position.x > 0.0, "con la mini espada, J ataca hacia donde mira Kai")
@@ -52,7 +53,6 @@ func _test_attack() -> void:
 	player.heal.active = true
 	_check(not combat.can_attack(), "no se puede atacar mientras Kai se cura")
 	player.heal.active = false
-	var start_x := enemy.global_position.x
 	await _until(func() -> bool: return not combat.is_attacking())
 	await _frames(6)
 	_check(enemy.health.current == enemy.max_health - 1.0, "un tajo quita 1 punto de vida, una sola vez (%.0f/%.0f)" % [enemy.health.current, enemy.max_health])
