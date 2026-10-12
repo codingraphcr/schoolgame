@@ -56,13 +56,13 @@ const RECIPES := {
 	&"eye_blink": { "wave": "noise", "freq": 1500.0, "dur": 0.025, "volume": 0.08, "lowpass": 2000.0 },
 	&"entity_whisper": { "type": "whisper", "dur": 1.9, "volume": 0.5, "syllables": 7 },
 	# Voces de diálogo (estilo Zelda: una "sílaba" cada pocas letras, ver DialogueCharacter.voice)
-	&"voice_kai": { "wave": "square", "freq": 620.0, "freq_end": 700.0, "dur": 0.055, "volume": 0.075, "duty": 0.3, "vibrato": [24.0, 55.0], "arp": [[0.0, 1.0], [0.45, 1.19]], "lowpass": 3600.0 },
+	&"voice_kai": { "wave": "square", "freq": 330.0, "freq_end": 350.0, "dur": 0.06, "volume": 0.07, "duty": 0.4, "vibrato": [10.0, 40.0], "arp": [[0.0, 1.0], [0.5, 1.12]], "lowpass": 2200.0 },
 	&"voice_profesor": { "wave": "triangle", "freq": 165.0, "freq_end": 148.0, "dur": 0.09, "attack": 0.01, "volume": 0.3, "vibrato": [3.0, 6.0], "noise": 0.04, "lowpass": 1200.0 },
 	&"voice_amenaza": { "wave": "saw", "freq": 230.0, "freq_end": 190.0, "dur": 0.06, "volume": 0.1, "noise": 0.2, "crush": 9.0, "lowpass": 2200.0 },
-	# Interfaz
-	&"ui_move": { "wave": "square", "freq": 1000.0, "dur": 0.03, "volume": 0.16, "duty": 0.25 },
-	&"ui_accept": { "wave": "square", "freq": 700.0, "freq_end": 1400.0, "dur": 0.08, "volume": 0.22 },
-	&"ui_back": { "wave": "square", "freq": 900.0, "freq_end": 450.0, "dur": 0.08, "volume": 0.2 },
+	# Interfaz (suaves y bajos: en el menú se oyen solos)
+	&"ui_move": { "wave": "triangle", "freq": 900.0, "dur": 0.035, "volume": 0.07, "lowpass": 2400.0 },
+	&"ui_accept": { "wave": "triangle", "freq": 600.0, "freq_end": 1000.0, "dur": 0.09, "volume": 0.1, "lowpass": 2600.0 },
+	&"ui_back": { "wave": "triangle", "freq": 800.0, "freq_end": 480.0, "dur": 0.09, "volume": 0.09, "lowpass": 2400.0 },
 	&"book_open": { "wave": "noise", "freq": 700.0, "freq_end": 250.0, "dur": 0.32, "volume": 0.3, "arp": [[0.0, 1.0], [0.5, 0.6]] },
 	&"book_page": { "wave": "noise", "freq": 3500.0, "freq_end": 1500.0, "dur": 0.13, "volume": 0.18 },
 	&"book_close": { "wave": "noise", "freq": 500.0, "freq_end": 150.0, "dur": 0.2, "volume": 0.32 },
