@@ -353,7 +353,7 @@ Cuenta los errores por pregunta (`mistakes`) para registros futuros. Funciona co
 personales, sin secuencias ni repeticiones) y estima la fortaleza (nivel, bits y tiempo para adivinarla); `suggest()`
 arma una frase de 4 palabras al azar y `backup_code()` un código de respaldo. **Entrada segura:** `sanitize()` deja solo
 letras (también ñ y con tilde), números, espacios y `! @ # $ % ^ & * ( ) - _ = + . , ; : ? / ~`, hasta 64 caracteres;
-quita lo que parece código o etiquetas (`< > [ ] { } " ' \` | \`), saltos de línea, tabulaciones y caracteres
+quita lo que parece código o etiquetas (< > [ ] { }, comillas, acento grave, barra vertical y barra invertida), saltos de línea, tabulaciones y caracteres
 invisibles mientras se escribe. El campo no permite copiar, pegar, arrastrar ni sugerencias del teclado del celular, y
 el juego queda en **pausa** mientras la ventana está abierta. `GameState.set_password` vuelve a validar (`is_clean`) y
 rechaza cualquier otra cosa sin tocar la partida. La contraseña nunca se ejecuta ni se interpreta: solo se calcula su
