@@ -31,7 +31,7 @@ const OUTLINE := Color("0a0d1c")
 ##          anchor_x (opcional): columna del centro del cuerpo si el
 ##          cálculo automático (centro de la cabeza) no sirve. only_body: conserva solo la figura
 ##          principal (descarta, por ejemplo, un globo de diálogo que quedó dentro de la zona).
-##          rotate: gira la pose 90° (acostada boca arriba, la cabeza a la izquierda).
+##          rotate: gira la pose 90° (desplomada boca abajo, la cabeza hacia donde mira).
 ##   animations: poses en orden, cuadros por segundo y si se repiten.
 const CHARACTERS := {
 	"kai": {
@@ -55,7 +55,7 @@ const CHARACTERS := {
 			"dash": { "rect": Rect2i(1020, 478, 156, 144) },
 			"dano": { "rect": Rect2i(1206, 478, 122, 144) },
 			# La muerte de la hoja parece dos personajes (hay una segunda cabeza oscura): Kai queda acostado
-			# boca arriba usando su pose de reposo girada 90° (rotate).
+			# desplomado boca abajo, con la cabeza hacia adelante: su pose de reposo girada 90° (rotate).
 			"tendido": { "rect": Rect2i(36, 478, 72, 144), "rotate": true },
 		},
 		"animations": {
@@ -262,8 +262,8 @@ func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 	var box := region.get_used_rect()
 	var image := region.get_region(box)
 	if pose.get("rotate", false):
-		# Acostado boca arriba: centrado en el cuadro y apoyado sobre el borde de abajo.
-		image.rotate_90(COUNTERCLOCKWISE)
+		# Desplomado boca abajo: centrado en el cuadro y apoyado sobre el borde de abajo.
+		image.rotate_90(CLOCKWISE)
 		return { "image": image, "anchor_x": image.get_width() / 2.0, "bottom": -1.0 }
 	var anchor: float
 	if pose.has("anchor_x"):

@@ -122,7 +122,8 @@ func _on_player_died() -> void:
 	var economy := get_node_or_null("/root/Economy")
 	if economy:
 		economy.apply_death_penalty()
-	await _scene_manager().transition(_respawn_at_checkpoint)
+	# Muerte y reaparición con la secuencia de la hoja de Ariel (desintegración, "CONEXIÓN PERDIDA...").
+	await DeathSequence.play(player, _respawn_at_checkpoint)
 
 
 func _on_progress_changed() -> void:

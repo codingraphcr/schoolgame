@@ -50,7 +50,8 @@ func _physics_process(delta: float) -> void:
 	if invulnerable_timer > 0.0:
 		invulnerable_timer = maxf(invulnerable_timer - delta, 0.0)
 		var blink_on := int(invulnerable_timer / blink_interval) % 2 == 0
-		_visual.modulate.a = 1.0 if invulnerable_timer <= 0.0 or blink_on else 0.35
+		# Mientras muere o reaparece no parpadea (lo maneja la animación de muerte).
+		_visual.modulate.a = 1.0 if invulnerable_timer <= 0.0 or blink_on or is_respawning else 0.35
 	_clock += delta
 	_track_safe_ground(delta)
 

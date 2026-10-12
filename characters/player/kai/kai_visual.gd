@@ -31,10 +31,11 @@ const COMBO_WINDOW := 0.45
 const HURT_TIME := 0.35
 ## Cuánto dura la pose de aterrizaje ("caer", agachado) al tocar el suelo.
 const LAND_TIME := 0.1
-const DEATH_TIME := 1.2
 ## Cuánto dura la pose final de la curación (se levanta o empieza a bajar).
 const HEAL_END_TIME := 0.35
 const HEAL_COLOR := Color("8a5cff")
+## Disolverse en píxeles (muerte y reaparición, DeathSequence).
+const DISSOLVE_SHADER := preload("res://world/effects/pixel_dissolve.gdshader")
 ## Rebote al correr con la apariencia por cuadros (en píxeles del dibujo).
 const RUN_BOB := 2.0
 const WALK_BOB := 1.0
@@ -90,7 +91,6 @@ func _ready() -> void:
 	if player and player.has_node("Damage"):
 		var damage := player.get_node("Damage") as PlayerDamage
 		damage.hurt.connect(func(_hit: HitData) -> void: _play_override(&"dano", HURT_TIME))
-		damage.died.connect(func() -> void: _play_override(&"muerte", DEATH_TIME))
 	if player and player.has_node("Heal"):
 		var heal := player.get_node("Heal") as PlayerHeal
 		heal.started.connect(_on_heal_started)
@@ -101,6 +101,21 @@ func _ready() -> void:
 	if FRAME_SETS.has(apariencia) and _build_frames(FRAME_SETS[apariencia][0], FRAME_SETS[apariencia].slice(1)):
 		return
 	_build_skeleton()
+
+
+## Kai se deshace en píxeles magenta (0 = entero, 1 = desaparecido). Lo usa la muerte (DeathSequence).
+func set_dissolve(amount: float) -> void:
+	if _sprite == null:
+		modulate.a = 1.0 - amount
+		return
+	if amount <= 0.0:
+		_sprite.material = null
+		return
+	if _sprite.material == null:
+		var material := ShaderMaterial.new()
+		material.shader = DISSOLVE_SHADER
+		_sprite.material = material
+	(_sprite.material as ShaderMaterial).set_shader_parameter(&"amount", amount)
 
 
 ## Nombre de la animación que se ve ahora (sirve para las pruebas automáticas).

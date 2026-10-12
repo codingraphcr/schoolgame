@@ -79,9 +79,9 @@ func attack(charged := false) -> bool:
 	_place_hitbox()
 	var visual := player.get_node_or_null("Visual/Body/Kai")
 	if _down and visual and visual.has_method("play_pose"):
-		# El cuadro de ataque trae dibujado el corte hacia adelante: hacia abajo, Kai sigue en el aire
-		# (pose de salto) y clava la espada debajo.
-		visual.play_pose(&"saltar", weapon.windup + weapon.active_time + 0.1)
+		# El cuadro de ataque trae dibujado el corte hacia adelante: hacia abajo, Kai recoge las rodillas
+		# (la pose "caer" de la hoja, como el ataque hacia abajo de Hollow Knight) y clava la espada debajo.
+		visual.play_pose(&"caer", weapon.windup + weapon.active_time + 0.15)
 	elif visual and visual.has_method("attack"):
 		visual.attack(weapon.windup)
 	_spawn_slash()

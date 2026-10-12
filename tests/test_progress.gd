@@ -135,7 +135,11 @@ func _test_room_applies_progress() -> void:
 	await _frames(6)
 	killer.queue_free()
 	_check(economy.ecos == 38, "morir quita el 10 %% de los Ecos (42 → %d)" % economy.ecos)
-	await create_timer(1.2, true, false, true).timeout
+	# La muerte (DeathSequence) dura unos segundos: se espera a que Kai termine de reaparecer.
+	for i in 900:
+		if not player.damage.is_respawning and not player.controls_locked:
+			break
+		await physics_frame
 	_check(room.get_node("CombatHUD/Ecos")._amount.text == "38", "el HUD actualiza los Ecos")
 	_check(player.health.current == 5.0, "reaparece con las máscaras llenas")
 	state.reset()
