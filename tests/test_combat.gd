@@ -147,9 +147,19 @@ func _test_fight() -> void:
 	await _until(func() -> bool: return box.is_playing())
 	_check(fight.running and fight.enemy != null and not fight.enemy.ai_enabled, "aparece la «Contraseña débil» (quieta mientras habla)")
 	_check(await _dialogue_contains(box, "no deberías poder vernos"), "dice «Tú no deberías poder vernos»")
+	var zoom := room.camera.zoom
 	await _advance(box)
-	# La Nullblade se materializa como un destello: sin tarjeta y sin quedar obtenida (eso es en el cuarto viejo).
+	# La Nullblade se materializa en la escena de cine de Ariel, como un destello: sin tarjeta y sin
+	# quedar obtenida (la oficial está en el cuarto viejo).
+	await _wait(1.5)
+	var reveal: NullbladeReveal = null
+	for child in room.get_children():
+		if child is NullbladeReveal:
+			reveal = child
+	_check(reveal != null and room.camera.zoom.x > zoom.x * 1.1, "la Nullblade aparece en una escena de cine (la cámara se acerca)")
 	await _until(func() -> bool: return player.combat.weapon != null)
+	await _until(func() -> bool: return room.camera.zoom.is_equal_approx(zoom))
+	_check(room.camera.zoom.is_equal_approx(zoom), "al terminar la escena la cámara vuelve a la normalidad")
 	_check(root.get_node_or_null("EquipmentCardLayer") == null, "no aparece la tarjeta de equipamiento (todavía no es la Nullblade oficial)")
 	_check(state.nullblade_stage == 0 and state.has_flag(&"nullblade_destello"), "la Nullblade es un destello: no queda obtenida")
 	_check(player.combat.weapon.id == &"nullblade", "Kai pelea con la Nullblade")

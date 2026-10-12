@@ -35,7 +35,9 @@ const RECIPES := {
 	&"slash": { "wave": "saw", "freq": 1800.0, "freq_end": 500.0, "dur": 0.15, "volume": 0.16, "noise": 0.55, "crush": 11.0, "lowpass": 6000.0, "arp": [[0.0, 1.0], [0.18, 0.0], [0.26, 1.6], [0.42, 0.0], [0.5, 0.8], [0.68, 0.0], [0.74, 1.3]] },
 	&"hit": { "wave": "square", "freq": 180.0, "freq_end": 60.0, "dur": 0.09, "volume": 0.17, "noise": 0.5, "crush": 8.0, "lowpass": 2200.0 },
 	&"energy_gain": { "wave": "sine", "freq": 1500.0, "freq_end": 2100.0, "dur": 0.06, "volume": 0.08 },
-	&"reveal_gather": { "wave": "saw", "freq": 90.0, "freq_end": 700.0, "dur": 1.6, "attack": 1.2, "volume": 0.16, "vibrato": [6.0, 11.0], "noise": 0.25, "lowpass": 2000.0 },
+	&"reveal_gather": { "wave": "saw", "freq": 70.0, "freq_end": 700.0, "dur": 3.4, "attack": 1.6, "volume": 0.3, "vibrato": [6.0, 11.0], "noise": 0.25, "lowpass": 2000.0 },
+	&"reveal_boom": { "wave": "sine", "freq": 120.0, "freq_end": 30.0, "dur": 1.2, "volume": 0.55, "noise": 0.1, "lowpass": 700.0 },
+	&"reveal_grip": { "wave": "triangle", "freq": 784.0, "dur": 0.6, "volume": 0.16, "arp": [[0.0, 1.0], [0.12, 1.5], [0.24, 2.0], [0.36, 3.0]], "lowpass": 5000.0 },
 	&"reveal_flash": { "wave": "triangle", "freq": 1046.0, "freq_end": 700.0, "dur": 0.7, "volume": 0.22, "noise": 0.15, "arp": [[0.0, 1.0], [0.1, 1.25], [0.2, 1.5]], "lowpass": 5000.0 },
 	&"fanfare": { "wave": "triangle", "freq": 523.0, "dur": 0.8, "volume": 0.2, "arp": [[0.0, 1.0], [0.18, 1.25], [0.36, 1.5], [0.54, 2.0]] },
 	# BITS y cofres

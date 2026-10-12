@@ -25,6 +25,9 @@ const OUTLINE := Color("0a0d1c")
 ##   reference/height: la pose de referencia queda con ese alto (fija la escala de todas).
 ##   poses: zona de cada pose en la hoja. feet_y (opcional): fila de los pies, si debajo hay efectos.
 ##          body (opcional): zona del cuerpo que el borrado del resplandor no toca.
+##          cover + cover_color (opcional): polígono (en la hoja) que se tapa con ese color
+##          (para quitar algo que sobra).
+##          clip (opcional): contorno (en la hoja) fuera del cual se borra todo (efectos pegados).
 ##          anchor_x (opcional): columna del centro del cuerpo si el
 ##          cálculo automático (centro de la cabeza) no sirve. only_body: conserva solo la figura
 ##          principal (descarta, por ejemplo, un globo de diálogo que quedó dentro de la zona).
@@ -110,10 +113,17 @@ const CHARACTERS := {
 		"height": 96,
 		"poses": {
 			"reposo": { "rect": Rect2i(1095, 135, 95, 180) },
-			"suelo_inicio": { "rect": Rect2i(60, 180, 130, 140), "feet_y": 310, "body": Rect2i(62, 188, 122, 128) },
-			"suelo_canalizar": { "rect": Rect2i(285, 135, 175, 185), "feet_y": 310, "body": Rect2i(306, 196, 128, 120) },
-			"suelo_restaurar": { "rect": Rect2i(515, 95, 235, 225), "feet_y": 310, "body": Rect2i(561, 196, 142, 120) },
-			"suelo_completar": { "rect": Rect2i(835, 140, 145, 180), "feet_y": 310, "body": Rect2i(836, 196, 128, 120) },
+			# cover (en las poses de rodillas): tapa la mano apoyada en el suelo con el color del pantalón;
+			# Kai solo tiene la mano en el pecho (en la hoja parecía el mismo brazo).
+			"suelo_canalizar": { "rect": Rect2i(285, 135, 175, 185), "feet_y": 310, "body": Rect2i(306, 196, 128, 120),
+				"cover": [Vector2(333, 296), Vector2(357, 296), Vector2(359, 314), Vector2(333, 314)], "cover_color": Color("16151f") },
+			# La pose de la canalización sin efectos (para empezar y terminar de curarse, y en la escena de la
+			# Nullblade): la manga doblada hacia el pecho. clip la recorta por su contorno (sin el aura).
+			"suelo_quieto": { "rect": Rect2i(285, 135, 175, 185), "feet_y": 310, "body": Rect2i(286, 188, 150, 140), "only_body": true,
+				"clip": [Vector2(354, 210), Vector2(366, 204), Vector2(382, 199), Vector2(390, 201), Vector2(401, 217), Vector2(405, 230), Vector2(402, 241), Vector2(397, 246), Vector2(401, 253), Vector2(408, 257), Vector2(410, 270), Vector2(407, 285), Vector2(410, 300), Vector2(410, 311), Vector2(352, 312), Vector2(306, 311), Vector2(307, 299), Vector2(319, 291), Vector2(319, 266), Vector2(325, 261), Vector2(327, 246), Vector2(331, 233), Vector2(345, 222)],
+				"cover": [Vector2(333, 296), Vector2(357, 296), Vector2(359, 314), Vector2(333, 314)], "cover_color": Color("16151f") },
+			"suelo_restaurar": { "rect": Rect2i(515, 95, 235, 225), "feet_y": 310, "body": Rect2i(561, 196, 142, 120),
+				"cover": [Vector2(598, 297), Vector2(621, 297), Vector2(621, 314), Vector2(598, 314)], "cover_color": Color("16151f") },
 			"aire_inicio": { "rect": Rect2i(45, 545, 150, 200), "feet_y": 735, "body": Rect2i(48, 548, 145, 198) },
 			"aire_canalizar": { "rect": Rect2i(285, 550, 155, 195), "feet_y": 730, "body": Rect2i(288, 556, 152, 190) },
 			"aire_restaurar": { "rect": Rect2i(525, 520, 225, 240), "feet_y": 735, "body": Rect2i(540, 556, 182, 205) },
@@ -121,9 +131,9 @@ const CHARACTERS := {
 			"aire_descenso": { "rect": Rect2i(1060, 555, 135, 195), "feet_y": 745, "body": Rect2i(1062, 558, 134, 192) },
 		},
 		"animations": {
-			"curar_suelo_inicio": { "poses": ["suelo_inicio"], "fps": 1.0, "loop": false },
+			"curar_suelo_inicio": { "poses": ["suelo_quieto"], "fps": 1.0, "loop": false },
 			"curar_suelo": { "poses": ["suelo_canalizar", "suelo_restaurar"], "fps": 5.0, "loop": true },
-			"curar_suelo_fin": { "poses": ["suelo_completar"], "fps": 1.0, "loop": false },
+			"curar_suelo_fin": { "poses": ["suelo_quieto"], "fps": 1.0, "loop": false },
 			"curar_aire_inicio": { "poses": ["aire_inicio"], "fps": 1.0, "loop": false },
 			"curar_aire": { "poses": ["aire_canalizar", "aire_restaurar"], "fps": 5.0, "loop": true },
 			"curar_aire_fin": { "poses": ["aire_completar", "aire_descenso"], "fps": 6.0, "loop": false },
@@ -190,12 +200,52 @@ func _extract_character(character: String) -> void:
 	json.close()
 
 
+## Polígono de la pose (en la hoja), pasado a coordenadas de su zona.
+func _local_polygon(pose: Dictionary, key: String) -> PackedVector2Array:
+	var polygon := PackedVector2Array()
+	var origin := Vector2(pose.rect.position)
+	for point: Vector2 in pose.get(key, []):
+		polygon.append(point - origin)
+	return polygon
+
+
+## Tapa la zona "cover" de la pose con el color "cover_color" (la mano que
+## Kai apoya en el suelo, con el color del pantalón que tiene detrás). Debajo de los pies solo
+## recolorea lo que ya es de la figura.
+func _cover(region: Image, pose: Dictionary) -> void:
+	var polygon := _local_polygon(pose, "cover")
+	if polygon.is_empty():
+		return
+	var color: Color = pose.cover_color
+	var feet: int = int(pose.get("feet_y", 1 << 20)) - pose.rect.position.y
+	for y in region.get_height():
+		for x in region.get_width():
+			if not Geometry2D.is_point_in_polygon(Vector2(x, y), polygon):
+				continue
+			if y <= feet or region.get_pixel(x, y).a > 0.0:
+				# Un poco de textura, como la tela del pantalón.
+				region.set_pixel(x, y, color.lightened(0.07) if (x * 7 + y * 13) % 5 == 0 else color)
+
+
+## Borra todo lo que queda fuera del contorno "clip" de la pose (aura y efectos pegados a la figura).
+func _clip(region: Image, pose: Dictionary) -> void:
+	var polygon := _local_polygon(pose, "clip")
+	if polygon.is_empty():
+		return
+	for y in region.get_height():
+		for x in region.get_width():
+			if not Geometry2D.is_point_in_polygon(Vector2(x, y), polygon):
+				region.set_pixel(x, y, Color(0, 0, 0, 0))
+
+
 ## Quita el fondo de la zona y recorta la pose. Devuelve la imagen y el centro del cuerpo.
 func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 	var rect: Rect2i = pose.rect
 	var region := sheet.get_region(rect)
 	_remove_background(region)
 	_remove_glow(region, pose)
+	_cover(region, pose)
+	_clip(region, pose)
 	if pose.get("only_body", false):
 		var body := _largest_component(region)
 		var kept := Image.create_empty(region.get_width(), region.get_height(), false, Image.FORMAT_RGBA8)
