@@ -72,13 +72,13 @@
 		},
 		"curar_suelo_inicio": {
 			"feet": [
-				52,
+				48,
 				119
 			],
 			"file": "kai_hd_curacion_curar_suelo_inicio.png",
 			"fps": 1.0,
 			"frame_size": [
-				104,
+				96,
 				128
 			],
 			"frames": 1,

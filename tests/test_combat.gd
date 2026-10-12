@@ -147,9 +147,17 @@ func _test_fight() -> void:
 	await _until(func() -> bool: return box.is_playing())
 	_check(fight.running and fight.enemy != null and not fight.enemy.ai_enabled, "aparece la «Contraseña débil» (quieta mientras habla)")
 	_check(await _dialogue_contains(box, "no deberías poder vernos"), "dice «Tú no deberías poder vernos»")
+	var zoom := room.camera.zoom
 	await _advance(box)
-	# La Nullblade se materializa y aparece la tarjeta de equipamiento (el juego queda en pausa).
+	# La Nullblade se materializa (escena de cine) y aparece la tarjeta de equipamiento (el juego queda en pausa).
+	await _wait(1.5)
+	var reveal: NullbladeReveal = null
+	for child in room.get_children():
+		if child is NullbladeReveal:
+			reveal = child
+	_check(reveal != null and room.camera.zoom.x > zoom.x * 1.1, "la Nullblade aparece en una escena de cine (la cámara se acerca)")
 	await _until(func() -> bool: return root.get_node_or_null("EquipmentCardLayer") != null)
+	_check(room.camera.zoom.is_equal_approx(zoom), "al terminar la escena la cámara vuelve a la normalidad")
 	var card := root.get_node_or_null("EquipmentCardLayer/EquipmentCard")
 	_check(card != null and paused and card.get_node("%Title").text == "NULLBLADE", "aparece la tarjeta «NULLBLADE» y el juego se pausa")
 	_check(state.nullblade_stage == 0 and player.controls_locked, "mientras tanto Kai no se mueve")

@@ -14,6 +14,8 @@ const FADE := 0.8
 static var current: StringName = &""
 static var _instance: Music
 static var _generated: Dictionary[StringName, AudioStream] = {}
+## Cuánto está bajada la música (Music.duck), en dB.
+static var _duck_db := 0.0
 
 var _player: AudioStreamPlayer
 var _tween: Tween
@@ -32,6 +34,15 @@ static func play(track: StringName) -> void:
 		_instance.process_mode = Node.PROCESS_MODE_ALWAYS
 		tree.root.add_child.call_deferred(_instance)
 	_instance._switch.call_deferred(track)
+
+
+## Baja la música un momento (escenas importantes, como la aparición de la Nullblade).
+## Music.duck(-16.0) la baja; Music.duck(0.0) la devuelve a su volumen.
+static func duck(volume_db: float, seconds := 0.5) -> void:
+	_duck_db = volume_db
+	if not is_instance_valid(_instance) or not _instance._player.playing:
+		return
+	_instance.create_tween().tween_property(_instance._player, "volume_db", volume_db, seconds)
 
 
 static func stream_for(track: StringName) -> AudioStream:
@@ -70,7 +81,7 @@ func _switch(track: StringName) -> void:
 		_player.volume_db = -40.0
 		_player.play())
 	if stream:
-		_tween.tween_property(_player, "volume_db", 0.0, FADE)
+		_tween.tween_property(_player, "volume_db", _duck_db, FADE)
 
 
 ## Música provisional de la computadora (donde vigila el ojo): un ambiente oscuro en bucle.
