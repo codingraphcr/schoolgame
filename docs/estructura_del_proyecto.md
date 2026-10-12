@@ -136,7 +136,7 @@ schoolgame/
 Cada sala es una escena con `Room` en la raíz: calcula los límites de la cámara, coloca a Kai en la entrada correcta,
 le aplica el progreso, decide dónde reaparece si muere (`checkpoint`) y define música, pasos y color de Kai
 (celeste dentro de la computadora). Las salidas (`RoomExit`) y entradas (`RoomEntry`) conectan salas.
-**Salas actuales:** Entrada del colegio → Pasillo + Laboratorio → Escritorio de la PC del profesor (nivel de SPAM).
+**Salas actuales:** Entrada del colegio → Pasillo → Laboratorio → Escritorio de la PC del profesor (nivel de SPAM).
 
 ### Kai, el jugador
 El nodo `Player` mueve a Kai (coyote time, salto variable, dash, doble salto, pared) y tiene nodos hijos, cada uno

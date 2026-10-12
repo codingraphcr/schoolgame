@@ -4,7 +4,7 @@ extends Node2D
 ## como referencia. No cambia el juego: solo deja probar el zoom de la cámara.
 ## Teclas: 1/2/3 = zoom ×2 (el del juego) / ×2,5 / ×3 · Esc = menú.
 
-const ROOM := "res://world/zones/zone0/pasillo_laboratorio.tscn"
+const ROOM := "res://world/zones/zone0/pasillo.tscn"
 const ZOOMS := { KEY_1: 2.0, KEY_2: 2.5, KEY_3: 3.0 }
 
 var _player: Player

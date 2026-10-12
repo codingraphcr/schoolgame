@@ -5,7 +5,8 @@ extends SceneTree
 ## Ejecutar: godot --headless --path . --script res://tests/test_world.gd
 
 const ENTRADA := "res://world/zones/zone0/entrada.tscn"
-const PASILLO := "res://world/zones/zone0/pasillo_laboratorio.tscn"
+const PASILLO := "res://world/zones/zone0/pasillo.tscn"
+const LAB := "res://world/zones/zone0/laboratorio.tscn"
 const PC := "res://world/zones/pc_profesor/escritorio.tscn"
 
 var _failures := 0
@@ -28,8 +29,8 @@ func _run() -> void:
 func _test_districts() -> void:
 	_check(world.districts.has(&"colegio") and world.districts.has(&"pc_profesor"), "se arman los distritos Colegio y PC del profesor")
 	var colegio: RoomGraph = world.graph(&"colegio")
-	_check(colegio != null and colegio.rooms.has(&"entrada") and colegio.rooms.has(&"pasillo_laboratorio"),
-		"el Colegio tiene la Entrada y el Pasillo y Laboratorio")
+	_check(colegio != null and colegio.rooms.has(&"entrada") and colegio.rooms.has(&"pasillo") and colegio.rooms.has(&"laboratorio"),
+		"el Colegio tiene la Entrada, el Pasillo y el Laboratorio (dos salas)")
 	_check(colegio != null and colegio.open_doors().is_empty(), "el Colegio no tiene puertas sin destino")
 	var wrong: PackedStringArray = []
 	for district_id: StringName in world.districts:
@@ -40,10 +41,14 @@ func _test_districts() -> void:
 	_check(world.district_of(&"pc_escritorio") == &"pc_profesor" and world.scene_of(&"pc_escritorio") == PC,
 		"la PC del profesor es un distrito aparte")
 	var to_pasillo: Dictionary = world.destination(&"entrada", &"este")
-	_check(to_pasillo.get("room") == &"pasillo_laboratorio" and to_pasillo.get("scene") == PASILLO
+	_check(to_pasillo.get("room") == &"pasillo" and to_pasillo.get("scene") == PASILLO
 		and to_pasillo.get("entry") == &"desde_entrada", "la puerta este de la Entrada lleva al Pasillo (entrada desde_entrada)")
-	var to_entrada: Dictionary = world.destination(&"pasillo_laboratorio", &"oeste")
+	var to_entrada: Dictionary = world.destination(&"pasillo", &"oeste")
 	_check(to_entrada.get("room") == &"entrada" and to_entrada.get("entry") == &"desde_pasillo", "y la oeste del Pasillo vuelve a la Entrada")
+	var to_lab: Dictionary = world.destination(&"pasillo", &"este")
+	_check(to_lab.get("room") == &"laboratorio" and to_lab.get("scene") == LAB and to_lab.get("entry") == &"desde_pasillo",
+		"la puerta este del Pasillo lleva al Laboratorio")
+	_check(world.destination(&"laboratorio", &"oeste").get("entry") == &"desde_laboratorio", "y la oeste del Laboratorio vuelve al Pasillo")
 	_check(world.destination(&"entrada", &"no_existe").is_empty() and world.destination(&"nadie", &"este").is_empty(),
 		"una puerta o una sala desconocida no tiene destino")
 	_check(world.room_for_scene(ENTRADA) == &"entrada" and world.room_for_scene("res://no.tscn") == &"", "encuentra la sala de cada escena")
@@ -88,13 +93,13 @@ func _test_entering_rooms() -> void:
 	_check(entered == [&"entrada"], "avisa con room_entered")
 	var room_exit := room.get_node("Exits/ToPasillo") as RoomExit
 	var target := room_exit.resolve()
-	_check(target.get("room") == &"pasillo_laboratorio", "la salida de la Entrada le pregunta el destino al mapa")
+	_check(target.get("room") == &"pasillo", "la salida de la Entrada le pregunta el destino al mapa")
 	# Cambiar de sala como lo hace una salida, con el id de la sala.
 	root.get_node("SceneManager").go_to_room(target["scene"], target["entry"], target["room"])
-	await _until(func() -> bool: return current_scene != null and current_scene.name == "PasilloLaboratorio")
+	await _until(func() -> bool: return current_scene != null and current_scene.name == "Pasillo")
 	await _frames(6)
 	room = current_scene as Room
-	_check(room != null and room.room_id == &"pasillo_laboratorio" and world.current_room == &"pasillo_laboratorio",
+	_check(room != null and room.room_id == &"pasillo" and world.current_room == &"pasillo",
 		"al llegar al Pasillo, World cambia de sala")
 	_check(room != null and absf(room.player.global_position.x - 40.0) < 4.0, "Kai aparece en la entrada que dice el mapa")
 	# Llegar sin id (p. ej. al continuar una partida): se busca por la escena.

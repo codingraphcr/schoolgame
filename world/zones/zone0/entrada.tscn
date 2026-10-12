@@ -304,7 +304,7 @@ facing = -1
 position = Vector2(794, 176)
 script = ExtResource("13_3jc38")
 door_id = &"este"
-target_scene = "res://world/zones/zone0/pasillo_laboratorio.tscn"
+target_scene = "res://world/zones/zone0/pasillo.tscn"
 target_entry = &"desde_entrada"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToPasillo" unique_id=1877800457]

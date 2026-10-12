@@ -26,8 +26,8 @@ func _initialize() -> void:
 ## Las fichas de data/world/rooms (las salas que ya existen en el juego).
 func _test_real_templates() -> void:
 	var real := RoomTemplate.load_folder()
-	_check(real.has(&"entrada") and real.has(&"pasillo_laboratorio") and real.has(&"pc_escritorio"),
-		"se cargan las fichas de la Entrada, el Pasillo y Laboratorio y la PC del profesor")
+	_check(real.has(&"entrada") and real.has(&"pasillo") and real.has(&"laboratorio") and real.has(&"pc_escritorio"),
+		"se cargan las fichas de la Entrada, el Pasillo, el Laboratorio y la PC del profesor")
 	var errors: PackedStringArray = []
 	for template: RoomTemplate in real.values():
 		errors.append_array(template.validate())
@@ -46,9 +46,10 @@ func _test_real_templates() -> void:
 	_check(missing.is_empty(), "cada puerta apunta a una entrada que existe en la escena %s" % [missing])
 	var colegio := RoomGraph.new(&"colegio", real)
 	colegio.add_room(&"entrada", &"entrada", Vector2i(0, 0))
-	colegio.add_room(&"pasillo", &"pasillo_laboratorio", Vector2i(1, 0))
-	_check(colegio.link(&"entrada", &"este", &"pasillo", &"oeste") and colegio.open_doors().is_empty(),
-		"el prólogo de hoy (Entrada ↔ Pasillo) arma un grafo sin puertas sueltas")
+	colegio.add_room(&"pasillo", &"pasillo", Vector2i(1, 0))
+	colegio.add_room(&"laboratorio", &"laboratorio", Vector2i(2, 0))
+	_check(colegio.link(&"entrada", &"este", &"pasillo", &"oeste") and colegio.link(&"pasillo", &"este", &"laboratorio", &"oeste")
+		and colegio.open_doors().is_empty(), "el prólogo de hoy (Entrada ↔ Pasillo ↔ Laboratorio) arma un grafo sin puertas sueltas")
 
 
 ## Un colegio de prueba, armado en el código:

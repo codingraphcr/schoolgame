@@ -247,10 +247,19 @@ para que compilen también en las pruebas de línea de comandos.
 
 ## Salas (`world/`)
 
-- `world/zones/zone0/pasillo_laboratorio.tscn`: **primera sala real** (Zona 0, Pasillo + Laboratorio), creada a partir
-  de la muestra de Ariel y editable en Godot: tiles (`Background`, `Cables`, tileset `world/tilesets/colegio_tileset.tres`),
-  colisiones como rectángulos (`Collisions`: suelo, paredes y bandejas de cables de un sentido), objetos (`Corridor`, `Lab`,
-  `CableTrays`), luces (`Lights`, textura compartida `assets/art/light_soft.tres`) y paquetes de datos (`Packets`).
+- `world/zones/zone0/pasillo.tscn` y `laboratorio.tscn`: las **primeras salas reales** (Zona 0), creadas a partir de
+  la muestra de Ariel y editables en Godot: tiles (`Background`, `Cables`, tileset `world/tilesets/colegio_tileset.tres`),
+  colisiones como rectángulos (`Collisions`: suelo, paredes y bandejas de cables de un sentido), objetos, luces (`Lights`,
+  textura compartida `assets/art/light_soft.tres`) y paquetes de datos (`Packets`). Eran una sola escena; en **M3** se
+  separaron en dos salas del mapa:
+  - **Pasillo** (688 px): el profesor, los casilleros, el router, las bandejas de cables y el puente de datos con su
+    fragmento (Visión Digital). Salida izquierda → Entrada; derecha → Laboratorio (`desde_pasillo`).
+  - **Laboratorio** (720 px): la computadora del laboratorio (prólogo y entrada a la PC del profesor), el monitor de la
+    entidad, los servidores (dos más, provisionales, con los sprites de Ariel) y la carnada del phishing. Su fondo es el
+    patrón diagonal de Ariel, ensanchado. Salida izquierda → Pasillo (`desde_laboratorio`); al salir de la PC se llega
+    aquí (`desde_pc`).
+  - La red de la Visión Digital (`red_zona0.gd`) está en las dos salas: `show_bridge` (puente y fragmento, en el
+    Pasillo) y `show_threat` (el pez del phishing, en el Laboratorio).
   Una partida nueva (`GameState.reset()`) empieza en la Entrada: Kai es un alumno común, sin habilidades.
 - `world/effects/`: comportamientos reutilizables del escenario: `flicker.gd` (parpadeo de carteles), `bob.gd`
   (flotar en píxeles enteros), `pulse_light.gd` (luz que late) y `packet_stream.gd` (paquetes por el cable que se
@@ -442,8 +451,8 @@ Plan aprobado del mapa 2D semi-procedural, tareas **M1–M8**. **M1 (hecho): el 
   escena, tipo (`corridor`, `classroom`, `library`, `stairs`…), distrito, **tamaño en celdas** de la cuadrícula del mapa,
   puertas, si es fija o secreta, peso de aparición, dificultad, habilidades mínimas para recorrerla, capítulo, enemigos,
   objetivos educativos y misiones. `validate()` encuentra fichas mal hechas; `RoomTemplate.load_folder()` carga todas
-  (también en el juego exportado). Hoy hay fichas de la Entrada, el Pasillo y Laboratorio (2 celdas, se separará en
-  dos salas) y la PC del profesor (distrito `pc_profesor`, se entra por la computadora, sin puertas).
+  (también en el juego exportado). Hoy hay fichas de la Entrada, el Pasillo, el Laboratorio y la PC del profesor
+  (distrito `pc_profesor`, se entra por la computadora, sin puertas).
 - **`DoorSpec`**: una puerta de la ficha: id, **lado** (izquierda, derecha, arriba, abajo), **celda** de la sala,
   **clase** (paso, puerta, escalera, ascensor, secreta) y la `RoomEntry` donde aparece Kai al llegar. Las escaleras y
   ascensores van arriba o abajo; las puertas, a los costados; un paso secreto solo se abre hacia un paso o una puerta.
@@ -458,7 +467,7 @@ Plan aprobado del mapa 2D semi-procedural, tareas **M1–M8**. **M1 (hecho): el 
 
 - **`DistrictLayout`** (`data/world/districts/*.tres`): la parte fija de un distrito: sus salas (`LayoutRoom`: id único
   en todo el mundo, ficha y celda), sus conexiones (`LayoutLink`: puertas, habilidades, un solo sentido) y la sala de
-  inicio. `build()` arma el `RoomGraph`. Hoy: **Colegio** (Entrada ↔ Pasillo y Laboratorio) y **PC del profesor**.
+  inicio. `build()` arma el `RoomGraph`. Hoy: **Colegio** (Entrada ↔ Pasillo ↔ Laboratorio) y **PC del profesor**.
 - **`World`** (autoload): carga fichas y distritos, sabe la sala actual (`current_room`, `current_district`, señal
   `room_entered`) y responde `destination(sala, puerta)` → `{room, scene, entry}`.
 - **`Room.room_id`**: al cargarse, la sala avisa a `World` con el id con que se llegó (`SceneManager.go_to_room(escena,
@@ -467,8 +476,8 @@ Plan aprobado del mapa 2D semi-procedural, tareas **M1–M8**. **M1 (hecho): el 
   `target_scene` / `target_entry`, que quedan como respaldo. `test_world` comprueba que ambos coinciden.
 - Las marcas `visitada_<escena>` siguen igual (las usa el mapa del Grimorio hasta M5).
 
-Siguiente: **M3**, separar Pasillo y Laboratorio en dos salas y las salas nuevas (escaleras, biblioteca) con arte
-provisional.
+**M3 (en curso, junto con H5):** ✅ Pasillo y Laboratorio son dos salas. Siguen las salas nuevas de H5 (el pasillo
+viejo y el cuarto viejo) con arte provisional.
 
 ## Misiones (`systems/quests/`)
 

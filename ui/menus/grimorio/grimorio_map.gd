@@ -19,8 +19,8 @@ const TEXT := Color("e6deff")
 const ZONES := {
 	&"colegio": [
 		{ "name": "Entrada", "rect": Rect2(1, 5, 4, 2), "flag": &"visitada_entrada" },
-		{ "name": "Pasillo", "rect": Rect2(5, 5, 6, 1), "flag": &"visitada_pasillo_laboratorio" },
-		{ "name": "Laboratorio", "rect": Rect2(11, 4, 3, 2), "flag": &"visitada_pasillo_laboratorio", "terminal": true },
+		{ "name": "Pasillo", "rect": Rect2(5, 5, 6, 1), "flag": &"visitada_pasillo" },
+		{ "name": "Laboratorio", "rect": Rect2(11, 4, 3, 2), "flag": &"visitada_laboratorio", "terminal": true },
 		{ "name": "???", "rect": Rect2(2, 1, 3, 3) },
 		{ "name": "???", "rect": Rect2(7, 1, 4, 3) },
 		{ "name": "???", "rect": Rect2(14, 6, 3, 2) },

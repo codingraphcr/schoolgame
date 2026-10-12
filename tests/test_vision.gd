@@ -4,7 +4,7 @@ extends SceneTree
 ## La visión involuntaria del prólogo se prueba en test_prologue.gd.
 ## Ejecutar: godot --headless --path . --script res://tests/test_vision.gd
 
-const PASILLO := "res://world/zones/zone0/pasillo_laboratorio.tscn"
+const PASILLO := "res://world/zones/zone0/pasillo.tscn"
 const ABOVE_BRIDGE := Vector2(600, 130)  # El puente de datos está en y=148
 const FRAGMENT := Vector2(640, 148)
 const FRAGMENT_FLAG := &"zona0_fragmento_recogido"

@@ -9,13 +9,18 @@ id = &"oeste"
 side = 0
 entry_id = &"desde_entrada"
 
+[sub_resource type="Resource" id="Resource_este"]
+script = ExtResource("2_door")
+id = &"este"
+side = 1
+entry_id = &"desde_laboratorio"
+
 [resource]
 script = ExtResource("1_tmpl")
-id = &"pasillo_laboratorio"
-display_name = "Pasillo y Laboratorio"
-scene_path = "res://world/zones/zone0/pasillo_laboratorio.tscn"
+id = &"pasillo"
+display_name = "Pasillo"
+scene_path = "res://world/zones/zone0/pasillo.tscn"
 room_type = &"corridor"
-size_cells = Vector2i(2, 1)
-doors = Array[ExtResource("2_door")]([SubResource("Resource_oeste")])
+doors = Array[ExtResource("2_door")]([SubResource("Resource_oeste"), SubResource("Resource_este")])
 fixed = true
 mission_ids = PackedStringArray("prologo")
