@@ -34,6 +34,9 @@ func _init() -> void:
 	display_name = "Contraseña débil"
 	max_health = 6.0
 	threat_type = &"credenciales"
+	# Enemigo de la historia: especial (20–40 Ecos) y se cobra una sola vez.
+	rank = Rank.ESPECIAL
+	reward_id = &"enemigo:contrasena_debil"
 	body_size = Vector2(22, 20)
 
 

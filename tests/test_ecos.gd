@@ -43,9 +43,13 @@ func _test_split() -> void:
 			total += coin.value
 		_check(total == amount and (amount <= EcoShard.MAX_COINS or coins.size() <= EcoShard.MAX_COINS or amount > 70),
 			"%d Ecos se reparten en %d fragmentos que suman lo mismo" % [amount, coins.size()])
+		for coin in coins:
+			coin.discard()  # Solo para contar: no se suman al saldo.
 	holder.queue_free()
 	var enemy := ENEMY.instantiate() as EnemyBase
-	_check(enemy.get_ecos_reward() == roundi(enemy.max_health * 3.0), "un enemigo suelta más Ecos cuanto más fuerte es (%d)" % enemy.get_ecos_reward())
+	root.add_child(enemy)
+	var reward := enemy.get_ecos_reward()
+	_check(reward >= 20 and reward <= 40, "la «Contraseña débil» es un enemigo especial: suelta entre 20 y 40 Ecos (%d)" % reward)
 	enemy.ecos_reward = 5
 	_check(enemy.get_ecos_reward() == 5, "cada enemigo puede fijar su propia cantidad")
 	enemy.free()
@@ -65,7 +69,7 @@ func _test_enemy_drop() -> void:
 	var coins := _coins()
 	_check(_value(coins) == reward, "suelta %d Ecos (%d fragmentos)" % [_value(coins), coins.size()])
 	await _wait(0.12)
-	_check(coins.any(func(c: EcoShard) -> bool: return c.velocity.y < 0.0 or not c.is_on_floor()), "las fragmentos saltan al salir")
+	_check(coins.any(func(c: EcoShard) -> bool: return c.velocity.y < 0.0 or not c.is_on_floor()), "los fragmentos saltan al salir")
 	await _wait(2.0)
 	_check(_coins().all(func(c: EcoShard) -> bool: return c.is_on_floor() and absf(c.velocity.y) < 1.0), "rebotan y quedan en el suelo")
 	_check(root.get_node("Economy").ecos == 0, "no se recogen solas si Kai está lejos")

@@ -59,6 +59,8 @@ func _on_interacted(player: Player) -> void:
 	window.interpreter.command_run.connect(_on_command_run)
 	var solved: bool = await window.closed
 	if solved:
+		var economy := get_node("/root/Economy")
+		economy.claim_reward(StringName("terminal:%s" % challenge.id), economy.reward_for(EconomyConfig.Source.TERMINAL, challenge.ecos_reward))
 		var box := DialogueBox.find(self)
 		if success_dialogue and box:
 			await box.play(success_dialogue)

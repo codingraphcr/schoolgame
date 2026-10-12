@@ -27,8 +27,14 @@ signal died
 @export var hurt_time := 0.25
 ## Si es false no se mueve ni ataca (escenas, presentaciones, pruebas).
 @export var ai_enabled := true
-## Ecos que suelta al ser derrotado (-1 = según su fuerza: 3 por cada punto de vida máxima).
+enum Rank { COMUN, ESPECIAL, JEFE }
+
+## Común, especial o jefe: define cuántos Ecos suelta (rangos de EconomyConfig).
+@export var rank := Rank.COMUN
+## Ecos que suelta al ser derrotado (-1 = un valor sorteado según su rango).
 @export var ecos_reward := -1
+## Si tiene un id, su recompensa es única (enemigos de la historia): solo la primera vez que se lo vence.
+@export var reward_id: StringName = &""
 ## Colores de los píxeles en que se desintegra al morir.
 @export var death_colors: Array[Color] = [Color("ff3d8a"), Color("ff7ab8"), Color("8a2be2")]
 
@@ -36,6 +42,8 @@ var health: HealthComponent
 var hurtbox: HurtboxComponent
 var contact: HitboxComponent
 var is_dead := false
+
+var _rolled_reward := -1
 
 var _stun := 0.0
 
@@ -141,6 +149,9 @@ func _die() -> void:
 	# Al final del cuadro: no se agregan cuerpos físicos en medio de un choque.
 	var room := get_parent()
 	var reward := get_ecos_reward()
+	var economy := get_node_or_null("/root/Economy")
+	if reward_id != &"" and economy and not economy.claim_drop(reward_id):
+		reward = 0  # Recompensa única ya cobrada.
 	(func() -> void: EcoShard.spawn_burst(room, center, reward)).call_deferred()
 	var tween := create_tween().set_parallel()
 	tween.tween_property(self, "scale", Vector2(1.4, 0.2), 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
@@ -166,6 +177,13 @@ func _rect(size: Vector2) -> RectangleShape2D:
 	return rect
 
 
-## Ecos que vale derrotarlo (más fuerte = más Ecos).
+## Ecos que vale derrotarlo: el fijado, o uno sorteado según su rango (se sortea una sola vez).
 func get_ecos_reward() -> int:
-	return ecos_reward if ecos_reward >= 0 else roundi(max_health * 3.0)
+	if ecos_reward >= 0:
+		return ecos_reward
+	if _rolled_reward < 0:
+		var economy := get_node_or_null("/root/Economy")
+		var sources: Array[EconomyConfig.Source] = [EconomyConfig.Source.ENEMY_COMMON, EconomyConfig.Source.ENEMY_SPECIAL, EconomyConfig.Source.BOSS]
+		var source: EconomyConfig.Source = sources[rank]
+		_rolled_reward = economy.roll(source) if economy else 0
+	return _rolled_reward

@@ -8,3 +8,5 @@ extends Resource
 @export var id: StringName = &""
 @export var title := ""
 @export var questions: Array[ChoiceQuestion] = []
+## Ecos al completarlo por primera vez (-1 = sorteado entre los de desafío en EconomyConfig).
+@export var ecos_reward := -1

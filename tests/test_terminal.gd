@@ -154,6 +154,9 @@ func _test_in_game() -> void:
 	await _frames(5)
 	_check(state.get_current_step(&"contrasena_profesor") == &"cambiar_contrasena" and not player.controls_locked,
 		"la misión avanza: cambiar la contraseña")
+	var gained: int = root.get_node("Economy").ecos
+	_check(gained >= 30 and gained <= 60 and root.get_node("Economy").is_claimed(&"terminal:pc_profesor_cuenta"),
+		"resolver la terminal da entre 30 y 60 Ecos, una sola vez (+%d)" % gained)
 	_check(state.has_learned_command(&"pwd") and state.has_learned_command(&"cd") and state.has_learned_command(&"cat"),
 		"los comandos usados quedan aprendidos (%s)" % ", ".join(state.get_learned_commands()))
 	var page_cat: GrimorioEntry = load("res://data/grimorio/comando_cat.tres")

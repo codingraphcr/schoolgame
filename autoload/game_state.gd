@@ -306,8 +306,9 @@ func complete_step(quest_id: StringName, step_id: StringName) -> bool:
 	_quest_progress[quest_id] = -1
 	if active_quest == quest_id:
 		active_quest = &""
+	# Recompensa única: aunque se repitiera el último paso, no se cobra dos veces.
 	if quest.ecos_reward > 0:
-		_economy().add_ecos(quest.ecos_reward)
+		_economy().claim_reward(StringName("mision:%s" % quest_id), quest.ecos_reward)
 	quest_completed.emit(quest_id)
 	if quest.next_quest != &"":
 		start_quest(quest.next_quest)

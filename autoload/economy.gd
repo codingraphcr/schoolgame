@@ -5,23 +5,37 @@ extends Node
 ## Es el ÚNICO lugar donde cambia el saldo, siempre con estas funciones (validan todo):
 ##   add_ecos(cantidad) · spend_ecos(cantidad) · can_afford_ecos(cantidad) · apply_death_penalty()
 ## Nunca hay saldos negativos ni cantidades inválidas. GameState la incluye al guardar (to_dict).
+##
+## Recompensas únicas (misiones, terminales, desafíos, cofres, fragmentos, enemigos de la historia):
+## cada una tiene un id estable y solo se paga la primera vez (claim_reward / claim_drop). Los ids
+## reclamados se guardan con la partida. Los valores salen de EconomyConfig (data/economy/economia.tres).
 
 signal ecos_changed(ecos: int, delta: int)
 
-## Al morir se pierde el 10 % (hacia abajo), como máximo 100 Ecos, y nada durante el tutorial.
-const DEATH_PENALTY := 0.10
-const DEATH_PENALTY_MAX := 100
+const CONFIG_PATH := "res://data/economy/economia.tres"
 ## Marca de GameState que termina el tutorial (al final del prólogo, «EL DESPERTAR»).
 const TUTORIAL_DONE_FLAG := &"tutorial_terminado"
 ## Tope de seguridad del saldo.
 const MAX_ECOS := 999_999
 
 var ecos := 0
+## Valores para equilibrar (rangos de recompensa y penalización).
+var config: EconomyConfig = load(CONFIG_PATH)
+## Para sortear recompensas (las pruebas pueden fijar la semilla).
+var rng := RandomNumberGenerator.new()
+
+## Recompensas únicas ya reclamadas: { id: true }.
+var _claimed: Dictionary[StringName, bool] = {}
+
+
+func _ready() -> void:
+	rng.randomize()
 
 
 ## Partida nueva.
 func reset() -> void:
 	ecos = 0
+	_claimed.clear()
 	ecos_changed.emit(ecos, 0)  # Sin «−X» en el HUD: no es una pérdida.
 
 
@@ -50,9 +64,9 @@ func spend_ecos(amount: int) -> bool:
 	return true
 
 
-## Cuántos Ecos se perderían al morir con este saldo (10 % hacia abajo, máximo 100).
-static func death_penalty_for(amount: int) -> int:
-	return mini(floori(maxi(amount, 0) * DEATH_PENALTY), DEATH_PENALTY_MAX)
+## Cuántos Ecos se perderían al morir con este saldo (10 % hacia abajo, máximo 100, según EconomyConfig).
+func death_penalty_for(amount: int) -> int:
+	return mini(floori(maxi(amount, 0) * config.death_penalty), config.death_penalty_max)
 
 
 ## Al perder un combate. Devuelve cuántos Ecos se perdieron (0 durante el tutorial).
@@ -72,11 +86,51 @@ func in_tutorial() -> bool:
 	return game_state != null and not game_state.has_flag(TUTORIAL_DONE_FLAG)
 
 
+# --- Recompensas ---
+
+## Un valor sorteado dentro del rango de esa fuente (EconomyConfig).
+func roll(source: EconomyConfig.Source) -> int:
+	var range_ := config.range_for(source)
+	return rng.randi_range(mini(range_.x, range_.y), maxi(range_.x, range_.y))
+
+
+## La cantidad fija si se indicó (>= 0) o una sorteada para esa fuente (-1 = según EconomyConfig).
+func reward_for(source: EconomyConfig.Source, fixed := -1) -> int:
+	return fixed if fixed >= 0 else roll(source)
+
+
+## Paga una recompensa única: la primera vez suma los Ecos y devuelve cuántos; después devuelve 0.
+func claim_reward(id: StringName, amount: int) -> int:
+	if not claim_drop(id) or amount <= 0:
+		return 0
+	add_ecos(amount)
+	return amount
+
+
+## Para recompensas que caen al suelo (cofres, enemigos de la historia): registra el id y devuelve
+## true solo la primera vez. Los Ecos se suman al recoger los fragmentos (o al salir de la sala).
+func claim_drop(id: StringName) -> bool:
+	if id == &"" or _claimed.has(id):
+		return false
+	_claimed[id] = true
+	return true
+
+
+func is_claimed(id: StringName) -> bool:
+	return _claimed.has(id)
+
+
 func to_dict() -> Dictionary:
-	return { "ecos": ecos }
+	var claimed: Array[String] = []
+	for id: StringName in _claimed:
+		claimed.append(String(id))
+	return { "ecos": ecos, "claimed": claimed }
 
 
 ## Carga el saldo. legacy_credits: los «créditos» de partidas guardadas antes de los Ecos.
 func from_dict(data: Dictionary, legacy_credits := 0) -> void:
 	ecos = clampi(int(data.get("ecos", legacy_credits)), 0, MAX_ECOS)
+	_claimed.clear()
+	for id: String in data.get("claimed", []):
+		_claimed[StringName(id)] = true
 	ecos_changed.emit(ecos, 0)

@@ -31,6 +31,8 @@ const DISCOVERED_FLAG := &"ecos_descubiertos"
 
 var value := 1
 var _time := 0.0
+## Si se quita sin sumar su valor (solo pruebas o efectos).
+var _discarded := false
 var _attracted := false
 var _collected := false
 var _phase := randf() * TAU
@@ -97,6 +99,22 @@ func _ready() -> void:
 	# Aparición: un destello breve.
 	scale = Vector2(0.4, 0.4)
 	create_tween().tween_property(self, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+## Al salir de la sala (o desaparecer) sin que Kai lo recoja, su valor se suma igual: los Ecos no se pierden.
+func _exit_tree() -> void:
+	if _collected or _discarded or value <= 0:
+		return
+	_collected = true
+	var economy := get_node_or_null("/root/Economy")
+	if economy:
+		economy.add_ecos(value)
+
+
+## Quita el fragmento sin sumar su valor.
+func discard() -> void:
+	_discarded = true
+	queue_free()
 
 
 func _physics_process(delta: float) -> void:

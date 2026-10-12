@@ -27,8 +27,8 @@ func _on_body_entered(body: Node) -> void:
 		return
 	var game_state := get_node("/root/GameState")
 	game_state.set_flag(flag)
-	get_node("/root/Economy").add_ecos(ecos_reward)
-	get_tree().call_group(&"toast", &"show_message", message % ecos_reward)
+	var gained: int = get_node("/root/Economy").claim_reward(StringName("fragmento:%s" % flag), ecos_reward)
+	get_tree().call_group(&"toast", &"show_message", message % gained)
 
 
 func _can_collect() -> bool:

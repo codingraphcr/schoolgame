@@ -201,6 +201,17 @@ píxeles (`world/effects/pixel_burst.gd`) y suelta `get_ecos_reward()` (`ecos_re
 recoger el primer Eco queda la marca `ecos_descubiertos` y se desbloquea su página del ARSENAL. HUD: `EcosDisplay`
 («1.250 ECOS», con +X / −X al cambiar).
 
+**Valores y recompensas únicas (E2):** `EconomyConfig` (`systems/economy/`, archivo `data/economy/economia.tres`, se edita
+en el Inspector) tiene los rangos de cada fuente —enemigo común 5–10, especial 20–40, jefe 150–250, terminal 30–60, desafío
+de elección 20–40, misión secundaria 75–150, depósito oculto 15–40— y la penalización (10 %, máximo 100).
+`Economy.roll(fuente)` sortea un valor dentro del rango; `reward_for(fuente, fijo)` usa el fijo si es ≥ 0. **Recompensas
+únicas** con id estable: `claim_reward(id, cantidad)` paga solo la primera vez; `claim_drop(id)` registra las que caen al
+suelo. Los ids cobrados se guardan con la partida (`"claimed"`). Ids: `mision:<id>`, `terminal:<id>`, `desafio:<id>`,
+`cofre:<id>`, `fragmento:<marca>`, `enemigo:<id>`. Los enemigos tienen `rank` (común, especial, jefe) y, si son de la historia,
+`reward_id` (la «Contraseña débil»: especial, `enemigo:contrasena_debil`). `TerminalChallenge.ecos_reward` y
+`ChoiceChallenge.ecos_reward` (-1 = sorteado). **Los Ecos no se pierden:** si Kai sale de la sala sin recoger los
+fragmentos, se suman solos (`EcoShard._exit_tree`; `discard()` los quita sin sumar).
+
 **Enemigos:** `characters/enemies/enemy_base.gd` (`EnemyBase`, CharacterBody2D). Crea su cuerpo (capa 3), su
 `HealthComponent`, su `HurtboxComponent` (recibe golpes de la capa 4) y su golpe por contacto (capa 5). Al recibir un
 golpe: destello, empuje y aturdimiento breve (`hurt_time`). Señales `damaged` y `died`. Cada enemigo escribe su
@@ -517,6 +528,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_account_security.gd` | Desafío de elección (opción incorrecta con explicación, correcta, avanzar), contenido educativo, y el final de la misión: Esc, Visión Digital, BITS, destello de la Nullblade que se apaga, vuelta al laboratorio y Q |
 | `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
+| `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |
 | `test_ecos.gd` | Reparto en fragmentos, Ecos según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |
 | `test_entity_eye.gd` | El ojo de la entidad: vigila al entrar, sigue a la cámara, parpadea, se cierra y desaparece en la terminal y no vuelve después de resolverla |
 | `test_terminal.gd` | Terminal simulada: sistema de archivos, comandos y errores, autocompletado, comandos permitidos, que no toque el sistema real, y la terminal de la PC del profesor (abrir, Esc, resolver, diálogo, paso de misión, comandos aprendidos y guardados) |

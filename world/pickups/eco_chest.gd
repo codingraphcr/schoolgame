@@ -12,7 +12,7 @@ const TRIM_LIGHT := Color("d9ccff")
 const OUTLINE := Color("0a0718")
 const SIZE := Vector2(22, 14)
 
-## Ecos que tiene dentro.
+## Ecos que tiene dentro (-1 = sorteado entre los de depósito oculto en EconomyConfig).
 @export var ecos := 30
 ## Identificador único del cofre (para recordar que ya se abrió). Vacío = el nombre del nodo.
 @export var chest_id: StringName = &""
@@ -46,9 +46,14 @@ func _ready() -> void:
 		enabled = false
 
 
+## Identificador del cofre (chest_id o, si está vacío, el nombre del nodo).
+func key() -> String:
+	return String(chest_id if chest_id != &"" else StringName(name))
+
+
 ## Marca que queda en GameState al abrirlo.
 func flag() -> StringName:
-	return StringName("cofre_" + String(chest_id if chest_id != &"" else StringName(name)))
+	return StringName("cofre_" + key())
 
 
 func open() -> void:
@@ -65,7 +70,10 @@ func open() -> void:
 	var parent := get_parent()
 	var at := global_position + Vector2(0, -SIZE.y - 2)
 	PixelBurst.spawn(parent, at, [TRIM, TRIM_LIGHT, Color.WHITE], 18, 80.0)
-	EcoShard.spawn_burst(parent, at, ecos)
+	# Recompensa única: aunque se perdiera la marca del cofre, sus Ecos no se cobran dos veces.
+	var economy := get_node_or_null("/root/Economy")
+	if economy and economy.claim_drop(StringName("cofre:%s" % key())):
+		EcoShard.spawn_burst(parent, at, economy.reward_for(EconomyConfig.Source.HIDDEN_DEPOSIT, ecos))
 
 
 func _on_interacted(_player: Player) -> void:

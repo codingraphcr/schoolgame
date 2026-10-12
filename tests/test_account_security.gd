@@ -113,8 +113,9 @@ func _test_in_game() -> void:
 	await _advance(box)
 	await _frames(3)
 	_check(state.vision_unlocked, "la Visión Digital queda desbloqueada")
-	_check(state.is_quest_completed(&"contrasena_profesor") and root.get_node("Economy").ecos == ecos_before + 100,
-		"la misión se completa y da sus 100 Ecos")
+	var gained: int = root.get_node("Economy").ecos - ecos_before
+	_check(state.is_quest_completed(&"contrasena_profesor") and gained >= 100 + 20 and gained <= 100 + 40,
+		"la misión da sus 100 Ecos y el desafío entre 20 y 40 (+%d)" % gained)
 	_check(player.combat.weapon == null and state.nullblade_stage == 0, "el destello de la Nullblade se apaga")
 	_check(state.has_flag(&"cuenta_profesor_segura"), "queda registrado que la cuenta está segura")
 

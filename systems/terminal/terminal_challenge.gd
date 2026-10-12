@@ -24,6 +24,8 @@ extends Resource
 @export var hints: PackedStringArray = []
 ## Retroalimentación al resolverlo (qué se aprendió).
 @export_multiline var success_text := ""
+## Ecos al resolverlo por primera vez (-1 = sorteado entre los de terminal en EconomyConfig).
+@export var ecos_reward := -1
 
 
 func create_interpreter() -> CommandInterpreter:

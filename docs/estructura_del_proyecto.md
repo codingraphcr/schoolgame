@@ -13,7 +13,7 @@ La historia, los personajes y el mundo se rigen por la **Biblia Narrativa** (`na
 | Pantalla | Diseño a **1280×720**, horizontal; el mundo en pixel art con la cámara a **×2** |
 | Plataformas | Windows y Android (después Linux, macOS, iOS, Steam) |
 | Dependencias | **Ninguna**: sin plugins ni librerías externas |
-| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 22 pruebas automáticas (478 comprobaciones) |
+| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 23 pruebas automáticas (478 comprobaciones) |
 | Equipo | Yohanncillo (dirección y programación) y Ariel (arte y programación), en la cuenta `codingraphcr` |
 
 ## 2. Las ideas que guían todo
@@ -80,6 +80,7 @@ schoolgame/
 ├── systems/           Sistemas sin escena propia
 │   ├── audio/           Sfx (efectos) y Music (música)
 │   ├── dialogue/        Dialogue y DialogueCharacter
+│   ├── economy/         EconomyConfig: valores de los Ecos para equilibrar
 │   ├── challenges/      Desafíos de elección (preguntas con opciones y explicaciones)
 │   ├── grimorio/        GrimorioEntry (una página del Grimorio)
 │   ├── incidents/       Incidentes, pistas y controles de seguridad (sistema de decisiones de Ariel)
@@ -108,7 +109,7 @@ schoolgame/
 ├── data/              Contenido editable (.tres): diálogos, personajes, misiones, terminales,
 │                      armas, Grimorio, incidentes
 ├── assets/            Arte (de Ariel), audio, fuentes y shaders
-├── tests/             22 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
+├── tests/             23 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
 ├── tools/art/         Herramientas para recortar el arte de las hojas de concepto de Ariel
 ├── prototypes/        Muestras de estilos visuales (no forman parte del juego)
 └── docs/              Documentación del proyecto (la historia, en docs/narrativa/)
@@ -202,6 +203,7 @@ la seguridad y la confianza del colegio. Está listo para usarse en los desafío
 | Un personaje que habla | Nuevo `DialogueCharacter` en `data/characters/` (nombre, retrato, color, voz) |
 | Una misión | Nuevo `Quest` en `data/quests/` con sus pasos, y la registro en `QuestDB` |
 | Una terminal | Nuevo `TerminalChallenge` en `data/terminals/` + una `TerminalStation` en la sala |
+| Equilibrar los Ecos | Editar `data/economy/economia.tres` (rangos por enemigo, terminal, misión, depósito y la penalización) |
 | Un desafío de elección | Nuevo `ChoiceChallenge` en `data/challenges/` (preguntas, opciones, cuál es correcta y por qué) |
 | Un arma o etapa de Nullblade | Nuevo `WeaponData` en `data/weapons/` |
 | Una página del Grimorio | Nuevo `GrimorioEntry` en `data/grimorio/` |
@@ -216,7 +218,7 @@ Opciones.
 **Capas de colisión:** 1 mundo · 2 jugador · 3 enemigos · 4 ataques del jugador · 5 ataques enemigos · 6 interactuables
 · 7 mundo digital.
 
-**Pruebas:** 22 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
+**Pruebas:** 23 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
 `godot --headless --path . --script res://tests/test_<nombre>.gd` y termina en `RESULTADO: TODO OK`. Esperan a que
 pasen las cosas (en vez de tiempos fijos) para no fallar cuando la computadora está ocupada.
 

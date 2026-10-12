@@ -41,6 +41,8 @@ func start(player: Player) -> void:
 		_cancel(player)
 		return
 	game_state.set_flag(&"cuenta_profesor_segura")
+	var economy := get_node("/root/Economy")
+	economy.claim_reward(StringName("desafio:%s" % challenge.id), economy.reward_for(EconomyConfig.Source.CHALLENGE, challenge.ecos_reward))
 	var box := DialogueBox.find(self)
 	if box and success_dialogue:
 		await box.play(success_dialogue)

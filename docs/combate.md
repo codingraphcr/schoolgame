@@ -94,6 +94,7 @@ Es el vínculo entre el combate y el contenido educativo.
 | C1 | Daño compartido, 4 máscaras, invulnerabilidad, peligros, muerte, dash por niveles, HUD | ✅ |
 | C2 | `GameState`: progreso de combate y moneda (pérdida al morir) | ✅ |
 | E1 | **ECOS**: autoload `Economy`, BITS → Ecos, penalización (10 %, máx. 100, nada en el tutorial) | ✅ |
+| E2 | `EconomyConfig` (valores configurables) y recompensas únicas que no se cobran dos veces; enemigos por rango | ✅ |
 | Z1 | Retirar la sala de desarrollo (la sala gris queda solo para pruebas automáticas) | ✅ |
 | Z2 | Arte oficial de Ariel (estilo D) en el proyecto + Kai como personaje | ✅ |
 | Z3 | Primera sala real: Pasillo + Laboratorio (Zona 0) | ✅ |
