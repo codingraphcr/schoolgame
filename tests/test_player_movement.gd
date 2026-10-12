@@ -46,7 +46,7 @@ func _test_ground_movement() -> void:
 	var start_x := player.global_position.x
 	await _press("move_right")
 	await _frames(30)
-	_check(is_equal_approx(player.velocity.x, player.max_speed), "alcanza la velocidad máxima (%.1f)" % player.velocity.x)
+	_check(not player.can_run and is_equal_approx(player.velocity.x, player.walk_speed), "al principio Kai camina: alcanza la velocidad de caminar (%.1f)" % player.velocity.x)
 	_check(player.state == Player.State.RUN, "estado RUN al correr")
 	Input.action_release("move_right")
 	await _frames(15)

@@ -120,7 +120,8 @@ Señales: `jumped`, `double_jumped`, `wall_jumped`, `dashed`, `landed`.
 
 | Parámetro | Valor | Efecto |
 |---|---|---|
-| `max_speed` | 140 px/s | Velocidad máxima horizontal |
+| `max_speed` | 140 px/s | Velocidad al correr (y la del dash) |
+| `walk_speed` | 130 px/s | Velocidad al caminar: al principio Kai solo camina (`can_run = false`); correr se desbloquea más adelante. Los niveles están pensados para unos 130 (con menos, algunos huecos y plataformas no se alcanzan) |
 | `jump_height` | 72 px (4,5 tiles) | Altura máxima del salto: alcanza plataformas de 4 tiles |
 | `time_to_apex` | 0,4 s | Tiempo hasta el punto más alto (define la gravedad) |
 | `fall_gravity_multiplier` | 2,0 | Caída más rápida y firme que la subida |
@@ -158,6 +159,7 @@ Las muestras de estilo usan este Kai si `_build_player_visual()` devuelve null (
 Con cuadros, `attack()` encadena `ataque_1` → `ataque_2` si se ataca dos veces seguidas, `PlayerDamage.hurt` muestra
 `dano` y `died` muestra `muerte`; al correr hay un rebote suave. `current_animation()` devuelve la animación visible
 (la usan las pruebas). La hoja tiene un cuadro por pose: para más fluidez, cada animación necesita más cuadros.
+Mientras `Player.can_run` es falso, al desplazarse usa `caminar` (las dos poses de perfil de la hoja a 5 cuadros/s, con un rebote de paso de 1 px) en vez de `correr`. En el aire usa la pose de salto (sin el brillo morado de la hoja); `caer`, que en la hoja está agachada, solo dura un instante al aterrizar. `muerte` es Kai acostado boca arriba: la pose de reposo girada 90° (en la hoja, la muerte parecía dos personajes).
 Las medidas de las piezas están en `kai_piezas.gd`; `generar_esqueleto_kai.gd` regenera la escena (borra retoques manuales).
 
 ## Combate (`components/combat/`)

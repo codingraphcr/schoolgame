@@ -118,7 +118,11 @@ func _test_layout(room: Room, player: Player) -> void:
 	Input.action_press("move_right")
 	await _frames(10)
 	var kai := player.get_node("Visual/Body/Kai") as KaiVisual
-	_check(kai.current_animation() == &"correr", "al correr usa la animación correr")
+	_check(kai.current_animation() == &"caminar", "al desplazarse usa la animación de caminar (correr llega más adelante)")
+	player.can_run = true
+	await _frames(20)
+	_check(kai.current_animation() == &"correr" and is_equal_approx(absf(player.velocity.x), player.max_speed), "cuando puede correr, corre más rápido con la animación correr")
+	player.can_run = false
 	var reached_lab := false
 	for i in 600:
 		await physics_frame

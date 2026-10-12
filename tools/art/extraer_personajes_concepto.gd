@@ -31,6 +31,7 @@ const OUTLINE := Color("0a0d1c")
 ##          anchor_x (opcional): columna del centro del cuerpo si el
 ##          cálculo automático (centro de la cabeza) no sirve. only_body: conserva solo la figura
 ##          principal (descarta, por ejemplo, un globo de diálogo que quedó dentro de la zona).
+##          rotate: gira la pose 90° (acostada boca arriba, la cabeza a la izquierda).
 ##   animations: poses en orden, cuadros por segundo y si se repiten.
 const CHARACTERS := {
 	"kai": {
@@ -43,19 +44,25 @@ const CHARACTERS := {
 		"height": 96,
 		"poses": {
 			"reposo": { "rect": Rect2i(36, 478, 72, 144) },
-			"caminar_1": { "rect": Rect2i(124, 478, 88, 144) },
-			"caminar_2": { "rect": Rect2i(220, 478, 94, 144) },
+			"caminar_1": { "rect": Rect2i(124, 478, 88, 144), "only_body": true },
+			"caminar_2": { "rect": Rect2i(220, 478, 94, 144), "only_body": true },
 			"correr": { "rect": Rect2i(330, 478, 130, 144) },
-			"saltar": { "rect": Rect2i(474, 478, 90, 144) },
+			# only_body: sin el brillo morado de la espada que queda a la izquierda.
+			"saltar": { "rect": Rect2i(474, 478, 90, 144), "only_body": true },
 			"caer": { "rect": Rect2i(575, 478, 96, 144) },
 			"ataque_1": { "rect": Rect2i(686, 478, 160, 144) },
 			"ataque_2": { "rect": Rect2i(861, 478, 162, 144), "anchor_x": 928 },  # El arco queda sobre la cabeza.
 			"dash": { "rect": Rect2i(1020, 478, 156, 144) },
 			"dano": { "rect": Rect2i(1206, 478, 122, 144) },
-			"muerte": { "rect": Rect2i(1336, 478, 158, 144) },
+			# La muerte de la hoja parece dos personajes (hay una segunda cabeza oscura): Kai queda acostado
+			# boca arriba usando su pose de reposo girada 90° (rotate).
+			"tendido": { "rect": Rect2i(36, 478, 72, 144), "rotate": true },
 		},
 		"animations": {
 			"quieto": { "poses": ["reposo"], "fps": 1.0, "loop": true },
+			# Caminar (lo normal al principio): las dos poses de perfil de la hoja (KaiVisual le suma un rebote
+			# de paso para que se vea fluido). Correr se desbloquea más adelante (Player.can_run).
+			"caminar": { "poses": ["caminar_1", "caminar_2"], "fps": 5.0, "loop": true },
 			"correr": { "poses": ["caminar_1", "correr", "caminar_2", "correr"], "fps": 9.0, "loop": true },
 			"saltar": { "poses": ["saltar"], "fps": 1.0, "loop": false },
 			"caer": { "poses": ["caer"], "fps": 1.0, "loop": true },
@@ -64,7 +71,7 @@ const CHARACTERS := {
 			"ataque_1": { "poses": ["ataque_1"], "fps": 1.0, "loop": false },
 			"ataque_2": { "poses": ["ataque_2"], "fps": 1.0, "loop": false },
 			"dano": { "poses": ["dano"], "fps": 1.0, "loop": false },
-			"muerte": { "poses": ["muerte"], "fps": 1.0, "loop": false },
+			"muerte": { "poses": ["tendido"], "fps": 1.0, "loop": false },
 		},
 	},
 	# Prof. Alvarado: adulto, un poco más alto que Kai (112 px frente a 96).
@@ -254,6 +261,10 @@ func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 		region = kept
 	var box := region.get_used_rect()
 	var image := region.get_region(box)
+	if pose.get("rotate", false):
+		# Acostado boca arriba: centrado en el cuadro y apoyado sobre el borde de abajo.
+		image.rotate_90(COUNTERCLOCKWISE)
+		return { "image": image, "anchor_x": image.get_width() / 2.0, "bottom": -1.0 }
 	var anchor: float
 	if pose.has("anchor_x"):
 		anchor = pose.anchor_x - rect.position.x - box.position.x

@@ -373,3 +373,4 @@ func _save_palette() -> void:
 	for c in colors:
 		gpl.store_line("%3d %3d %3d\t%s" % [c.r8, c.g8, c.b8, c.to_html(false).to_upper()])
 	gpl.close()
+6

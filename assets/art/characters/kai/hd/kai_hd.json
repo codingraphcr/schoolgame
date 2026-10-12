@@ -42,6 +42,20 @@
 			"frames": 1,
 			"loop": true
 		},
+		"caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_caminar.png",
+			"fps": 5.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
 		"correr": {
 			"feet": [
 				60,
@@ -86,13 +100,13 @@
 		},
 		"muerte": {
 			"feet": [
-				60,
+				52,
 				119
 			],
 			"file": "kai_hd_muerte.png",
 			"fps": 1.0,
 			"frame_size": [
-				120,
+				104,
 				128
 			],
 			"frames": 1,

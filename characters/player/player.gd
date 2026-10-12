@@ -29,9 +29,15 @@ const NULLBLADE_WEAPON := "res://data/weapons/nullblade.tres"
 @export var can_double_jump := false
 ## Deslizar por paredes y saltar desde ellas. Se desbloquea durante la historia.
 @export var can_wall_jump := false
+## Correr. Al principio Kai solo camina (walk_speed); correr se desbloquea más adelante en la historia.
+@export var can_run := false
 
 @export_group("Movimiento horizontal")
+## Velocidad al correr (y la del dash).
 @export var max_speed := 140.0
+## Velocidad al caminar (mientras no puede correr). Los niveles están pensados para unos 130: con
+## menos, algunos huecos y plataformas ya no se alcanzan saltando.
+@export var walk_speed := 130.0
 @export var ground_acceleration := 1400.0
 @export var ground_deceleration := 1800.0
 @export var air_acceleration := 1000.0
@@ -319,7 +325,7 @@ func _apply_horizontal_movement(delta: float) -> void:
 		rate = ground_deceleration if on_floor else air_deceleration + air_acceleration
 	else:
 		rate = ground_acceleration if on_floor else air_acceleration
-	velocity.x = move_toward(velocity.x, direction * max_speed, rate * delta)
+	velocity.x = move_toward(velocity.x, direction * move_speed(), rate * delta)
 
 	if not is_zero_approx(direction) and not is_wall_sliding:
 		_set_facing(1 if direction > 0.0 else -1)
@@ -349,6 +355,11 @@ func _handle_jump() -> void:
 		_squash(Vector2(0.75, 1.25))
 		RingBurst.spawn(get_parent(), global_position, Color(0.133, 0.827, 0.933))
 		double_jumped.emit()
+
+
+## Velocidad horizontal al desplazarse: caminando, o corriendo si ya lo desbloqueó (can_run).
+func move_speed() -> float:
+	return max_speed if can_run else walk_speed
 
 
 ## Rebote del ataque hacia abajo (pogo, como en Hollow Knight): impulso hacia arriba de altura fija

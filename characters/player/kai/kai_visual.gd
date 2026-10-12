@@ -37,6 +37,7 @@ const HEAL_END_TIME := 0.35
 const HEAL_COLOR := Color("8a5cff")
 ## Rebote al correr con la apariencia por cuadros (en píxeles del dibujo).
 const RUN_BOB := 2.0
+const WALK_BOB := 1.0
 
 const ANIMATIONS := {
 	Player.State.IDLE: &"quieto",
@@ -152,13 +153,16 @@ func _play_state_animation() -> void:
 	var wanted: StringName = ANIMATIONS.get(player.state, &"quieto")
 	# En la hoja de Ariel, "caer" está dibujada agachada (es el aterrizaje): en el aire se usa la
 	# pose de salto, y "caer" solo un instante al tocar el suelo (LAND_TIME).
+	# Al principio Kai solo camina; correr llega más adelante (Player.can_run).
+	if wanted == &"correr" and not player.can_run and _has_animation(&"caminar"):
+		wanted = &"caminar"
 	if wanted == &"caer" and apariencia == Apariencia.CONCEPTO:
 		wanted = &"saltar"
 	if _sprite:
 		if _sprite.animation != wanted or not _sprite.is_playing():
 			_play_sprite(wanted)
-		var ratio := clampf(absf(player.velocity.x) / player.max_speed, 0.5, 1.2)
-		_sprite.speed_scale = ratio if wanted == &"correr" else 1.0
+		var ratio := clampf(absf(player.velocity.x) / player.move_speed(), 0.5, 1.2)
+		_sprite.speed_scale = ratio if wanted in [&"correr", &"caminar"] else 1.0
 		return
 	if _animation.current_animation != wanted:
 		_animation.play(wanted, BLEND)
@@ -300,9 +304,11 @@ func _play_sprite(anim: StringName) -> void:
 func _update_sprite_motion() -> void:
 	var base: Vector2 = _sprite_offsets.get(_sprite.animation, Vector2.ZERO)
 	var bob := 0.0
-	if _sprite.animation == &"correr" and player.is_on_floor():
-		var rate := 18.0 * clampf(absf(player.velocity.x) / player.max_speed, 0.5, 1.2)
-		bob = -absf(sin(_time * rate)) * RUN_BOB
+	if _sprite.animation in [&"correr", &"caminar"] and player.is_on_floor():
+		# Un rebote por paso: caminando, más suave y al ritmo de las dos poses.
+		var walking := _sprite.animation == &"caminar"
+		var rate := (PI * 5.0 if walking else 18.0) * clampf(absf(player.velocity.x) / player.move_speed(), 0.5, 1.2)
+		bob = -absf(sin(_time * rate)) * (WALK_BOB if walking else RUN_BOB)
 	_sprite.offset = base + Vector2(0, roundf(bob))
 
 
