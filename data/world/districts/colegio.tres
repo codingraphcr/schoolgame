@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="DistrictLayout" format=3]
+
+[ext_resource type="Script" path="res://systems/world/district_layout.gd" id="1_dist"]
+[ext_resource type="Script" path="res://systems/world/layout_room.gd" id="2_room"]
+[ext_resource type="Script" path="res://systems/world/layout_link.gd" id="3_link"]
+
+[sub_resource type="Resource" id="Resource_entrada"]
+script = ExtResource("2_room")
+room_id = &"entrada"
+template_id = &"entrada"
+
+[sub_resource type="Resource" id="Resource_pasillo"]
+script = ExtResource("2_room")
+room_id = &"pasillo"
+template_id = &"pasillo"
+cell = Vector2i(1, 0)
+
+[sub_resource type="Resource" id="Resource_laboratorio"]
+script = ExtResource("2_room")
+room_id = &"laboratorio"
+template_id = &"laboratorio"
+cell = Vector2i(2, 0)
+
+[sub_resource type="Resource" id="Resource_link1"]
+script = ExtResource("3_link")
+room_a = &"entrada"
+door_a = &"este"
+room_b = &"pasillo"
+door_b = &"oeste"
+
+[sub_resource type="Resource" id="Resource_link2"]
+script = ExtResource("3_link")
+room_a = &"pasillo"
+door_a = &"este"
+room_b = &"laboratorio"
+door_b = &"oeste"
+
+[resource]
+script = ExtResource("1_dist")
+id = &"colegio"
+display_name = "Colegio"
+start_room = &"entrada"
+rooms = Array[ExtResource("2_room")]([SubResource("Resource_entrada"), SubResource("Resource_pasillo"), SubResource("Resource_laboratorio")])
+links = Array[ExtResource("3_link")]([SubResource("Resource_link1"), SubResource("Resource_link2")])

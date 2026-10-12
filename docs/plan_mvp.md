@@ -19,7 +19,8 @@ ciberseguridad: terminales con comandos reales, decisiones y combate. Estructura
 | Prólogo | Visión involuntaria → PC del profesor (SPAM, terminal, «Contraseña débil», 2 elecciones) → invitación a unas instalaciones → desafío Visión Digital + terminal → cuarto viejo con la Nullblade oficial (dash y doble salto). **«EL DESPERTAR»** al final |
 | Contraseña propia | En H4d el jugador **crea** la contraseña del profesor (reglas explicadas, código de respaldo; se guarda solo la huella). Tendrá que recordarla en el **capítulo 4** y en **misiones extra** |
 | Tienda de prueba | **La soda del colegio** (sistema ECOS, tarea E5) |
-| Orden | Contraseña propia ✅ → ECOS (E1 ✅ · E2 ✅ · E3 ✅ · E4–E5) → H5 |
+| Orden | Contraseña propia ✅ → ECOS (E1 ✅ · E2 ✅ · E3 ✅ · E4 ✅) → mapa semi-procedural (M1 ✅ · M2 ✅ · M3 en curso junto con H5 · M4–M8) → E5 → H5 |
+| Mapa | Sistema de mapa 2D semi-procedural aprobado (M1–M8): Pasillo y Laboratorio ya son **dos salas** ✅; arte provisional por código |
 | Moneda | **ECOS** (nombre definitivo; reemplaza a BITS). Autoload `Economy`; penalización 10 %, máximo 100, nada en el tutorial |
 | Nullblade en el combate | Se mantiene la de Ariel, pero como **destello**: aparece en la pelea y se apaga al terminar la misión; la oficial se obtiene en el cuarto viejo |
 | Primera tarea | La **terminal simulada** (antes que el combate) ✅ |

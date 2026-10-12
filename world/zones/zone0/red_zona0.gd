@@ -1,8 +1,9 @@
 extends VectorCanvas
-## La red del Pasillo + Laboratorio tal como se ve con la Visión Digital (dibujo vectorial de Ariel):
-## cuadrícula, contornos de los objetos, cobertura del Wi-Fi, enlaces a los servidores con paquetes,
-## el puente de datos con su fragmento oculto y la forma real del phishing: un pez abisal que usa
-## el "correo raro" como carnada. Las posiciones se ajustan en el Inspector.
+## La red del Pasillo y del Laboratorio tal como se ve con la Visión Digital (dibujo vectorial de
+## Ariel): cuadrícula, contornos de los objetos, cobertura del Wi-Fi, enlaces a los servidores con
+## paquetes, el puente de datos con su fragmento oculto (en el Pasillo) y la forma real del phishing
+## (en el Laboratorio): un pez abisal que usa el "correo raro" como carnada. Las posiciones se
+## ajustan en el Inspector.
 
 const CYAN := Color("3ef2ff")
 const MAG := Color("ff3ea5")
@@ -21,6 +22,10 @@ const ABYSS := Color(0.2, 0.01, 0.12, 0.85)
 ## Debe coincidir con la colisión del nodo DataBridge.
 @export var data_bridge := Rect2(556, 148, 112, 6)
 @export var fragment_position := Vector2(640, 126)
+## Dibuja el puente de datos y su fragmento (solo en la sala que los tiene).
+@export var show_bridge := true
+## Dibuja el pez del phishing con su carnada (solo en la sala que lo tiene).
+@export var show_threat := true
 ## Marca de GameState: si ya se recogió, el fragmento no se dibuja.
 @export var fragment_flag: StringName = &"zona0_fragmento_recogido"
 @export var platforms: Array[Rect2] = [Rect2(456, 256, 64, 8), Rect2(536, 216, 80, 8), Rect2(632, 252, 40, 8)]
@@ -42,8 +47,10 @@ func _paint(c: VectorCanvas, t: float) -> void:
 	_paint_grid(c)
 	_paint_wireframe(c)
 	_paint_network(c, t)
-	_paint_bridge(c, t)
-	_paint_fish(c, t)
+	if show_bridge:
+		_paint_bridge(c, t)
+	if show_threat:
+		_paint_fish(c, t)
 	# Firma digital de Kai.
 	if player:
 		var feet := player.global_position

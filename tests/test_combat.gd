@@ -172,7 +172,7 @@ func _test_fight() -> void:
 	# Kai llega caminando (pasa por el punto de restauración del final).
 	player.teleport_to(Vector2(2940, 304))
 	await _walk_to(player, 3172.0)
-	_check(room.checkpoint == room.get_node("RestorePointFinal"), "hay un punto de restauración justo antes del combate")
+	_check(room.checkpoint == room.get_node("RestorePointFinal"), "hay un punto de restauración (solo de control) justo antes del combate")
 	_check(tab._prompt.visible and tab._prompt.text == "E: cambiar la contraseña", "la pestaña ofrece «E: cambiar la contraseña»")
 
 	_action("interact")

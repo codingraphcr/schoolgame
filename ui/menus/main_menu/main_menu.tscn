@@ -79,6 +79,16 @@ offset_bottom = 200.0
 grow_horizontal = 2
 theme_override_constants/separation = 4
 
+[node name="ContinueButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(320, 46)
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 20
+text = "CONTINUAR"
+script = ExtResource("3_option")
+
 [node name="PlayButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(320, 46)

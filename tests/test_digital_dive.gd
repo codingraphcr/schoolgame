@@ -3,8 +3,8 @@ extends SceneTree
 ## pantalla de carga, se materializa dentro de la PC del profesor y puede volver al laboratorio.
 ## Ejecutar: godot --headless --path . --script res://tests/test_digital_dive.gd
 
-const PASILLO := "res://world/zones/zone0/pasillo_laboratorio.tscn"
-const COMPUTER := Vector2(716, 304)
+const LAB := "res://world/zones/zone0/laboratorio.tscn"
+const COMPUTER := Vector2(220, 304)
 
 var _failures := 0
 
@@ -21,7 +21,7 @@ func _run() -> void:
 		state.complete_step(&"prologo", step)
 	_check(state.get_current_step(&"contrasena_profesor") == &"entrar_pc", "preparación: misión del profesor en curso")
 
-	change_scene_to_file(PASILLO)
+	change_scene_to_file(LAB)
 	await _wait(0.5)
 	var room := current_scene as Room
 	var player := room.player
@@ -68,9 +68,9 @@ func _run() -> void:
 	Input.action_release("move_left")
 	await _wait(1.0)
 	room = current_scene as Room
-	_check(room != null and room.name == "PasilloLaboratorio", "la salida izquierda vuelve al laboratorio")
+	_check(room != null and room.name == "Laboratorio", "la salida izquierda vuelve al laboratorio")
 	if room:
-		_check(absf(room.player.global_position.x - 686.0) < 16.0, "Kai aparece junto a la computadora (x=%.0f)" % room.player.global_position.x)
+		_check(absf(room.player.global_position.x - 190.0) < 16.0, "Kai aparece junto a la computadora (x=%.0f)" % room.player.global_position.x)
 		await _wait(1.2)
 		_check(not room.player.controls_locked, "tras materializarse en el laboratorio, recupera los controles")
 

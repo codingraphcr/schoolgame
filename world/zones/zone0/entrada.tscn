@@ -18,6 +18,7 @@
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="16_1n0rg"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="17_ly34l"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="18_0p42w"]
+[ext_resource type="Script" path="res://world/digital/save_point.gd" id="19_savep"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_stp1f"]
 size = Vector2(864, 80)
@@ -284,6 +285,11 @@ text = "Espacio: saltar (mantener = más alto)"
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=494460373]
 position = Vector2(72, 304)
 
+[node name="SavePoint" type="Area2D" parent="." unique_id=1220530183]
+position = Vector2(640, 304)
+script = ExtResource("19_savep")
+save_id = &"entrada"
+
 [node name="Entries" type="Node2D" parent="." unique_id=765024335]
 
 [node name="FromPasillo" type="Marker2D" parent="Entries" unique_id=1230351858]
@@ -297,7 +303,8 @@ facing = -1
 [node name="ToPasillo" type="Area2D" parent="Exits" unique_id=1890514170]
 position = Vector2(794, 176)
 script = ExtResource("13_3jc38")
-target_scene = "res://world/zones/zone0/pasillo_laboratorio.tscn"
+door_id = &"este"
+target_scene = "res://world/zones/zone0/pasillo.tscn"
 target_entry = &"desde_entrada"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToPasillo" unique_id=1877800457]

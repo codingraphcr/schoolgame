@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="1_tmpl"]
+
+[resource]
+script = ExtResource("1_tmpl")
+id = &"pc_escritorio"
+display_name = "Escritorio de la PC del profesor"
+scene_path = "res://world/zones/pc_profesor/escritorio.tscn"
+room_type = &"digital"
+district_id = &"pc_profesor"
+size_cells = Vector2i(6, 1)
+fixed = true
+difficulty = 2
+mission_ids = PackedStringArray("contrasena_profesor")

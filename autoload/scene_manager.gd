@@ -15,6 +15,8 @@ var _fade_rect: ColorRect
 var _is_changing := false
 ## Entrada (RoomEntry.id) por la que debe aparecer el jugador en la próxima sala.
 var _pending_entry: StringName = &""
+## Sala del mapa (World) a la que se va, si se conoce.
+var _pending_room: StringName = &""
 
 
 func _ready() -> void:
@@ -54,8 +56,10 @@ func change_scene(scene_path: String) -> void:
 
 
 ## Cambia a otra sala y hace aparecer al jugador en la entrada indicada (RoomEntry.id).
-func go_to_room(scene_path: String, entry: StringName) -> void:
+## room_id: la sala del mapa (World) a la que se llega; vacío = se busca por la escena.
+func go_to_room(scene_path: String, entry: StringName, room_id: StringName = &"") -> void:
 	_pending_entry = entry
+	_pending_room = room_id
 	change_scene(scene_path)
 
 
@@ -64,6 +68,13 @@ func take_pending_entry() -> StringName:
 	var entry := _pending_entry
 	_pending_entry = &""
 	return entry
+
+
+## Devuelve (y olvida) la sala del mapa pendiente. La llama la sala al cargarse.
+func take_pending_room() -> StringName:
+	var room_id := _pending_room
+	_pending_room = &""
+	return room_id
 
 
 ## Fundido a negro, ejecuta midpoint (p. ej. mover al jugador) y vuelve a mostrar la escena.

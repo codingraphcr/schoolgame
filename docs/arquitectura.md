@@ -38,6 +38,8 @@ Las carpetas se crean cuando se necesitan, no antes.
 | Nombre | Archivo | Responsabilidad |
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
+| `World` | `autoload/world.gd` | El mapa del mundo: grafos de los distritos, sala actual y a dónde lleva cada puerta. Ver «Mapa del mundo». |
+| `SaveManager` | `autoload/save_manager.gd` | Guardar y continuar la partida (`user://partida.json`). Ver «Guardado». |
 | `Economy` | `autoload/economy.gd` | Saldo de **Ecos** (la moneda) y la penalización al morir. Ver «ECOS». |
 | `DigitalVision` | `autoload/digital_vision.gd` | Estado de la Visión Digital (lista, activa, recargando), duración, recarga y `blend` para los efectos. Ver "Visión Digital". |
 | `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. **Progreso del jugador** (habilidades, evoluciones, misiones, comandos, contraseñas). Preparado para guardar partida (`to_dict` / `from_dict`). |
@@ -245,10 +247,19 @@ para que compilen también en las pruebas de línea de comandos.
 
 ## Salas (`world/`)
 
-- `world/zones/zone0/pasillo_laboratorio.tscn`: **primera sala real** (Zona 0, Pasillo + Laboratorio), creada a partir
-  de la muestra de Ariel y editable en Godot: tiles (`Background`, `Cables`, tileset `world/tilesets/colegio_tileset.tres`),
-  colisiones como rectángulos (`Collisions`: suelo, paredes y bandejas de cables de un sentido), objetos (`Corridor`, `Lab`,
-  `CableTrays`), luces (`Lights`, textura compartida `assets/art/light_soft.tres`) y paquetes de datos (`Packets`).
+- `world/zones/zone0/pasillo.tscn` y `laboratorio.tscn`: las **primeras salas reales** (Zona 0), creadas a partir de
+  la muestra de Ariel y editables en Godot: tiles (`Background`, `Cables`, tileset `world/tilesets/colegio_tileset.tres`),
+  colisiones como rectángulos (`Collisions`: suelo, paredes y bandejas de cables de un sentido), objetos, luces (`Lights`,
+  textura compartida `assets/art/light_soft.tres`) y paquetes de datos (`Packets`). Eran una sola escena; en **M3** se
+  separaron en dos salas del mapa:
+  - **Pasillo** (688 px): el profesor, los casilleros, el router, las bandejas de cables y el puente de datos con su
+    fragmento (Visión Digital). Salida izquierda → Entrada; derecha → Laboratorio (`desde_pasillo`).
+  - **Laboratorio** (720 px): la computadora del laboratorio (prólogo y entrada a la PC del profesor), el monitor de la
+    entidad, los servidores (dos más, provisionales, con los sprites de Ariel) y la carnada del phishing. Su fondo es el
+    patrón diagonal de Ariel, ensanchado. Salida izquierda → Pasillo (`desde_laboratorio`); al salir de la PC se llega
+    aquí (`desde_pc`).
+  - La red de la Visión Digital (`red_zona0.gd`) está en las dos salas: `show_bridge` (puente y fragmento, en el
+    Pasillo) y `show_threat` (el pez del phishing, en el Laboratorio).
   Una partida nueva (`GameState.reset()`) empieza en la Entrada: Kai es un alumno común, sin habilidades.
 - `world/effects/`: comportamientos reutilizables del escenario: `flicker.gd` (parpadeo de carteles), `bob.gd`
   (flotar en píxeles enteros), `pulse_light.gd` (luz que late) y `packet_stream.gd` (paquetes por el cable que se
@@ -438,6 +449,57 @@ y Kai vuelve al laboratorio (entrada `desde_pc`).
 décimo de la tabla del MEP 2025 (Operaciones ciberseguras): seguridad en sistemas operativos de código abierto y
 conceptos básicos de gestión de contraseñas.
 
+## Guardado (`autoload/save_manager.gd`, `world/digital/save_point.gd`)
+
+**`SaveManager`** guarda todo el progreso (`GameState.to_dict()`: misiones, marcas, Ecos y recompensas cobradas,
+habilidades, evoluciones, comandos aprendidos, la huella de la contraseña, cristales y energía) y **dónde continuar**:
+la escena y la computadora segura (`{"version", "saved_at", "location": {"scene", "entry"}, "game"}`). Funciona sin
+conexión. **Escritura segura:** escribe un archivo temporal, comprueba que se puede leer y recién entonces reemplaza al
+guardado anterior, que queda como copia (`partida.respaldo.json`). Si el principal está dañado usa la copia; un guardado
+dañado, de una versión futura o con una sala inexistente no se usa. `VERSION` y `_migrate()` preparan los cambios de
+formato. `continue_game()` carga y lleva a la sala; `Room` coloca a Kai en la `SavePoint` cuyo `save_id` coincide.
+
+**Computadora segura** (`SavePoint`, un `Interactable`): monitor verde con un escudo (distinto de las terminales y de los
+nodos de Aegis). Al pasar queda como **punto de control** (si Kai muere, reaparece ahí); con **E** guarda la partida y
+llena los cristales y la energía. Por ahora hay una en la Entrada del colegio. En la PC del profesor (prólogo y combate) **no hay
+computadoras de guardado**: solo puntos de restauración (`RestorePoint`), que son puntos de control al pasar. El menú principal muestra **CONTINUAR** si hay una partida guardada.
+
+## Mapa del mundo (`systems/world/`, `data/world/`)
+
+Plan aprobado del mapa 2D semi-procedural, tareas **M1–M8**. **M1 (hecho): el modelo de datos.**
+
+- **`RoomTemplate`** (`data/world/rooms/*.tres`): la ficha de una escena de sala, separada del dibujo: id, nombre,
+  escena, tipo (`corridor`, `classroom`, `library`, `stairs`…), distrito, **tamaño en celdas** de la cuadrícula del mapa,
+  puertas, si es fija o secreta, peso de aparición, dificultad, habilidades mínimas para recorrerla, capítulo, enemigos,
+  objetivos educativos y misiones. `validate()` encuentra fichas mal hechas; `RoomTemplate.load_folder()` carga todas
+  (también en el juego exportado). Hoy hay fichas de la Entrada, el Pasillo, el Laboratorio y la PC del profesor
+  (distrito `pc_profesor`, se entra por la computadora, sin puertas).
+- **`DoorSpec`**: una puerta de la ficha: id, **lado** (izquierda, derecha, arriba, abajo), **celda** de la sala,
+  **clase** (paso, puerta, escalera, ascensor, secreta) y la `RoomEntry` donde aparece Kai al llegar. Las escaleras y
+  ascensores van arriba o abajo; las puertas, a los costados; un paso secreto solo se abre hacia un paso o una puerta.
+- **`RoomGraph`** (código puro, sin escenas): las salas colocadas en celdas (sin chocar) y las conexiones entre puertas.
+  Solo conecta puertas **enfrentadas** (celdas vecinas, lados opuestos) y de **clases compatibles**. Cada conexión puede
+  pedir habilidades (`&"dash"`, `&"double_jump"`, `&"wall_jump"`, `&"vision"`) y ser de **un solo sentido** (atajos);
+  un paso secreto pide la Visión Digital solo. `target_of()` dice a dónde lleva una puerta, `open_doors()` las que
+  quedan sueltas, `reachable()` / `find_path()` recorren según las habilidades (`RoomGraph.abilities_of(GameState)`),
+  y `to_dict()` / `from_dict()` lo guardan (también en JSON); un grafo de otra versión o que ya no encaja no se usa.
+
+**M2 (hecho): el mapa en el juego, todavía fijo.**
+
+- **`DistrictLayout`** (`data/world/districts/*.tres`): la parte fija de un distrito: sus salas (`LayoutRoom`: id único
+  en todo el mundo, ficha y celda), sus conexiones (`LayoutLink`: puertas, habilidades, un solo sentido) y la sala de
+  inicio. `build()` arma el `RoomGraph`. Hoy: **Colegio** (Entrada ↔ Pasillo ↔ Laboratorio) y **PC del profesor**.
+- **`World`** (autoload): carga fichas y distritos, sabe la sala actual (`current_room`, `current_district`, señal
+  `room_entered`) y responde `destination(sala, puerta)` → `{room, scene, entry}`.
+- **`Room.room_id`**: al cargarse, la sala avisa a `World` con el id con que se llegó (`SceneManager.go_to_room(escena,
+  entrada, room_id)`) o, si no hay (p. ej. al continuar una partida), se busca por la escena.
+- **`RoomExit.door_id`**: si la sala está en el mapa, la salida le pregunta el destino a `World`; si no, usa
+  `target_scene` / `target_entry`, que quedan como respaldo. `test_world` comprueba que ambos coinciden.
+- Las marcas `visitada_<escena>` siguen igual (las usa el mapa del Grimorio hasta M5).
+
+**M3 (en curso, junto con H5):** ✅ Pasillo y Laboratorio son dos salas. Siguen las salas nuevas de H5 (el pasillo
+viejo y el cuarto viejo) con arte provisional.
+
 ## Misiones (`systems/quests/`)
 
 | Pieza | Responsabilidad |
@@ -566,6 +628,9 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» chica (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el jefe en la PC (se arma, la Nullblade como destello, barra de vida, barrera, perder y reintentar, ganar: la Nullblade se va, el fragmento de vida, el profesor y avanzar) |
 | `test_boss.gd` | El jefe: ventanita al principio (sin golpes), se arma, camina hacia Kai, avisa y embiste, choca y queda agachado (más bajo), el pogo crítico, proyectiles, fase 2 con la mitad de la vida, «ACCESO DENEGADO» y desaparece; fragmentos de vida (recoger, HUD, 4 forman una vida) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
+| `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
+| `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
+| `test_save.gd` | Guardar y continuar (todo el progreso), escritura segura con copia, archivos dañados o inválidos, la computadora segura (punto de control al pasar; con E guarda y cura) y CONTINUAR en el menú |
 | `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |
 | `test_ecos.gd` | Reparto en fragmentos, Ecos según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |
 | `test_entity_eye.gd` | El ojo de la entidad: vigila al entrar, sigue a la cámara, parpadea, se cierra y desaparece en la terminal y no vuelve después de resolverla |

@@ -2,7 +2,7 @@ extends SceneTree
 ## Prueba automática: diálogos (formato, caja de diálogo) e interacción con el profesor del pasillo.
 ## Ejecutar: godot --headless --path . --script res://tests/test_dialogue.gd
 
-const PASILLO := "res://world/zones/zone0/pasillo_laboratorio.tscn"
+const PASILLO := "res://world/zones/zone0/pasillo.tscn"
 const NEAR_PROFESOR := Vector2(170, 304)  # El profesor está en x=196
 
 var _failures := 0

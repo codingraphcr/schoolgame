@@ -5,9 +5,10 @@ extends SceneTree
 ## Ejecutar: godot --headless --path . --script res://tests/test_prologue.gd
 
 const MENU := "res://ui/menus/main_menu/main_menu.tscn"
-const PASILLO := "res://world/zones/zone0/pasillo_laboratorio.tscn"
+const PASILLO := "res://world/zones/zone0/pasillo.tscn"
+const LAB := "res://world/zones/zone0/laboratorio.tscn"
 const NEAR_PROFESOR := Vector2(170, 304)
-const COMPUTER := Vector2(716, 304)
+const COMPUTER := Vector2(220, 304)
 
 var _failures := 0
 var state: Node
@@ -31,16 +32,15 @@ func _run() -> void:
 	var objective: Label = current_scene.get_node("CombatHUD/Objective")._text
 	_check(objective.text == "Busca al profesor en el pasillo.", "el objetivo aparece en pantalla")
 
-	change_scene_to_file(PASILLO)
-	await _wait(0.5)
-	var room := current_scene as Room
+	var room := await _go(LAB)
 	var player := room.player
 	var computer := room.get_node("LabComputer") as Interactable
-
 	player.teleport_to(COMPUTER)
 	await _frames(8)
 	_check(not computer._prompt.visible, "la computadora no se puede usar antes de hablar con el profesor")
 
+	room = await _go(PASILLO)
+	player = room.player
 	player.teleport_to(NEAR_PROFESOR)
 	await _frames(8)
 	await _talk(room)
@@ -48,8 +48,13 @@ func _run() -> void:
 	objective = room.get_node("CombatHUD/Objective")._text
 	_check(objective.text == "Revisa la computadora del laboratorio.", "el objetivo cambia")
 
+	room = await _go(LAB)
+	player = room.player
+	computer = room.get_node("LabComputer") as Interactable
 	await _test_involuntary_vision(room, player, computer)
 
+	room = await _go(PASILLO)
+	player = room.player
 	player.teleport_to(NEAR_PROFESOR)
 	await _frames(8)
 	await _talk(room)
@@ -59,8 +64,13 @@ func _run() -> void:
 	_check(title.is_showing() and title._title.text == "EL DESPERTAR", "aparece el título «EL DESPERTAR»")
 	_check(state.active_quest == &"contrasena_profesor" and state.get_current_step(&"contrasena_profesor") == &"entrar_pc",
 		"empieza la misión «La contraseña del profesor»")
+	objective = room.get_node("CombatHUD/Objective")._text
 	_check(objective.text.contains("cuenta del profesor"), "el objetivo muestra la nueva misión")
 	_check(not state.vision_unlocked, "Q sigue bloqueada hasta terminar la misión del profesor")
+	await _until(func() -> bool: return not title.is_showing())
+	room = await _go(LAB)
+	player = room.player
+	computer = room.get_node("LabComputer") as Interactable
 	player.teleport_to(COMPUTER)
 	await _frames(8)
 	_check(computer._prompt.visible and computer._prompt.text == "E: revisar la cuenta del profesor",
@@ -125,6 +135,13 @@ func _test_involuntary_vision(room: Room, player: Player, computer: Interactable
 	await _frames(5)
 	_check(state.get_current_step(&"prologo") == &"volver_profesor" and not player.controls_locked,
 		"la misión avanza: contarle al profesor")
+
+
+## Carga una sala (sin la transición de una salida) y la devuelve.
+func _go(scene_path: String) -> Room:
+	change_scene_to_file(scene_path)
+	await _wait(0.5)
+	return current_scene as Room
 
 
 ## Espera (en cuadros de física) a que se cumpla la condición, hasta unos 10 s de juego.

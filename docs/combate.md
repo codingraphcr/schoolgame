@@ -95,6 +95,7 @@ Es el vínculo entre el combate y el contenido educativo.
 | C2 | `GameState`: progreso de combate y moneda (pérdida al morir) | ✅ |
 | E1 | **ECOS**: autoload `Economy`, BITS → Ecos, penalización (10 %, máx. 100, nada en el tutorial) | ✅ |
 | E2 | `EconomyConfig` (valores configurables) y recompensas únicas que no se cobran dos veces; enemigos por rango | ✅ |
+| E4 | Guardado de la partida (`SaveManager`), computadoras seguras y CONTINUAR | ✅ |
 | E3 | Ecos cristalinos (1 azul, 5 violeta, 25 blanco violáceo), partículas y sonido; combate más largo y difícil en una arena con obstáculos | ✅ |
 | Z1 | Retirar la sala de desarrollo (la sala gris queda solo para pruebas automáticas) | ✅ |
 | Z2 | Arte oficial de Ariel (estilo D) en el proyecto + Kai como personaje | ✅ |

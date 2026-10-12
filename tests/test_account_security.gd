@@ -120,13 +120,13 @@ func _test_in_game() -> void:
 	_check(state.has_flag(&"cuenta_profesor_segura"), "queda registrado que la cuenta está segura")
 
 	# Kai vuelve al laboratorio y ya puede usar la Visión Digital.
-	await _until(func() -> bool: return current_scene != null and current_scene.name == "PasilloLaboratorio")
+	await _until(func() -> bool: return current_scene != null and current_scene.name == "Laboratorio")
 	room = current_scene as Room
-	_check(room != null and room.name == "PasilloLaboratorio", "Kai sale de la PC y vuelve al laboratorio")
+	_check(room != null and room.name == "Laboratorio", "Kai sale de la PC y vuelve al laboratorio")
 	if room == null:
 		return
 	player = room.player
-	_check(absf(player.global_position.x - 686.0) < 16.0, "aparece junto a la computadora")
+	_check(absf(player.global_position.x - 190.0) < 16.0, "aparece junto a la computadora")
 	await _until(func() -> bool: return not player.controls_locked)
 	_check(player.combat.weapon == null, "afuera de la PC Kai no tiene la Nullblade")
 	_action("vision")

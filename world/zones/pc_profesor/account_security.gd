@@ -17,7 +17,7 @@ const PASSWORD_ID := &"profesor"
 @export var challenge: ChoiceChallenge
 @export var success_dialogue: Dialogue
 ## A dónde vuelve Kai al terminar (y por qué entrada).
-@export_file("*.tscn") var exit_scene := "res://world/zones/zone0/pasillo_laboratorio.tscn"
+@export_file("*.tscn") var exit_scene := "res://world/zones/zone0/laboratorio.tscn"
 @export var exit_entry: StringName = &"desde_pc"
 
 var running := false
