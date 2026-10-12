@@ -53,7 +53,10 @@ const CHARACTERS := {
 			"ataque_1": { "rect": Rect2i(686, 478, 160, 144) },
 			"ataque_2": { "rect": Rect2i(861, 478, 162, 144), "anchor_x": 928 },  # El arco queda sobre la cabeza.
 			"dash": { "rect": Rect2i(1020, 478, 156, 144) },
-			"dano": { "rect": Rect2i(1206, 478, 122, 144) },
+			# clip: sin la espada morada (la forma de hacha en la mano) ni el palito de la izquierda.
+			"dano": { "rect": Rect2i(1206, 478, 122, 144), "clip": [Vector2(1236, 505), Vector2(1300, 505), Vector2(1300, 575),
+				Vector2(1288, 590), Vector2(1288, 612), Vector2(1215, 612), Vector2(1215, 588), Vector2(1229, 586), Vector2(1225, 565),
+				Vector2(1228, 545), Vector2(1236, 530)] },
 			# La muerte de la hoja parece dos personajes (hay una segunda cabeza oscura): Kai queda acostado
 			# desplomado boca abajo, con la cabeza hacia adelante: su pose de reposo girada 90° (rotate).
 			"tendido": { "rect": Rect2i(36, 478, 72, 144), "rotate": true },
