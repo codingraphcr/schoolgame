@@ -34,6 +34,8 @@ var _charged := false
 ## Si el ataque en curso va hacia abajo, y si ya rebotó con él (un rebote por ataque).
 var _down := false
 var _bounced := false
+## Si la pose del ataque hacia abajo ya trae la espada dibujada (las poses del pogo de la hoja).
+var _pose_has_blade := false
 
 
 func _ready() -> void:
@@ -78,11 +80,13 @@ func attack(charged := false) -> bool:
 	_windup = maxf(weapon.windup, 0.001)
 	_place_hitbox()
 	var visual := player.get_node_or_null("Visual/Body/Kai")
-	if _down and visual and visual.has_method("play_pose"):
-		# El cuadro de ataque trae dibujado el corte hacia adelante: hacia abajo, Kai recoge las rodillas
-		# (la pose "caer" de la hoja, como el ataque hacia abajo de Hollow Knight) y clava la espada debajo.
+	# Hacia abajo, las poses del pogo de la hoja de Ariel (con la Nullblade dibujada en la mano).
+	# Si la apariencia no las tiene, Kai recoge las rodillas y se dibuja la espada aparte.
+	_pose_has_blade = _down and visual != null and visual.has_method("pogo_attack") \
+		and visual.pogo_attack(weapon.windup, weapon.active_time)
+	if _down and not _pose_has_blade and visual and visual.has_method("play_pose"):
 		visual.play_pose(&"caer", weapon.windup + weapon.active_time + 0.15)
-	elif visual and visual.has_method("attack"):
+	elif not _down and visual and visual.has_method("attack"):
 		visual.attack(weapon.windup)
 	_spawn_slash()
 	attacked.emit()
@@ -137,8 +141,12 @@ func _on_hit_dealt(target: Node2D, _hit: HitData) -> void:
 		# Pogo: rebota hacia arriba en vez de retroceder (una vez por ataque).
 		if not _bounced:
 			_bounced = true
-			RingBurst.spawn(player.get_parent(), player.global_position + Vector2(0.0, weapon.reach.x * 0.55), weapon.slash_color)
+			_spawn_pogo_impact(player.global_position + Vector2(0.0, weapon.reach.x * 0.55))
 			player.pogo(pogo_height)
+			var visual := player.get_node_or_null("Visual/Body/Kai")
+			if visual and visual.has_method("pogo_bounce"):
+				visual.pogo_bounce()
+			_spawn_ascent_trail()
 			pogo.emit()
 	else:
 		player.velocity.x = -player.facing * weapon.recoil
@@ -180,9 +188,13 @@ func _spawn_slash() -> void:
 	tween.tween_callback(slash.queue_free)
 
 
-## Ataque hacia abajo: Kai clava la espada debajo de sus pies. La hoja (WeaponData.sprite, punta
+## Ataque hacia abajo: Kai clava la espada debajo de sus pies. Con las poses del pogo la espada ya
+## está en la mano y solo se agrega el rastro de descenso; si no, la hoja (WeaponData.sprite, punta
 ## hacia abajo) baja de golpe con una estela vertical y se desvanece al terminar el ataque.
 func _spawn_stab() -> void:
+	if _pose_has_blade:
+		_spawn_descent_trail()
+		return
 	var stab := Node2D.new()
 	stab.name = "Stab"
 	stab.z_index = 5
@@ -215,6 +227,73 @@ func _spawn_stab() -> void:
 	tween.tween_interval(weapon.active_time)
 	tween.tween_property(stab, "modulate:a", 0.0, 0.12)
 	tween.tween_callback(stab.queue_free)
+
+
+## Rastro de descenso (hoja del pogo): líneas de energía sobre Kai mientras baja con la espada.
+func _spawn_descent_trail() -> void:
+	var trail := Node2D.new()
+	trail.z_index = 4
+	var color := weapon.slash_color.lightened(0.3)
+	trail.draw.connect(func() -> void:
+		for i in 5:
+			var x := (i - 2) * 3.5
+			var top := -40.0 - (12.0 + (i % 2) * 9.0)
+			trail.draw_line(Vector2(x, -38.0), Vector2(x, top), Color(color, 0.7 if i == 2 else 0.4), 2.0 if i == 2 else 1.0))
+	player.add_child(trail)
+	var tween := trail.create_tween()
+	tween.tween_property(trail, "modulate:a", 0.0, weapon.windup + weapon.active_time + 0.1)
+	tween.tween_callback(trail.queue_free)
+
+
+## Impacto del pogo (hoja de Ariel): chispa digital en la punta de la espada (píxeles, rayos en
+## abanico y franjas de glitch) y el chorro vertical de energía del rebote.
+func _spawn_pogo_impact(at: Vector2) -> void:
+	var color := weapon.slash_color
+	var pink := Color("ff6ad5")
+	PixelBurst.spawn(player.get_parent(), at, [color, pink, color.lightened(0.6)], 16, 110.0)
+	var fx := Node2D.new()
+	fx.z_index = 5
+	player.get_parent().add_child(fx)
+	fx.global_position = at
+	var life := [0.0]
+	fx.draw.connect(func() -> void:
+		var k: float = life[0]
+		var rise := minf(k * 2.5, 1.0)
+		for i in 7:
+			var angle := lerpf(-PI * 0.92, -PI * 0.08, i / 6.0)
+			var dir := Vector2(cos(angle), sin(angle))
+			fx.draw_line(dir * 3.0, dir * (8.0 + 18.0 * k), Color(pink.lightened(0.35), 1.0 - k), 1.5)
+		fx.draw_rect(Rect2(-5.0, -38.0 * rise, 10.0, 38.0 * rise), Color(color, 0.25 * (1.0 - k)))
+		fx.draw_rect(Rect2(-1.5, -38.0 * rise, 3.0, 38.0 * rise), Color(color.lightened(0.5), 0.8 * (1.0 - k)))
+		if not GameSettings.reduce_glitch and k < 0.6:
+			for j in 3:
+				fx.draw_rect(Rect2(randf_range(-18.0, 6.0), randf_range(-14.0, 2.0), randf_range(6.0, 14.0), 1.0), Color([color, pink].pick_random(), 0.8)))
+	var tween := fx.create_tween()
+	tween.tween_method(func(value: float) -> void:
+		life[0] = value
+		fx.queue_redraw(), 0.0, 1.0, 0.32)
+	tween.tween_callback(fx.queue_free)
+
+
+## Arco de rastro aéreo (hoja del pogo): una estela de energía que sigue a Kai mientras sube.
+func _spawn_ascent_trail() -> void:
+	var trail := Node2D.new()
+	trail.z_index = 3
+	player.get_parent().add_child(trail)
+	var points: Array[Vector2] = []
+	var color := weapon.slash_color
+	trail.draw.connect(func() -> void:
+		for i in range(1, points.size()):
+			var k := float(i) / points.size()
+			trail.draw_line(trail.to_local(points[i - 1]), trail.to_local(points[i]), Color(color.lightened(0.2 * k), 0.6 * k), 1.0 + 3.0 * k))
+	var tween := trail.create_tween()
+	tween.tween_method(func(_value: float) -> void:
+		points.append(player.global_position + Vector2(-5.0 * player.facing, -16.0))
+		if points.size() > 10:
+			points.remove_at(0)
+		trail.queue_redraw(), 0.0, 1.0, 0.35)
+	tween.tween_property(trail, "modulate:a", 0.0, 0.15)
+	tween.tween_callback(trail.queue_free)
 
 
 ## Energía por golpe: solo si el objetivo es un enemigo de verdad, sigue en pie y no tiene escudo.

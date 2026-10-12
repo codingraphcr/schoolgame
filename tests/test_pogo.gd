@@ -1,7 +1,8 @@
 extends SceneTree
 ## Prueba automática: ataque hacia abajo y rebote (pogo, como en Hollow Knight) y la cadencia de ataque.
 ## En el aire, abajo + J ataca hacia abajo; al golpear a un enemigo, unos pinchos o un nodo de rebote,
-## Kai rebota hacia arriba y recupera el doble salto. En el suelo, abajo + J es un ataque normal.
+## Kai rebota hacia arriba (el doble salto no se recupera: solo al tocar el suelo). En el suelo, abajo + J
+## es un ataque normal.
 ## Ejecutar: godot --headless --path . --script res://tests/test_pogo.gd
 
 const ROOM := "res://tests/fixtures/combat_test_room.tscn"
@@ -58,9 +59,11 @@ func _run() -> void:
 	_check(bounce < -150.0, "al atacar hacia abajo sobre un enemigo, Kai rebota (%.0f px/s)" % bounce)
 	_check(enemy.health.current < enemy_health, "el enemigo recibe el golpe")
 	_check(_pogos == 1, "suena y avisa el rebote una sola vez")
-	_check(player.air_jumps_left == player.max_air_jumps, "el rebote recupera el doble salto")
+	_check(player.air_jumps_left == 0, "el rebote NO devuelve el doble salto (ya se había usado)")
 	enemy.queue_free()
 	await _until(func() -> bool: return player.is_on_floor())
+	await _frames(2)
+	_check(player.air_jumps_left == player.max_air_jumps, "al tocar el suelo vuelve a tener el doble salto")
 
 	# Rebote en los pinchos: no lastiman si se rebota a tiempo.
 	var spikes := room.get_node("Hazards/SpikesFloor") as Spikes
@@ -97,6 +100,8 @@ func _down_attack_over(at: Vector2, expect_hit := true) -> float:
 	player.teleport_to(at)
 	player.velocity = Vector2.ZERO
 	await _frames(1)
+	# Como si ya hubiera usado el doble salto en este salto.
+	player.air_jumps_left = 0
 	Input.action_press("move_down")
 	var attacked := player.combat.attack()
 	_check(attacked and player.combat.is_down_attack(), "en el aire, abajo + J ataca hacia abajo")

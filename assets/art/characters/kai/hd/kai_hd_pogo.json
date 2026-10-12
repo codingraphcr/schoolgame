@@ -1,0 +1,33 @@
+{
+	"animations": {
+		"pogo_clavar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_pogo_pogo_clavar.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				176
+			],
+			"frames": 1,
+			"loop": false
+		},
+		"pogo_subir": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_pogo_pogo_subir.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				176
+			],
+			"frames": 1,
+			"loop": false
+		}
+	},
+	"scale": 0.5
+}
