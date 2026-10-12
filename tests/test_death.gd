@@ -2,7 +2,7 @@ extends SceneTree
 ## Prueba automática: muerte y reaparición de Kai (hoja de Ariel). Al perder la última máscara:
 ## aturdido (daño) → de rodillas → desplomado (muerte) → se desintegra en píxeles → pantalla
 ## "CONEXIÓN PERDIDA..." → reaparece en el punto de control: se rearma, se levanta y recupera el
-## control con la vida llena. Pogo: el ataque hacia abajo tiene su propia pose (no la de salto).
+## control con la vida llena. Pogo: el ataque hacia abajo usa las poses de la hoja del pogo.
 ## Ejecutar: godot --headless --path . --script res://tests/test_death.gd
 
 const ROOM := "res://tests/fixtures/combat_test_room.tscn"
@@ -35,7 +35,7 @@ func _run() -> void:
 	player.combat.attack()
 	Input.action_release("move_down")
 	await _frames(2)
-	_check(kai.current_animation() == &"caer", "el ataque hacia abajo tiene su propia pose (no la de salto)")
+	_check(kai.current_animation() in [&"pogo_clavar"], "el ataque hacia abajo usa las poses del pogo de la hoja (no la de salto)")
 	await _until(func() -> bool: return player.is_on_floor() and player.combat.can_attack())
 	await _wait(0.3)
 

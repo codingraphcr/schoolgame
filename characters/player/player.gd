@@ -363,11 +363,12 @@ func move_speed() -> float:
 
 
 ## Rebote del ataque hacia abajo (pogo, como en Hollow Knight): impulso hacia arriba de altura fija
-## (no se corta al soltar el salto) y recupera el doble salto y el dash en el aire.
+## (no se corta al soltar el salto) y recupera el dash en el aire. El doble salto NO se recupera: solo
+## al tocar suelo, una plataforma o una estructura (así no se encadenan pogo, doble salto y pogo).
 func pogo(height: float) -> void:
 	_jump(_velocity_for_height(height))
 	_is_jump_rising = false
-	_restore_air_moves()
+	_air_dash_available = true
 	_squash(Vector2(0.8, 1.2))
 
 

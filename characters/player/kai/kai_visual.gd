@@ -22,7 +22,7 @@ const RUN_STRIDE_SPEED := 100.0
 
 ## Carpeta y archivo de descripción de cada apariencia por cuadros.
 const FRAME_SETS := {
-	Apariencia.CONCEPTO: ["res://assets/art/characters/kai/hd/", "kai_hd.json", "kai_hd_curacion.json"],
+	Apariencia.CONCEPTO: ["res://assets/art/characters/kai/hd/", "kai_hd.json", "kai_hd_curacion.json", "kai_hd_pogo.json"],
 	Apariencia.CUADROS: ["res://assets/art/characters/kai/cuadros/", "kai_cuadros.json"],
 }
 ## Cuánto dura cada golpe del combo y el margen para encadenar el segundo.
@@ -139,6 +139,22 @@ func attack(windup := 0.0) -> void:
 	var second := _combo_left > 0.0 and _override == &"ataque_1"
 	_play_override(&"ataque_2" if second and _has_animation(&"ataque_2") else &"ataque_1", ATTACK_TIME)
 	_combo_left = 0.0 if second else COMBO_WINDOW
+
+
+## Pogo (hoja de Ariel "Animación de pogo"): Kai clava la Nullblade hacia abajo (la pose de
+## preparación de la hoja, que tiene las piernas). Devuelve false si esta apariencia no la tiene.
+func pogo_attack(windup: float, active: float) -> bool:
+	if _sprite == null or not _has_animation(&"pogo_clavar"):
+		return false
+	_play_override(&"pogo_clavar", windup + active + 0.15)
+	return true
+
+
+## Rebote del pogo: sube con la pose de ascenso de la hoja; después vuelve a la de salto.
+func pogo_bounce() -> void:
+	if _sprite == null or not _has_animation(&"pogo_subir"):
+		return
+	_play_override(&"pogo_subir", 0.35)
 
 
 func _process(delta: float) -> void:

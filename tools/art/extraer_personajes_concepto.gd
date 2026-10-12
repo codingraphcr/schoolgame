@@ -23,6 +23,7 @@ const OUTLINE := Color("0a0d1c")
 
 ## Configuración por personaje.
 ##   reference/height: la pose de referencia queda con ese alto (fija la escala de todas).
+##   frame_height (opcional): alto de los cuadros (128 si no se pone; los pies siempre en FEET_Y).
 ##   poses: zona de cada pose en la hoja. feet_y (opcional): fila de los pies, si debajo hay efectos.
 ##          body (opcional): zona del cuerpo que el borrado del resplandor no toca.
 ##          cover + cover_color (opcional): polígono (en la hoja) que se tapa con ese color
@@ -149,6 +150,34 @@ const CHARACTERS := {
 			"curar_aire_fin": { "poses": ["aire_completar", "aire_descenso"], "fps": 6.0, "loop": false },
 		},
 	},
+	# Pogo con la Nullblade (hoja de Ariel "Animación de pogo"): la fila de arriba, de a una fase.
+	# "salto" solo fija la escala (mismo alto que la pose de salto del juego: 88 px). feet_y: fila de
+	# los pies (la espada que apunta hacia abajo no empuja a Kai hacia arriba). El impacto (4) tiene
+	# al enemigo pegado (su destello lo dibuja el juego). En el descenso (3) y el rebote (5) Kai está
+	# encogido y casi no se le ven las piernas: clava la espada con la pose de preparación (2), que sí
+	# las tiene, y al rebotar pasa directo al ascenso (6). En la recuperación (7) el pantalón negro se
+	# confunde con el fondo y la pose quedaba cortada a la mitad: después del ascenso, la pose de salto.
+	"kai_pogo": {
+		"source": "res://docs/arte/referencias/pogo_concepto.webp",
+		"out": "res://assets/art/characters/kai/hd/",
+		"prefix": "kai_hd_pogo",
+		# Cuadros más altos que los de siempre: la espada baja bastante por debajo de los pies.
+		"frame_height": 176,
+		"background": Color("070c16"),
+		"tolerance": 0.07,
+		"remove_glow": true,
+		"reference": "salto",
+		"height": 88,
+		"poses": {
+			"salto": { "rect": Rect2i(50, 135, 135, 150), "feet_y": 282, "body": Rect2i(50, 135, 135, 150), "only_body": true },
+			"preparar": { "rect": Rect2i(278, 132, 105, 180), "feet_y": 257, "body": Rect2i(278, 132, 105, 180), "only_body": true },
+			"subir": { "rect": Rect2i(1148, 125, 95, 130), "feet_y": 248, "body": Rect2i(1148, 125, 95, 130), "only_body": true },
+		},
+		"animations": {
+			"pogo_clavar": { "poses": ["preparar"], "fps": 1.0, "loop": false },
+			"pogo_subir": { "poses": ["subir"], "fps": 1.0, "loop": false },
+		},
+	},
 }
 
 var _config: Dictionary
@@ -192,7 +221,8 @@ func _extract_character(character: String) -> void:
 		for pose_name: String in anim.poses:
 			half = maxi(half, frames[pose_name].half_width)
 		var width := maxi(MIN_FRAME_WIDTH, ceili(half * 2 / 8.0) * 8)
-		var strip := Image.create_empty(width * anim.poses.size(), FRAME_HEIGHT, false, Image.FORMAT_RGBA8)
+		var height: int = _config.get("frame_height", FRAME_HEIGHT)
+		var strip := Image.create_empty(width * anim.poses.size(), height, false, Image.FORMAT_RGBA8)
 		for i in anim.poses.size():
 			var frame: Dictionary = frames[anim.poses[i]]
 			var image: Image = frame.image
@@ -201,10 +231,10 @@ func _extract_character(character: String) -> void:
 		var file_name := "%s_%s.png" % [_config.prefix, anim_name]
 		strip.save_png(out + file_name)
 		info[anim_name] = {
-			"file": file_name, "frame_size": [width, FRAME_HEIGHT], "feet": [width / 2, FEET_Y],
+			"file": file_name, "frame_size": [width, height], "feet": [width / 2, FEET_Y],
 			"frames": anim.poses.size(), "fps": anim.fps, "loop": anim.loop,
 		}
-		print("%s: %d cuadro(s) de %d×%d" % [file_name, anim.poses.size(), width, FRAME_HEIGHT])
+		print("%s: %d cuadro(s) de %d×%d" % [file_name, anim.poses.size(), width, height])
 	var json := FileAccess.open(out + "%s.json" % _config.prefix, FileAccess.WRITE)
 	json.store_string(JSON.stringify({ "scale": WORLD_SCALE, "animations": info }, "\t"))
 	json.close()
