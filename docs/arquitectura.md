@@ -433,6 +433,28 @@ nodos de Aegis). Al pasar queda como **punto de control** (si Kai muere, reapare
 llena los cristales y la energía. Por ahora hay una en la Entrada del colegio. En la PC del profesor (prólogo y combate) **no hay
 computadoras de guardado**: solo puntos de restauración (`RestorePoint`), que son puntos de control al pasar. El menú principal muestra **CONTINUAR** si hay una partida guardada.
 
+## Mapa del mundo (`systems/world/`, `data/world/`)
+
+Plan aprobado del mapa 2D semi-procedural, tareas **M1–M8**. **M1 (hecho): el modelo de datos.**
+
+- **`RoomTemplate`** (`data/world/rooms/*.tres`): la ficha de una escena de sala, separada del dibujo: id, nombre,
+  escena, tipo (`corridor`, `classroom`, `library`, `stairs`…), distrito, **tamaño en celdas** de la cuadrícula del mapa,
+  puertas, si es fija o secreta, peso de aparición, dificultad, habilidades mínimas para recorrerla, capítulo, enemigos,
+  objetivos educativos y misiones. `validate()` encuentra fichas mal hechas; `RoomTemplate.load_folder()` carga todas
+  (también en el juego exportado). Hoy hay fichas de la Entrada, el Pasillo y Laboratorio (2 celdas, se separará en
+  dos salas) y la PC del profesor (distrito `pc_profesor`, se entra por la computadora, sin puertas).
+- **`DoorSpec`**: una puerta de la ficha: id, **lado** (izquierda, derecha, arriba, abajo), **celda** de la sala,
+  **clase** (paso, puerta, escalera, ascensor, secreta) y la `RoomEntry` donde aparece Kai al llegar. Las escaleras y
+  ascensores van arriba o abajo; las puertas, a los costados; un paso secreto solo se abre hacia un paso o una puerta.
+- **`RoomGraph`** (código puro, sin escenas): las salas colocadas en celdas (sin chocar) y las conexiones entre puertas.
+  Solo conecta puertas **enfrentadas** (celdas vecinas, lados opuestos) y de **clases compatibles**. Cada conexión puede
+  pedir habilidades (`&"dash"`, `&"double_jump"`, `&"wall_jump"`, `&"vision"`) y ser de **un solo sentido** (atajos);
+  un paso secreto pide la Visión Digital solo. `target_of()` dice a dónde lleva una puerta, `open_doors()` las que
+  quedan sueltas, `reachable()` / `find_path()` recorren según las habilidades (`RoomGraph.abilities_of(GameState)`),
+  y `to_dict()` / `from_dict()` lo guardan (también en JSON); un grafo de otra versión o que ya no encaja no se usa.
+
+Siguiente: **M2**, la pieza global `World` y `room_id` / `door_id` en las salas actuales, sin generar nada todavía.
+
 ## Misiones (`systems/quests/`)
 
 | Pieza | Responsabilidad |
@@ -560,6 +582,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_pogo.gd` | Cadencia de 0,45 s; abajo + J en el suelo ataca adelante; en el aire ataca hacia abajo y rebota en un enemigo (lo daña; el doble salto vuelve recién al tocar el suelo), en los pinchos (sin daño) y en un nodo de rebote; sin nada debajo no rebota |
 | `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
+| `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
 | `test_save.gd` | Guardar y continuar (todo el progreso), escritura segura con copia, archivos dañados o inválidos, la computadora segura (punto de control al pasar; con E guarda y cura) y CONTINUAR en el menú |
 | `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |
 | `test_ecos.gd` | Reparto en fragmentos, Ecos según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |

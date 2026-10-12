@@ -87,7 +87,8 @@ schoolgame/
 │   ├── quests/          Misiones, pasos, registro de misiones y disparadores
 │   ├── security/        Reglas de contraseñas seguras (medidor, frases sugeridas, códigos de respaldo)
 │   ├── settings/        GameSettings (opciones del jugador, guardadas en user://ajustes.cfg)
-│   └── terminal/        Terminal simulada: sistema de archivos ficticio e intérprete de comandos
+│   ├── terminal/        Terminal simulada: sistema de archivos ficticio e intérprete de comandos
+│   └── world/           Mapa: fichas de sala (RoomTemplate, DoorSpec) y el grafo del distrito (RoomGraph)
 ├── ui/                Interfaz
 │   ├── hud/             CombatHUD: cristales, energía, Ecos, objetivo, avisos, títulos
 │   ├── dialogue/        Caja de diálogo estilo Hades con retratos y voces
@@ -207,6 +208,7 @@ la seguridad y la confianza del colegio. Está listo para usarse en los desafío
 | Equilibrar los Ecos | Editar `data/economy/economia.tres` (rangos por enemigo, terminal, misión, depósito y la penalización) |
 | Un desafío de elección | Nuevo `ChoiceChallenge` en `data/challenges/` (preguntas, opciones, cuál es correcta y por qué) |
 | Un arma o etapa de Nullblade | Nuevo `WeaponData` en `data/weapons/` |
+| La ficha de una sala para el mapa | Nuevo `RoomTemplate` en `data/world/rooms/` (tamaño en celdas, puertas con su lado, celda, clase y entrada) |
 | Una página del Grimorio | Nuevo `GrimorioEntry` en `data/grimorio/` |
 | Un nivel de plataformas digital | Arrastrar pop-ups, trampas, lluvias de correo y puntos de restauración a la sala |
 

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="1_tmpl"]
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="2_door"]
+
+[sub_resource type="Resource" id="Resource_este"]
+script = ExtResource("2_door")
+id = &"este"
+side = 1
+entry_id = &"desde_pasillo"
+
+[resource]
+script = ExtResource("1_tmpl")
+id = &"entrada"
+display_name = "Entrada"
+scene_path = "res://world/zones/zone0/entrada.tscn"
+room_type = &"entrance"
+doors = Array[ExtResource("2_door")]([SubResource("Resource_este")])
+fixed = true
