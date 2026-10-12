@@ -76,10 +76,10 @@ func _test_bridge_and_fragment() -> void:
 	await _frames(2)  # El "en el suelo" del cuadro anterior todavía no se actualizó.
 	await _until_on_floor()
 	_check(absf(player.global_position.y - 148.0) < 1.0, "con la visión activa, el puente de datos sostiene a Kai (y=%.0f)" % player.global_position.y)
-	var credits_before: int = state.credits
+	var ecos_before: int = root.get_node("Economy").ecos
 	player.teleport_to(FRAGMENT)
 	await _frames(10)
-	_check(state.has_flag(FRAGMENT_FLAG) and state.credits == credits_before + 25, "recoger el fragmento da 25 créditos y queda marcado")
+	_check(state.has_flag(FRAGMENT_FLAG) and root.get_node("Economy").ecos == ecos_before + 25, "recoger el fragmento da 25 Ecos y queda marcado")
 	_check(room.get_node("CombatHUD/Toast").text.contains("fragmento"), "aparece el mensaje del fragmento")
 
 	_action("vision")
@@ -98,13 +98,13 @@ func _test_recharge_and_duration() -> void:
 	_check(room.get_node("CombatHUD/Toast").text.contains("recargando"), "avisa que se está recargando")
 	await _wait(1.2)
 	_check(vision.state == vision.State.READY, "termina de recargar")
-	var credits_before: int = state.credits
+	var ecos_before: int = root.get_node("Economy").ecos
 	_action("vision")
 	await _frames(3)
 	_check(vision.is_active(), "lista: Q la vuelve a encender")
 	player.teleport_to(FRAGMENT)
 	await _frames(10)
-	_check(state.credits == credits_before, "el fragmento no se puede recoger dos veces")
+	_check(root.get_node("Economy").ecos == ecos_before, "el fragmento no se puede recoger dos veces")
 	await _until(func() -> bool: return not vision.is_active())
 	_check(not vision.is_active() and vision.state == vision.State.RECHARGING, "se apaga sola al terminar su duración")
 

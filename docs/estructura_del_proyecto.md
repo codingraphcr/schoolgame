@@ -3,6 +3,7 @@
 Guía de la arquitectura y la estructura del proyecto (actualizada al 12 de octubre de 2026). Explica **qué piezas
 hay, dónde están y cómo se conectan**. Los detalles técnicos de cada sistema están en `arquitectura.md`; el combate y
 la historia en `combate.md`; el plan del MVP en `plan_mvp.md`; el currículo en `curriculo_mep.md`.
+La historia, los personajes y el mundo se rigen por la **Biblia Narrativa** (`narrativa/BIBLIA_NARRATIVA.md`).
 
 ## 1. En pocas palabras
 
@@ -12,7 +13,7 @@ la historia en `combate.md`; el plan del MVP en `plan_mvp.md`; el currículo en 
 | Pantalla | Diseño a **1280×720**, horizontal; el mundo en pixel art con la cámara a **×2** |
 | Plataformas | Windows y Android (después Linux, macOS, iOS, Steam) |
 | Dependencias | **Ninguna**: sin plugins ni librerías externas |
-| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 20 pruebas automáticas (478 comprobaciones) |
+| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 23 pruebas automáticas (478 comprobaciones) |
 | Equipo | Yohanncillo (dirección y programación) y Ariel (arte y programación), en la cuenta `codingraphcr` |
 
 ## 2. Las ideas que guían todo
@@ -23,7 +24,7 @@ la historia en `combate.md`; el plan del MVP en `plan_mvp.md`; el currículo en 
    Grimorio se crean y editan en el **Inspector** de Godot.
 3. **Señales para avisar, no referencias cruzadas.** Por ejemplo, el enemigo emite `died` y el combate lo escucha;
    el enemigo no sabe nada del combate.
-4. **Pocos autoloads** (piezas globales): solo tres. El resto vive en cada sala.
+4. **Pocos autoloads** (piezas globales): solo cuatro. El resto vive en cada sala.
 5. **Todo se ve en el editor** (`@tool`): pop-ups, trampas, terminales y barreras se dibujan mientras se diseña el nivel.
 6. **Identificadores estables** (`contrasena_profesor`, `cambiar_contrasena`, `pc_profesor_cuenta`) para el guardado.
 7. **Nada se da por bueno sin probarlo:** cada sistema tiene su prueba automática.
@@ -34,14 +35,15 @@ la historia en `combate.md`; el plan del MVP en `plan_mvp.md`; el currículo en 
 flowchart TB
     subgraph Global["Autoloads (siempre presentes)"]
         SM[SceneManager<br/>cambio de sala y transiciones]
-        GS[GameState<br/>progreso, misiones, créditos]
+        GS[GameState<br/>progreso, misiones, guardado]
+        EC[Economy<br/>Ecos]
         DV[DigitalVision<br/>Visión Digital]
     end
     subgraph Sala["Una sala (Room)"]
         P[Jugador: Kai]
         E[Enemigos]
         N[NPC y objetos con E]
-        HUD[CombatHUD<br/>cristales, energía, BITS, objetivo, diálogos]
+        HUD[CombatHUD<br/>cristales, energía, Ecos, objetivo, diálogos]
         C[Cámara]
     end
     subgraph Datos["Datos (.tres en data/)"]
@@ -58,6 +60,7 @@ flowchart TB
     N -->|completa pasos| GS
     P -->|lee| D4
     HUD -->|muestra| GS
+    HUD -->|muestra| EC
     D2 --> GS
 ```
 
@@ -65,7 +68,7 @@ flowchart TB
 
 ```
 schoolgame/
-├── autoload/          Las 3 piezas globales (SceneManager, GameState, DigitalVision)
+├── autoload/          Las 4 piezas globales (SceneManager, GameState, DigitalVision, Economy)
 ├── characters/        Personajes
 │   ├── player/          Kai: movimiento, daño, combate, curación, sonidos y su dibujo (kai/)
 │   ├── enemies/         EnemyBase y cada enemigo (weak_password/ = la «Contraseña débil»)
@@ -77,16 +80,20 @@ schoolgame/
 ├── systems/           Sistemas sin escena propia
 │   ├── audio/           Sfx (efectos) y Music (música)
 │   ├── dialogue/        Dialogue y DialogueCharacter
+│   ├── economy/         EconomyConfig: valores de los Ecos para equilibrar
+│   ├── challenges/      Desafíos de elección (preguntas con opciones y explicaciones)
 │   ├── grimorio/        GrimorioEntry (una página del Grimorio)
 │   ├── incidents/       Incidentes, pistas y controles de seguridad (sistema de decisiones de Ariel)
 │   ├── quests/          Misiones, pasos, registro de misiones y disparadores
+│   ├── security/        Reglas de contraseñas seguras (medidor, frases sugeridas, códigos de respaldo)
 │   ├── settings/        GameSettings (opciones del jugador, guardadas en user://ajustes.cfg)
 │   └── terminal/        Terminal simulada: sistema de archivos ficticio e intérprete de comandos
 ├── ui/                Interfaz
-│   ├── hud/             CombatHUD: cristales, energía, BITS, objetivo, avisos, títulos
+│   ├── hud/             CombatHUD: cristales, energía, Ecos, objetivo, avisos, títulos
 │   ├── dialogue/        Caja de diálogo estilo Hades con retratos y voces
 │   ├── menus/           Menú principal, Opciones y Grimorio
 │   ├── terminal/        Ventana de la terminal
+│   ├── challenges/      Ventanas de los desafíos de elección y de crear una contraseña
 │   ├── equipment/       Tarjeta "NUEVO EQUIPAMIENTO DESBLOQUEADO"
 │   ├── transitions/     Pantalla de carga
 │   └── theme/           Tema visual común
@@ -96,16 +103,16 @@ schoolgame/
 │   ├── digital/         Piezas del mundo digital: SPAM, terminal, punto de restauración, barrera
 │   ├── vision/          Lo que se ve con la Visión Digital (red, puentes de datos, fragmentos)
 │   ├── effects/         Efectos: succión por la pantalla, destellos, píxeles, aparición de Nullblade
-│   ├── pickups/         BITS (monedas) y cofres
+│   ├── pickups/         Ecos (la moneda) y cofres
 │   ├── hazards/         Peligros (pinchos)
 │   └── camera/          Cámara del juego
 ├── data/              Contenido editable (.tres): diálogos, personajes, misiones, terminales,
 │                      armas, Grimorio, incidentes
 ├── assets/            Arte (de Ariel), audio, fuentes y shaders
-├── tests/             20 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
+├── tests/             23 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
 ├── tools/art/         Herramientas para recortar el arte de las hojas de concepto de Ariel
 ├── prototypes/        Muestras de estilos visuales (no forman parte del juego)
-└── docs/              Documentación del proyecto
+└── docs/              Documentación del proyecto (la historia, en docs/narrativa/)
 ```
 
 ## 5. Las piezas globales
@@ -113,7 +120,8 @@ schoolgame/
 | Pieza | Tipo | Qué hace |
 |---|---|---|
 | `SceneManager` | Autoload | Cambia de sala con transición, recuerda por qué entrada se llega (`go_to_room`) |
-| `GameState` | Autoload | Todo el progreso: misiones, créditos/BITS, cristales, energía, habilidades, etapas de Nullblade/Aegis/Dominio, comandos aprendidos, marcas de la historia, incidentes. Sabe convertirse a datos para guardar (`to_dict` / `from_dict`) |
+| `Economy` | Autoload | Saldo de **Ecos** (la moneda): sumar, gastar, si alcanza y la penalización al morir (10 %, máx. 100, nada en el tutorial) |
+| `GameState` | Autoload | Todo el progreso: misiones, cristales, energía, habilidades, etapas de Nullblade/Aegis/Dominio, comandos aprendidos, marcas de la historia, incidentes. Sabe convertirse a datos para guardar (`to_dict` / `from_dict`) |
 | `DigitalVision` | Autoload | Estado de la Visión Digital: lista, activa (10 s) o recargando (16 s), y el glitch involuntario del prólogo |
 | `GameSettings` | Clase estática | Volumen, pantalla completa, velocidad del texto, reducir glitch y teclas |
 | `Sfx` y `Music` | Clases estáticas | Efectos y música. Si falta el archivo de audio, generan un sonido provisional por código |
@@ -145,7 +153,7 @@ con un trabajo:
 Todo el daño del juego viaja igual: un **`HitboxComponent`** (lo que golpea) crea un **`HitData`** (daño, tipo de
 amenaza, empuje) que recibe un **`HurtboxComponent`** y descuenta un **`HealthComponent`**. Sirve para la espada, los
 enemigos, los correos SPAM y las trampas.
-Los enemigos heredan de **`EnemyBase`** (vida, contacto, destello, empuje, muerte en píxeles y BITS); cada uno solo
+Los enemigos heredan de **`EnemyBase`** (vida, contacto, destello, empuje, muerte en píxeles y Ecos); cada uno solo
 escribe su comportamiento. Hoy existe la **«Contraseña débil»** (salta avisando; con media vida, «fuerza bruta»).
 
 ### Interacción, diálogos y NPC
@@ -184,7 +192,7 @@ la seguridad y la confianza del colegio. Está listo para usarse en los desafío
 3. La zona de golpe se activa un instante delante de Kai.
 4. El `Hurtbox` del enemigo la detecta → recibe el `HitData` → su vida baja.
 5. El enemigo parpadea, retrocede y suelta una contraseña débil; Kai recupera energía; la acción se congela 0,05 s.
-6. Si la vida llega a 0: el enemigo emite `died`, se desintegra en píxeles y suelta BITS; el combate lo escucha y
+6. Si la vida llega a 0: el enemigo emite `died`, se desintegra en píxeles y suelta Ecos; el combate lo escucha y
    avanza la misión.
 
 ## 8. Cómo agregar contenido sin programar
@@ -195,6 +203,8 @@ la seguridad y la confianza del colegio. Está listo para usarse en los desafío
 | Un personaje que habla | Nuevo `DialogueCharacter` en `data/characters/` (nombre, retrato, color, voz) |
 | Una misión | Nuevo `Quest` en `data/quests/` con sus pasos, y la registro en `QuestDB` |
 | Una terminal | Nuevo `TerminalChallenge` en `data/terminals/` + una `TerminalStation` en la sala |
+| Equilibrar los Ecos | Editar `data/economy/economia.tres` (rangos por enemigo, terminal, misión, depósito y la penalización) |
+| Un desafío de elección | Nuevo `ChoiceChallenge` en `data/challenges/` (preguntas, opciones, cuál es correcta y por qué) |
 | Un arma o etapa de Nullblade | Nuevo `WeaponData` en `data/weapons/` |
 | Una página del Grimorio | Nuevo `GrimorioEntry` en `data/grimorio/` |
 | Un nivel de plataformas digital | Arrastrar pop-ups, trampas, lluvias de correo y puntos de restauración a la sala |
@@ -208,7 +218,7 @@ Opciones.
 **Capas de colisión:** 1 mundo · 2 jugador · 3 enemigos · 4 ataques del jugador · 5 ataques enemigos · 6 interactuables
 · 7 mundo digital.
 
-**Pruebas:** 20 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
+**Pruebas:** 23 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
 `godot --headless --path . --script res://tests/test_<nombre>.gd` y termina en `RESULTADO: TODO OK`. Esperan a que
 pasen las cosas (en vez de tiempos fijos) para no fallar cuando la computadora está ocupada.
 
@@ -218,11 +228,12 @@ ramas quedan en el mismo commit.
 ## 10. Estado actual y lo que falta
 
 **Hecho:** movimiento completo, salas y transiciones, prólogo (Visión involuntaria y la entidad «???»), entrar a la
-PC, nivel de SPAM de 3360 px, terminal, combate contra la «Contraseña débil», Nullblade, curación, energía, BITS,
+PC, nivel de SPAM de 3360 px, terminal, combate contra la «Contraseña débil» (con el destello de la Nullblade),
+la contraseña que crea el jugador (se guarda solo su huella), la verificación en dos pasos que desbloquea la Visión Digital, curación, energía, Ecos,
 Grimorio, opciones, sonido provisional y voces.
 
-**Falta para el MVP:** H4d (elegir contraseña y verificación en dos pasos → Visión Digital con Q), H5 (cierre del
-prólogo y «EL DESPERTAR»), **guardado en disco** con la computadora segura, controles táctiles, exportar a Windows y
+**Falta para el MVP:** H5 (invitación del profesor, desafío Visión Digital + terminal, cuarto viejo con la
+Nullblade oficial, dash, doble salto y «EL DESPERTAR»), **guardado en disco** con la computadora segura, controles táctiles, exportar a Windows y
 Android, pruebas en celular.
 
 ## 11. Observaciones y riesgos
@@ -231,9 +242,6 @@ Android, pruebas en celular.
   en nuestra computadora (la Entrada, a 60). Viene del nivel de SPAM: decenas de dibujos vectoriales animados que se
   redibujan en cada cuadro. Antes de probar en Android hay que optimizarlo (por ejemplo, dibujar una vez lo que no se
   mueve y animar solo lo necesario).
-- **Historia por confirmar:** Ariel hizo que la **Nullblade aparezca en el combate** contra la «Contraseña débil»
-  (reemplaza a la mini espada). El plan decía que se obtenía después, en el cuarto viejo (H5). Hay que decidir cuál
-  queda y qué pasa entonces en H5.
 - **`GameState` crece rápido** (unas 470 líneas). Por ahora está bien; si sigue creciendo conviene separarlo por
   temas (misiones, jugador, conocimiento).
 - **El guardado todavía no escribe en disco:** el progreso se pierde al cerrar el juego.

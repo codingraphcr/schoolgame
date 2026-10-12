@@ -3,7 +3,7 @@ extends Node2D
 ## Sala del mundo. Calcula los límites de la cámara a partir del TileMapLayer y coloca al jugador
 ## en el punto de aparición, aplicándole el progreso de la partida (GameState). Si el jugador cae
 ## fuera, cuenta como peligro (1 máscara y vuelta al último suelo seguro). Si muere, pierde una
-## parte de los créditos y reaparece en el punto de control con las máscaras llenas.
+## parte de los Ecos y reaparece en el punto de control con las máscaras llenas.
 ## El nodo raíz de cada sala usa filtro Nearest para que el pixel art se vea nítido.
 
 @export var tile_layer: TileMapLayer
@@ -118,9 +118,10 @@ func respawn_player() -> void:
 
 
 func _on_player_died() -> void:
-	var game_state := _game_state()
-	if game_state:
-		game_state.apply_death_penalty()
+	# Pierde Ecos (10 %, máximo 100; nada durante el tutorial). El HUD muestra cuántos.
+	var economy := get_node_or_null("/root/Economy")
+	if economy:
+		economy.apply_death_penalty()
 	await _scene_manager().transition(_respawn_at_checkpoint)
 
 

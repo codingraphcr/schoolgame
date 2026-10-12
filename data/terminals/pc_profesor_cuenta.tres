@@ -35,5 +35,6 @@ Pendiente: cambiar mi contraseña algún día...
 goal_file = "cuenta/configuracion.txt"
 allowed_commands = PackedStringArray()
 hints = PackedStringArray("Escribe ls para ver qué carpetas hay aquí.", "La configuración de la cuenta debe estar en la carpeta cuenta: entra con cd cuenta", "Dentro de cuenta, escribe cat configuracion.txt para leer el archivo.")
+ecos_reward = 0
 success_text = "La contraseña 123456 es de las más usadas del mundo y la cuenta no tiene verificación en dos pasos: así cualquiera podría entrar.
 Con pwd, ls, cd y cat revisaste el sistema como lo hace un técnico en Linux."

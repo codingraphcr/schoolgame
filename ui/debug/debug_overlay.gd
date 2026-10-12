@@ -18,10 +18,10 @@ func _process(_delta: float) -> void:
 		"Saltos aéreos: %d   Dash: %s" % [player.air_jumps_left, "listo" if player.dash_cooldown_timer <= 0.0 else "%.2f s" % player.dash_cooldown_timer],
 		"Habilidades: dash nivel %d · doble salto %s · pared %s" % [player.dash_level, _on_off(player.can_double_jump), _on_off(player.can_wall_jump)],
 		"Máscaras: %d/%d   Invulnerable: %s" % [ceili(player.health.current), int(player.health.max_health), _on_off(player.is_invulnerable())],
-		"Progreso: %s · %s · %s · %s · créditos %d" % [
+		"Progreso: %s · %s · %s · %s · Ecos %d" % [
 			GameState.DASH_NAMES[GameState.dash_level], GameState.NULLBLADE_NAMES[GameState.nullblade_stage],
 			GameState.AEGIS_NAMES[GameState.aegis_stage], GameState.DOMAIN_NAMES[GameState.domain_stage],
-			GameState.credits],
+			Economy.ecos],
 		"F3: ocultar",
 	])
 

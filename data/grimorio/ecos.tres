@@ -7,11 +7,11 @@
 script = ExtResource("1_entry")
 category = 5
 order = 4
-title = "BITS"
+title = "ECOS"
 subtitle = "Recurso · Datos recuperados"
-text = "Fragmentos de información recuperados de amenazas digitales neutralizadas. Tras la destrucción de una entidad corrupta, parte de sus datos se estabiliza y adopta la forma de pequeñas monedas luminosas conocidas como BITS.
+text = "Pequeños residuos de información digital que quedan cuando una criatura digital es neutralizada o una estructura de datos se fragmenta. Con la Visión Digital se ven como fragmentos luminosos de energía azul y violeta. Los comerciantes vinculados con la tecnología los usan como moneda.
 
 «Incluso los datos corruptos pueden conservar algo de valor»."
 facts = Dictionary[String, String]({"Obtención": "Al derrotar enemigos y recuperar sus datos residuales", "Utilidad": "Pueden intercambiarse por mejoras, objetos y otros recursos durante la aventura"})
 image = ExtResource("2_art")
-unlock_flag = &"bits_descubiertos"
+unlock_flag = &"ecos_descubiertos"

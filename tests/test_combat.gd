@@ -78,7 +78,8 @@ func _test_enemy() -> void:
 	var enemy := _spawn_enemy(room, player.global_position + Vector2(24, -4))
 	var died := [false]
 	enemy.died.connect(func() -> void: died[0] = true)
-	for i in 8:
+	var guesses_thrown := false
+	for i in 14:
 		if died[0]:
 			break
 		await _until(func() -> bool: return combat.can_attack() and enemy.is_on_floor())
@@ -88,9 +89,11 @@ func _test_enemy() -> void:
 		combat.attack()
 		await _until(func() -> bool: return not combat.is_attacking())
 		await _frames(2)
-		if i == 2:
-			_check(enemy.brute_force, "con la mitad de la vida entra en «fuerza bruta»")
-	_check(died[0], "6 tajos la derrotan")
+		if i == 4:
+			_check(enemy.brute_force and not enemy.dictionary, "con la mitad de la vida entra en «fuerza bruta»")
+		if i == 6:
+			_check(enemy.dictionary, "con el 30 %% de la vida, «ataque de diccionario» (%.0f/10)" % enemy.health.current)
+	_check(died[0], "10 tajos la derrotan (tiene 10 de vida)")
 	var enemy_id := enemy.get_instance_id()
 	await _until(func() -> bool: return not is_instance_id_valid(enemy_id))
 	_check(not is_instance_id_valid(enemy_id), "al morir desaparece")
@@ -103,6 +106,34 @@ func _test_enemy() -> void:
 	_check(player.health.current == player.health.max_health - 0.5, "tocarla quita medio cristal")
 	toucher.queue_free()
 	await _until(func() -> bool: return not player.is_invulnerable())
+
+	# Fuerza bruta: al caer de un salto lanza un intento a ras del suelo; en diccionario, dos.
+	player.health.restore_full()
+	player.teleport_to(Vector2(80, player.global_position.y))
+	var brute := _spawn_enemy(room, Vector2(260, player.global_position.y - 4))
+	await _until(func() -> bool: return brute.is_on_floor())
+	brute.health.take_damage(5.0)
+	brute._on_damaged(HitData.new())
+	brute.ai_enabled = true
+	await _until(func() -> bool: return _guesses(room).size() > 0)
+	var shot: PasswordGuess = _guesses(room)[0] if not _guesses(room).is_empty() else null
+	_check(shot != null and brute.brute_force, "en fuerza bruta lanza un intento (%s)" % (shot.text if shot else "nada"))
+	_check(shot != null and shot.text in WeakPasswordEnemy.WEAK_PASSWORDS and shot.direction == -1,
+		"el intento es una contraseña débil real y va hacia Kai")
+	if shot:
+		var start_x := shot.global_position.x
+		await _frames(30)
+		_check(is_instance_valid(shot) and shot.global_position.x < start_x - 20.0, "avanza a ras del suelo")
+	brute.health.take_damage(2.0)
+	brute._on_damaged(HitData.new())
+	for guess in _guesses(room):
+		guess.queue_free()
+	await _until(func() -> bool: return _guesses(room).size() >= 2)
+	_check(brute.dictionary and _guesses(room).size() >= 2, "en el ataque de diccionario lanza dos intentos seguidos")
+	brute.queue_free()
+	for guess in _guesses(room):
+		guess.queue_free()
+	await _frames(2)
 
 	# Inteligencia: se agacha avisando y salta hacia Kai.
 	player.health.restore_full()
@@ -149,25 +180,27 @@ func _test_fight() -> void:
 	_check(await _dialogue_contains(box, "no deberías poder vernos"), "dice «Tú no deberías poder vernos»")
 	var zoom := room.camera.zoom
 	await _advance(box)
-	# La Nullblade se materializa (escena de cine) y aparece la tarjeta de equipamiento (el juego queda en pausa).
+	# La Nullblade se materializa en la escena de cine de Ariel, como un destello: sin tarjeta y sin
+	# quedar obtenida (la oficial está en el cuarto viejo).
 	await _wait(1.5)
 	var reveal: NullbladeReveal = null
 	for child in room.get_children():
 		if child is NullbladeReveal:
 			reveal = child
 	_check(reveal != null and room.camera.zoom.x > zoom.x * 1.1, "la Nullblade aparece en una escena de cine (la cámara se acerca)")
-	await _until(func() -> bool: return root.get_node_or_null("EquipmentCardLayer") != null)
+	await _until(func() -> bool: return player.combat.weapon != null)
+	await _until(func() -> bool: return room.camera.zoom.is_equal_approx(zoom))
 	_check(room.camera.zoom.is_equal_approx(zoom), "al terminar la escena la cámara vuelve a la normalidad")
-	var card := root.get_node_or_null("EquipmentCardLayer/EquipmentCard")
-	_check(card != null and paused and card.get_node("%Title").text == "NULLBLADE", "aparece la tarjeta «NULLBLADE» y el juego se pausa")
-	_check(state.nullblade_stage == 0 and player.controls_locked, "mientras tanto Kai no se mueve")
-	await _wait(0.9)
-	_action("interact")
-	await _until(func() -> bool: return root.get_node_or_null("EquipmentCardLayer") == null)
-	await _frames(3)
-	_check(not paused and state.nullblade_stage == 1, "al cerrar la tarjeta, Kai tiene la Nullblade")
-	_check(player.combat.weapon != null and player.combat.weapon.id == &"nullblade", "Kai pelea con la Nullblade")
+	_check(root.get_node_or_null("EquipmentCardLayer") == null, "no aparece la tarjeta de equipamiento (todavía no es la Nullblade oficial)")
+	_check(state.nullblade_stage == 0 and state.has_flag(&"nullblade_destello"), "la Nullblade es un destello: no queda obtenida")
+	_check(player.combat.weapon.id == &"nullblade", "Kai pelea con la Nullblade")
 	_check(barrier.active and fight.enemy.ai_enabled and not player.controls_locked, "se cierra la barrera y empieza el combate")
+	var rain := room.get_node("SpamMail/MailRainFight") as SpamMailSpawner
+	_check(rain.is_processing(), "durante la pelea cae una lluvia de correos sobre la arena")
+	_check(room.camera.limit_right - barrier.global_position.x > 900.0, "la arena mide más de 900 px")
+	var arena_traps := room.get_node("TrapAds").get_children().filter(func(t: Node) -> bool: return t.global_position.x > 3300.0)
+	var arena_popups := room.get_node("SpamPopups").get_children().filter(func(p: Node) -> bool: return p.global_position.x > 3300.0)
+	_check(arena_traps.size() == 3 and arena_popups.size() == 3, "la arena tiene 3 anuncios trampa y 3 pop-ups para saltar")
 	_check(not tab._prompt.visible, "durante el combate la pestaña no se puede usar")
 
 	# Perder: el combate se cancela y se puede repetir.
@@ -175,6 +208,7 @@ func _test_fight() -> void:
 	await _until(func() -> bool: return not fight.running and not barrier.active)
 	await _until(func() -> bool: return not player.health.is_dead() and not player.controls_locked)
 	_check(not fight.running and not barrier.active and not is_instance_valid(fight.enemy), "si Kai muere, el combate se cancela")
+	_check(not room.get_node("SpamMail/MailRainFight").is_processing(), "fuera de la pelea no cae la lluvia de la arena")
 	_check(absf(player.global_position.x - 2975.0) < 2.0, "Kai reaparece en el punto de restauración (x=%.0f)" % player.global_position.x)
 	_check(state.get_current_step(&"contrasena_profesor") == &"cambiar_contrasena", "la misión sigue en «cambiar la contraseña»")
 
@@ -187,8 +221,12 @@ func _test_fight() -> void:
 	await _until(func() -> bool: return fight.enemy.ai_enabled)
 	var enemy := fight.enemy
 	enemy.ai_enabled = false  # Quieta, para que la prueba no dependa de los saltos.
-	for i in 10:
-		if enemy.is_dead:
+	# Para golpearla sin interrupciones: las trampas y la lluvia de la arena no dañan a Kai en esta parte.
+	player.hurtbox.immune = true
+	var won := [false]
+	enemy.died.connect(func() -> void: won[0] = true)
+	for i in 14:
+		if won[0]:
 			break
 		await _until(func() -> bool: return player.combat.can_attack() and enemy.is_on_floor())
 		player.teleport_to(Vector2(enemy.global_position.x - 22, 304))
@@ -198,7 +236,8 @@ func _test_fight() -> void:
 		await _until(func() -> bool: return player.combat.is_attacking())
 		await _until(func() -> bool: return not player.combat.is_attacking())
 		await _frames(2)
-	_check(enemy.is_dead, "la Nullblade derrota a la «Contraseña débil»")
+	_check(won[0], "la Nullblade derrota a la «Contraseña débil»")
+	player.hurtbox.immune = false
 	await _until(func() -> bool: return box.is_playing())
 	_check(await _dialogue_contains(box, "1... 2... 3"), "se deshace en números y Kai le cuenta al profesor")
 	await _advance(box)
@@ -208,6 +247,10 @@ func _test_fight() -> void:
 	player.teleport_to(Vector2(3172, 304))
 	await _frames(8)
 	_check(tab._prompt.visible and tab._prompt.text == "E: elegir la nueva contraseña", "la pestaña ofrece elegir la nueva contraseña (H4d)")
+
+
+func _guesses(room: Node) -> Array:
+	return room.get_children().filter(func(node: Node) -> bool: return node is PasswordGuess and not node.is_queued_for_deletion())
 
 
 func _spawn_enemy(room: Node, position: Vector2) -> WeakPasswordEnemy:

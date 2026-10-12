@@ -1,9 +1,12 @@
 class_name WeakPasswordEnemy
 extends EnemyBase
 ## La «Contraseña débil» (prólogo, cuenta del profesor): un candado digital con «123456» en la
-## pantalla. Se agacha avisando y salta hacia Kai. Con la mitad de la vida entra en «fuerza
-## bruta»: avisa menos y salta más seguido y más lejos. Cada golpe suelta una contraseña débil
-## real (123456, qwerty…) y al morir se deshace en números.
+## pantalla. Tres fases:
+##   1. Se agacha avisando y salta hacia Kai.
+##   2. «Fuerza bruta» (mitad de la vida): avisa menos, salta más seguido y más lejos, y al caer
+##      lanza un «intento» (PasswordGuess: una contraseña débil real) a ras del suelo.
+##   3. «Ataque de diccionario» (30 % de la vida): lanza dos intentos seguidos.
+## Cada golpe suelta una contraseña débil real (123456, qwerty…) y al morir se deshace en números.
 ## Dibujo vectorial provisional (VectorCanvas) hasta que Ariel haga el suyo.
 
 enum Phase { IDLE, TELEGRAPH, HOP }
@@ -18,10 +21,16 @@ const SCREEN := Color("2b0d1f")
 @export var hop_jump_speed := 250.0
 @export var idle_time := 0.8
 @export var telegraph_time := 0.45
+## Fracción de la vida a la que empieza el ataque de diccionario (dos intentos por salto).
+@export_range(0.0, 1.0) var dictionary_at := 0.3
+## Segundos entre los dos intentos del ataque de diccionario.
+@export var dictionary_gap := 0.5
 
 var phase := Phase.IDLE
-## Fuerza bruta: con la mitad de la vida o menos.
+## Fuerza bruta: con la mitad de la vida o menos (lanza intentos).
 var brute_force := false
+## Ataque de diccionario: con dictionary_at de la vida o menos (dos intentos seguidos).
+var dictionary := false
 
 var _timer := 0.6
 var _facing := -1
@@ -32,8 +41,11 @@ var _popups := 0
 
 func _init() -> void:
 	display_name = "Contraseña débil"
-	max_health = 6.0
+	max_health = 10.0
 	threat_type = &"credenciales"
+	# Enemigo de la historia: especial (20–40 Ecos) y se cobra una sola vez.
+	rank = Rank.ESPECIAL
+	reward_id = &"enemigo:contrasena_debil"
 	body_size = Vector2(22, 20)
 
 
@@ -69,6 +81,8 @@ func _ai(delta: float) -> void:
 			elif _left_floor:
 				phase = Phase.IDLE
 				_timer = idle_time * (0.45 if brute_force else 1.0)
+				if brute_force:
+					_attack()
 
 
 func _on_damaged(_hit: HitData) -> void:
@@ -80,6 +94,29 @@ func _on_damaged(_hit: HitData) -> void:
 		brute_force = true
 		Sfx.play(&"brute_force")
 		_popup("¡FUERZA BRUTA!", Color("ffd84a"), Vector2(0, -44))
+	if not dictionary and health.current <= max_health * dictionary_at:
+		dictionary = true
+		Sfx.play(&"brute_force")
+		_popup("¡ATAQUE DE DICCIONARIO!", Color("ffd84a"), Vector2(0, -50))
+
+
+## Lanza intentos hacia Kai a ras del suelo (uno; dos seguidos en el ataque de diccionario).
+func _attack() -> void:
+	_throw()
+	if dictionary:
+		# Referencia débil: si el enemigo desaparece antes del segundo intento, no se lanza.
+		var me: WeakRef = weakref(self)
+		get_tree().create_timer(dictionary_gap, false).timeout.connect(func() -> void:
+			var enemy := me.get_ref() as WeakPasswordEnemy
+			if enemy and enemy.is_inside_tree() and not enemy.is_dead and enemy.ai_enabled:
+				enemy._throw())
+
+
+func _throw() -> void:
+	var dir := direction_to_player()
+	var guess: String = WEAK_PASSWORDS[_popups % WEAK_PASSWORDS.size()]
+	_popups += 1
+	PasswordGuess.throw(get_parent(), global_position + Vector2(dir * 16.0, -6.0), dir, guess)
 
 
 func _on_died() -> void:

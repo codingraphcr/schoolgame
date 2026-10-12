@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 4
+order = 3
+title = "La contraseña del profesor"
+subtitle = "Registro · Cuenta del profesor"
+text = "La creaste tú y no está escrita en ningún lado: el juego solo guarda su huella. Recuérdala, porque la vas a necesitar. Si la olvidas, usa el código de respaldo que anotaste."
+facts = Dictionary[String, String]({"Creada por": "Ti", "Segundo paso": "Aplicación de autenticación", "Si la olvidas": "Código de respaldo"})
+unlock_flag = &"cuenta_profesor_segura"

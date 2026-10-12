@@ -1,6 +1,7 @@
 # Diseño del sistema de combate
 
 Referencia acordada con el director del proyecto. Resume el diseño y las decisiones del MVP.
+La historia, los personajes y sus revelaciones se rigen por la Biblia Narrativa (`narrativa/BIBLIA_NARRATIVA.md`).
 
 ## Regla fundamental
 
@@ -15,7 +16,7 @@ y **defensa** (herramientas reales de ciberseguridad).
 | Capacidad | Rol | Cuándo se obtiene | Evoluciones |
 |---|---|---|---|
 | **Nullblade** | Espada digital, cuerpo a cuerpo. Carga energía al golpear | Tutorial | .exe → .zero → .void → .max |
-| **Aegis** | Núcleo flotante: disparo teledirigido manual (K), barrera, plataformas | Capítulo 2, nivel 3 (fundamentos de programación; la historia de cómo lo encuentra está por definir) | Pulse → Bridge → Sync |
+| **Aegis** | Núcleo flotante: disparo teledirigido manual (K), barrera, plataformas | Capítulo 3, misión especial «Eco en la Red»: Kai lo rescata y lo repara con comandos | Pulse → Bridge → Sync |
 | **Expansión Digital: Dominio Nulo** | Ultimate: enemigos al 80 % de velocidad y bonificación de daño. Barra propia | Capítulo 2 | I (15 s, +10 %, 100) · II (20 s, +15 %, 115) · III (30 s, +30 %, 138) |
 | **Dash-parry** | Un dash justo antes de recibir un golpe hace el parry (no hay botón de parry). Reemplaza al Escudo MFA | Con el primer dash | Mejora con los niveles del dash |
 
@@ -27,9 +28,10 @@ Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `
 |---|---|---|
 | **Capítulo 0: Prólogo** | Entrada del colegio → pasillo (el profesor le pide revisar una computadora) → laboratorio: «Por fin alguien está mirando» y la **Visión Digital se activa sola**, como un glitch, sin pulsar nada | Caminar, saltar, interactuar (E) |
 | **Primera misión: la contraseña del profesor** | Kai entra a la PC como **alma digital**: nivel de plataformas con estética de escritorio hasta la pestaña "Cambiar contraseña" / MFA. Kai humano: «Profe, ¡aquí está el error!». En la **terminal** de la PC encuentra la configuración de la cuenta (`ls`, `cd`, `cat`: contraseña 123456, sin verificación en dos pasos). En la pestaña, con E aparece el enemigo **"Contraseña débil"** y se vence con una **mini espada digital** (sin nombre, solo para aprender a golpear: se desbloquea **J**). Después, **2 elecciones**: la contraseña nueva más segura y un método de MFA, con explicación | + mini espada (solo en este combate) |
-| **Recompensa** | El profesor agradece. Desde aquí la **Visión Digital se usa con Q** | + Visión Digital |
-| **La habitación vieja** | El profesor lo invita a un cuarto viejo y lleno de polvo del colegio: allí está **Nullblade.exe**. Cierra el prólogo con el título **«EL DESPERTAR»** (se mueve aquí desde el final de la primera parte) | + Nullblade, **dash** (nivel 1) y **doble salto** |
-| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), **Aegis (cap. 2, nivel 3: fundamentos de programación)** y mejoras con créditos |
+| **Combate** | En la pelea contra la «Contraseña débil» la **Nullblade aparece como un destello** (animación de Ariel) y Kai pelea con ella. No queda obtenida | Nullblade (solo en la PC) |
+| **Recompensa** | El jugador **crea su propia contraseña** para el profesor (con un medidor que explica cada regla; se guarda solo su huella y tendrá que recordarla en el capítulo 4 y en misiones extra) y elige el segundo paso (aplicación de autenticación), con explicación de cada opción. El profesor agradece, la **Visión Digital se usa con Q** desde aquí, el destello de la Nullblade **se apaga** y Kai vuelve al laboratorio. En la PC los Ecos solo los da el villano | + Visión Digital |
+| **La habitación vieja** | El profesor lo invita a visitar unas instalaciones: un pasillo donde está el cuarto viejo. Para entrar hay un desafío de **Visión Digital + terminal** (con Q se ven pistas ocultas; con ellas se resuelve el acceso en una terminal; tema del MEP: control de acceso). Adentro está la **Nullblade oficial**: con ella llegan el **dash** y el **doble salto**, la tarjeta «NUEVO EQUIPAMIENTO» y el título **«EL DESPERTAR»** | + Nullblade (para siempre), **dash** (nivel 1) y **doble salto** |
+| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), **Aegis (cap. 3, «Eco en la Red»)** y mejoras con Ecos |
 
 **No existe una sala de pruebas dentro del juego:** cada arma y habilidad se prueba en el mapa a medida que
 se desbloquea. La sala gris (`tests/fixtures/`) solo la usan las pruebas automáticas.
@@ -42,14 +44,14 @@ se desbloquea. La sala gris (`tests/fixtures/`) solo la usan las pruebas automá
 | Tras un golpe | Congelamiento breve (0,08 s), sacudida de cámara, empuje y **1 s de invulnerabilidad** con parpadeo |
 | Peligros (pinchos, vacío) | Quitan 1 máscara y devuelven al **último suelo seguro** (el de ~0,3 s antes del golpe) |
 | Curación | Mantener **L** gasta energía y recupera 1 máscara (tarea C5) |
-| Muerte | Reaparece en el punto de control con las máscaras llenas y **pierde el 10 % de los créditos** (redondeado hacia abajo) |
-| Monedas | **Créditos** del jugador (mejoras: dash, máscaras…) separados del **presupuesto** del colegio (decisiones de seguridad). Cada mejora tiene su propio precio |
+| Muerte | Reaparece en el punto de control con las máscaras llenas y **pierde el 10 % de sus Ecos** (hacia abajo, **máximo 100**; **nada durante el tutorial**). Nunca pierde habilidades, evoluciones, comandos, páginas ni progreso |
+| Monedas | **ECOS** (moneda oficial, solo se obtienen jugando) para mejoras y tiendas, separados del **presupuesto** del colegio (decisiones de seguridad). Cada artículo tiene su propio precio |
 
 ## Decisiones de movimiento
 
 | Tema | Decisión |
 |---|---|
-| Dash | **Por niveles**, se adquiere en la mini aventura y se mejora con créditos: 0 sin dash · 1 Dash (no protege, pero **un dash en el momento justo hace el parry**) · 2 **Dash Fantasma** (atraviesa enemigos y ataques sin daño) · 3 **Esquiva Perfecta** (ventana de parry más amplia y mejor recompensa) |
+| Dash | **Por niveles**, se adquiere en la mini aventura y se mejora con Ecos: 0 sin dash · 1 Dash (no protege, pero **un dash en el momento justo hace el parry**) · 2 **Dash Fantasma** (atraviesa enemigos y ataques sin daño) · 3 **Esquiva Perfecta** (ventana de parry más amplia y mejor recompensa) |
 | Doble salto | Se desbloquea con la historia |
 | Pared | Deslizar + salto de pared, se desbloquea con la historia. Al agarrarse se recuperan el doble salto y el dash aéreo |
 | Caída | Más rápida y firme (gravedad ×2 al caer); la cámara se adelanta hacia abajo en caídas rápidas |
@@ -90,7 +92,10 @@ Es el vínculo entre el combate y el contenido educativo.
 | T1 | Sala de pruebas + movimiento + cámara | ✅ |
 | T2 | Movimiento avanzado: dash + doble salto + deslizar/salto de pared | ✅ |
 | C1 | Daño compartido, 4 máscaras, invulnerabilidad, peligros, muerte, dash por niveles, HUD | ✅ |
-| C2 | `GameState`: progreso de combate y créditos (pérdida al morir) | ✅ |
+| C2 | `GameState`: progreso de combate y moneda (pérdida al morir) | ✅ |
+| E1 | **ECOS**: autoload `Economy`, BITS → Ecos, penalización (10 %, máx. 100, nada en el tutorial) | ✅ |
+| E2 | `EconomyConfig` (valores configurables) y recompensas únicas que no se cobran dos veces; enemigos por rango | ✅ |
+| E3 | Ecos cristalinos (1 azul, 5 violeta, 25 blanco violáceo), partículas y sonido; combate más largo y difícil en una arena con obstáculos | ✅ |
 | Z1 | Retirar la sala de desarrollo (la sala gris queda solo para pruebas automáticas) | ✅ |
 | Z2 | Arte oficial de Ariel (estilo D) en el proyecto + Kai como personaje | ✅ |
 | Z3 | Primera sala real: Pasillo + Laboratorio (Zona 0) | ✅ |
@@ -102,8 +107,8 @@ Es el vínculo entre el combate y el contenido educativo.
 | H4b | Nivel de SPAM dentro de la PC (pop-ups, anuncios trampa, correos que caen) hasta la cuenta del profesor | ✅ |
 | T1 | Terminal simulada (pwd, ls, cd, cat…) + primera terminal en la PC del profesor | ✅ |
 | H4c | Combate contra la "Contraseña débil" con la mini espada (J): `PlayerCombat`, `WeaponData`, `EnemyBase`, `ArenaBarrier` | ✅ |
-| H4d | 2 elecciones (contraseña y MFA) → desbloquea Q y sale de la PC | ⏳ |
-| H5 | Habitación vieja: Nullblade.exe (dash, doble salto, ataque) + cartel "Capítulo 1" | ⏳ |
+| H4d | 2 elecciones (contraseña y MFA) → desbloquea Q y sale de la PC: `ChoiceChallenge`, `ChoiceWindow`, `AccountSecurity` | ✅ |
+| H5 | Invitación del profesor → pasillo de las instalaciones → desafío Visión Digital + terminal → cuarto viejo: Nullblade oficial, dash, doble salto y «EL DESPERTAR» | ⏳ |
 | C3 | Nullblade.exe (datos de las 4 etapas) + sensación de impacto | ⏳ |
 | C4 | `EnemyBase` + `EnemyData` + `CombatClock` + enemigo patrullero | ⏳ |
 | C5 | Energía (curación con L) + carga del Dominio | ⏳ |

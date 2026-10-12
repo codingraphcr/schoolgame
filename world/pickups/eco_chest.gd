@@ -1,7 +1,7 @@
 @tool
-class_name BitChest
+class_name EcoChest
 extends Interactable
-## Cofre de datos: con E se abre y suelta BITS. Queda abierto para siempre (marca en GameState,
+## Cofre de datos: con E se abre y suelta Ecos. Queda abierto para siempre (marca en GameState,
 ## "cofre_<chest_id>"). Dibujado en pixel art por código; se ve también en el editor.
 ## El origen es la base del cofre, apoyada en el suelo.
 
@@ -12,8 +12,8 @@ const TRIM_LIGHT := Color("d9ccff")
 const OUTLINE := Color("0a0718")
 const SIZE := Vector2(22, 14)
 
-## BITS que tiene dentro.
-@export var bits := 30
+## Ecos que tiene dentro (-1 = sorteado entre los de depósito oculto en EconomyConfig).
+@export var ecos := 30
 ## Identificador único del cofre (para recordar que ya se abrió). Vacío = el nombre del nodo.
 @export var chest_id: StringName = &""
 
@@ -46,9 +46,14 @@ func _ready() -> void:
 		enabled = false
 
 
+## Identificador del cofre (chest_id o, si está vacío, el nombre del nodo).
+func key() -> String:
+	return String(chest_id if chest_id != &"" else StringName(name))
+
+
 ## Marca que queda en GameState al abrirlo.
 func flag() -> StringName:
-	return StringName("cofre_" + String(chest_id if chest_id != &"" else StringName(name)))
+	return StringName("cofre_" + key())
 
 
 func open() -> void:
@@ -65,7 +70,10 @@ func open() -> void:
 	var parent := get_parent()
 	var at := global_position + Vector2(0, -SIZE.y - 2)
 	PixelBurst.spawn(parent, at, [TRIM, TRIM_LIGHT, Color.WHITE], 18, 80.0)
-	BitCoin.spawn_burst(parent, at, bits)
+	# Recompensa única: aunque se perdiera la marca del cofre, sus Ecos no se cobran dos veces.
+	var economy := get_node_or_null("/root/Economy")
+	if economy and economy.claim_drop(StringName("cofre:%s" % key())):
+		EcoShard.spawn_burst(parent, at, economy.reward_for(EconomyConfig.Source.HIDDEN_DEPOSIT, ecos))
 
 
 func _on_interacted(_player: Player) -> void:
@@ -101,7 +109,7 @@ func _draw() -> void:
 	draw_rect(lid.grow(1), OUTLINE)
 	draw_rect(lid, BODY_LIGHT)
 	draw_rect(Rect2(lid.position.x, lid.end.y - 1, lid.size.x, 1), TRIM)
-	# Cerradura: un rombo con el símbolo de bit.
+	# Cerradura: un rombo.
 	var lock := Vector2(0, -h + 4)
 	var r := 3.5
 	draw_colored_polygon(PackedVector2Array([lock + Vector2(0, -r), lock + Vector2(r, 0), lock + Vector2(0, r), lock + Vector2(-r, 0)]),

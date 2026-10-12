@@ -5,6 +5,9 @@ desarrollado con **Godot 4.7.2** y **GDScript**.
 
 > Estado: **prototipo de combate en desarrollo.** Ver el plan en [`docs/combate.md`](docs/combate.md).
 
+> Historia: la referencia narrativa principal es la [Biblia Narrativa](docs/narrativa/BIBLIA_NARRATIVA.md)
+> (cómo usarla: [`docs/narrativa/README.md`](docs/narrativa/README.md)).
+
 ## Cómo ejecutar
 
 1. Instala [Godot 4.7.2](https://godotengine.org/download) (edición estándar). Todo el equipo debe usar la misma versión.
@@ -53,4 +56,7 @@ godot --headless --path . --script res://tests/test_digital_dive.gd
 godot --headless --path . --script res://tests/test_spam_level.gd
 godot --headless --path . --script res://tests/test_terminal.gd
 godot --headless --path . --script res://tests/test_combat.gd
+godot --headless --path . --script res://tests/test_account_security.gd
+godot --headless --path . --script res://tests/test_custom_password.gd
+godot --headless --path . --script res://tests/test_economy.gd
 ```

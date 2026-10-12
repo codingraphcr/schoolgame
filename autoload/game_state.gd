@@ -11,7 +11,6 @@ signal control_applied(incident: Incident, control: SecurityControl)
 ## Cambió el progreso del jugador (créditos, habilidades o evoluciones).
 signal progress_changed
 ## Cambiaron los créditos; delta es la diferencia (negativa al gastar o perder).
-signal credits_changed(credits: int, delta: int)
 signal quest_started(quest_id: StringName)
 signal quest_step_changed(quest_id: StringName)
 signal quest_completed(quest_id: StringName)
@@ -32,7 +31,6 @@ const MAX_NULLBLADE_STAGE := 4
 const MAX_AEGIS_STAGE := 3
 const MAX_DOMAIN_STAGE := 3
 ## Fracción de los créditos que se pierde al morir.
-const DEATH_CREDIT_PENALTY := 0.1
 
 ## Nombres para la interfaz. El índice es la etapa (0 = no obtenido).
 const NULLBLADE_NAMES: Array[String] = ["—", "Nullblade.exe", "Nullblade.zero", "Nullblade.void", "Nullblade.max"]
@@ -57,8 +55,6 @@ var _decision_log: Array[Dictionary] = []
 # Separado del presupuesto del colegio: los créditos son del jugador y pagan sus mejoras.
 # Solo se modifica con las funciones de abajo, que limitan los valores y avisan del cambio.
 
-## Créditos del jugador (mejoras de habilidades). Se pierde una parte al morir.
-var credits := 0
 var max_masks := START_MASKS
 ## Máscaras actuales al salir de una sala (-1 = llenas). Así cambiar de sala no cura.
 var current_masks := -1.0
@@ -87,6 +83,9 @@ var _quest_progress: Dictionary[StringName, int] = {}
 # --- Conocimiento ---
 ## Comandos de terminal que Kai ya usó (páginas del manual del Grimorio).
 var _commands: Dictionary[StringName, bool] = {}
+## Contraseñas creadas por el jugador (p. ej. la del profesor). Solo la huella con sal, nunca el
+## texto: { id: { "salt", "hash", "backup_salt", "backup_hash" } }.
+var _passwords: Dictionary[StringName, Dictionary] = {}
 
 
 ## Vuelve al estado inicial (nueva partida).
@@ -102,6 +101,8 @@ func reset() -> void:
 	active_quest = &""
 	_quest_progress.clear()
 	_commands.clear()
+	_passwords.clear()
+	_economy().reset()
 	stats_changed.emit()
 	progress_changed.emit()
 
@@ -207,35 +208,6 @@ func _set_incident_state(incident: Incident, state: Incident.State) -> void:
 
 # --- Progreso del jugador ---
 
-func add_credits(amount: int) -> void:
-	if amount <= 0:
-		return
-	credits += amount
-	credits_changed.emit(credits, amount)
-	progress_changed.emit()
-
-
-## Paga una mejora. Devuelve false (sin cobrar nada) si no alcanza.
-func spend_credits(amount: int) -> bool:
-	if amount < 0 or amount > credits:
-		return false
-	if amount > 0:
-		credits -= amount
-		credits_changed.emit(credits, -amount)
-		progress_changed.emit()
-	return true
-
-
-## Al morir se pierde una parte de los créditos. Devuelve cuántos se perdieron.
-func apply_death_penalty() -> int:
-	var lost := floori(credits * DEATH_CREDIT_PENALTY)
-	if lost > 0:
-		credits -= lost
-		credits_changed.emit(credits, -lost)
-		progress_changed.emit()
-	return lost
-
-
 func set_dash_level(level: int) -> void:
 	dash_level = clampi(level, 0, MAX_DASH_LEVEL)
 	progress_changed.emit()
@@ -283,7 +255,6 @@ func unlock_vision(unlocked := true) -> void:
 
 
 func _reset_progress() -> void:
-	credits = 0
 	max_masks = START_MASKS
 	max_energy_cells = START_ENERGY_CELLS
 	current_energy = -1.0
@@ -335,8 +306,9 @@ func complete_step(quest_id: StringName, step_id: StringName) -> bool:
 	_quest_progress[quest_id] = -1
 	if active_quest == quest_id:
 		active_quest = &""
-	if quest.bits_reward > 0:
-		add_credits(quest.bits_reward)
+	# Recompensa única: aunque se repitiera el último paso, no se cobra dos veces.
+	if quest.ecos_reward > 0:
+		_economy().claim_reward(StringName("mision:%s" % quest_id), quest.ecos_reward)
 	quest_completed.emit(quest_id)
 	if quest.next_quest != &"":
 		start_quest(quest.next_quest)
@@ -388,6 +360,55 @@ func get_learned_commands() -> Array[String]:
 	return _key_list(_commands)
 
 
+# --- Contraseñas del jugador ---
+# Como en los sistemas reales, se guarda la huella (hash SHA-256 con sal), no la contraseña:
+# ni el archivo de guardado ni otra persona pueden leerla. El jugador tiene que recordarla.
+
+## Guarda la huella de una contraseña (y de su código de respaldo, si se da). Reemplaza la anterior.
+## Rechaza (false) un texto vacío, demasiado largo o con caracteres no permitidos (PasswordRules.sanitize):
+## así nada que no sea una contraseña llega al guardado.
+func set_password(id: StringName, password: String, backup_code := "") -> bool:
+	if id == &"" or not PasswordRules.is_clean(password) or backup_code.length() > 16:
+		push_warning("GameState: contraseña rechazada (vacía, muy larga o con caracteres no permitidos).")
+		return false
+	var entry := { "salt": _new_salt(), "hash": "", "backup_salt": "", "backup_hash": "" }
+	entry["hash"] = _fingerprint(entry["salt"], password)
+	if not backup_code.is_empty():
+		entry["backup_salt"] = _new_salt()
+		entry["backup_hash"] = _fingerprint(entry["backup_salt"], backup_code.strip_edges().to_upper())
+	_passwords[id] = entry
+	return true
+
+
+func has_password(id: StringName) -> bool:
+	return _passwords.has(id)
+
+
+## Si el intento coincide con la contraseña guardada (distingue mayúsculas, como los sistemas reales).
+func check_password(id: StringName, attempt: String) -> bool:
+	var entry: Dictionary = _passwords.get(id, {})
+	return not entry.is_empty() and _fingerprint(entry["salt"], attempt) == entry["hash"]
+
+
+## Si el código de respaldo es correcto (para recuperar la cuenta si se olvida la contraseña).
+func check_backup_code(id: StringName, code: String) -> bool:
+	var entry: Dictionary = _passwords.get(id, {})
+	return not entry.is_empty() and not String(entry["backup_hash"]).is_empty() 		and _fingerprint(entry["backup_salt"], code.strip_edges().to_upper()) == entry["backup_hash"]
+
+
+## La economía (saldo de Ecos) es su propio autoload; GameState la guarda y reinicia con el resto.
+func _economy() -> Node:
+	return get_node("/root/Economy")
+
+
+static func _fingerprint(salt: String, text: String) -> String:
+	return (salt + text).sha256_text()
+
+
+static func _new_salt() -> String:
+	return Crypto.new().generate_random_bytes(8).hex_encode()
+
+
 # --- Guardado (preparado para más adelante) ---
 
 func to_dict() -> Dictionary:
@@ -401,9 +422,10 @@ func to_dict() -> Dictionary:
 		"decision_log": _decision_log.duplicate(true),
 		"active_quest": String(active_quest),
 		"quests": _keys_to_strings(_quest_progress),
+		"economy": _economy().to_dict(),
 		"commands": _key_list(_commands),
+		"passwords": _keys_to_strings(_passwords),
 		"player": {
-			"credits": credits,
 			"max_masks": max_masks,
 			"current_masks": current_masks,
 			"max_energy_cells": max_energy_cells,
@@ -439,10 +461,14 @@ func from_dict(data: Dictionary) -> void:
 		_quest_progress[StringName(quest_id)] = int(quests[quest_id])
 	for command: String in data.get("commands", []):
 		_commands[StringName(command)] = true
+	var passwords: Dictionary = data.get("passwords", {})
+	for password_id: String in passwords:
+		_passwords[StringName(password_id)] = (passwords[password_id] as Dictionary).duplicate()
 	# Partidas sin progreso del jugador (versiones anteriores) quedan con los valores iniciales.
 	# int() porque al pasar por JSON los números vuelven como decimales.
 	var player: Dictionary = data.get("player", {})
-	credits = int(player.get("credits", 0))
+	# Las partidas de antes de los Ecos guardaban «credits»: se convierten.
+	_economy().from_dict(data.get("economy", {}), int(player.get("credits", 0)))
 	max_masks = maxi(int(player.get("max_masks", START_MASKS)), 1)
 	current_masks = float(player.get("current_masks", -1.0))
 	max_energy_cells = clampi(int(player.get("max_energy_cells", START_ENERGY_CELLS)), 1, MAX_ENERGY_CELLS)

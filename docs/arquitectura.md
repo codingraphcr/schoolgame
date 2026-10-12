@@ -2,6 +2,9 @@
 
 Documento vivo: se actualiza cada vez que se agrega o cambia un sistema.
 
+Historia, personajes y mundo: [`narrativa/BIBLIA_NARRATIVA.md`](narrativa/BIBLIA_NARRATIVA.md), la referencia
+narrativa principal.
+
 ## Principios
 
 - **Carpetas por funcionalidad:** cada escena vive junto a su script (`player.tscn` + `player.gd`).
@@ -35,8 +38,9 @@ Las carpetas se crean cuando se necesitan, no antes.
 | Nombre | Archivo | Responsabilidad |
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
+| `Economy` | `autoload/economy.gd` | Saldo de **Ecos** (la moneda) y la penalización al morir. Ver «ECOS». |
 | `DigitalVision` | `autoload/digital_vision.gd` | Estado de la Visión Digital (lista, activa, recargando), duración, recarga y `blend` para los efectos. Ver "Visión Digital". |
-| `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. **Progreso del jugador** (créditos, habilidades, evoluciones). Preparado para guardar partida (`to_dict` / `from_dict`). |
+| `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. **Progreso del jugador** (habilidades, evoluciones, misiones, comandos, contraseñas). Preparado para guardar partida (`to_dict` / `from_dict`). |
 
 ## Estilo visual oficial: muestra E de Ariel (huesos pixelados + Visión Digital)
 
@@ -186,7 +190,34 @@ el arco del tajo y emite `hit_landed` (para energía y combos futuros). La anima
 Armas: `data/weapons/` (`nullblade.tres`, la que se obtiene en el prólogo; `mini_espada.tres` quedó sin uso).
 **Energía por golpe:** cada golpe acertado a un **enemigo válido** (`EnemyBase` en pie, sin escudo) recupera `WeaponData.energy_gain` (**12,5 %** de la energía máxima; el ataque cargado futuro, `charged_energy_gain`, **15 %**), nunca más del máximo. Paredes, objetos y el aire no dan energía; un mismo ataque golpea una vez a cada enemigo y cada enemigo distinto cuenta; derrotar no da extra. La barra hace un pulso violeta (`EnergyBar.pulse()`). El tajo es una media luna del color del arma.
 **Nullblade:** `world/effects/nullblade_reveal.gd` (`NullbladeReveal.play(jugador)`) la materializa por primera vez en una **escena de cine** (~6 s): franjas negras, la pantalla se oscurece a violeta con un foco sobre Kai (`reveal_shade.gdshader`), la cámara se acerca y la música baja (`Music.duck`). Fases de la hoja de Ariel: activación (datos que suben del suelo), manifestación (fragmentos que giran y una columna de luz), condensación (la espada se define con la punta hacia arriba), materialización (destello blanco, golpe grave, ondas, rayos y franjas de glitch), empuñadura (vuela a la mano de Kai con estela) y un tajo de prueba. Con "reducir glitch" el destello es suave y no hay franjas. Después muestra la tarjeta `ui/equipment/equipment_card.tscn` (`EquipmentCard.show_card()`, reutilizable para otros equipos; pausa el juego). Arte en `assets/art/items/nullblade/` (`tools/art/extraer_nullblade.gd`). Con `GameState.nullblade_stage > 0`, `Player.apply_progress()` la equipa en todas las salas.
-**BITS (la moneda):** por dentro son los créditos de `GameState` (`credits`, `add_credits`, se pierde un 10 % al morir); en pantalla se llaman **BITS** (concepto de Ariel en `docs/arte/referencias/bits_concepto.webp`). `world/pickups/bit_coin.gd` (`BitCoin`): moneda en pixel art por código (`BitCoin.draw_coin`, también el ícono del HUD) que salta, rebota en el mundo (capa 1), flota girando, brilla y vuela hacia Kai cuando se acerca (36 px); vale 1 o 5. `BitCoin.spawn_burst(sala, posición, cantidad)` reparte la cantidad en monedas (máx. 14, con monedas de 5 si hace falta). **Enemigos:** al morir, `EnemyBase` se desintegra en píxeles (`world/effects/pixel_burst.gd`, colores `death_colors`) y suelta `get_bits_reward()` (`bits_reward`, o 3 por punto de vida máxima: más fuerte, más BITS). **Misiones:** `Quest.bits_reward` (prólogo 25, contraseña del profesor 100). **Cofres:** `world/pickups/bit_chest.gd` (`BitChest`, un `Interactable`; queda abierto con la marca `cofre_<chest_id>`); hay uno en la PC del profesor junto al punto de restauración. Al recoger el primer BIT queda la marca `bits_descubiertos` y se desbloquea su página del ARSENAL (`GrimorioEntry.unlock_flag`).
+**ECOS (la moneda oficial):** residuos de información que dejan las amenazas neutralizadas; solo se obtienen jugando
+(sin dinero real). El saldo vive en el autoload **`Economy`** (`autoload/economy.gd`), el único lugar donde cambia:
+`add_ecos()` (rechaza 0 o negativos), `spend_ecos()` (false si no alcanza o es inválido), `can_afford_ecos()` y
+`apply_death_penalty()` (**10 % hacia abajo, máximo 100, nada durante el tutorial**: hasta la marca `tutorial_terminado`,
+al final del prólogo). Señal `ecos_changed(ecos, delta)`. `GameState` la guarda y reinicia con el resto (`to_dict` →
+`"economy"`); las partidas viejas con «credits» se convierten en Ecos. `world/pickups/eco_shard.gd` (`EcoShard`):
+fragmento que salta, rebota en el mundo (capa 1), flota, brilla y vuela hacia Kai cuando se acerca (36 px); vale 1 o 5;
+`EcoShard.spawn_burst(sala, posición, cantidad)` reparte la cantidad en fragmentos de **1, 5 y 25** (`EcoShard.split`,
+máx. 14 piezas). **Apariencia (E3):** fragmento **cristalino** dibujado por código (`EcoShard.draw_shard`, también el ícono
+del HUD): azul si vale 1, violeta si vale 5 y blanco violáceo, más grande, si vale 25; flota, gira, destella y al recogerlo
+se deshace en partículas con un anillo de luz y un tintineo de cristal (`eco_pickup`). **Enemigos:** al morir, `EnemyBase`
+se desintegra en píxeles (`world/effects/pixel_burst.gd`) y suelta `get_ecos_reward()` (según su rango, ver E2).
+**Misiones:** `Quest.ecos_reward` (prólogo 25). **Cofres:** `world/pickups/eco_chest.gd` (`EcoChest`, un `Interactable`;
+queda abierto con la marca `cofre_<chest_id>`). **En la PC del profesor los Ecos solo los da el villano** (la «Contraseña
+débil»): no hay cofre y la terminal, el desafío y la misión dan 0. Al
+recoger el primer Eco queda la marca `ecos_descubiertos` y se desbloquea su página del ARSENAL. HUD: `EcosDisplay`
+(«1.250 ECOS», con +X / −X al cambiar).
+
+**Valores y recompensas únicas (E2):** `EconomyConfig` (`systems/economy/`, archivo `data/economy/economia.tres`, se edita
+en el Inspector) tiene los rangos de cada fuente —enemigo común 5–10, especial 20–40, jefe 150–250, terminal 30–60, desafío
+de elección 20–40, misión secundaria 75–150, depósito oculto 15–40— y la penalización (10 %, máximo 100).
+`Economy.roll(fuente)` sortea un valor dentro del rango; `reward_for(fuente, fijo)` usa el fijo si es ≥ 0. **Recompensas
+únicas** con id estable: `claim_reward(id, cantidad)` paga solo la primera vez; `claim_drop(id)` registra las que caen al
+suelo. Los ids cobrados se guardan con la partida (`"claimed"`). Ids: `mision:<id>`, `terminal:<id>`, `desafio:<id>`,
+`cofre:<id>`, `fragmento:<marca>`, `enemigo:<id>`. Los enemigos tienen `rank` (común, especial, jefe) y, si son de la historia,
+`reward_id` (la «Contraseña débil»: especial, `enemigo:contrasena_debil`). `TerminalChallenge.ecos_reward` y
+`ChoiceChallenge.ecos_reward` (-1 = sorteado). **Los Ecos no se pierden:** si Kai sale de la sala sin recoger los
+fragmentos, se suman solos (`EcoShard._exit_tree`; `discard()` los quita sin sumar).
 
 **Enemigos:** `characters/enemies/enemy_base.gd` (`EnemyBase`, CharacterBody2D). Crea su cuerpo (capa 3), su
 `HealthComponent`, su `HurtboxComponent` (recibe golpes de la capa 4) y su golpe por contacto (capa 5). Al recibir un
@@ -194,10 +225,12 @@ golpe: destello, empuje y aturdimiento breve (`hurt_time`). Señales `damaged` y
 comportamiento en `_ai()` y sus reacciones en `_on_damaged()` / `_on_died()`. `ai_enabled = false` lo deja quieto
 (presentaciones y pruebas). Kai atraviesa a los enemigos recibiendo daño, como en Hollow Knight.
 
-**La «Contraseña débil»** (`characters/enemies/weak_password/`, `WeakPasswordEnemy`): 6 de vida, tipo de amenaza
-`credenciales`. Se agacha avisando (`TELEGRAPH`) y salta hacia Kai. Con la mitad de la vida entra en **fuerza bruta**
-(avisa menos y salta más seguido y más lejos). Cada golpe suelta una contraseña débil real (`123456`, `qwerty`…) y al
-morir se deshace en números. Dibujo vectorial provisional hasta que Ariel haga el suyo.
+**La «Contraseña débil»** (`characters/enemies/weak_password/`, `WeakPasswordEnemy`): **10 de vida**, tipo de amenaza
+`credenciales`, especial y de la historia (20–40 Ecos, una sola vez). Tres fases: 1) se agacha avisando (`TELEGRAPH`) y
+salta hacia Kai; 2) con la mitad de la vida, **fuerza bruta**: avisa menos, salta más seguido y más lejos y al caer lanza
+un **intento** (`PasswordGuess`: una contraseña débil real que corre a ras del suelo; hay que saltarla, quita medio
+cristal); 3) con el 30 %, **ataque de diccionario**: dos intentos seguidos (`dictionary_gap`). Cada golpe suelta una
+contraseña débil real (`123456`, `qwerty`…) y al morir se deshace en números. Dibujo vectorial provisional hasta que Ariel haga el suyo.
 
 **Curación:** `characters/player/player_heal.gd` (`PlayerHeal`, nodo `Heal`): manteniendo **L**, Kai canaliza su energía. Cada curación gasta **media barrita** (`Player.energy`, máximo `GameState.max_energy_cells`) y devuelve **1,5 cristales**. La primera tarda **1,141 s** (incluye **0,30 s** de inicio); manteniendo L y con energía, cada una más tarda **0,9 s**. Soltar antes cancela sin gastar; un golpe la corta; para volver a curarse hay que soltar y presionar L. En el suelo Kai se arrodilla y en el aire queda flotando (animaciones `curar_suelo*` / `curar_aire*` de `assets/art/characters/kai/hd/kai_hd_curacion.json`, extraídas de `docs/arte/referencias/kai_curacion_concepto.webp` con `tools/art/extraer_personajes_concepto.gd -- kai_curacion`). La energía se conserva entre salas (`GameState.current_energy`), se llena al reaparecer y `Player.add_energy()` queda para recompensas futuras.
 
@@ -243,7 +276,7 @@ contraseña del profesor. En el prólogo aparece sola, como un glitch (`glitch()
 |---|---|
 | `DigitalVision` (autoload) | Estado (`READY` / `ACTIVE` / `RECHARGING`), `toggle()`, `activate(force)`, `deactivate()`, `reset()`, `blend` (0 físico → 1 digital, con transición). Señales `activated`, `deactivated`, `denied(reason, segundos)` |
 | `DigitalWorld` (uno por sala) | Oscurece el ambiente, muestra la capa digital (`digital_layer`) y los nodos del grupo `digital_only` (oculta `physical_only`), activa la **capa de colisión 7 (mundo_digital)** en el jugador, ilumina a Kai y hace el glitch de pantalla |
-| `DataFragment` | Objeto oculto que solo se recoge con la visión activa: da créditos y deja una marca en `GameState` |
+| `DataFragment` | Objeto oculto que solo se recoge con la visión activa: da Ecos y deja una marca en `GameState` |
 | `Room` | Q llama a `DigitalVision.toggle()` |
 | HUD | `VisionMeter` (LISTA / ACTIVA / RECARGANDO, arriba a la derecha) y `Toast` (mensajes: `get_tree().call_group(&"toast", &"show_message", texto)`) |
 
@@ -251,7 +284,7 @@ contraseña del profesor. En el prólogo aparece sola, como un glitch (`glitch()
 grupo `digital_only` (dibujos). No hace falta duplicar la sala.
 
 **Zona 0:** `DigitalLayer/Network` (`red_zona0.gd`, dibujo vectorial de Ariel: red, servidores, puente de datos y el
-pez del phishing), `DataBridge` (capa 7), `DataFragment` (+25 créditos, marca `zona0_fragmento_recogido`) y
+pez del phishing), `DataBridge` (capa 7), `DataFragment` (+25 Ecos, marca `zona0_fragmento_recogido`) y
 `LabComputer` (`lab_computer.gd`, un `Interactable`): en el prólogo el **monitor de pared** (`LabMonitor`, pixel art por
 código) se enciende solo con interferencia, muestra el **ojo de la entidad «???»** mientras habla en magenta con escritura
 irregular («Por fin alguien está mirando», «Te estoy observando»), parpadea y se apaga un momento. Después
@@ -288,7 +321,7 @@ Diálogos en `data/dialogues/prologo/`: `profesor_pedido.tres` (pide revisar la 
    cierra la pantalla de carga y Kai se arma desde píxeles (`DigitalDive.materialize()`).
 4. Las salas digitales usan `Room.player_tint` (Kai celeste: su alma digital) y `Room.room_size` (no tienen tiles).
 
-`world/zones/pc_profesor/escritorio.tscn`: **nivel de SPAM** dentro de la computadora del profesor (3360 px, solo caminar
+`world/zones/pc_profesor/escritorio.tscn`: **nivel de SPAM** dentro de la computadora del profesor (3920 px, solo caminar
 y saltar). La salida izquierda vuelve al laboratorio (entrada `desde_pc`, también con materialización).
 
 **Aspecto del escritorio (concepto de Ariel, `docs/arte/referencias/escritorio_entidad_concepto.webp`):** `escritorio_fondo.gd` dibuja una pantalla clara invadida por la entidad, en rosa: columnas de binario que caen y cambian, código hex, terminales que se escriben solas, paneles «ANALIZANDO», circuitos con pulsos y cuadritos; solo dibuja lo que está en pantalla. Los íconos del escritorio están corruptos (glitch de color, franjas y nombres dañados). `entity_eye.gd` (`EntityEye`): el ojo de la entidad en un monitor con el panel «OBSERVANDO»; acompaña a la cámara, mira hacia Kai y a veces hacia otros lados, parpadea, y al acercarse Kai a la terminal se cierra y desaparece; desde el paso `cambiar_contrasena` ya no está. El brillo `SoulGlow` de Kai se bajó a 0,35 para el fondo claro.
@@ -304,6 +337,7 @@ Recorrido, de izquierda a derecha:
 | D | 1820–2300 | Lluvia C (la más intensa) y 3 vallas cortas que hay que saltar |
 | E | 2320–2900 | Lluvia D, Fri Fayer → Valorante (se mueve) → Brawl Starz (se cierra) → Zeldo sobre un foso largo |
 | Final | 2956–3310 | «¡Profe, aquí está el error!», la **terminal** (x=3036) y la cuenta del profesor |
+| Arena | 2992–3920 | Combate contra la «Contraseña débil»: pop-ups, anuncios trampa y lluvia de correos solo durante la pelea |
 
 **Componentes de SPAM** (`world/digital/spam/`, se ven también en el editor y sirven para otros niveles):
 
@@ -344,8 +378,37 @@ en la sala; no hace falta programar.
 **Combate de la cuenta del profesor** (`world/zones/pc_profesor/password_fight.gd`, `PasswordFight`): la pestaña
 «Cambiar contraseña» (`AccountTab`, paso `cambiar_contrasena`) lo inicia. Aparece la «Contraseña débil» y dice
 «Tú no deberías poder vernos»; la Nullblade se materializa (`NullbladeReveal`) y aparece la tarjeta de equipamiento; al reintentar no se repite; una `ArenaBarrier`
-(`world/digital/`, un pequeño firewall) cierra la zona. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
+(`world/digital/`, un pequeño firewall) cierra la **arena** (~930 px, de la barrera a la pared): 3 pop-ups para saltar
+(uno sube y baja), 3 anuncios trampa y una lluvia de correos (`MailRainFight`, en `fight_hazards`) que **solo cae durante
+la pelea**. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
 muere, el combate se cancela, reaparece en `RestorePointFinal` (justo antes) y puede reintentarlo con un diálogo corto.
+
+**Desafíos de elección** (`systems/challenges/`, `ui/challenges/`): un `ChoiceChallenge` (en `data/challenges/`) tiene
+preguntas (`ChoiceQuestion`) con opciones (`ChoiceOption`: texto, detalle, si es correcta y su explicación).
+`ChoiceWindow` las muestra: una opción incorrecta explica por qué y queda descartada; la correcta habilita «Continuar».
+Cuenta los errores por pregunta (`mistakes`) para registros futuros. Funciona con teclado, mando, mouse y pantalla táctil.
+
+**Contraseña creada por el jugador** (`systems/security/password_rules.gd`, `ui/challenges/password_window.gd`):
+`PasswordRules.evaluate()` revisa 4 reglas (larga, no de las más usadas —también con trucos como `P@ssw0rd`—, sin datos
+personales, sin secuencias ni repeticiones) y estima la fortaleza (nivel, bits y tiempo para adivinarla); `suggest()`
+arma una frase de 4 palabras al azar y `backup_code()` un código de respaldo. **Entrada segura:** `sanitize()` deja solo
+letras (también ñ y con tilde), números, espacios y `! @ # $ % ^ & * ( ) - _ = + . , ; : ? / ~`, hasta 64 caracteres;
+quita lo que parece código o etiquetas (< > [ ] { }, comillas, acento grave, barra vertical y barra invertida), saltos de línea, tabulaciones y caracteres
+invisibles mientras se escribe. El campo no permite copiar, pegar, arrastrar ni sugerencias del teclado del celular, y
+el juego queda en **pausa** mientras la ventana está abierta. `GameState.set_password` vuelve a validar (`is_clean`) y
+rechaza cualquier otra cosa sin tocar la partida. La contraseña nunca se ejecuta ni se interpreta: solo se calcula su
+huella. **Flechas:** en `PasswordWindow` y `ChoiceWindow` las flechas (o el mando) se mueven entre el campo y los
+botones (no por el texto); Enter activa. `PasswordWindow` tiene 3 pasos: crearla
+(medidor en vivo, mostrar/ocultar, «Sugerir frase»), confirmarla y anotar el código de respaldo. **Solo se guarda la
+huella** (SHA-256 con sal) en `GameState` (`set_password`, `check_password`, `check_backup_code`, `has_password`): ni el
+archivo de guardado contiene la contraseña. El jugador tendrá que recordarla en el **capítulo 4** y en **misiones
+extra** (`GameState.check_password(&"profesor", intento)`).
+
+**Final de la misión** (`account_security.gd`, `AccountSecurity`, paso `elegir_seguridad`): primero el jugador **crea**
+la contraseña del profesor (`PasswordWindow`, paso 1 de 2; si cierra en el paso 2 no tiene que crearla otra vez) y luego
+elige el método de verificación en dos pasos (desafío `cuenta_profesor_seguridad`, paso 2 de 2). Al terminar: diálogo, Visión
+Digital desbloqueada, el destello de la Nullblade se apaga (`nullblade_stage` sigue en 0), la misión se completa
+y Kai vuelve al laboratorio (entrada `desde_pc`).
 
 **Primera terminal** (PC del profesor, paso `revisar_configuracion`): encontrar y leer
 `~/cuenta/configuracion.txt` (contraseña 123456, sin verificación en dos pasos). Alineada con indicadores de
@@ -377,7 +440,6 @@ El jugador **solo puede usar lo adquirido**: cada `Room` aplica el progreso al j
 
 | Campo | Inicial | Rango / significado |
 |---|---|---|
-| `credits` | 0 | Créditos del jugador para mejoras (separados del `budget` del colegio). Al morir se pierde el 10 % |
 | `max_masks` | 4 | Máscaras máximas |
 | `dash_level` | 0 | 0–3 (sin dash, Dash, Dash Fantasma, Esquiva Perfecta) |
 | `can_double_jump` / `can_wall_jump` | no | Se desbloquean con la historia |
@@ -386,10 +448,9 @@ El jugador **solo puede usar lo adquirido**: cada `Room` aplica el progreso al j
 | `aegis_stage` | 0 | 0 no obtenido · 1 Pulse · 2 Bridge · 3 Sync |
 | `domain_stage` | 0 | 0 bloqueado · 1–3 Dominio Nulo I–III |
 
-Se modifica solo con funciones que limitan los valores y emiten señales: `add_credits()`, `spend_credits()`
-(devuelve `false` si no alcanza), `apply_death_penalty()`, `set_dash_level()`, `set_nullblade_stage()`,
+Se modifica solo con funciones que limitan los valores y emiten señales (los Ecos están en `Economy`): `set_dash_level()`, `set_nullblade_stage()`,
 `set_aegis_stage()`, `set_domain_stage()`, `set_max_masks()`, `unlock_double_jump()`, `unlock_wall_jump()`, `unlock_vision()`.
-Señales: `progress_changed` y `credits_changed(credits, delta)`. Nombres para la interfaz: `DASH_NAMES`, `NULLBLADE_NAMES`, `AEGIS_NAMES`, `DOMAIN_NAMES`.
+Señal: `progress_changed`. Nombres para la interfaz: `DASH_NAMES`, `NULLBLADE_NAMES`, `AEGIS_NAMES`, `DOMAIN_NAMES`.
 
 **Sin sala de desarrollo:** las habilidades se prueban en el mapa a medida que se desbloquean. Las pruebas automáticas
 declaran el progreso que necesitan con estas mismas funciones antes de cargar la sala gris (`tests/fixtures/combat_test_room.tscn`).
@@ -443,7 +504,7 @@ Para agregar una entrada al Grimorio: copiar un `.tres` de `data/grimorio/`, cam
 | `Sfx` (`sfx.gd`) | `Sfx.play(&"nombre", tono, volumen_db)`. Si existe `assets/audio/sfx/<nombre>.wav/.ogg/.mp3` usa ese archivo; si no, genera un **sonido provisional** por código (`RECIPES`: onda, barrido de tono, arpegio, vibrato, ruido, bitcrush y filtro `lowpass`; `entity_whisper` es un susurro distorsionado con formantes). Los de movimiento son sutiles, al estilo Hollow Knight; el tajo suena con glitch. Bus `SFX` (volumen de Efectos), suena también en pausa, 16 voces. Se crea solo con el primer `play()`; no es autoload. `Sfx.history` guarda los últimos (pruebas) |
 | `Music` (`music.gd`) | `Music.play(&"pista")`: busca `assets/audio/music/<pista>.ogg` y la reproduce en bucle con fundido por el bus `Music`; si no existe, silencio. Pistas: `menu`, `colegio`, `computadora`, `pelea`. `Room.music_track` la pide al entrar a la sala. Mientras no haya archivo, `computadora` (donde vigila el ojo) tiene una música provisional generada por código: ambiente oscuro en La menor, en bucle |
 | `PlayerSounds` (`characters/player/player_sounds.gd`, nodo `Sounds`) | Pasos (`Room.footstep`: `step_school` o `step_digital`), salto, doble salto, salto de pared, caída, dash, daño + crujido del cristal (+ error con un anuncio trampa), muerte, curación (carga y cada curación), tajo, golpe y energía |
-| Otros ganchos | Enemigo herido / desintegración (`EnemyBase`), «fuerza bruta», aviso del correo SPAM, ventanas que se cierran y abren, BITS (más agudo si se recogen seguidos), cofre, aparición de la Nullblade, tarjeta de equipamiento (fanfarria), monitor del laboratorio (estática, apagón), ojo de la entidad (latido, parpadeo, cierre y un susurro cada tanto), la entidad «???» susurra en cada línea de diálogo, menús (moverse, aceptar, volver), Grimorio (abrir, página, cerrar) y terminal (teclas, enter, error, objetivo cumplido) |
+| Otros ganchos | Enemigo herido / desintegración (`EnemyBase`), «fuerza bruta», aviso del correo SPAM, ventanas que se cierran y abren, Ecos (más agudo si se recogen seguidos), cofre, aparición de la Nullblade, tarjeta de equipamiento (fanfarria), monitor del laboratorio (estática, apagón), ojo de la entidad (latido, parpadeo, cierre y un susurro cada tanto), la entidad «???» susurra en cada línea de diálogo, menús (moverse, aceptar, volver), Grimorio (abrir, página, cerrar) y terminal (teclas, enter, error, objetivo cumplido) |
 | Voces de diálogo (`DialogueBox._speak`) | Como los NPC de Zelda: mientras se escribe el texto suena una «sílaba» cada `voice_every` letras con la voz del personaje (`DialogueCharacter.voice`, un sonido de `Sfx`). El tono cambia según la letra (`voice_pitch`, `voice_variation`), así una frase suena siempre igual. Kai: `voice_kai` (electrónica y juvenil, cada 2 letras); Prof. Alvarado: `voice_profesor` (grave y cálida, cada 3); Contraseña débil: `voice_amenaza`. La narración no tiene voz y «???» susurra. Un personaje nuevo solo necesita `voice` en su `.tres` |
 
 Para reemplazar un sonido: dejar el archivo con el mismo nombre en `assets/audio/sfx/` (ver `assets/audio/LEEME.md`).
@@ -471,15 +532,18 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_vision.gd` | Visión Digital bloqueada, desbloqueo, capa digital, oscurecimiento, puente de datos (capa 7), fragmento (una sola vez), apagado manual, recarga y fin por duración |
 | `test_dialogue.gd` | Formato de los diálogos, aviso «E: hablar», caja de diálogo (letra por letra, completar, avanzar, cerrar), controles bloqueados, marca del profesor y recordatorio |
 | `test_settings_grimorio.gd` | Ajustes (buses de audio, velocidad del texto, glitch, cambiar y restablecer teclas, guardado), pantalla de opciones (◀ ▶, controles, abrir grimorio) y Grimorio (pestañas, desbloqueo por la historia, «???», mapa) |
-| `test_sound.gd` | Los 46 sonidos provisionales se generan, bus de Efectos, salto, caída, pasos, tajo, golpe, enemigo, BITS, curación, daño, la música y los pasos de la computadora y las voces de diálogo (Kai, profesor, la entidad susurra, la narración en silencio) |
+| `test_sound.gd` | Los 46 sonidos provisionales se generan, bus de Efectos, salto, caída, pasos, tajo, golpe, enemigo, Ecos, curación, daño, la música y los pasos de la computadora y las voces de diálogo (Kai, profesor, la entidad susurra, la narración en silencio) |
 | `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
 | `test_digital_dive.gd` | La computadora absorbe a Kai (cámara, desaparición), pantalla de carga, llegada al escritorio, materialización, alma digital celeste, límites y regreso al laboratorio |
 | `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa solo saltando (bot), punto de restauración (activarlo y reaparecer ahí al morir) y llegada a la cuenta del profesor |
+| `test_custom_password.gd` | Reglas y medidor (débiles, comunes con trucos, datos personales, repeticiones, frases fuertes), frases sugeridas, código de respaldo, guardado de solo la huella (con sal) y la ventana para crearla |
+| `test_account_security.gd` | Desafío de elección (opción incorrecta con explicación, correcta, avanzar), contenido educativo, y el final de la misión: Esc, Visión Digital, Ecos, destello de la Nullblade que se apaga, vuelta al laboratorio y Q |
 | `test_pogo.gd` | Cadencia de 0,45 s; abajo + J en el suelo ataca adelante; en el aire ataca hacia abajo y rebota en un enemigo (lo daña, recupera el doble salto), en los pinchos (sin daño) y en un nodo de rebote; sin nada debajo no rebota |
 | `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
-| `test_bits.gd` | Reparto en monedas, BITS según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |
+| `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |
+| `test_ecos.gd` | Reparto en fragmentos, Ecos según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |
 | `test_entity_eye.gd` | El ojo de la entidad: vigila al entrar, sigue a la cámara, parpadea, se cierra y desaparece en la terminal y no vuelve después de resolverla |
 | `test_terminal.gd` | Terminal simulada: sistema de archivos, comandos y errores, autocompletado, comandos permitidos, que no toque el sistema real, y la terminal de la PC del profesor (abrir, Esc, resolver, diálogo, paso de misión, comandos aprendidos y guardados) |
-| `test_progress.gd` | Progreso inicial, créditos, penalización al morir, límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
+| `test_progress.gd` | Progreso inicial, Ecos (validaciones), penalización al morir (10 %, máximo 100, nada en el tutorial), límites, guardar/cargar (también partidas antiguas) y aplicación del progreso al jugador en una sala |
 | `test_decision_system.gd` | Datos del incidente de phishing, flujo de investigación, cobro y efectos de las medidas, rechazos (sin evidencia, sin presupuesto, ya resuelto) y guardar/cargar |

@@ -2,6 +2,8 @@
 
 Resumen del análisis del **Documento maestro de desarrollo** (octubre 2026) y de las decisiones del equipo.
 Detalle técnico de cada sistema en `arquitectura.md`; combate e historia en `combate.md`.
+La historia se rige por la Biblia Narrativa (`narrativa/BIBLIA_NARRATIVA.md`); las diferencias entre este plan y la
+Biblia están anotadas, pendientes de decisión, en `narrativa/README.md`.
 
 ## Visión
 
@@ -14,12 +16,18 @@ ciberseguridad: terminales con comandos reales, decisiones y combate. Estructura
 
 | Tema | Decisión |
 |---|---|
-| Prólogo | Se mantiene el nuestro: Visión involuntaria → PC del profesor (SPAM, terminal, «Contraseña débil» con mini espada, 2 elecciones) → cuarto viejo con Nullblade.exe. La «Contraseña débil» dirá «Tú no deberías poder vernos». **«EL DESPERTAR»** pasa al final (al obtener Nullblade) |
+| Prólogo | Visión involuntaria → PC del profesor (SPAM, terminal, «Contraseña débil», 2 elecciones) → invitación a unas instalaciones → desafío Visión Digital + terminal → cuarto viejo con la Nullblade oficial (dash y doble salto). **«EL DESPERTAR»** al final |
+| Contraseña propia | En H4d el jugador **crea** la contraseña del profesor (reglas explicadas, código de respaldo; se guarda solo la huella). Tendrá que recordarla en el **capítulo 4** y en **misiones extra** |
+| Tienda de prueba | **La soda del colegio** (sistema ECOS, tarea E5) |
+| Orden | Contraseña propia ✅ → ECOS (E1 ✅ · E2 ✅ · E3 ✅ · E4–E5) → H5 |
+| Moneda | **ECOS** (nombre definitivo; reemplaza a BITS). Autoload `Economy`; penalización 10 %, máximo 100, nada en el tutorial |
+| Nullblade en el combate | Se mantiene la de Ariel, pero como **destello**: aparece en la pelea y se apaga al terminar la misión; la oficial se obtiene en el cuarto viejo |
 | Primera tarea | La **terminal simulada** (antes que el combate) ✅ |
 | Primera terminal | En la PC del profesor: encontrar la configuración de la cuenta (un solo objetivo) ✅ |
-| Aegis | Se obtiene en el **capítulo 2, nivel 3** (fundamentos de programación): Kai lo **repara con comandos** en una terminal. Detalle en `curriculo_mep.md` |
+| Aegis | Aparece en la misión especial **«Eco en la Red»** (décimo, capítulo 3): Kai lo rescata y lo **repara con comandos** (Biblia Narrativa). Detalle en `curriculo_mep.md` |
+| Nombres | **Oficiales:** *Nullveil: Beyond the Firewall*, **Kai** y **Prof. Alvarado** |
 | Daño | Se mantiene el cambio de Ariel: un golpe enemigo y los pinchos quitan **medio cristal** |
-| Currículo | Distribución de los 24 niveles según la tabla del MEP, aprobada: `curriculo_mep.md` |
+| Currículo | Los 24 niveles combinan la Biblia (títulos e historia) y la tabla del MEP (contenidos): `curriculo_mep.md` |
 | Puntos de control | **Computadora segura**: con E guarda la partida, marca dónde reaparecer y llena las máscaras. Reemplazará al punto de restauración actual cuando exista el guardado |
 | Terminal | Estilo **Linux** (bash) |
 | La entidad «???» | Primera manifestación de **El Núcleo**, sin revelarlo |
@@ -97,7 +105,7 @@ controles táctiles, exportación Windows y Android, documentación.
 
 | Bloque | Tareas |
 |---|---|
-| 1 · Terminal y prólogo | ✅ Terminal simulada · ✅ H4c combate y `EnemyBase` · H4d elecciones · H5 Nullblade.exe y «EL DESPERTAR» |
+| 1 · Terminal y prólogo | ✅ Terminal simulada · ✅ H4c combate y `EnemyBase` · ✅ H4d elecciones · H5 cuarto viejo, Nullblade y «EL DESPERTAR» |
 | 2 · Guardado | `SaveManager`, computadora segura, `LevelData` |
 | 3 · Grimorio y mapa | ✅ Grimorio base (Ariel) · Tab dentro del juego, pestaña de misiones, minimapa |
 | 4 · Entrega | Controles táctiles, exportaciones, sonido, pulido, pruebas en celular, documentación |
