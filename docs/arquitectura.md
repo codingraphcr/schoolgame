@@ -348,8 +348,18 @@ preguntas (`ChoiceQuestion`) con opciones (`ChoiceOption`: texto, detalle, si es
 `ChoiceWindow` las muestra: una opción incorrecta explica por qué y queda descartada; la correcta habilita «Continuar».
 Cuenta los errores por pregunta (`mistakes`) para registros futuros. Funciona con teclado, mando, mouse y pantalla táctil.
 
-**Final de la misión** (`account_security.gd`, `AccountSecurity`, paso `elegir_seguridad`): la pestaña abre el desafío
-`cuenta_profesor_seguridad` (contraseña nueva y método de verificación en dos pasos). Al terminar: diálogo, Visión
+**Contraseña creada por el jugador** (`systems/security/password_rules.gd`, `ui/challenges/password_window.gd`):
+`PasswordRules.evaluate()` revisa 4 reglas (larga, no de las más usadas —también con trucos como `P@ssw0rd`—, sin datos
+personales, sin secuencias ni repeticiones) y estima la fortaleza (nivel, bits y tiempo para adivinarla); `suggest()`
+arma una frase de 4 palabras al azar y `backup_code()` un código de respaldo. `PasswordWindow` tiene 3 pasos: crearla
+(medidor en vivo, mostrar/ocultar, «Sugerir frase»), confirmarla y anotar el código de respaldo. **Solo se guarda la
+huella** (SHA-256 con sal) en `GameState` (`set_password`, `check_password`, `check_backup_code`, `has_password`): ni el
+archivo de guardado contiene la contraseña. El jugador tendrá que recordarla en el **capítulo 4** y en **misiones
+extra** (`GameState.check_password(&"profesor", intento)`).
+
+**Final de la misión** (`account_security.gd`, `AccountSecurity`, paso `elegir_seguridad`): primero el jugador **crea**
+la contraseña del profesor (`PasswordWindow`, paso 1 de 2; si cierra en el paso 2 no tiene que crearla otra vez) y luego
+elige el método de verificación en dos pasos (desafío `cuenta_profesor_seguridad`, paso 2 de 2). Al terminar: diálogo, Visión
 Digital desbloqueada, el destello de la Nullblade se apaga (`nullblade_stage` sigue en 0), la misión se completa
 (+100 BITS) y Kai vuelve al laboratorio (entrada `desde_pc`).
 
@@ -481,6 +491,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
 | `test_digital_dive.gd` | La computadora absorbe a Kai (cámara, desaparición), pantalla de carga, llegada al escritorio, materialización, alma digital celeste, límites y regreso al laboratorio |
 | `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa solo saltando (bot), punto de restauración (activarlo y reaparecer ahí al morir) y llegada a la cuenta del profesor |
+| `test_custom_password.gd` | Reglas y medidor (débiles, comunes con trucos, datos personales, repeticiones, frases fuertes), frases sugeridas, código de respaldo, guardado de solo la huella (con sal) y la ventana para crearla |
 | `test_account_security.gd` | Desafío de elección (opción incorrecta con explicación, correcta, avanzar), contenido educativo, y el final de la misión: Esc, Visión Digital, BITS, destello de la Nullblade que se apaga, vuelta al laboratorio y Q |
 | `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |

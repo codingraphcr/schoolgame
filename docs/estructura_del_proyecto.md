@@ -12,7 +12,7 @@ la historia en `combate.md`; el plan del MVP en `plan_mvp.md`; el currículo en 
 | Pantalla | Diseño a **1280×720**, horizontal; el mundo en pixel art con la cámara a **×2** |
 | Plataformas | Windows y Android (después Linux, macOS, iOS, Steam) |
 | Dependencias | **Ninguna**: sin plugins ni librerías externas |
-| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 21 pruebas automáticas (478 comprobaciones) |
+| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 22 pruebas automáticas (478 comprobaciones) |
 | Equipo | Yohanncillo (dirección y programación) y Ariel (arte y programación), en la cuenta `codingraphcr` |
 
 ## 2. Las ideas que guían todo
@@ -81,6 +81,7 @@ schoolgame/
 │   ├── grimorio/        GrimorioEntry (una página del Grimorio)
 │   ├── incidents/       Incidentes, pistas y controles de seguridad (sistema de decisiones de Ariel)
 │   ├── quests/          Misiones, pasos, registro de misiones y disparadores
+│   ├── security/        Reglas de contraseñas seguras (medidor, frases sugeridas, códigos de respaldo)
 │   ├── settings/        GameSettings (opciones del jugador, guardadas en user://ajustes.cfg)
 │   └── terminal/        Terminal simulada: sistema de archivos ficticio e intérprete de comandos
 ├── ui/                Interfaz
@@ -88,7 +89,7 @@ schoolgame/
 │   ├── dialogue/        Caja de diálogo estilo Hades con retratos y voces
 │   ├── menus/           Menú principal, Opciones y Grimorio
 │   ├── terminal/        Ventana de la terminal
-│   ├── challenges/      Ventana de los desafíos de elección
+│   ├── challenges/      Ventanas de los desafíos de elección y de crear una contraseña
 │   ├── equipment/       Tarjeta "NUEVO EQUIPAMIENTO DESBLOQUEADO"
 │   ├── transitions/     Pantalla de carga
 │   └── theme/           Tema visual común
@@ -104,7 +105,7 @@ schoolgame/
 ├── data/              Contenido editable (.tres): diálogos, personajes, misiones, terminales,
 │                      armas, Grimorio, incidentes
 ├── assets/            Arte (de Ariel), audio, fuentes y shaders
-├── tests/             21 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
+├── tests/             22 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
 ├── tools/art/         Herramientas para recortar el arte de las hojas de concepto de Ariel
 ├── prototypes/        Muestras de estilos visuales (no forman parte del juego)
 └── docs/              Documentación del proyecto
@@ -211,7 +212,7 @@ Opciones.
 **Capas de colisión:** 1 mundo · 2 jugador · 3 enemigos · 4 ataques del jugador · 5 ataques enemigos · 6 interactuables
 · 7 mundo digital.
 
-**Pruebas:** 21 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
+**Pruebas:** 22 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
 `godot --headless --path . --script res://tests/test_<nombre>.gd` y termina en `RESULTADO: TODO OK`. Esperan a que
 pasen las cosas (en vez de tiempos fijos) para no fallar cuando la computadora está ocupada.
 
@@ -222,7 +223,7 @@ ramas quedan en el mismo commit.
 
 **Hecho:** movimiento completo, salas y transiciones, prólogo (Visión involuntaria y la entidad «???»), entrar a la
 PC, nivel de SPAM de 3360 px, terminal, combate contra la «Contraseña débil» (con el destello de la Nullblade),
-elecciones de seguridad que desbloquean la Visión Digital, curación, energía, BITS,
+la contraseña que crea el jugador (se guarda solo su huella), la verificación en dos pasos que desbloquea la Visión Digital, curación, energía, BITS,
 Grimorio, opciones, sonido provisional y voces.
 
 **Falta para el MVP:** H5 (invitación del profesor, desafío Visión Digital + terminal, cuarto viejo con la

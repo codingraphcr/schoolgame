@@ -6,54 +6,30 @@
 
 [sub_resource type="Resource" id="Resource_nj5li"]
 script = ExtResource("2_wgvbl")
-text = "Alvarado1985"
-detail = "Su apellido y su año de nacimiento"
-feedback = "No. Usa datos personales que cualquiera encuentra en redes sociales: es de lo primero que prueba un atacante."
-
-[sub_resource type="Resource" id="Resource_pactf"]
-script = ExtResource("2_wgvbl")
-text = "tiza-ventana-cometa-mango-27"
-detail = "Una frase de contraseña: palabras al azar"
-correct = true
-feedback = "¡Sí! Es larga, sus palabras no tienen relación entre sí y no usa datos personales: difícil de adivinar y fácil de recordar. Y debe ser única: no se repite en otras cuentas."
-
-[sub_resource type="Resource" id="Resource_djbst"]
-script = ExtResource("2_wgvbl")
-text = "P@ssw0rd!"
-detail = "Una palabra común con símbolos"
-feedback = "No. Cambiar letras por símbolos (a→@, o→0) es un truco conocido que los programas para adivinar contraseñas ya prueban. Además es corta."
-
-[sub_resource type="Resource" id="Resource_i5ha7"]
-script = ExtResource("1_eyx36")
-prompt = "¿Cuál es la contraseña nueva más segura para la cuenta del profesor?"
-options = Array[ExtResource("2_wgvbl")]([SubResource("Resource_nj5li"), SubResource("Resource_pactf"), SubResource("Resource_djbst")])
-
-[sub_resource type="Resource" id="Resource_fal5u"]
-script = ExtResource("2_wgvbl")
 text = "Un código por mensaje de texto (SMS)"
 detail = "Llega al celular cada vez que inicia sesión"
 feedback = "Funciona y es mejor que nada, pero los SMS se pueden interceptar o robar duplicando la tarjeta SIM del teléfono. Hay una opción más segura."
 
-[sub_resource type="Resource" id="Resource_1pyu8"]
+[sub_resource type="Resource" id="Resource_pactf"]
 script = ExtResource("2_wgvbl")
 text = "Una aplicación de autenticación"
 detail = "Genera en el celular un código nuevo cada 30 segundos"
 correct = true
 feedback = "¡Sí! El código se crea dentro del teléfono y cambia cada 30 segundos: aunque alguien robe la contraseña, sin el teléfono no puede entrar. Es «algo que tienes», además de «algo que sabes»."
 
-[sub_resource type="Resource" id="Resource_jgpub"]
+[sub_resource type="Resource" id="Resource_djbst"]
 script = ExtResource("2_wgvbl")
 text = "Una pregunta de seguridad"
 detail = "«¿Cómo se llamaba tu primera mascota?»"
 feedback = "No. Es otra cosa que «se sabe», igual que la contraseña, y la respuesta suele estar en redes sociales. No es un segundo factor de verdad."
 
-[sub_resource type="Resource" id="Resource_iyjmb"]
+[sub_resource type="Resource" id="Resource_i5ha7"]
 script = ExtResource("1_eyx36")
 prompt = "Ahora la verificación en dos pasos. ¿Cuál es el método más seguro para el segundo paso?"
-options = Array[ExtResource("2_wgvbl")]([SubResource("Resource_fal5u"), SubResource("Resource_1pyu8"), SubResource("Resource_jgpub")])
+options = Array[ExtResource("2_wgvbl")]([SubResource("Resource_nj5li"), SubResource("Resource_pactf"), SubResource("Resource_djbst")])
 
 [resource]
 script = ExtResource("3_1g710")
 id = &"cuenta_profesor_seguridad"
 title = "Asegurar la cuenta del profesor"
-questions = Array[ExtResource("1_eyx36")]([SubResource("Resource_i5ha7"), SubResource("Resource_iyjmb")])
+questions = Array[ExtResource("1_eyx36")]([SubResource("Resource_i5ha7")])

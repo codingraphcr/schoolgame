@@ -87,6 +87,9 @@ var _quest_progress: Dictionary[StringName, int] = {}
 # --- Conocimiento ---
 ## Comandos de terminal que Kai ya usó (páginas del manual del Grimorio).
 var _commands: Dictionary[StringName, bool] = {}
+## Contraseñas creadas por el jugador (p. ej. la del profesor). Solo la huella con sal, nunca el
+## texto: { id: { "salt", "hash", "backup_salt", "backup_hash" } }.
+var _passwords: Dictionary[StringName, Dictionary] = {}
 
 
 ## Vuelve al estado inicial (nueva partida).
@@ -102,6 +105,7 @@ func reset() -> void:
 	active_quest = &""
 	_quest_progress.clear()
 	_commands.clear()
+	_passwords.clear()
 	stats_changed.emit()
 	progress_changed.emit()
 
@@ -388,6 +392,44 @@ func get_learned_commands() -> Array[String]:
 	return _key_list(_commands)
 
 
+# --- Contraseñas del jugador ---
+# Como en los sistemas reales, se guarda la huella (hash SHA-256 con sal), no la contraseña:
+# ni el archivo de guardado ni otra persona pueden leerla. El jugador tiene que recordarla.
+
+## Guarda la huella de una contraseña (y de su código de respaldo, si se da). Reemplaza la anterior.
+func set_password(id: StringName, password: String, backup_code := "") -> void:
+	var entry := { "salt": _new_salt(), "hash": "", "backup_salt": "", "backup_hash": "" }
+	entry["hash"] = _fingerprint(entry["salt"], password)
+	if not backup_code.is_empty():
+		entry["backup_salt"] = _new_salt()
+		entry["backup_hash"] = _fingerprint(entry["backup_salt"], backup_code.strip_edges().to_upper())
+	_passwords[id] = entry
+
+
+func has_password(id: StringName) -> bool:
+	return _passwords.has(id)
+
+
+## Si el intento coincide con la contraseña guardada (distingue mayúsculas, como los sistemas reales).
+func check_password(id: StringName, attempt: String) -> bool:
+	var entry: Dictionary = _passwords.get(id, {})
+	return not entry.is_empty() and _fingerprint(entry["salt"], attempt) == entry["hash"]
+
+
+## Si el código de respaldo es correcto (para recuperar la cuenta si se olvida la contraseña).
+func check_backup_code(id: StringName, code: String) -> bool:
+	var entry: Dictionary = _passwords.get(id, {})
+	return not entry.is_empty() and not String(entry["backup_hash"]).is_empty() 		and _fingerprint(entry["backup_salt"], code.strip_edges().to_upper()) == entry["backup_hash"]
+
+
+static func _fingerprint(salt: String, text: String) -> String:
+	return (salt + text).sha256_text()
+
+
+static func _new_salt() -> String:
+	return Crypto.new().generate_random_bytes(8).hex_encode()
+
+
 # --- Guardado (preparado para más adelante) ---
 
 func to_dict() -> Dictionary:
@@ -402,6 +444,7 @@ func to_dict() -> Dictionary:
 		"active_quest": String(active_quest),
 		"quests": _keys_to_strings(_quest_progress),
 		"commands": _key_list(_commands),
+		"passwords": _keys_to_strings(_passwords),
 		"player": {
 			"credits": credits,
 			"max_masks": max_masks,
@@ -439,6 +482,9 @@ func from_dict(data: Dictionary) -> void:
 		_quest_progress[StringName(quest_id)] = int(quests[quest_id])
 	for command: String in data.get("commands", []):
 		_commands[StringName(command)] = true
+	var passwords: Dictionary = data.get("passwords", {})
+	for password_id: String in passwords:
+		_passwords[StringName(password_id)] = (passwords[password_id] as Dictionary).duplicate()
 	# Partidas sin progreso del jugador (versiones anteriores) quedan con los valores iniciales.
 	# int() porque al pasar por JSON los números vuelven como decimales.
 	var player: Dictionary = data.get("player", {})

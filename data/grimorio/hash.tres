@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 3
+order = 6
+title = "Hash (huella digital)"
+subtitle = "Concepto · Criptografía"
+text = "Un hash convierte un texto en una huella de tamaño fijo. Calcularla es fácil, pero volver de la huella al texto es prácticamente imposible. Por eso los sistemas no guardan tu contraseña: guardan su huella y la comparan cuando inicias sesión."
+facts = Dictionary[String, String]({"Ejemplo": "SHA-256", "Sal": "Texto al azar que se agrega antes", "Para qué la sal": "Que dos contraseñas iguales no tengan la misma huella"})
+unlock_flag = &"cuenta_profesor_segura"

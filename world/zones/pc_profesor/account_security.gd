@@ -1,8 +1,9 @@
 class_name AccountSecurity
 extends Node
 ## Final de «La contraseña del profesor» (H4d). Lo inicia la pestaña de la cuenta (AccountTab) en el
-## paso «elegir_seguridad»: Kai elige la nueva contraseña y el método de verificación en dos pasos
-## (ChoiceWindow). Al terminar: diálogo, la Visión Digital queda desbloqueada (Q), el destello de la
+## paso «elegir_seguridad»: el jugador CREA la nueva contraseña (PasswordWindow; se guarda solo su
+## huella y tendrá que recordarla en el capítulo 4 y en misiones extra) y elige el método de
+## verificación en dos pasos (ChoiceWindow). Al terminar: diálogo, la Visión Digital queda desbloqueada (Q), el destello de la
 ## Nullblade se apaga, se completa la misión y Kai vuelve al laboratorio.
 ## Si cierra la ventana sin terminar, puede volver a intentarlo.
 
@@ -10,6 +11,8 @@ signal finished
 
 const QUEST := &"contrasena_profesor"
 const STEP := &"elegir_seguridad"
+## Id de la contraseña del profesor (GameState.check_password(PASSWORD_ID, intento)).
+const PASSWORD_ID := &"profesor"
 
 @export var challenge: ChoiceChallenge
 @export var success_dialogue: Dialogue
@@ -26,13 +29,17 @@ func start(player: Player) -> void:
 	running = true
 	player.controls_locked = true
 	player.velocity.x = 0.0
-	var window := ChoiceWindow.open(self, challenge)
-	var completed: bool = await window.closed
-	if not completed:
-		player.controls_locked = false
-		running = false
-		return
 	var game_state := get_node("/root/GameState")
+	# Si ya la creó (y cerró la ventana en el paso 2), no tiene que crearla otra vez.
+	if not game_state.has_password(PASSWORD_ID):
+		var create := PasswordWindow.open(self, PASSWORD_ID, "%s · Paso 1 de 2" % challenge.title)
+		if not await create.closed:
+			_cancel(player)
+			return
+	var window := ChoiceWindow.open(self, challenge, 1, 2)
+	if not await window.closed:
+		_cancel(player)
+		return
 	game_state.set_flag(&"cuenta_profesor_segura")
 	var box := DialogueBox.find(self)
 	if box and success_dialogue:
@@ -47,6 +54,11 @@ func start(player: Player) -> void:
 	running = false
 	finished.emit()
 	get_node("/root/SceneManager").go_to_room(exit_scene, exit_entry)
+
+
+func _cancel(player: Player) -> void:
+	player.controls_locked = false
+	running = false
 
 
 ## El destello de la Nullblade se apaga: Kai la perdió hasta encontrar la oficial (cuarto viejo, H5).

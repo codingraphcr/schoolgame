@@ -26,7 +26,7 @@ solo se reubica el contenido según la tabla.
 | | 4 | Control de flujo, estructuras de datos, errores y desarrollo seguro (SGSI) |
 | **3** Amenazas invisibles | 5 | Malware y tipos de ataques |
 | | 6 | Autenticación, criptografía y registros SIEM |
-| **4** Guardianes de la información | 7 | Redes: LAN/WAN, OSI y TCP/IP, Ethernet y MAC |
+| **4** Guardianes de la información | 7 | Redes: LAN/WAN, OSI y TCP/IP, Ethernet y MAC. Aquí el jugador vuelve a necesitar **la contraseña que creó** para el profesor (y su código de respaldo si la olvidó) |
 | | 8 | Desafío final de décimo: IPv4/IPv6 y TCP/UDP |
 | **5** El sistema desconocido | 9 | Sistemas operativos libres y licenciados |
 | | 10 | Compatibilidad y virtualización |

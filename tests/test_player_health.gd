@@ -61,7 +61,8 @@ func _test_floor_spikes() -> void:
 	_check(_hurts == hurts_before + 1, "los pinchos dañan al tocarlos")
 	_check(player.health.current == 3.5, "pierde medio cristal (quedan %.1f)" % player.health.current)
 	_check(player.is_invulnerable(), "queda invulnerable tras el golpe")
-	await _wait(1.0)
+	# Espera a que termine la reaparición (no un tiempo fijo: con la computadora ocupada tarda más).
+	await _until(func() -> bool: return not player.damage.is_respawning and not player.controls_locked)
 	var x := player.global_position.x
 	_check(x < 1095.0 and absf(player.global_position.y - FLOOR_Y) < 1.0,
 		"reaparece en el suelo seguro, antes de los pinchos (x=%.0f)" % x)
@@ -167,7 +168,7 @@ func _test_death() -> void:
 			break
 	Input.action_release("move_right")
 	_check(_deaths == deaths_before + 1, "al perder la última máscara, muere")
-	await _wait(1.2)
+	await _until(func() -> bool: return player.health.current == 4.0 and not player.controls_locked)
 	_check(player.global_position.distance_to(room.spawn_point.global_position) < 2.0, "reaparece en el punto de control")
 	_check(player.health.current == 4.0, "con las 4 máscaras llenas")
 	_check(not player.controls_locked, "y con los controles activos")
@@ -215,6 +216,15 @@ func _press(action: String) -> void:
 func _frames(count: int) -> void:
 	for i in count:
 		await process_frame  # Teclas y HUD se procesan en cuadros de dibujo.
+		await physics_frame
+
+
+## Espera (en cuadros de física) a que se cumpla la condición, hasta unos 10 s de juego.
+func _until(condition: Callable) -> void:
+	for i in 600:
+		if condition.call():
+			return
+		await process_frame
 		await physics_frame
 
 

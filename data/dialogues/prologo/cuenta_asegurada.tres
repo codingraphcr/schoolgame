@@ -7,6 +7,8 @@ script = ExtResource("1_ctaok")
 script_text = "# Al terminar las elecciones de seguridad de la cuenta del profesor (H4d).
 Prof. Alvarado [sorprendido]: ¡Me llegó un código a la aplicación del teléfono! ¿Así va a ser cada vez que entre?
 Kai [sonriente]: Exacto. Aunque alguien adivine su contraseña, sin su teléfono no puede entrar.
+Prof. Alvarado [preocupado]: ¿Y si se me olvida la contraseña nueva?
+Kai: Para eso es el código de respaldo. Guárdelo en un lugar seguro... y no se la diga a nadie.
 Prof. Alvarado [sonriente]: ¡Gracias, Kai! Ahora sal de ahí... como sea que hayas entrado.
 (La pantalla brilla. El mundo parpadea en azul alrededor de Kai.)
 Kai [pensativo]: Esa visión otra vez... pero ahora siento que puedo controlarla.

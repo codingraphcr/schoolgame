@@ -15,6 +15,9 @@ const TEXT := Color("d8e4ff")
 const PANEL := Color("070b18")
 
 var challenge: ChoiceChallenge
+## Si el desafío es parte de una secuencia más larga: pasos anteriores y total (0 = solo este).
+var step_offset := 0
+var step_total := 0
 var question_index := 0
 var completed := false
 ## Intentos fallidos por pregunta (para registros y puntuación futura).
@@ -28,9 +31,11 @@ var _continue: Button
 var _buttons: Array[Button] = []
 
 
-static func open(from: Node, choice_challenge: ChoiceChallenge) -> ChoiceWindow:
+static func open(from: Node, choice_challenge: ChoiceChallenge, offset := 0, total := 0) -> ChoiceWindow:
 	var window := ChoiceWindow.new()
 	window.challenge = choice_challenge
+	window.step_offset = offset
+	window.step_total = total
 	from.get_tree().current_scene.add_child(window)
 	return window
 
@@ -96,7 +101,8 @@ func _input(event: InputEvent) -> void:
 func _show_question(index: int) -> void:
 	question_index = index
 	var question := challenge.questions[index]
-	_step.text = "%s · PASO %d DE %d" % [challenge.title.to_upper(), index + 1, challenge.questions.size()]
+	var total := step_total if step_total > 0 else challenge.questions.size()
+	_step.text = "%s · PASO %d DE %d" % [challenge.title.to_upper(), step_offset + index + 1, total]
 	_prompt.text = question.prompt
 	_feedback.hide()
 	_continue.hide()
