@@ -1,7 +1,7 @@
 extends SceneTree
 ## Prueba automática: la Nullblade recarga energía al golpear enemigos (12,5 % por golpe, 15 % el
 ## cargado), solo con golpes válidos, una vez por enemigo y por ataque, sin pasar del máximo; el
-## pulso de la barra; y su página en el ARSENAL del Grimorio.
+## pulso de la barra; y su página en el INVENTARIO del Grimorio.
 ## Ejecutar: godot --headless --path . --script res://tests/test_nullblade.gd
 
 const ROOM := "res://tests/fixtures/combat_test_room.tscn"
@@ -87,9 +87,9 @@ func _run() -> void:
 	a.queue_free()
 	b.queue_free()
 
-	# El ARSENAL del Grimorio.
+	# El INVENTARIO del Grimorio.
 	var entry: GrimorioEntry = load("res://data/grimorio/nullblade.tres")
-	_check(entry.category == GrimorioEntry.Category.ARSENAL and entry.title == "Nullblade", "la Nullblade está en el ARSENAL del Grimorio")
+	_check(entry.category == GrimorioEntry.Category.ARSENAL and entry.title == "Nullblade", "la Nullblade está en el INVENTARIO del Grimorio")
 	_check(not entry.is_unlocked(state), "antes de obtenerla aparece como «???»")
 	state.set_nullblade_stage(1)
 	_check(entry.is_unlocked(state) and entry.text.contains("siempre queda algo capaz de defenderlo"), "al obtenerla se lee su texto")

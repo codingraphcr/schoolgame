@@ -182,13 +182,21 @@ func _test_fight() -> void:
 	_check(await _dialogue_contains(box, "no deberías poder vernos"), "dice «Tú no deberías poder vernos»")
 	var zoom := room.camera.zoom
 	await _advance(box)
+	# Decenas de ventanas de error forman el cuerpo del jefe.
+	var boss := fight.enemy as WeakPasswordBoss
+	_check(boss != null, "la «Contraseña débil» es el jefe del prólogo")
+	await _until(func() -> bool: return boss.state == WeakPasswordBoss.State.INTRO)
+	_check(boss.state == WeakPasswordBoss.State.INTRO, "sus ventanas de error se juntan y forman el cuerpo del jefe")
 	# La Nullblade se materializa en la escena de cine de Ariel, como un destello: sin tarjeta y sin
 	# quedar obtenida (la oficial está en el cuarto viejo).
-	await _wait(1.5)
 	var reveal: NullbladeReveal = null
-	for child in room.get_children():
-		if child is NullbladeReveal:
-			reveal = child
+	for i in 900:
+		for child in room.get_children():
+			if child is NullbladeReveal:
+				reveal = child
+		if reveal != null and room.camera.zoom.x > zoom.x * 1.1:
+			break
+		await physics_frame
 	_check(reveal != null and room.camera.zoom.x > zoom.x * 1.1, "la Nullblade aparece en una escena de cine (la cámara se acerca)")
 	await _until(func() -> bool: return player.combat.weapon != null)
 	await _until(func() -> bool: return room.camera.zoom.is_equal_approx(zoom))
@@ -197,6 +205,8 @@ func _test_fight() -> void:
 	_check(state.nullblade_stage == 0 and state.has_flag(&"nullblade_destello"), "la Nullblade es un destello: no queda obtenida")
 	_check(player.combat.weapon.id == &"nullblade", "Kai pelea con la Nullblade")
 	_check(barrier.active and fight.enemy.ai_enabled and not player.controls_locked, "se cierra la barrera y empieza el combate")
+	var bar := room.get_node_or_null("CombatHUD/BossBar") as BossBar
+	_check(bar != null and bar.title == "CONTRASEÑA DÉBIL", "aparece la barra de vida del jefe con su nombre")
 	var rain := room.get_node("SpamMail/MailRainFight") as SpamMailSpawner
 	_check(rain.is_processing(), "durante la pelea cae una lluvia de correos sobre la arena")
 	_check(room.camera.limit_right - barrier.global_position.x > 900.0, "la arena mide más de 900 px")
@@ -227,11 +237,13 @@ func _test_fight() -> void:
 	player.hurtbox.immune = true
 	var won := [false]
 	enemy.died.connect(func() -> void: won[0] = true)
+	# El jefe tiene mucha vida (la pelea completa la prueba test_boss): aquí le queda poca.
+	enemy.health.take_damage(enemy.health.current - 2.0)
 	for i in 14:
 		if won[0]:
 			break
 		await _until(func() -> bool: return player.combat.can_attack() and enemy.is_on_floor())
-		player.teleport_to(Vector2(enemy.global_position.x - 22, 304))
+		player.teleport_to(Vector2(enemy.global_position.x - 42, 304))
 		player.face(1)
 		await _frames(2)
 		_action("attack")
@@ -240,8 +252,24 @@ func _test_fight() -> void:
 		await _frames(2)
 	_check(won[0], "la Nullblade derrota a la «Contraseña débil»")
 	player.hurtbox.immune = false
+	# La Nullblade se deshace en la mano de Kai y no vuelve; el jefe deja el primer fragmento de vida.
 	await _until(func() -> bool: return box.is_playing())
-	_check(await _dialogue_contains(box, "1... 2... 3"), "se deshace en números y Kai le cuenta al profesor")
+	_check(await _dialogue_contains(box, "¿A dónde se fue?"), "la Nullblade se deshace: «¿Eh...? ¿A dónde se fue?»")
+	_check(player.combat.weapon == null, "Kai se queda sin la Nullblade")
+	await _advance(box)
+	await _until(func() -> bool: return box.is_playing())
+	_check(await _dialogue_contains(box, "acostumbrarme"), "no logra invocarla: «Genial... justo cuando empezaba a acostumbrarme»")
+	await _advance(box)
+	# El fragmento de vida: ventana para reclamarlo y explicación.
+	await _until(func() -> bool: return root.get_node_or_null("LifeFragmentLayer") != null)
+	_check(root.get_node_or_null("LifeFragmentLayer") != null, "aparece la ventana «¡Has obtenido un fragmento de vida!»")
+	await _wait(0.7)
+	_action("interact")
+	await _wait(0.7)
+	_action("interact")
+	await _until(func() -> bool: return box.is_playing())
+	_check(state.life_fragments == 1, "reclama el primer fragmento de vida (1/4)")
+	_check(await _dialogue_contains(box, "¿Ya quedó?"), "después habla el profesor")
 	await _advance(box)
 	await _frames(5)
 	_check(state.get_current_step(&"contrasena_profesor") == &"elegir_seguridad", "la misión avanza: elegir la nueva contraseña")

@@ -18,6 +18,11 @@ enum Category { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS, ARSENAL }
 ## Acción cuya tecla se muestra en los datos (solo para comandos), p. ej. &"vision".
 @export var action: StringName = &""
 @export var image: Texture2D
+## Página de los fragmentos de vida: en vez de la imagen muestra el cristal de vida en negro, que se
+## va llenando con los fragmentos juntados (LifeFragmentIcon), y cuántos hay.
+@export var shows_life_fragments := false
+## Cantidad que se muestra en la casilla del inventario y en los datos: &"ecos" = los Ecos de Kai.
+@export var shows_amount: StringName = &""
 
 @export_group("Desbloqueo")
 ## Misión que lo desbloquea (vacío = disponible desde el principio).

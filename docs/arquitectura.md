@@ -377,13 +377,34 @@ pestaña COMANDOS del Grimorio (`data/grimorio/comando_*.tres`, con `unlock_comm
 resultado y concepto relacionado. Para crear una terminal nueva: un `TerminalChallenge` en el Inspector y una `TerminalStation`
 en la sala; no hace falta programar.
 
-**Combate de la cuenta del profesor** (`world/zones/pc_profesor/password_fight.gd`, `PasswordFight`): la pestaña
-«Cambiar contraseña» (`AccountTab`, paso `cambiar_contrasena`) lo inicia. Aparece la «Contraseña débil» y dice
-«Tú no deberías poder vernos»; la Nullblade se materializa (`NullbladeReveal`) y aparece la tarjeta de equipamiento; al reintentar no se repite; una `ArenaBarrier`
-(`world/digital/`, un pequeño firewall) cierra la **arena** (~930 px, de la barrera a la pared): 3 pop-ups para saltar
-(uno sube y baja), 3 anuncios trampa y una lluvia de correos suave (`MailRainFight`, uno cada 1,8 s, en `fight_hazards`) que
-**solo cae durante la pelea**. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
-muere, el combate se cancela, reaparece en `RestorePointFinal` (justo antes) y puede reintentarlo con un diálogo corto.
+**Jefe del prólogo: la «Contraseña débil»** (`world/zones/pc_profesor/password_fight.gd`, `PasswordFight`; el jefe es
+`characters/enemies/weak_password_boss/`, `WeakPasswordBoss`; hoja general de Ariel `docs/arte/referencias/jefe_contrasena_debil_concepto.webp`).
+**Sprites:** la hoja de Ariel `docs/arte/referencias/jefe_contrasena_sprites.webp` (fondo verde) recortada con `tools/art/extraer_jefe_contrasena.gd` → `assets/art/characters/jefe_contrasena/` (`jefe.json` + tiras): quieto, caminar, preparar, embestir, agachado, daño, muerte y alerta, con el mismo tamaño de píxel que Kai. Caminar y embestir miran a la derecha en la hoja: la herramienta genera su versión `_izq` espejada pero con el texto de las ventanas rosas al derecho (si no, "123456" se leería al revés).
+La pestaña «Cambiar contraseña» (`AccountTab`, paso `cambiar_contrasena`) lo inicia: la cámara va al fondo de la arena, aparece una
+ventanita "123456" que dice «Tú no deberías poder vernos», **decenas de ventanas de error se juntan y forman el jefe** (`assemble()`),
+la cámara vuelve a Kai, la Nullblade se materializa (`NullbladeReveal`, sin tarjeta; al reintentar no se repite y el armado es corto)
+y aparece su **barra de vida** (`ui/hud/boss_bar.gd`, `BossBar`: ícono, nombre, marca de la fase 2 y estela blanca).
+Encima del sprite se dibujan la ventanita y las ventanas de error de la aparición (el jefe se arma desde los píxeles con `pixel_dissolve`), la estela de la embestida,
+«ACCESO DENEGADO» y los fragmentos de código. En la fase 2, glitch en franjas (`world/effects/glitch_slices.gdshader`). **24 de vida**, rango `JEFE` (`jefe:contrasena_debil`, 150-250 Ecos una sola vez), no lo empujan los golpes.
+Ataques: **camina** hacia Kai para presionarlo, **embiste** en línea recta (avisa: la pantalla se pone roja; el choque quita un cristal) y
+lanza **contraseñas comunes** (`PasswordGuess`). Tras la embestida **choca y queda agachado** (`CROUCHED`, más bajo): ahí se le puede hacer
+**pogo**, que le quita el doble (¡CRÍTICO!). **Fase 1** (100-50 %): alterna embestida y proyectiles, lento. **Fase 2** (50-0 %): «¡VENTANAS
+INESTABLES!», tiemblan y parpadean, todo ×1,3 y al levantarse del choque dispara enseguida (combina sus ataques).
+Una `ArenaBarrier` (`world/digital/`, un pequeño firewall) cierra la **arena** (~930 px): 3 pop-ups para saltar (uno sube y baja),
+3 anuncios trampa y una lluvia de correos suave (`MailRainFight`, uno cada 1,8 s, en `fight_hazards`) que **solo cae durante la pelea**.
+**Al ganar:** todas sus ventanas muestran **«ACCESO DENEGADO»** y explotan en píxeles magenta; el cuerpo se deshace en fragmentos de código
+(`death_finished`). La Nullblade parpadea en la mano de Kai, él la aprieta y **se deshace en partículas violetas** (`world/effects/nullblade_fade.gd`,
+`NullbladeFade`; le quita el arma): «¿Eh...? ¿A dónde se fue?». Intenta invocarla (`try_summon`) y no pasa nada: «Genial... justo cuando
+empezaba a acostumbrarme». El jefe deja el **primer fragmento de vida** (vuela hacia Kai), habla el profesor y el paso pasa a
+`elegir_seguridad` (H4d; ahí llega la Visión Digital). Si Kai muere, el combate se cancela, reaparece en `RestorePointFinal` y puede reintentarlo.
+
+**Fragmentos de vida** (`GameState.life_fragments`, `add_life_fragment()`): pedazos rotos (un cuarto) de un cristal de integridad.
+Con **4** (`LIFE_FRAGMENTS_PER_MASK`) se forma una **vida nueva** llena (`max_masks` + 1). Se guardan en la partida. En el mundo:
+`world/pickups/life_fragment.gd` (`LifeFragment`: flota, vuela hacia Kai, se recoge una sola vez con un flag). Al tocarlo aparece la ventana
+`ui/rewards/life_fragment_window.gd` (`LifeFragmentWindow`, pausa el juego): «¡Has obtenido un fragmento de vida!» y [E] Reclamar; al reclamarlo
+el pedazo entra en el cristal de vida en negro y explica que se necesitan 4 y dónde encontrarlos. Reclamarlo suma el fragmento y desbloquea su página
+del Grimorio (flag `fragmento_vida_obtenido`).
+No aparece en el HUD: se ve en el **INVENTARIO** del Grimorio (`ui/rewards/life_fragment_icon.gd`, `LifeFragmentIcon`: el cristal de vida en negro que se va llenando).
 
 **Desafíos de elección** (`systems/challenges/`, `ui/challenges/`): un `ChoiceChallenge` (en `data/challenges/`) tiene
 preguntas (`ChoiceQuestion`) con opciones (`ChoiceOption`: texto, detalle, si es correcta y su explicación).
@@ -495,7 +516,7 @@ INACTIVE ──start_incident()──▶ INVESTIGATING ──find_clue() × clue
 | Pantalla de opciones (`ui/menus/settings/`) | Estilo lila del menú. Filas `SettingRow` (hereda de `MainMenuOption`): deslizador, sí/no, opciones y tecla; ◀ ▶ cambian el valor. Subpantalla de **controles** (elige una acción y presiona la tecla nueva; Esc cancela) |
 | Quién usa los ajustes | `DialogueBox` (velocidad del texto; sin temblor de «???» si se reduce el glitch), `DigitalWorld.pulse_glitch()` (más suave) y `LabMonitor` (luz sin parpadeo) |
 | `GrimorioEntry` (`systems/grimorio/`, un `.tres` por entrada en `data/grimorio/`) | Página del Grimorio: categoría (MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS), título, texto, datos, tecla (`action`), imagen y desbloqueo (`unlock_quest` + `unlock_step`, `unlock_on_complete` o `unlock_property` de `GameState`). Bloqueada se ve como «???» |
-| Grimorio (`ui/menus/grimorio/`, `GrimorioScreen`) | Se abre con **G** durante el juego (`CombatHUD` llama a `GrimorioScreen.open()`): queda encima de la sala, que se pausa; G, Esc o CERRAR lo cierran. No se abre en diálogos ni escenas sin control. El libro (concepto de Ariel en `docs/arte/referencias/grimorio_concepto.webp`) dibujado por código (`GrimorioBook`), pestañas con íconos (`GrimorioTab`; cada una abre la categoría de su `icon_kind`; ARSENAL = armas, dispositivos y habilidades) y el mapa esquemático (`GrimorioMap`: salas de cada zona en `ZONES`, visitadas según la marca `visitada_<escena>` que deja `Room` o el paso de una misión) |
+| Grimorio (`ui/menus/grimorio/`, `GrimorioScreen`) | Se abre con **G** durante el juego (`CombatHUD` llama a `GrimorioScreen.open()`): queda encima de la sala, que se pausa; G, Esc o CERRAR lo cierran. No se abre en diálogos ni escenas sin control. El libro (concepto de Ariel en `docs/arte/referencias/grimorio_concepto.webp`) dibujado por código (`GrimorioBook`), pestañas con íconos (`GrimorioTab`; cada una abre la categoría de su `icon_kind`). La primera y principal es el **INVENTARIO** (la categoría `ARSENAL`), estilo Hollow Knight: una cuadrícula de casillas (`InventorySlot`) con lo que Kai ya tiene (la Nullblade, sus habilidades, los Ecos con su cantidad —`shows_amount`— y el cristal de los fragmentos de vida —`shows_life_fragments`—); después MAPA, COMANDOS, CONCEPTOS, AMENAZAS y REGISTROS y el mapa esquemático (`GrimorioMap`: salas de cada zona en `ZONES`, visitadas según la marca `visitada_<escena>` que deja `Room` o el paso de una misión) |
 
 Para agregar una entrada al Grimorio: copiar un `.tres` de `data/grimorio/`, cambiar textos y desbloqueo. `GameState.has_reached_step(mision, paso)` dice si la misión ya llegó a ese paso.
 
@@ -542,7 +563,8 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_account_security.gd` | Desafío de elección (opción incorrecta con explicación, correcta, avanzar), contenido educativo, y el final de la misión: Esc, Visión Digital, Ecos, destello de la Nullblade que se apaga, vuelta al laboratorio y Q |
 | `test_death.gd` | El ataque hacia abajo tiene su propia pose; al morir: aturdido, de rodillas y desplomado en orden, pantalla «CONEXIÓN PERDIDA...», reaparece en el punto de control con la vida llena, entero y con el control |
 | `test_pogo.gd` | Cadencia de 0,45 s; abajo + J en el suelo ataca adelante; en el aire ataca hacia abajo y rebota en un enemigo (lo daña; el doble salto vuelve recién al tocar el suelo), en los pinchos (sin daño) y en un nodo de rebote; sin nada debajo no rebota |
-| `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
+| `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» chica (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el jefe en la PC (se arma, la Nullblade como destello, barra de vida, barrera, perder y reintentar, ganar: la Nullblade se va, el fragmento de vida, el profesor y avanzar) |
+| `test_boss.gd` | El jefe: ventanita al principio (sin golpes), se arma, camina hacia Kai, avisa y embiste, choca y queda agachado (más bajo), el pogo crítico, proyectiles, fase 2 con la mitad de la vida, «ACCESO DENEGADO» y desaparece; fragmentos de vida (recoger, HUD, 4 forman una vida) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |
 | `test_ecos.gd` | Reparto en fragmentos, Ecos según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |

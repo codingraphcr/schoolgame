@@ -1,7 +1,7 @@
 @tool
 class_name GrimorioTab
 extends Button
-## Pestaña del Grimorio (MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS): oscura con borde lila;
+## Pestaña del Grimorio (INVENTARIO, MAPA, COMANDOS, CONCEPTOS, AMENAZAS, REGISTROS): oscura con borde lila;
 ## la elegida se ilumina en lila y sobresale. El ícono se dibuja con líneas (sin imágenes).
 
 enum Icon { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS, ARSENAL }
@@ -91,11 +91,12 @@ func _draw() -> void:
 				draw_line(o + Vector2(5, y), o + Vector2(9, y + 1.0), c, 1.0)
 				draw_line(o + Vector2(15, y + 1.0), o + Vector2(19, y), c, 1.0)
 		Icon.ARSENAL:
-			# Espada en diagonal con la guarda y el núcleo en rombo (como la Nullblade).
-			draw_line(o + Vector2(9, 15), o + Vector2(23, 1), c, 3.0)
-			draw_line(o + Vector2(4, 12), o + Vector2(12, 20), c, 2.0)
-			draw_line(o + Vector2(7, 17), o + Vector2(1, 23), c, 3.0)
-			draw_colored_polygon(PackedVector2Array([o + Vector2(8, 13), o + Vector2(11, 16), o + Vector2(8, 19), o + Vector2(5, 16)]), c)
+			# Inventario: una mochila con la tapa, el asa y un núcleo en rombo.
+			_poly(o, PackedVector2Array([Vector2(3, 9), Vector2(21, 9), Vector2(21, 24), Vector2(3, 24), Vector2(3, 9)]), c)
+			_poly(o, PackedVector2Array([Vector2(3, 9), Vector2(5, 5), Vector2(19, 5), Vector2(21, 9)]), c)
+			_poly(o, PackedVector2Array([Vector2(9, 5), Vector2(9, 1), Vector2(15, 1), Vector2(15, 5)]), c)
+			draw_line(o + Vector2(3, 14), o + Vector2(21, 14), c, 2.0)
+			draw_colored_polygon(PackedVector2Array([o + Vector2(12, 15), o + Vector2(15, 18), o + Vector2(12, 21), o + Vector2(9, 18)]), c)
 		Icon.REGISTROS:
 			_poly(o, PackedVector2Array([Vector2(3, 0), Vector2(16, 0), Vector2(21, 5), Vector2(21, 24), Vector2(3, 24), Vector2(3, 0)]), c)
 			_poly(o, PackedVector2Array([Vector2(16, 0), Vector2(16, 5), Vector2(21, 5)]), c)

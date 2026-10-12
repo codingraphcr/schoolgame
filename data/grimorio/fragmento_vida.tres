@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 5
+order = 5
+title = "Fragmentos de vida"
+subtitle = "Recurso · Núcleo de integridad"
+text = "Pedazos rotos de un núcleo de integridad, el cristal que sostiene la existencia digital de Kai. Un fragmento solo no alcanza: con cuatro se forma una vida completa.
+
+Puedes encontrarlos durante la historia y en encuentros con enemigos que tendrás que derrotar en el futuro."
+facts = Dictionary[String, String]({"Para una vida": "4 fragmentos", "Dónde": "En la historia y al derrotar enemigos poderosos"})
+shows_life_fragments = true
+unlock_flag = &"fragmento_vida_obtenido"

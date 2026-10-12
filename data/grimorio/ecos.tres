@@ -14,4 +14,5 @@ text = "Pequeños residuos de información digital que quedan cuando una criatur
 «Incluso los datos corruptos pueden conservar algo de valor»."
 facts = Dictionary[String, String]({"Obtención": "Al derrotar enemigos y recuperar sus datos residuales", "Utilidad": "Pueden intercambiarse por mejoras, objetos y otros recursos durante la aventura"})
 image = ExtResource("2_art")
+shows_amount = &"ecos"
 unlock_flag = &"ecos_descubiertos"

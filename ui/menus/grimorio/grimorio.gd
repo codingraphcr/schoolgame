@@ -1,9 +1,11 @@
 class_name GrimorioScreen
 extends Control
-## El Grimorio: el glosario del juego con forma de libro (concepto de Ariel). Pestañas MAPA,
-## COMANDOS, AMENAZAS, CONCEPTOS y REGISTROS. La página izquierda muestra el mapa o la lista de
-## entradas y la derecha la entrada elegida. Las entradas son GrimorioEntry de data/grimorio/;
-## las que todavía no se descubren aparecen como «???».
+## El Grimorio: el glosario del juego con forma de libro (concepto de Ariel). Pestañas INVENTARIO (la
+## principal, estilo Hollow Knight: una cuadrícula con el arma, las habilidades y los recursos de Kai,
+## como los Ecos o los fragmentos de vida), MAPA, COMANDOS, CONCEPTOS, AMENAZAS y REGISTROS. La página
+## izquierda muestra el inventario, el mapa o la lista de entradas y la derecha la entrada elegida.
+## Las entradas son GrimorioEntry de data/grimorio/; las que todavía no se descubren aparecen como «???»
+## (en el inventario solo está lo que Kai ya tiene).
 ## Durante el juego se abre con G (acción "grimorio", ver CombatHUD) encima de la sala, que queda
 ## en pausa: GrimorioScreen.open(nodo). G, Esc o CERRAR lo cierran.
 
@@ -12,14 +14,15 @@ const SCENE_PATH := "res://ui/menus/grimorio/grimorio.tscn"
 ## Si se abre como escena suelta (sin juego detrás), al cerrar vuelve al menú.
 const RETURN_SCENE := "res://ui/menus/main_menu/main_menu.tscn"
 
-const CATEGORY_TITLES: PackedStringArray = ["MAPA", "COMANDOS", "AMENAZAS", "CONCEPTOS", "REGISTROS", "ARSENAL"]
+# El índice es la categoría (GrimorioEntry.Category); la de índice 5 (ARSENAL) se muestra como INVENTARIO.
+const CATEGORY_TITLES: PackedStringArray = ["MAPA", "COMANDOS", "AMENAZAS", "CONCEPTOS", "REGISTROS", "INVENTARIO"]
 const CATEGORY_DESCRIPTIONS: PackedStringArray = [
 	"Explora las áreas que has visitado y descubre nuevas rutas, secretos y conexiones.",
 	"Cómo moverse e interactuar, y los comandos de terminal que Kai aprende.",
 	"Lo que acecha en la red: cómo ataca cada amenaza y cómo defenderte.",
 	"Ideas de ciberseguridad que Kai va entendiendo en su camino.",
 	"Notas, mensajes y recuerdos de lo que ha pasado.",
-	"Las armas, dispositivos, habilidades y recursos que Kai ha obtenido.",
+	"Lo que Kai lleva consigo: su arma, sus habilidades y sus recursos.",
 ]
 const LOCKED_TEXT := "Aún no lo descubres. Sigue avanzando en la historia para completar esta página."
 
@@ -33,6 +36,8 @@ var _entries: Array[GrimorioEntry] = []
 var _category := 0
 var _entry_group := ButtonGroup.new()
 var _tab_group := ButtonGroup.new()
+## Cuadrícula del INVENTARIO (en el lugar de la lista de entradas).
+var _inventory: GridContainer
 
 @onready var _book: Control = %Book
 @onready var _tabs: Array[Node] = %Tabs.get_children()
@@ -60,6 +65,7 @@ func _ready() -> void:
 		$Background.visible = false
 		$Shade.color.a = 0.78
 	_load_entries()
+	_build_inventory()
 	for i in _tabs.size():
 		var tab := _tabs[i] as Button
 		tab.button_group = _tab_group
@@ -71,7 +77,7 @@ func _ready() -> void:
 			if _category != category:
 				select_category(category))
 	_back_button.pressed.connect(close)
-	select_category(0)
+	select_category(GrimorioEntry.Category.ARSENAL)
 	if not DisplayServer.is_touchscreen_available():
 		(_tabs[0] as Control).grab_focus()
 	Sfx.play(&"book_open")
@@ -109,13 +115,18 @@ func select_category(category: int) -> void:
 	_category_title.text = CATEGORY_TITLES[category]
 	_category_description.text = CATEGORY_DESCRIPTIONS[category]
 	var is_map := category == GrimorioEntry.Category.MAPA
+	var is_inventory := category == GrimorioEntry.Category.ARSENAL
 	_map.visible = is_map
 	_zone_buttons.visible = is_map
-	_entry_scroll.visible = not is_map
+	_entry_scroll.visible = not is_map and not is_inventory
+	_inventory.visible = is_inventory
 	_entry_group = ButtonGroup.new()
 	var container: Container = _zone_buttons if is_map else _entry_list
-	for child in _zone_buttons.get_children() + _entry_list.get_children():
+	for child in _zone_buttons.get_children() + _entry_list.get_children() + _inventory.get_children():
 		child.queue_free()
+	if is_inventory:
+		_fill_inventory()
+		return
 	# Se muestra la primera entrada descubierta (o la primera, si no hay ninguna).
 	var first: Button
 	var first_entry: GrimorioEntry
@@ -139,7 +150,9 @@ func show_entry(entry: GrimorioEntry) -> void:
 	_entry_text.text = entry.text if unlocked else LOCKED_TEXT
 	_illustration.texture = entry.image if unlocked else null
 	_illustration.visible = _illustration.texture != null
-	_emblem.visible = not _illustration.visible
+	var fragments := unlocked and entry.shows_life_fragments
+	_show_life_fragments(fragments)
+	_emblem.visible = not _illustration.visible and not fragments
 	_emblem.modulate = Color.WHITE if unlocked else Color(1, 1, 1, 0.35)
 	var facts: Dictionary[String, String] = {}
 	if entry.category == GrimorioEntry.Category.MAPA:
@@ -157,8 +170,88 @@ func show_entry(entry: GrimorioEntry) -> void:
 		if unlocked:
 			if entry.action != &"":
 				facts["Tecla"] = GameSettings.key_name(entry.action)
+			if entry.shows_life_fragments:
+				facts["Fragmentos"] = "%d / %d" % [_life_fragments(), GameState.LIFE_FRAGMENTS_PER_MASK]
+			if entry.shows_amount != &"":
+				facts["Tienes"] = str(_amount_of(entry))
 			facts.merge(entry.facts)
 	_fill_facts(facts)
+
+
+## La cuadrícula del inventario, en el mismo lugar que la lista de entradas.
+func _build_inventory() -> void:
+	_inventory = GridContainer.new()
+	_inventory.name = "Inventory"
+	_inventory.columns = 4
+	_inventory.add_theme_constant_override(&"h_separation", 12)
+	_inventory.add_theme_constant_override(&"v_separation", 12)
+	_entry_scroll.get_parent().add_child(_inventory)
+	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		_inventory.set_anchor(side, _entry_scroll.get_anchor(side))
+		_inventory.set_offset(side, _entry_scroll.get_offset(side))
+	_inventory.offset_top += 8.0
+	_inventory.visible = false
+
+
+## Una casilla por cada cosa que Kai ya tiene (en el orden de las entradas); muestra la primera.
+func _fill_inventory() -> void:
+	var first: InventorySlot
+	for entry in entries_in(GrimorioEntry.Category.ARSENAL):
+		if not is_unlocked(entry):
+			continue
+		var slot := InventorySlot.new()
+		slot.entry = entry
+		slot.button_group = _entry_group
+		slot.amount = _amount_of(entry) if entry.shows_amount != &"" else -1
+		slot.fragments = _life_fragments()
+		slot.pressed.connect(show_entry.bind(entry))
+		# Con teclado o mando, el objeto se muestra al pasar por él.
+		slot.focus_entered.connect(func() -> void:
+			slot.set_pressed_no_signal(true)
+			slot.pressed.emit())
+		_inventory.add_child(slot)
+		if first == null:
+			first = slot
+	if first:
+		first.set_pressed_no_signal(true)
+		show_entry(first.entry)
+	else:
+		var entries := entries_in(GrimorioEntry.Category.ARSENAL)
+		if not entries.is_empty():
+			show_entry(entries[0])
+
+
+## Cantidad de un recurso del inventario (p. ej. los Ecos).
+func _amount_of(entry: GrimorioEntry) -> int:
+	if entry.shows_amount == &"ecos":
+		var economy := get_node_or_null("/root/Economy")
+		return economy.ecos if economy else 0
+	return 0
+
+
+## El cristal de vida en negro que se va llenando (en el recuadro de la ilustración).
+func _show_life_fragments(on: bool) -> void:
+	var icon := _illustration.get_parent().get_node_or_null("LifeFragments") as LifeFragmentIcon
+	if not on:
+		if icon:
+			icon.visible = false
+		return
+	if icon == null:
+		icon = LifeFragmentIcon.new()
+		icon.name = "LifeFragments"
+		_illustration.get_parent().add_child(icon)
+		icon.set_anchors_preset(Control.PRESET_FULL_RECT)
+		icon.offset_left = 24.0
+		icon.offset_right = -24.0
+		icon.offset_top = 12.0
+		icon.offset_bottom = -12.0
+	icon.visible = true
+	icon.count = _life_fragments()
+
+
+func _life_fragments() -> int:
+	var game_state := get_node_or_null("/root/GameState")
+	return game_state.life_fragments if game_state else 0
 
 
 func _fill_facts(facts: Dictionary[String, String]) -> void:

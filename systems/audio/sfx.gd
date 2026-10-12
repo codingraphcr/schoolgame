@@ -57,6 +57,13 @@ const RECIPES := {
 	&"monitor_off": { "wave": "square", "freq": 700.0, "freq_end": 40.0, "dur": 0.28, "volume": 0.16, "noise": 0.3, "lowpass": 2500.0 },
 	&"eye_heartbeat": { "wave": "sine", "freq": 58.0, "freq_end": 44.0, "dur": 0.42, "volume": 0.35, "arp": [[0.0, 1.0], [0.25, 0.0], [0.4, 0.9]] },
 	&"eye_blink": { "wave": "noise", "freq": 1500.0, "dur": 0.025, "volume": 0.08, "lowpass": 2000.0 },
+	# Jefe: «Contraseña débil»
+	&"boss_roar": { "wave": "saw", "freq": 140.0, "freq_end": 60.0, "dur": 0.9, "attack": 0.05, "volume": 0.24, "vibrato": [18.0, 14.0], "noise": 0.3, "crush": 9.0, "lowpass": 1800.0 },
+	&"boss_charge": { "wave": "noise", "freq": 600.0, "freq_end": 2400.0, "dur": 0.45, "attack": 0.05, "volume": 0.16, "crush": 6.0, "lowpass": 3000.0 },
+	&"boss_crash": { "wave": "square", "freq": 120.0, "freq_end": 40.0, "dur": 0.4, "volume": 0.24, "noise": 0.5, "crush": 8.0, "lowpass": 1400.0 },
+	&"access_denied": { "wave": "square", "freq": 440.0, "dur": 0.7, "volume": 0.14, "arp": [[0.0, 1.0], [0.18, 0.0], [0.26, 1.0], [0.44, 0.0], [0.52, 0.75]], "crush": 5.0, "lowpass": 2600.0 },
+	&"blade_shatter": { "wave": "noise", "freq": 7000.0, "freq_end": 1500.0, "dur": 0.8, "attack": 0.05, "volume": 0.12, "crush": 5.0, "arp": [[0.0, 1.0], [0.35, 0.8], [0.6, 1.1]], "lowpass": 6000.0 },
+	&"life_fragment": { "wave": "triangle", "freq": 659.0, "dur": 0.7, "volume": 0.18, "arp": [[0.0, 1.0], [0.14, 1.26], [0.28, 1.5], [0.42, 2.0], [0.6, 2.52]], "lowpass": 6000.0 },
 	&"death_dissolve": { "wave": "noise", "freq": 5000.0, "freq_end": 700.0, "dur": 0.9, "attack": 0.1, "volume": 0.14, "crush": 7.0, "arp": [[0.0, 1.0], [0.3, 0.7], [0.55, 1.2], [0.75, 0.5]], "lowpass": 4500.0 },
 	&"connection_lost": { "wave": "square", "freq": 330.0, "freq_end": 160.0, "dur": 0.6, "volume": 0.12, "noise": 0.25, "crush": 8.0, "arp": [[0.0, 1.0], [0.2, 0.0], [0.28, 0.9], [0.48, 0.0], [0.56, 0.75]], "lowpass": 2500.0 },
 	&"respawn_build": { "wave": "triangle", "freq": 392.0, "freq_end": 784.0, "dur": 0.75, "attack": 0.3, "volume": 0.16, "noise": 0.1, "arp": [[0.0, 1.0], [0.25, 1.25], [0.5, 1.5], [0.75, 2.0]], "lowpass": 5000.0 },

@@ -4,8 +4,7 @@
 
 [resource]
 script = ExtResource("1_wpok")
-script_text = "# Al vencer a la «Contraseña débil».
-(La «Contraseña débil» se deshace en números: 1... 2... 3... 4... 5... 6.)
+script_text = "# Al vencer a la «Contraseña débil» (después de que la Nullblade se va y Kai recoge el fragmento de vida).
 Prof. Alvarado [sorprendido]: ¿Qué fue todo ese ruido? ¿Ya quedó?
 Kai: Casi, profe. La contraseña vieja ya no protege nada.
 Kai [pensativo]: Ahora hay que elegir una nueva... y esta vez, una buena."

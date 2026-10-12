@@ -94,7 +94,22 @@ func _test_grimorio() -> void:
 	change_scene_to_file("res://ui/menus/grimorio/grimorio.tscn")
 	await _wait(0.4)
 	var grimorio := current_scene
-	_check(grimorio.get_node("%Tabs").get_child_count() == 6, "el Grimorio tiene 6 pestañas (con ARSENAL)")
+	_check(grimorio.get_node("%Tabs").get_child_count() == 6, "el Grimorio tiene 6 pestañas")
+	_check(grimorio.get_node("%CategoryTitle").text == "INVENTARIO" and grimorio.get_node("%Tabs").get_child(0).text == "INVENTARIO",
+		"se abre en el INVENTARIO, la primera pestaña")
+	# El inventario muestra solo lo que Kai tiene, con la cantidad de Ecos.
+	var game_state := root.get_node("GameState")
+	game_state.set_flag(&"ecos_descubiertos")
+	game_state.set_flag(&"fragmento_vida_obtenido")
+	root.get_node("Economy").ecos = 42
+	grimorio.select_category(GrimorioEntry.Category.ARSENAL)
+	await process_frame
+	var slots: Array = grimorio.get_node("Book/LeftPage/Inventory").get_children().filter(func(s: Node) -> bool: return not s.is_queued_for_deletion())
+	var titles := slots.map(func(s: InventorySlot) -> String: return s.entry.title)
+	var ecos_slot = slots.filter(func(s: InventorySlot) -> bool: return s.entry.title == "ECOS")
+	_check("ECOS" in titles and "Fragmentos de vida" in titles and not "Nullblade" in titles, "el inventario muestra lo que Kai tiene (%s)" % ", ".join(titles))
+	_check(not ecos_slot.is_empty() and ecos_slot[0].amount == 42, "la casilla de los Ecos muestra cuántos tiene")
+	_check(not grimorio.get_node("%EntryScroll").visible, "en el inventario hay casillas en vez de una lista")
 	var firewall: GrimorioEntry = load("res://data/grimorio/firewall.tres")
 	var phishing: GrimorioEntry = load("res://data/grimorio/phishing.tres")
 	_check(grimorio.is_unlocked(firewall) and not grimorio.is_unlocked(phishing), "al empezar, Phishing está oculto")

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_nbno"]
+
+[resource]
+script = ExtResource("1_nbno")
+script_text = "# Kai intenta invocar la Nullblade otra vez, pero no pasa nada.
+Kai [pensativo]: Genial... justo cuando empezaba a acostumbrarme."
