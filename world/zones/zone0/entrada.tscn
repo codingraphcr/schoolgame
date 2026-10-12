@@ -303,6 +303,7 @@ facing = -1
 [node name="ToPasillo" type="Area2D" parent="Exits" unique_id=1890514170]
 position = Vector2(794, 176)
 script = ExtResource("13_3jc38")
+door_id = &"este"
 target_scene = "res://world/zones/zone0/pasillo_laboratorio.tscn"
 target_entry = &"desde_entrada"
 

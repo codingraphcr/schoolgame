@@ -38,6 +38,7 @@ Las carpetas se crean cuando se necesitan, no antes.
 | Nombre | Archivo | Responsabilidad |
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
+| `World` | `autoload/world.gd` | El mapa del mundo: grafos de los distritos, sala actual y a dónde lleva cada puerta. Ver «Mapa del mundo». |
 | `SaveManager` | `autoload/save_manager.gd` | Guardar y continuar la partida (`user://partida.json`). Ver «Guardado». |
 | `Economy` | `autoload/economy.gd` | Saldo de **Ecos** (la moneda) y la penalización al morir. Ver «ECOS». |
 | `DigitalVision` | `autoload/digital_vision.gd` | Estado de la Visión Digital (lista, activa, recargando), duración, recarga y `blend` para los efectos. Ver "Visión Digital". |
@@ -453,7 +454,21 @@ Plan aprobado del mapa 2D semi-procedural, tareas **M1–M8**. **M1 (hecho): el 
   quedan sueltas, `reachable()` / `find_path()` recorren según las habilidades (`RoomGraph.abilities_of(GameState)`),
   y `to_dict()` / `from_dict()` lo guardan (también en JSON); un grafo de otra versión o que ya no encaja no se usa.
 
-Siguiente: **M2**, la pieza global `World` y `room_id` / `door_id` en las salas actuales, sin generar nada todavía.
+**M2 (hecho): el mapa en el juego, todavía fijo.**
+
+- **`DistrictLayout`** (`data/world/districts/*.tres`): la parte fija de un distrito: sus salas (`LayoutRoom`: id único
+  en todo el mundo, ficha y celda), sus conexiones (`LayoutLink`: puertas, habilidades, un solo sentido) y la sala de
+  inicio. `build()` arma el `RoomGraph`. Hoy: **Colegio** (Entrada ↔ Pasillo y Laboratorio) y **PC del profesor**.
+- **`World`** (autoload): carga fichas y distritos, sabe la sala actual (`current_room`, `current_district`, señal
+  `room_entered`) y responde `destination(sala, puerta)` → `{room, scene, entry}`.
+- **`Room.room_id`**: al cargarse, la sala avisa a `World` con el id con que se llegó (`SceneManager.go_to_room(escena,
+  entrada, room_id)`) o, si no hay (p. ej. al continuar una partida), se busca por la escena.
+- **`RoomExit.door_id`**: si la sala está en el mapa, la salida le pregunta el destino a `World`; si no, usa
+  `target_scene` / `target_entry`, que quedan como respaldo. `test_world` comprueba que ambos coinciden.
+- Las marcas `visitada_<escena>` siguen igual (las usa el mapa del Grimorio hasta M5).
+
+Siguiente: **M3**, separar Pasillo y Laboratorio en dos salas y las salas nuevas (escaleras, biblioteca) con arte
+provisional.
 
 ## Misiones (`systems/quests/`)
 
@@ -583,6 +598,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
+| `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
 | `test_save.gd` | Guardar y continuar (todo el progreso), escritura segura con copia, archivos dañados o inválidos, la computadora segura (punto de control al pasar; con E guarda y cura) y CONTINUAR en el menú |
 | `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |
 | `test_ecos.gd` | Reparto en fragmentos, Ecos según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |

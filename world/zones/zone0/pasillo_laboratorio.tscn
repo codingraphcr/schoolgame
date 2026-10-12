@@ -691,6 +691,7 @@ arrival_effect = "materialize"
 [node name="ToEntrada" type="Area2D" parent="Exits" unique_id=1554206632]
 position = Vector2(6, 176)
 script = ExtResource("35_xved5")
+door_id = &"oeste"
 target_scene = "res://world/zones/zone0/entrada.tscn"
 target_entry = &"desde_pasillo"
 

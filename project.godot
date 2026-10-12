@@ -25,6 +25,7 @@ GameState="*res://autoload/game_state.gd"
 DigitalVision="*res://autoload/digital_vision.gd"
 Economy="*res://autoload/economy.gd"
 SaveManager="*res://autoload/save_manager.gd"
+World="*res://autoload/world.gd"
 
 [display]
 

@@ -24,6 +24,8 @@ extends Node2D
 @export var music_track: StringName = &""
 
 var bounds: Rect2
+## Id de esta sala en el mapa (World); vacío si la escena no está en el mapa.
+var room_id: StringName = &""
 
 
 func _ready() -> void:
@@ -32,6 +34,9 @@ func _ready() -> void:
 		Music.play(music_track)
 	if camera:
 		camera.set_limits(bounds)
+	var world := get_node_or_null("/root/World")
+	if world and not scene_file_path.is_empty():
+		room_id = world.enter(scene_file_path, _scene_manager().take_pending_room())
 	var game_state := _game_state()
 	# Queda anotado que Kai estuvo en esta sala (el mapa del Grimorio lo usa).
 	if game_state and not scene_file_path.is_empty():
