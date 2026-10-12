@@ -27,8 +27,9 @@ Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `
 |---|---|---|
 | **Capítulo 0: Prólogo** | Entrada del colegio → pasillo (el profesor le pide revisar una computadora) → laboratorio: «Por fin alguien está mirando» y la **Visión Digital se activa sola**, como un glitch, sin pulsar nada | Caminar, saltar, interactuar (E) |
 | **Primera misión: la contraseña del profesor** | Kai entra a la PC como **alma digital**: nivel de plataformas con estética de escritorio hasta la pestaña "Cambiar contraseña" / MFA. Kai humano: «Profe, ¡aquí está el error!». En la **terminal** de la PC encuentra la configuración de la cuenta (`ls`, `cd`, `cat`: contraseña 123456, sin verificación en dos pasos). En la pestaña, con E aparece el enemigo **"Contraseña débil"** y se vence con una **mini espada digital** (sin nombre, solo para aprender a golpear: se desbloquea **J**). Después, **2 elecciones**: la contraseña nueva más segura y un método de MFA, con explicación | + mini espada (solo en este combate) |
-| **Recompensa** | El profesor agradece. Desde aquí la **Visión Digital se usa con Q** | + Visión Digital |
-| **La habitación vieja** | El profesor lo invita a un cuarto viejo y lleno de polvo del colegio: allí está **Nullblade.exe**. Cierra el prólogo con el título **«EL DESPERTAR»** (se mueve aquí desde el final de la primera parte) | + Nullblade, **dash** (nivel 1) y **doble salto** |
+| **Combate** | En la pelea contra la «Contraseña débil» la **Nullblade aparece como un destello** (animación de Ariel) y Kai pelea con ella. No queda obtenida | Nullblade (solo en la PC) |
+| **Recompensa** | 2 elecciones: la contraseña nueva (frase de contraseña) y el segundo paso (aplicación de autenticación), con explicación de cada opción. El profesor agradece, la **Visión Digital se usa con Q** desde aquí, el destello de la Nullblade **se apaga** y Kai vuelve al laboratorio (+100 BITS) | + Visión Digital |
+| **La habitación vieja** | El profesor lo invita a visitar unas instalaciones: un pasillo donde está el cuarto viejo. Para entrar hay un desafío de **Visión Digital + terminal** (con Q se ven pistas ocultas; con ellas se resuelve el acceso en una terminal; tema del MEP: control de acceso). Adentro está la **Nullblade oficial**: con ella llegan el **dash** y el **doble salto**, la tarjeta «NUEVO EQUIPAMIENTO» y el título **«EL DESPERTAR»** | + Nullblade (para siempre), **dash** (nivel 1) y **doble salto** |
 | **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), **Aegis (cap. 2, nivel 3: fundamentos de programación)** y mejoras con créditos |
 
 **No existe una sala de pruebas dentro del juego:** cada arma y habilidad se prueba en el mapa a medida que
@@ -102,8 +103,8 @@ Es el vínculo entre el combate y el contenido educativo.
 | H4b | Nivel de SPAM dentro de la PC (pop-ups, anuncios trampa, correos que caen) hasta la cuenta del profesor | ✅ |
 | T1 | Terminal simulada (pwd, ls, cd, cat…) + primera terminal en la PC del profesor | ✅ |
 | H4c | Combate contra la "Contraseña débil" con la mini espada (J): `PlayerCombat`, `WeaponData`, `EnemyBase`, `ArenaBarrier` | ✅ |
-| H4d | 2 elecciones (contraseña y MFA) → desbloquea Q y sale de la PC | ⏳ |
-| H5 | Habitación vieja: Nullblade.exe (dash, doble salto, ataque) + cartel "Capítulo 1" | ⏳ |
+| H4d | 2 elecciones (contraseña y MFA) → desbloquea Q y sale de la PC: `ChoiceChallenge`, `ChoiceWindow`, `AccountSecurity` | ✅ |
+| H5 | Invitación del profesor → pasillo de las instalaciones → desafío Visión Digital + terminal → cuarto viejo: Nullblade oficial, dash, doble salto y «EL DESPERTAR» | ⏳ |
 | C3 | Nullblade.exe (datos de las 4 etapas) + sensación de impacto | ⏳ |
 | C4 | `EnemyBase` + `EnemyData` + `CombatClock` + enemigo patrullero | ⏳ |
 | C5 | Energía (curación con L) + carga del Dominio | ⏳ |

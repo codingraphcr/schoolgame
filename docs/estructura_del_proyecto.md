@@ -12,7 +12,7 @@ la historia en `combate.md`; el plan del MVP en `plan_mvp.md`; el currículo en 
 | Pantalla | Diseño a **1280×720**, horizontal; el mundo en pixel art con la cámara a **×2** |
 | Plataformas | Windows y Android (después Linux, macOS, iOS, Steam) |
 | Dependencias | **Ninguna**: sin plugins ni librerías externas |
-| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 20 pruebas automáticas (478 comprobaciones) |
+| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 21 pruebas automáticas (478 comprobaciones) |
 | Equipo | Yohanncillo (dirección y programación) y Ariel (arte y programación), en la cuenta `codingraphcr` |
 
 ## 2. Las ideas que guían todo
@@ -77,6 +77,7 @@ schoolgame/
 ├── systems/           Sistemas sin escena propia
 │   ├── audio/           Sfx (efectos) y Music (música)
 │   ├── dialogue/        Dialogue y DialogueCharacter
+│   ├── challenges/      Desafíos de elección (preguntas con opciones y explicaciones)
 │   ├── grimorio/        GrimorioEntry (una página del Grimorio)
 │   ├── incidents/       Incidentes, pistas y controles de seguridad (sistema de decisiones de Ariel)
 │   ├── quests/          Misiones, pasos, registro de misiones y disparadores
@@ -87,6 +88,7 @@ schoolgame/
 │   ├── dialogue/        Caja de diálogo estilo Hades con retratos y voces
 │   ├── menus/           Menú principal, Opciones y Grimorio
 │   ├── terminal/        Ventana de la terminal
+│   ├── challenges/      Ventana de los desafíos de elección
 │   ├── equipment/       Tarjeta "NUEVO EQUIPAMIENTO DESBLOQUEADO"
 │   ├── transitions/     Pantalla de carga
 │   └── theme/           Tema visual común
@@ -102,7 +104,7 @@ schoolgame/
 ├── data/              Contenido editable (.tres): diálogos, personajes, misiones, terminales,
 │                      armas, Grimorio, incidentes
 ├── assets/            Arte (de Ariel), audio, fuentes y shaders
-├── tests/             20 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
+├── tests/             21 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
 ├── tools/art/         Herramientas para recortar el arte de las hojas de concepto de Ariel
 ├── prototypes/        Muestras de estilos visuales (no forman parte del juego)
 └── docs/              Documentación del proyecto
@@ -195,6 +197,7 @@ la seguridad y la confianza del colegio. Está listo para usarse en los desafío
 | Un personaje que habla | Nuevo `DialogueCharacter` en `data/characters/` (nombre, retrato, color, voz) |
 | Una misión | Nuevo `Quest` en `data/quests/` con sus pasos, y la registro en `QuestDB` |
 | Una terminal | Nuevo `TerminalChallenge` en `data/terminals/` + una `TerminalStation` en la sala |
+| Un desafío de elección | Nuevo `ChoiceChallenge` en `data/challenges/` (preguntas, opciones, cuál es correcta y por qué) |
 | Un arma o etapa de Nullblade | Nuevo `WeaponData` en `data/weapons/` |
 | Una página del Grimorio | Nuevo `GrimorioEntry` en `data/grimorio/` |
 | Un nivel de plataformas digital | Arrastrar pop-ups, trampas, lluvias de correo y puntos de restauración a la sala |
@@ -208,7 +211,7 @@ Opciones.
 **Capas de colisión:** 1 mundo · 2 jugador · 3 enemigos · 4 ataques del jugador · 5 ataques enemigos · 6 interactuables
 · 7 mundo digital.
 
-**Pruebas:** 20 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
+**Pruebas:** 21 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
 `godot --headless --path . --script res://tests/test_<nombre>.gd` y termina en `RESULTADO: TODO OK`. Esperan a que
 pasen las cosas (en vez de tiempos fijos) para no fallar cuando la computadora está ocupada.
 
@@ -218,11 +221,12 @@ ramas quedan en el mismo commit.
 ## 10. Estado actual y lo que falta
 
 **Hecho:** movimiento completo, salas y transiciones, prólogo (Visión involuntaria y la entidad «???»), entrar a la
-PC, nivel de SPAM de 3360 px, terminal, combate contra la «Contraseña débil», Nullblade, curación, energía, BITS,
+PC, nivel de SPAM de 3360 px, terminal, combate contra la «Contraseña débil» (con el destello de la Nullblade),
+elecciones de seguridad que desbloquean la Visión Digital, curación, energía, BITS,
 Grimorio, opciones, sonido provisional y voces.
 
-**Falta para el MVP:** H4d (elegir contraseña y verificación en dos pasos → Visión Digital con Q), H5 (cierre del
-prólogo y «EL DESPERTAR»), **guardado en disco** con la computadora segura, controles táctiles, exportar a Windows y
+**Falta para el MVP:** H5 (invitación del profesor, desafío Visión Digital + terminal, cuarto viejo con la
+Nullblade oficial, dash, doble salto y «EL DESPERTAR»), **guardado en disco** con la computadora segura, controles táctiles, exportar a Windows y
 Android, pruebas en celular.
 
 ## 11. Observaciones y riesgos
@@ -231,9 +235,6 @@ Android, pruebas en celular.
   en nuestra computadora (la Entrada, a 60). Viene del nivel de SPAM: decenas de dibujos vectoriales animados que se
   redibujan en cada cuadro. Antes de probar en Android hay que optimizarlo (por ejemplo, dibujar una vez lo que no se
   mueve y animar solo lo necesario).
-- **Historia por confirmar:** Ariel hizo que la **Nullblade aparezca en el combate** contra la «Contraseña débil»
-  (reemplaza a la mini espada). El plan decía que se obtenía después, en el cuarto viejo (H5). Hay que decidir cuál
-  queda y qué pasa entonces en H5.
 - **`GameState` crece rápido** (unas 470 líneas). Por ahora está bien; si sigue creciendo conviene separarlo por
   temas (misiones, jugador, conocimiento).
 - **El guardado todavía no escribe en disco:** el progreso se pierde al cerrar el juego.

@@ -14,7 +14,8 @@ ciberseguridad: terminales con comandos reales, decisiones y combate. Estructura
 
 | Tema | Decisión |
 |---|---|
-| Prólogo | Se mantiene el nuestro: Visión involuntaria → PC del profesor (SPAM, terminal, «Contraseña débil» con mini espada, 2 elecciones) → cuarto viejo con Nullblade.exe. La «Contraseña débil» dirá «Tú no deberías poder vernos». **«EL DESPERTAR»** pasa al final (al obtener Nullblade) |
+| Prólogo | Visión involuntaria → PC del profesor (SPAM, terminal, «Contraseña débil», 2 elecciones) → invitación a unas instalaciones → desafío Visión Digital + terminal → cuarto viejo con la Nullblade oficial (dash y doble salto). **«EL DESPERTAR»** al final |
+| Nullblade en el combate | Se mantiene la de Ariel, pero como **destello**: aparece en la pelea y se apaga al terminar la misión; la oficial se obtiene en el cuarto viejo |
 | Primera tarea | La **terminal simulada** (antes que el combate) ✅ |
 | Primera terminal | En la PC del profesor: encontrar la configuración de la cuenta (un solo objetivo) ✅ |
 | Aegis | Se obtiene en el **capítulo 2, nivel 3** (fundamentos de programación): Kai lo **repara con comandos** en una terminal. Detalle en `curriculo_mep.md` |
@@ -97,7 +98,7 @@ controles táctiles, exportación Windows y Android, documentación.
 
 | Bloque | Tareas |
 |---|---|
-| 1 · Terminal y prólogo | ✅ Terminal simulada · ✅ H4c combate y `EnemyBase` · H4d elecciones · H5 Nullblade.exe y «EL DESPERTAR» |
+| 1 · Terminal y prólogo | ✅ Terminal simulada · ✅ H4c combate y `EnemyBase` · ✅ H4d elecciones · H5 cuarto viejo, Nullblade y «EL DESPERTAR» |
 | 2 · Guardado | `SaveManager`, computadora segura, `LevelData` |
 | 3 · Grimorio y mapa | ✅ Grimorio base (Ariel) · Tab dentro del juego, pestaña de misiones, minimapa |
 | 4 · Entrega | Controles táctiles, exportaciones, sonido, pulido, pruebas en celular, documentación |

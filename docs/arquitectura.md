@@ -343,6 +343,16 @@ en la sala; no hace falta programar.
 (`world/digital/`, un pequeño firewall) cierra la zona. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
 muere, el combate se cancela, reaparece en `RestorePointFinal` (justo antes) y puede reintentarlo con un diálogo corto.
 
+**Desafíos de elección** (`systems/challenges/`, `ui/challenges/`): un `ChoiceChallenge` (en `data/challenges/`) tiene
+preguntas (`ChoiceQuestion`) con opciones (`ChoiceOption`: texto, detalle, si es correcta y su explicación).
+`ChoiceWindow` las muestra: una opción incorrecta explica por qué y queda descartada; la correcta habilita «Continuar».
+Cuenta los errores por pregunta (`mistakes`) para registros futuros. Funciona con teclado, mando, mouse y pantalla táctil.
+
+**Final de la misión** (`account_security.gd`, `AccountSecurity`, paso `elegir_seguridad`): la pestaña abre el desafío
+`cuenta_profesor_seguridad` (contraseña nueva y método de verificación en dos pasos). Al terminar: diálogo, Visión
+Digital desbloqueada, el destello de la Nullblade se apaga (`nullblade_stage` sigue en 0), la misión se completa
+(+100 BITS) y Kai vuelve al laboratorio (entrada `desde_pc`).
+
 **Primera terminal** (PC del profesor, paso `revisar_configuracion`): encontrar y leer
 `~/cuenta/configuracion.txt` (contraseña 123456, sin verificación en dos pasos). Alineada con indicadores de
 décimo de la tabla del MEP 2025 (Operaciones ciberseguras): seguridad en sistemas operativos de código abierto y
@@ -471,6 +481,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_prologue.gd` | API de misiones (orden, guardado), el prólogo completo con el objetivo en pantalla, la computadora bloqueada antes de tiempo, la visión involuntaria (sin indicador, Q no la controla, sin recarga), «EL DESPERTAR» y el comienzo de la misión del profesor |
 | `test_digital_dive.gd` | La computadora absorbe a Kai (cámara, desaparición), pantalla de carga, llegada al escritorio, materialización, alma digital celeste, límites y regreso al laboratorio |
 | `test_spam_level.gd` | Pop-ups (fijo, que se cierra y reabre, que se mueve y lleva a Kai), anuncio trampa, correo que cae (y apunta a Kai), ruta completa solo saltando (bot), punto de restauración (activarlo y reaparecer ahí al morir) y llegada a la cuenta del profesor |
+| `test_account_security.gd` | Desafío de elección (opción incorrecta con explicación, correcta, avanzar), contenido educativo, y el final de la misión: Esc, Visión Digital, BITS, destello de la Nullblade que se apaga, vuelta al laboratorio y Q |
 | `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_bits.gd` | Reparto en monedas, BITS según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |

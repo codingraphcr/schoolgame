@@ -148,17 +148,11 @@ func _test_fight() -> void:
 	_check(fight.running and fight.enemy != null and not fight.enemy.ai_enabled, "aparece la «Contraseña débil» (quieta mientras habla)")
 	_check(await _dialogue_contains(box, "no deberías poder vernos"), "dice «Tú no deberías poder vernos»")
 	await _advance(box)
-	# La Nullblade se materializa y aparece la tarjeta de equipamiento (el juego queda en pausa).
-	await _until(func() -> bool: return root.get_node_or_null("EquipmentCardLayer") != null)
-	var card := root.get_node_or_null("EquipmentCardLayer/EquipmentCard")
-	_check(card != null and paused and card.get_node("%Title").text == "NULLBLADE", "aparece la tarjeta «NULLBLADE» y el juego se pausa")
-	_check(state.nullblade_stage == 0 and player.controls_locked, "mientras tanto Kai no se mueve")
-	await _wait(0.9)
-	_action("interact")
-	await _until(func() -> bool: return root.get_node_or_null("EquipmentCardLayer") == null)
-	await _frames(3)
-	_check(not paused and state.nullblade_stage == 1, "al cerrar la tarjeta, Kai tiene la Nullblade")
-	_check(player.combat.weapon != null and player.combat.weapon.id == &"nullblade", "Kai pelea con la Nullblade")
+	# La Nullblade se materializa como un destello: sin tarjeta y sin quedar obtenida (eso es en el cuarto viejo).
+	await _until(func() -> bool: return player.combat.weapon != null)
+	_check(root.get_node_or_null("EquipmentCardLayer") == null, "no aparece la tarjeta de equipamiento (todavía no es la Nullblade oficial)")
+	_check(state.nullblade_stage == 0 and state.has_flag(&"nullblade_destello"), "la Nullblade es un destello: no queda obtenida")
+	_check(player.combat.weapon.id == &"nullblade", "Kai pelea con la Nullblade")
 	_check(barrier.active and fight.enemy.ai_enabled and not player.controls_locked, "se cierra la barrera y empieza el combate")
 	_check(not tab._prompt.visible, "durante el combate la pestaña no se puede usar")
 
