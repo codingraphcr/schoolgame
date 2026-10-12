@@ -1,7 +1,8 @@
 class_name WeakPasswordEnemy
 extends EnemyBase
 ## La «Contraseña débil» (prólogo, cuenta del profesor): un candado digital con «123456» en la
-## pantalla. Tres fases:
+## pantalla. Persigue a Kai por toda la arena: calcula cada salto para caer donde está él, también
+## arriba de los pop-ups (plataformas). Tres fases:
 ##   1. Se agacha avisando y salta hacia Kai.
 ##   2. «Fuerza bruta» (mitad de la vida): avisa menos, salta más seguido y más lejos, y al caer
 ##      lanza un «intento» (PasswordGuess: una contraseña débil real) a ras del suelo.
@@ -17,8 +18,12 @@ const MAG := Color("ff3ea5")
 const DARK := Color("1a0f2e")
 const SCREEN := Color("2b0d1f")
 
-@export var hop_speed := 120.0
+## Velocidad horizontal máxima de un salto (en fuerza bruta, ×1.3).
+@export var hop_speed := 160.0
+## Impulso de un salto normal (al mismo nivel que Kai).
 @export var hop_jump_speed := 250.0
+## Impulso máximo para subir a una plataforma donde está Kai.
+@export var max_jump_speed := 470.0
 @export var idle_time := 0.8
 @export var telegraph_time := 0.45
 ## Fracción de la vida a la que empieza el ataque de diccionario (dos intentos por salto).
@@ -71,8 +76,7 @@ func _ai(delta: float) -> void:
 			velocity.x = 0.0
 			_timer -= delta
 			if _timer <= 0.0:
-				var boost := 1.3 if brute_force else 1.0
-				velocity = Vector2(_facing * hop_speed * boost, -hop_jump_speed)
+				velocity = _jump_toward_player()
 				phase = Phase.HOP
 				_left_floor = false
 		Phase.HOP:
@@ -83,6 +87,30 @@ func _ai(delta: float) -> void:
 				_timer = idle_time * (0.45 if brute_force else 1.0)
 				if brute_force:
 					_attack()
+
+
+## Salto calculado para caer donde está Kai: si está más arriba (en un pop-up), sube hasta ahí;
+## si está al mismo nivel o más abajo, salta hacia él. La distancia de cada salto tiene un límite.
+func _jump_toward_player() -> Vector2:
+	var player := get_player()
+	var max_x := hop_speed * (1.3 if brute_force else 1.0)
+	if player == null:
+		return Vector2(_facing * max_x, -hop_jump_speed)
+	var target := player.global_position
+	if player.is_on_floor():
+		target.y = player.global_position.y
+	var rise := global_position.y - target.y  # Positivo: Kai está más arriba.
+	var vy := hop_jump_speed
+	var fall_height := 0.0
+	if rise > 10.0:
+		# Sube un poco más alto que la plataforma y cae sobre ella.
+		vy = minf(sqrt(2.0 * gravity * (rise + 22.0)), max_jump_speed)
+		fall_height = maxf(vy * vy / (2.0 * gravity) - rise, 1.0)
+	else:
+		fall_height = vy * vy / (2.0 * gravity) - rise
+	var flight := vy / gravity + sqrt(2.0 * maxf(fall_height, 1.0) / gravity)
+	var dx := target.x - global_position.x
+	return Vector2(clampf(dx / flight, -max_x, max_x), -vy)
 
 
 func _on_damaged(_hit: HitData) -> void:

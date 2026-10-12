@@ -227,8 +227,9 @@ comportamiento en `_ai()` y sus reacciones en `_on_damaged()` / `_on_died()`. `a
 (presentaciones y pruebas). Kai atraviesa a los enemigos recibiendo daño, como en Hollow Knight.
 
 **La «Contraseña débil»** (`characters/enemies/weak_password/`, `WeakPasswordEnemy`): **10 de vida**, tipo de amenaza
-`credenciales`, especial y de la historia (20–40 Ecos, una sola vez). Tres fases: 1) se agacha avisando (`TELEGRAPH`) y
-salta hacia Kai; 2) con la mitad de la vida, **fuerza bruta**: avisa menos, salta más seguido y más lejos y al caer lanza
+`credenciales`, especial y de la historia (20–40 Ecos, una sola vez). **Persigue a Kai por toda la arena**: cada salto
+se calcula para caer donde está él (`_jump_toward_player`), también arriba de los pop-ups (hasta `max_jump_speed`).
+Aparece al fondo de la arena (x≈3860), lejos de Kai. Tres fases: 1) se agacha avisando (`TELEGRAPH`) y salta hacia Kai; 2) con la mitad de la vida, **fuerza bruta**: avisa menos, salta más seguido y más lejos y al caer lanza
 un **intento** (`PasswordGuess`: una contraseña débil real que corre a ras del suelo; hay que saltarla, quita medio
 cristal); 3) con el 30 %, **ataque de diccionario**: dos intentos seguidos (`dictionary_gap`). Cada golpe suelta una
 contraseña débil real (`123456`, `qwerty`…) y al morir se deshace en números. Dibujo vectorial provisional hasta que Ariel haga el suyo.
@@ -380,8 +381,8 @@ en la sala; no hace falta programar.
 «Cambiar contraseña» (`AccountTab`, paso `cambiar_contrasena`) lo inicia. Aparece la «Contraseña débil» y dice
 «Tú no deberías poder vernos»; la Nullblade se materializa (`NullbladeReveal`) y aparece la tarjeta de equipamiento; al reintentar no se repite; una `ArenaBarrier`
 (`world/digital/`, un pequeño firewall) cierra la **arena** (~930 px, de la barrera a la pared): 3 pop-ups para saltar
-(uno sube y baja), 3 anuncios trampa y una lluvia de correos (`MailRainFight`, en `fight_hazards`) que **solo cae durante
-la pelea**. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
+(uno sube y baja), 3 anuncios trampa y una lluvia de correos suave (`MailRainFight`, uno cada 1,8 s, en `fight_hazards`) que
+**solo cae durante la pelea**. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
 muere, el combate se cancela, reaparece en `RestorePointFinal` (justo antes) y puede reintentarlo con un diálogo corto.
 
 **Desafíos de elección** (`systems/challenges/`, `ui/challenges/`): un `ChoiceChallenge` (en `data/challenges/`) tiene
