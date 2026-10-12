@@ -30,7 +30,7 @@ enum Category { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS, ARSENAL }
 @export var unlock_property: StringName = &""
 ## Comando de terminal que Kai tiene que haber usado (p. ej. &"ls"): la página del manual de comandos.
 @export var unlock_command: StringName = &""
-## Marca de GameState que tiene que existir (p. ej. &"bits_descubiertos").
+## Marca de GameState que tiene que existir (p. ej. &"ecos_descubiertos").
 @export var unlock_flag: StringName = &""
 
 

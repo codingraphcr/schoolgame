@@ -1,12 +1,12 @@
 class_name DataFragment
 extends Area2D
 ## Fragmento de datos oculto en la red: solo se puede recoger con la Visión Digital activa.
-## Da créditos y deja una marca en GameState para no volver a aparecer. El dibujo lo hace
+## Da Ecos y deja una marca en GameState para no volver a aparecer. El dibujo lo hace
 ## la capa digital de la sala (que consulta la misma marca).
 
 @export var flag: StringName = &"zona0_fragmento_recogido"
-@export var credits_reward := 25
-@export var message := "¡Encontraste un fragmento de datos oculto en la red! (+%d créditos)"
+@export var ecos_reward := 25
+@export var message := "¡Encontraste un fragmento de datos oculto en la red! (+%d Ecos)"
 
 
 func _ready() -> void:
@@ -27,8 +27,8 @@ func _on_body_entered(body: Node) -> void:
 		return
 	var game_state := get_node("/root/GameState")
 	game_state.set_flag(flag)
-	game_state.add_credits(credits_reward)
-	get_tree().call_group(&"toast", &"show_message", message % credits_reward)
+	get_node("/root/Economy").add_ecos(ecos_reward)
+	get_tree().call_group(&"toast", &"show_message", message % ecos_reward)
 
 
 func _can_collect() -> bool:

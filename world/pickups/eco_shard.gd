@@ -1,32 +1,33 @@
-class_name BitCoin
+class_name EcoShard
 extends CharacterBody2D
-## Un BIT: dato recuperado de una amenaza digital (concepto de Ariel en
-## docs/arte/referencias/bits_concepto.webp). Sale disparado, rebota un poco en el suelo, flota
-## girando y brilla de vez en cuando. Cuando Kai se acerca, vuela hacia él y se recoge
-## (GameState.add_credits: los BITS son la moneda del juego).
+## Un ECO: residuo de información que deja una amenaza neutralizada (la moneda del juego, Economy).
+## Sale disparado, rebota un poco en el suelo, flota girando y brilla de vez en cuando. Cuando Kai
+## se acerca, vuela hacia él y se recoge (Economy.add_ecos).
+## Dibujo provisional: la moneda del concepto de Ariel (docs/arte/referencias/bits_concepto.webp);
+## el fragmento cristalino de los Ecos es la tarea E3.
 ## Valor 1 (violeta) o 5 (más brillante y un poco más grande).
-## Uso: BitCoin.spawn_burst(sala, posición, cantidad)
+## Uso: EcoShard.spawn_burst(sala, posición, cantidad)
 
 const VIOLET := Color("8a5cff")
 const BRIGHT := Color("d07bff")
 const DARK := Color("1a0f3a")
 const FACE := Color("2c1870")
 const LIGHT := Color("e9e1ff")
-## Cuántas monedas como máximo por explosión (si hay más BITS, valen 5 cada una).
+## Cuántos fragmentos como máximo por explosión (si hay más Ecos, valen 5 cada uno).
 const MAX_COINS := 14
 const GRAVITY := 700.0
-## Distancia a la que el BIT empieza a volar hacia Kai, y a la que se recoge.
+## Distancia a la que el Eco empieza a volar hacia Kai, y a la que se recoge.
 const MAGNET_RADIUS := 36.0
 const PICKUP_RADIUS := 8.0
 ## Segundos antes de poder recogerlo (para que se vea la explosión).
 const PICKUP_DELAY := 0.35
 
-## Recoger varios BITS seguidos suena cada vez un poco más agudo.
+## Recoger varios Ecos seguidos suena cada vez un poco más agudo.
 static var _combo := 0
 static var _last_pickup_ms := 0
 
-## Flag que queda al recoger el primer BIT (desbloquea su página del Grimorio).
-const DISCOVERED_FLAG := &"bits_descubiertos"
+## Marca que queda al recoger el primer Eco (desbloquea su página del Grimorio).
+const DISCOVERED_FLAG := &"ecos_descubiertos"
 
 var value := 1
 var _time := 0.0
@@ -35,12 +36,12 @@ var _collected := false
 var _phase := randf() * TAU
 
 
-## Suelta "amount" BITS repartidos en varias monedas que saltan desde "at".
-static func spawn_burst(parent: Node, at: Vector2, amount: int) -> Array[BitCoin]:
-	var coins: Array[BitCoin] = []
+## Suelta "amount" Ecos repartidos en varios fragmentos que saltan desde "at".
+static func spawn_burst(parent: Node, at: Vector2, amount: int) -> Array[EcoShard]:
+	var coins: Array[EcoShard] = []
 	if amount <= 0 or parent == null:
 		return coins
-	# Con muchos BITS, algunas monedas valen 5 para no llenar la pantalla (5·fives + ones = amount).
+	# Con muchos Ecos, algunos fragmentos valen 5 para no llenar la pantalla (5·fives + ones = amount).
 	var values: Array[int] = []
 	var fives := 0
 	if amount > MAX_COINS:
@@ -52,7 +53,7 @@ static func spawn_burst(parent: Node, at: Vector2, amount: int) -> Array[BitCoin
 		values.append(1)
 	values.shuffle()
 	for i in values.size():
-		var coin := BitCoin.new()
+		var coin := EcoShard.new()
 		coin.value = values[i]
 		var spread := (i - values.size() / 2.0) / maxf(values.size(), 1.0)
 		coin.velocity = Vector2(spread * 150.0 + randf_range(-20.0, 20.0), randf_range(-220.0, -150.0))
@@ -62,7 +63,7 @@ static func spawn_burst(parent: Node, at: Vector2, amount: int) -> Array[BitCoin
 	return coins
 
 
-## Dibuja una moneda BIT (también la usa el HUD). spin: 1 = de frente, cerca de 0 = de canto.
+## Dibuja un Eco (también lo usa el HUD). spin: 1 = de frente, cerca de 0 = de canto.
 static func draw_coin(canvas: CanvasItem, center: Vector2, radius: float, spin := 1.0, bright := false, glow := 0.0) -> void:
 	var rim := BRIGHT if bright else VIOLET
 	if glow > 0.0:
@@ -135,7 +136,7 @@ func _draw() -> void:
 	var spin := cos(_time * (4.0 if not _attracted else 10.0) + _phase)
 	var shine := maxf(0.0, sin(_time * 1.7 + _phase) - 0.85) * 6.0
 	var radius := 5.0 if value >= 5 else 4.0
-	BitCoin.draw_coin(self, Vector2(0, bob - 1.0), radius, spin, value >= 5, 0.6 + shine)
+	EcoShard.draw_coin(self, Vector2(0, bob - 1.0), radius, spin, value >= 5, 0.6 + shine)
 	if shine > 0.2:
 		var c := Vector2(0, bob - 1.0)
 		draw_line(c + Vector2(-radius - 3, 0), c + Vector2(radius + 3, 0), Color(LIGHT, shine * 0.5), 1.0)
@@ -144,9 +145,11 @@ func _draw() -> void:
 
 func _collect() -> void:
 	_collected = true
+	var economy := get_node_or_null("/root/Economy")
+	if economy:
+		economy.add_ecos(value)
 	var game_state := get_node_or_null("/root/GameState")
 	if game_state:
-		game_state.add_credits(value)
 		game_state.set_flag(DISCOVERED_FLAG)
 	_pickup_sound()
 	# Desaparición: se deshace en cuadritos.
@@ -159,4 +162,4 @@ func _pickup_sound() -> void:
 	var now := Time.get_ticks_msec()
 	_combo = mini(_combo + 1, 12) if now - _last_pickup_ms < 450 else 0
 	_last_pickup_ms = now
-	Sfx.play(&"bit_pickup", 1.0 + _combo * 0.06 + (0.15 if value >= 5 else 0.0))
+	Sfx.play(&"eco_pickup", 1.0 + _combo * 0.06 + (0.15 if value >= 5 else 0.0))

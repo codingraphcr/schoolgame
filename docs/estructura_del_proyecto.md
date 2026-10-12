@@ -23,7 +23,7 @@ la historia en `combate.md`; el plan del MVP en `plan_mvp.md`; el currículo en 
    Grimorio se crean y editan en el **Inspector** de Godot.
 3. **Señales para avisar, no referencias cruzadas.** Por ejemplo, el enemigo emite `died` y el combate lo escucha;
    el enemigo no sabe nada del combate.
-4. **Pocos autoloads** (piezas globales): solo tres. El resto vive en cada sala.
+4. **Pocos autoloads** (piezas globales): solo cuatro. El resto vive en cada sala.
 5. **Todo se ve en el editor** (`@tool`): pop-ups, trampas, terminales y barreras se dibujan mientras se diseña el nivel.
 6. **Identificadores estables** (`contrasena_profesor`, `cambiar_contrasena`, `pc_profesor_cuenta`) para el guardado.
 7. **Nada se da por bueno sin probarlo:** cada sistema tiene su prueba automática.
@@ -34,14 +34,15 @@ la historia en `combate.md`; el plan del MVP en `plan_mvp.md`; el currículo en 
 flowchart TB
     subgraph Global["Autoloads (siempre presentes)"]
         SM[SceneManager<br/>cambio de sala y transiciones]
-        GS[GameState<br/>progreso, misiones, créditos]
+        GS[GameState<br/>progreso, misiones, guardado]
+        EC[Economy<br/>Ecos]
         DV[DigitalVision<br/>Visión Digital]
     end
     subgraph Sala["Una sala (Room)"]
         P[Jugador: Kai]
         E[Enemigos]
         N[NPC y objetos con E]
-        HUD[CombatHUD<br/>cristales, energía, BITS, objetivo, diálogos]
+        HUD[CombatHUD<br/>cristales, energía, Ecos, objetivo, diálogos]
         C[Cámara]
     end
     subgraph Datos["Datos (.tres en data/)"]
@@ -58,6 +59,7 @@ flowchart TB
     N -->|completa pasos| GS
     P -->|lee| D4
     HUD -->|muestra| GS
+    HUD -->|muestra| EC
     D2 --> GS
 ```
 
@@ -65,7 +67,7 @@ flowchart TB
 
 ```
 schoolgame/
-├── autoload/          Las 3 piezas globales (SceneManager, GameState, DigitalVision)
+├── autoload/          Las 4 piezas globales (SceneManager, GameState, DigitalVision, Economy)
 ├── characters/        Personajes
 │   ├── player/          Kai: movimiento, daño, combate, curación, sonidos y su dibujo (kai/)
 │   ├── enemies/         EnemyBase y cada enemigo (weak_password/ = la «Contraseña débil»)
@@ -85,7 +87,7 @@ schoolgame/
 │   ├── settings/        GameSettings (opciones del jugador, guardadas en user://ajustes.cfg)
 │   └── terminal/        Terminal simulada: sistema de archivos ficticio e intérprete de comandos
 ├── ui/                Interfaz
-│   ├── hud/             CombatHUD: cristales, energía, BITS, objetivo, avisos, títulos
+│   ├── hud/             CombatHUD: cristales, energía, Ecos, objetivo, avisos, títulos
 │   ├── dialogue/        Caja de diálogo estilo Hades con retratos y voces
 │   ├── menus/           Menú principal, Opciones y Grimorio
 │   ├── terminal/        Ventana de la terminal
@@ -99,7 +101,7 @@ schoolgame/
 │   ├── digital/         Piezas del mundo digital: SPAM, terminal, punto de restauración, barrera
 │   ├── vision/          Lo que se ve con la Visión Digital (red, puentes de datos, fragmentos)
 │   ├── effects/         Efectos: succión por la pantalla, destellos, píxeles, aparición de Nullblade
-│   ├── pickups/         BITS (monedas) y cofres
+│   ├── pickups/         Ecos (la moneda) y cofres
 │   ├── hazards/         Peligros (pinchos)
 │   └── camera/          Cámara del juego
 ├── data/              Contenido editable (.tres): diálogos, personajes, misiones, terminales,
@@ -116,7 +118,8 @@ schoolgame/
 | Pieza | Tipo | Qué hace |
 |---|---|---|
 | `SceneManager` | Autoload | Cambia de sala con transición, recuerda por qué entrada se llega (`go_to_room`) |
-| `GameState` | Autoload | Todo el progreso: misiones, créditos/BITS, cristales, energía, habilidades, etapas de Nullblade/Aegis/Dominio, comandos aprendidos, marcas de la historia, incidentes. Sabe convertirse a datos para guardar (`to_dict` / `from_dict`) |
+| `Economy` | Autoload | Saldo de **Ecos** (la moneda): sumar, gastar, si alcanza y la penalización al morir (10 %, máx. 100, nada en el tutorial) |
+| `GameState` | Autoload | Todo el progreso: misiones, cristales, energía, habilidades, etapas de Nullblade/Aegis/Dominio, comandos aprendidos, marcas de la historia, incidentes. Sabe convertirse a datos para guardar (`to_dict` / `from_dict`) |
 | `DigitalVision` | Autoload | Estado de la Visión Digital: lista, activa (10 s) o recargando (16 s), y el glitch involuntario del prólogo |
 | `GameSettings` | Clase estática | Volumen, pantalla completa, velocidad del texto, reducir glitch y teclas |
 | `Sfx` y `Music` | Clases estáticas | Efectos y música. Si falta el archivo de audio, generan un sonido provisional por código |
@@ -148,7 +151,7 @@ con un trabajo:
 Todo el daño del juego viaja igual: un **`HitboxComponent`** (lo que golpea) crea un **`HitData`** (daño, tipo de
 amenaza, empuje) que recibe un **`HurtboxComponent`** y descuenta un **`HealthComponent`**. Sirve para la espada, los
 enemigos, los correos SPAM y las trampas.
-Los enemigos heredan de **`EnemyBase`** (vida, contacto, destello, empuje, muerte en píxeles y BITS); cada uno solo
+Los enemigos heredan de **`EnemyBase`** (vida, contacto, destello, empuje, muerte en píxeles y Ecos); cada uno solo
 escribe su comportamiento. Hoy existe la **«Contraseña débil»** (salta avisando; con media vida, «fuerza bruta»).
 
 ### Interacción, diálogos y NPC
@@ -187,7 +190,7 @@ la seguridad y la confianza del colegio. Está listo para usarse en los desafío
 3. La zona de golpe se activa un instante delante de Kai.
 4. El `Hurtbox` del enemigo la detecta → recibe el `HitData` → su vida baja.
 5. El enemigo parpadea, retrocede y suelta una contraseña débil; Kai recupera energía; la acción se congela 0,05 s.
-6. Si la vida llega a 0: el enemigo emite `died`, se desintegra en píxeles y suelta BITS; el combate lo escucha y
+6. Si la vida llega a 0: el enemigo emite `died`, se desintegra en píxeles y suelta Ecos; el combate lo escucha y
    avanza la misión.
 
 ## 8. Cómo agregar contenido sin programar
@@ -223,7 +226,7 @@ ramas quedan en el mismo commit.
 
 **Hecho:** movimiento completo, salas y transiciones, prólogo (Visión involuntaria y la entidad «???»), entrar a la
 PC, nivel de SPAM de 3360 px, terminal, combate contra la «Contraseña débil» (con el destello de la Nullblade),
-la contraseña que crea el jugador (se guarda solo su huella), la verificación en dos pasos que desbloquea la Visión Digital, curación, energía, BITS,
+la contraseña que crea el jugador (se guarda solo su huella), la verificación en dos pasos que desbloquea la Visión Digital, curación, energía, Ecos,
 Grimorio, opciones, sonido provisional y voces.
 
 **Falta para el MVP:** H5 (invitación del profesor, desafío Visión Digital + terminal, cuarto viejo con la

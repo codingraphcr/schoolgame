@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="1_hud"]
-[ext_resource type="Script" path="res://ui/hud/credits_display.gd" id="2_credits"]
+[ext_resource type="Script" path="res://ui/hud/ecos_display.gd" id="2_ecos"]
 [ext_resource type="Script" path="res://ui/hud/vision_meter.gd" id="3_vision"]
 [ext_resource type="Script" path="res://ui/hud/toast.gd" id="4_toast"]
 [ext_resource type="PackedScene" path="res://ui/dialogue/dialogue_box.tscn" id="5_dv60m"]
@@ -31,13 +31,13 @@ offset_bottom = 60.0
 mouse_filter = 2
 theme_override_constants/separation = 6
 
-[node name="Credits" type="HBoxContainer" parent="." unique_id=610872201]
+[node name="Ecos" type="HBoxContainer" parent="." unique_id=610872201]
 offset_left = 26.0
 offset_top = 96.0
 offset_right = 226.0
 offset_bottom = 124.0
 mouse_filter = 2
-script = ExtResource("2_credits")
+script = ExtResource("2_ecos")
 
 [node name="VisionMeter" type="Control" parent="." unique_id=1104332021]
 layout_mode = 3

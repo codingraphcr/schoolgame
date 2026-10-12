@@ -1,8 +1,8 @@
 extends SceneTree
-## Prueba automática: BITS. Los enemigos se desintegran y sueltan BITS según su fuerza; las monedas
+## Prueba automática: Ecos. Los enemigos se desintegran y sueltan Ecos según su fuerza; las fragmentos
 ## rebotan y quedan en el suelo; Kai las recoge al acercarse; los cofres y las misiones también dan
-## BITS; el HUD y la página del Grimorio.
-## Ejecutar: godot --headless --path . --script res://tests/test_bits.gd
+## Ecos; el HUD y la página del Grimorio.
+## Ejecutar: godot --headless --path . --script res://tests/test_ecos.gd
 
 const ROOM := "res://tests/fixtures/combat_test_room.tscn"
 const ENEMY := preload("res://characters/enemies/weak_password/weak_password.tscn")
@@ -37,17 +37,17 @@ func _test_split() -> void:
 	var holder := Node2D.new()
 	root.add_child(holder)
 	for amount in [3, 18, 200]:
-		var coins := BitCoin.spawn_burst(holder, Vector2.ZERO, amount)
+		var coins := EcoShard.spawn_burst(holder, Vector2.ZERO, amount)
 		var total := 0
 		for coin in coins:
 			total += coin.value
-		_check(total == amount and (amount <= BitCoin.MAX_COINS or coins.size() <= BitCoin.MAX_COINS or amount > 70),
-			"%d BITS se reparten en %d monedas que suman lo mismo" % [amount, coins.size()])
+		_check(total == amount and (amount <= EcoShard.MAX_COINS or coins.size() <= EcoShard.MAX_COINS or amount > 70),
+			"%d Ecos se reparten en %d fragmentos que suman lo mismo" % [amount, coins.size()])
 	holder.queue_free()
 	var enemy := ENEMY.instantiate() as EnemyBase
-	_check(enemy.get_bits_reward() == roundi(enemy.max_health * 3.0), "un enemigo suelta más BITS cuanto más fuerte es (%d)" % enemy.get_bits_reward())
-	enemy.bits_reward = 5
-	_check(enemy.get_bits_reward() == 5, "cada enemigo puede fijar su propia cantidad")
+	_check(enemy.get_ecos_reward() == roundi(enemy.max_health * 3.0), "un enemigo suelta más Ecos cuanto más fuerte es (%d)" % enemy.get_ecos_reward())
+	enemy.ecos_reward = 5
+	_check(enemy.get_ecos_reward() == 5, "cada enemigo puede fijar su propia cantidad")
 	enemy.free()
 
 
@@ -58,34 +58,34 @@ func _test_enemy_drop() -> void:
 	room.add_child(enemy)
 	enemy.global_position = player.global_position + Vector2(160, -4)
 	await _until(func() -> bool: return enemy.is_on_floor())
-	var reward := enemy.get_bits_reward()
+	var reward := enemy.get_ecos_reward()
 	enemy.health.take_damage(enemy.max_health)
 	await _frames(3)
 	_check(_count(PixelBurst) > 0, "al morir, el cuerpo se desintegra en píxeles")
 	var coins := _coins()
-	_check(_value(coins) == reward, "suelta %d BITS (%d monedas)" % [_value(coins), coins.size()])
+	_check(_value(coins) == reward, "suelta %d Ecos (%d fragmentos)" % [_value(coins), coins.size()])
 	await _wait(0.12)
-	_check(coins.any(func(c: BitCoin) -> bool: return c.velocity.y < 0.0 or not c.is_on_floor()), "las monedas saltan al salir")
+	_check(coins.any(func(c: EcoShard) -> bool: return c.velocity.y < 0.0 or not c.is_on_floor()), "las fragmentos saltan al salir")
 	await _wait(2.0)
-	_check(_coins().all(func(c: BitCoin) -> bool: return c.is_on_floor() and absf(c.velocity.y) < 1.0), "rebotan y quedan en el suelo")
-	_check(state.credits == 0, "no se recogen solas si Kai está lejos")
+	_check(_coins().all(func(c: EcoShard) -> bool: return c.is_on_floor() and absf(c.velocity.y) < 1.0), "rebotan y quedan en el suelo")
+	_check(root.get_node("Economy").ecos == 0, "no se recogen solas si Kai está lejos")
 	# Kai camina hasta ellas y las recoge.
 	await _collect_all()
 	await _wait(0.3)
 	await _frames(3)
-	_check(state.credits == reward, "Kai recoge los BITS al acercarse (%d)" % state.credits)
-	_check(room.get_node("CombatHUD/Credits")._amount.text == str(reward), "el HUD muestra los BITS")
-	_check(CreditsDisplay.format_bits(1250) == "1,250", "el HUD separa los miles (1,250)")
-	var entry: GrimorioEntry = load("res://data/grimorio/bits.tres")
-	_check(state.has_flag(BitCoin.DISCOVERED_FLAG) and entry.is_unlocked(state), "al recoger el primer BIT se desbloquea su página del Grimorio")
+	_check(root.get_node("Economy").ecos == reward, "Kai recoge los Ecos al acercarse (%d)" % root.get_node("Economy").ecos)
+	_check(room.get_node("CombatHUD/Ecos")._amount.text == str(reward), "el HUD muestra los Ecos")
+	_check(EcosDisplay.format_ecos(1250) == "1.250", "el HUD separa los miles (1.250)")
+	var entry: GrimorioEntry = load("res://data/grimorio/ecos.tres")
+	_check(state.has_flag(EcoShard.DISCOVERED_FLAG) and entry.is_unlocked(state), "al recoger el primer Eco se desbloquea su página del Grimorio")
 	_check(entry.text.contains("Incluso los datos corruptos pueden conservar algo de valor"), "la página tiene el texto de Ariel")
 
 
 func _test_chest() -> void:
-	var before: int = state.credits
-	var chest := BitChest.new()
+	var before: int = root.get_node("Economy").ecos
+	var chest := EcoChest.new()
 	chest.name = "CofrePrueba"
-	chest.bits = 30
+	chest.ecos = 30
 	room.add_child(chest)
 	chest.global_position = player.global_position + Vector2(40, 0)
 	await _frames(3)
@@ -98,13 +98,13 @@ func _test_chest() -> void:
 	await _collect_all()
 	await _wait(0.3)
 	await _frames(3)
-	_check(state.credits == before + 30, "el cofre suelta sus BITS y Kai los recoge (+%d)" % (state.credits - before))
+	_check(root.get_node("Economy").ecos == before + 30, "el cofre suelta sus Ecos y Kai los recoge (+%d)" % (root.get_node("Economy").ecos - before))
 	_action("interact")
 	await _frames(3)
-	_check(_coins().is_empty() and state.credits == before + 30, "un cofre abierto no vuelve a dar BITS")
+	_check(_coins().is_empty() and root.get_node("Economy").ecos == before + 30, "un cofre abierto no vuelve a dar Ecos")
 	chest.queue_free()
 	await _frames(2)
-	var again := BitChest.new()
+	var again := EcoChest.new()
 	again.name = "CofrePrueba"
 	room.add_child(again)
 	await _frames(2)
@@ -113,23 +113,23 @@ func _test_chest() -> void:
 
 
 func _test_quest_reward() -> void:
-	var before: int = state.credits
+	var before: int = root.get_node("Economy").ecos
 	state.start_quest(&"prologo")
 	for step in [&"hablar_profesor", &"revisar_computadora", &"volver_profesor"]:
 		state.complete_step(&"prologo", step)
 	var quest := QuestDB.get_quest(&"prologo")
-	_check(quest.bits_reward > 0 and state.credits == before + quest.bits_reward, "completar una misión da BITS (+%d)" % (state.credits - before))
+	_check(quest.ecos_reward > 0 and root.get_node("Economy").ecos == before + quest.ecos_reward, "completar una misión da Ecos (+%d)" % (root.get_node("Economy").ecos - before))
 
 
-func _coins() -> Array[BitCoin]:
-	var result: Array[BitCoin] = []
+func _coins() -> Array[EcoShard]:
+	var result: Array[EcoShard] = []
 	for node in room.get_children():
-		if node is BitCoin and not node.is_queued_for_deletion():
+		if node is EcoShard and not node.is_queued_for_deletion():
 			result.append(node)
 	return result
 
 
-func _value(coins: Array[BitCoin]) -> int:
+func _value(coins: Array[EcoShard]) -> int:
 	var total := 0
 	for coin in coins:
 		total += coin.value
@@ -179,7 +179,7 @@ func _check(condition: bool, message: String) -> void:
 	print("%s %s" % ["OK  " if condition else "FAIL", message])
 
 
-## Kai pasa por encima de cada moneda (como al caminar por la zona).
+## Kai pasa por encima de cada fragmento (como al caminar por la zona).
 func _collect_all() -> void:
 	for i in 30:
 		var coins := _coins()

@@ -30,7 +30,7 @@ Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `
 | **Combate** | En la pelea contra la «Contraseña débil» la **Nullblade aparece como un destello** (animación de Ariel) y Kai pelea con ella. No queda obtenida | Nullblade (solo en la PC) |
 | **Recompensa** | El jugador **crea su propia contraseña** para el profesor (con un medidor que explica cada regla; se guarda solo su huella y tendrá que recordarla en el capítulo 4 y en misiones extra) y elige el segundo paso (aplicación de autenticación), con explicación de cada opción. El profesor agradece, la **Visión Digital se usa con Q** desde aquí, el destello de la Nullblade **se apaga** y Kai vuelve al laboratorio (+100 BITS) | + Visión Digital |
 | **La habitación vieja** | El profesor lo invita a visitar unas instalaciones: un pasillo donde está el cuarto viejo. Para entrar hay un desafío de **Visión Digital + terminal** (con Q se ven pistas ocultas; con ellas se resuelve el acceso en una terminal; tema del MEP: control de acceso). Adentro está la **Nullblade oficial**: con ella llegan el **dash** y el **doble salto**, la tarjeta «NUEVO EQUIPAMIENTO» y el título **«EL DESPERTAR»** | + Nullblade (para siempre), **dash** (nivel 1) y **doble salto** |
-| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), **Aegis (cap. 2, nivel 3: fundamentos de programación)** y mejoras con créditos |
+| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), **Aegis (cap. 2, nivel 3: fundamentos de programación)** y mejoras con Ecos |
 
 **No existe una sala de pruebas dentro del juego:** cada arma y habilidad se prueba en el mapa a medida que
 se desbloquea. La sala gris (`tests/fixtures/`) solo la usan las pruebas automáticas.
@@ -43,14 +43,14 @@ se desbloquea. La sala gris (`tests/fixtures/`) solo la usan las pruebas automá
 | Tras un golpe | Congelamiento breve (0,08 s), sacudida de cámara, empuje y **1 s de invulnerabilidad** con parpadeo |
 | Peligros (pinchos, vacío) | Quitan 1 máscara y devuelven al **último suelo seguro** (el de ~0,3 s antes del golpe) |
 | Curación | Mantener **L** gasta energía y recupera 1 máscara (tarea C5) |
-| Muerte | Reaparece en el punto de control con las máscaras llenas y **pierde el 10 % de los créditos** (redondeado hacia abajo) |
-| Monedas | **Créditos** del jugador (mejoras: dash, máscaras…) separados del **presupuesto** del colegio (decisiones de seguridad). Cada mejora tiene su propio precio |
+| Muerte | Reaparece en el punto de control con las máscaras llenas y **pierde el 10 % de sus Ecos** (hacia abajo, **máximo 100**; **nada durante el tutorial**). Nunca pierde habilidades, evoluciones, comandos, páginas ni progreso |
+| Monedas | **ECOS** (moneda oficial, solo se obtienen jugando) para mejoras y tiendas, separados del **presupuesto** del colegio (decisiones de seguridad). Cada artículo tiene su propio precio |
 
 ## Decisiones de movimiento
 
 | Tema | Decisión |
 |---|---|
-| Dash | **Por niveles**, se adquiere en la mini aventura y se mejora con créditos: 0 sin dash · 1 Dash (no protege, pero **un dash en el momento justo hace el parry**) · 2 **Dash Fantasma** (atraviesa enemigos y ataques sin daño) · 3 **Esquiva Perfecta** (ventana de parry más amplia y mejor recompensa) |
+| Dash | **Por niveles**, se adquiere en la mini aventura y se mejora con Ecos: 0 sin dash · 1 Dash (no protege, pero **un dash en el momento justo hace el parry**) · 2 **Dash Fantasma** (atraviesa enemigos y ataques sin daño) · 3 **Esquiva Perfecta** (ventana de parry más amplia y mejor recompensa) |
 | Doble salto | Se desbloquea con la historia |
 | Pared | Deslizar + salto de pared, se desbloquea con la historia. Al agarrarse se recuperan el doble salto y el dash aéreo |
 | Caída | Más rápida y firme (gravedad ×2 al caer); la cámara se adelanta hacia abajo en caídas rápidas |
@@ -91,7 +91,8 @@ Es el vínculo entre el combate y el contenido educativo.
 | T1 | Sala de pruebas + movimiento + cámara | ✅ |
 | T2 | Movimiento avanzado: dash + doble salto + deslizar/salto de pared | ✅ |
 | C1 | Daño compartido, 4 máscaras, invulnerabilidad, peligros, muerte, dash por niveles, HUD | ✅ |
-| C2 | `GameState`: progreso de combate y créditos (pérdida al morir) | ✅ |
+| C2 | `GameState`: progreso de combate y moneda (pérdida al morir) | ✅ |
+| E1 | **ECOS**: autoload `Economy`, BITS → Ecos, penalización (10 %, máx. 100, nada en el tutorial) | ✅ |
 | Z1 | Retirar la sala de desarrollo (la sala gris queda solo para pruebas automáticas) | ✅ |
 | Z2 | Arte oficial de Ariel (estilo D) en el proyecto + Kai como personaje | ✅ |
 | Z3 | Primera sala real: Pasillo + Laboratorio (Zona 0) | ✅ |

@@ -29,7 +29,7 @@
 [ext_resource type="Resource" path="res://data/dialogues/prologo/contrasena_debil_aparece.tres" id="19_wpin"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/contrasena_debil_reintento.tres" id="20_wpre"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/contrasena_debil_derrotada.tres" id="21_wpok"]
-[ext_resource type="Script" path="res://world/pickups/bit_chest.gd" id="40_chest"]
+[ext_resource type="Script" path="res://world/pickups/eco_chest.gd" id="40_chest"]
 [ext_resource type="Script" path="res://world/zones/pc_profesor/entity_eye.gd" id="41_eye"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5aedr"]
@@ -513,7 +513,7 @@ interval = 0.85
 position = Vector2(1400, 304)
 script = ExtResource("12_rstpt")
 
-[node name="BitChest" type="Area2D" parent="."]
+[node name="EcoChest" type="Area2D" parent="."]
 position = Vector2(1462, 304)
 script = ExtResource("40_chest")
 chest_id = &"pc_profesor_restauracion"

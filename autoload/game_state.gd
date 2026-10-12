@@ -11,7 +11,6 @@ signal control_applied(incident: Incident, control: SecurityControl)
 ## Cambió el progreso del jugador (créditos, habilidades o evoluciones).
 signal progress_changed
 ## Cambiaron los créditos; delta es la diferencia (negativa al gastar o perder).
-signal credits_changed(credits: int, delta: int)
 signal quest_started(quest_id: StringName)
 signal quest_step_changed(quest_id: StringName)
 signal quest_completed(quest_id: StringName)
@@ -32,7 +31,6 @@ const MAX_NULLBLADE_STAGE := 4
 const MAX_AEGIS_STAGE := 3
 const MAX_DOMAIN_STAGE := 3
 ## Fracción de los créditos que se pierde al morir.
-const DEATH_CREDIT_PENALTY := 0.1
 
 ## Nombres para la interfaz. El índice es la etapa (0 = no obtenido).
 const NULLBLADE_NAMES: Array[String] = ["—", "Nullblade.exe", "Nullblade.zero", "Nullblade.void", "Nullblade.max"]
@@ -57,8 +55,6 @@ var _decision_log: Array[Dictionary] = []
 # Separado del presupuesto del colegio: los créditos son del jugador y pagan sus mejoras.
 # Solo se modifica con las funciones de abajo, que limitan los valores y avisan del cambio.
 
-## Créditos del jugador (mejoras de habilidades). Se pierde una parte al morir.
-var credits := 0
 var max_masks := START_MASKS
 ## Máscaras actuales al salir de una sala (-1 = llenas). Así cambiar de sala no cura.
 var current_masks := -1.0
@@ -106,6 +102,7 @@ func reset() -> void:
 	_quest_progress.clear()
 	_commands.clear()
 	_passwords.clear()
+	_economy().reset()
 	stats_changed.emit()
 	progress_changed.emit()
 
@@ -211,35 +208,6 @@ func _set_incident_state(incident: Incident, state: Incident.State) -> void:
 
 # --- Progreso del jugador ---
 
-func add_credits(amount: int) -> void:
-	if amount <= 0:
-		return
-	credits += amount
-	credits_changed.emit(credits, amount)
-	progress_changed.emit()
-
-
-## Paga una mejora. Devuelve false (sin cobrar nada) si no alcanza.
-func spend_credits(amount: int) -> bool:
-	if amount < 0 or amount > credits:
-		return false
-	if amount > 0:
-		credits -= amount
-		credits_changed.emit(credits, -amount)
-		progress_changed.emit()
-	return true
-
-
-## Al morir se pierde una parte de los créditos. Devuelve cuántos se perdieron.
-func apply_death_penalty() -> int:
-	var lost := floori(credits * DEATH_CREDIT_PENALTY)
-	if lost > 0:
-		credits -= lost
-		credits_changed.emit(credits, -lost)
-		progress_changed.emit()
-	return lost
-
-
 func set_dash_level(level: int) -> void:
 	dash_level = clampi(level, 0, MAX_DASH_LEVEL)
 	progress_changed.emit()
@@ -287,7 +255,6 @@ func unlock_vision(unlocked := true) -> void:
 
 
 func _reset_progress() -> void:
-	credits = 0
 	max_masks = START_MASKS
 	max_energy_cells = START_ENERGY_CELLS
 	current_energy = -1.0
@@ -339,8 +306,8 @@ func complete_step(quest_id: StringName, step_id: StringName) -> bool:
 	_quest_progress[quest_id] = -1
 	if active_quest == quest_id:
 		active_quest = &""
-	if quest.bits_reward > 0:
-		add_credits(quest.bits_reward)
+	if quest.ecos_reward > 0:
+		_economy().add_ecos(quest.ecos_reward)
 	quest_completed.emit(quest_id)
 	if quest.next_quest != &"":
 		start_quest(quest.next_quest)
@@ -428,6 +395,11 @@ func check_backup_code(id: StringName, code: String) -> bool:
 	return not entry.is_empty() and not String(entry["backup_hash"]).is_empty() 		and _fingerprint(entry["backup_salt"], code.strip_edges().to_upper()) == entry["backup_hash"]
 
 
+## La economía (saldo de Ecos) es su propio autoload; GameState la guarda y reinicia con el resto.
+func _economy() -> Node:
+	return get_node("/root/Economy")
+
+
 static func _fingerprint(salt: String, text: String) -> String:
 	return (salt + text).sha256_text()
 
@@ -449,10 +421,10 @@ func to_dict() -> Dictionary:
 		"decision_log": _decision_log.duplicate(true),
 		"active_quest": String(active_quest),
 		"quests": _keys_to_strings(_quest_progress),
+		"economy": _economy().to_dict(),
 		"commands": _key_list(_commands),
 		"passwords": _keys_to_strings(_passwords),
 		"player": {
-			"credits": credits,
 			"max_masks": max_masks,
 			"current_masks": current_masks,
 			"max_energy_cells": max_energy_cells,
@@ -494,7 +466,8 @@ func from_dict(data: Dictionary) -> void:
 	# Partidas sin progreso del jugador (versiones anteriores) quedan con los valores iniciales.
 	# int() porque al pasar por JSON los números vuelven como decimales.
 	var player: Dictionary = data.get("player", {})
-	credits = int(player.get("credits", 0))
+	# Las partidas de antes de los Ecos guardaban «credits»: se convierten.
+	_economy().from_dict(data.get("economy", {}), int(player.get("credits", 0)))
 	max_masks = maxi(int(player.get("max_masks", START_MASKS)), 1)
 	current_masks = float(player.get("current_masks", -1.0))
 	max_energy_cells = clampi(int(player.get("max_energy_cells", START_ENERGY_CELLS)), 1, MAX_ENERGY_CELLS)

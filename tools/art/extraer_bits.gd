@@ -1,6 +1,6 @@
 extends SceneTree
 ## Recorta el símbolo de los BITS de la hoja de Ariel (con su fondo oscuro) para el Grimorio.
-## Las monedas del juego y el ícono del HUD se dibujan por código (BitCoin.draw_coin).
+## Las monedas del juego y el ícono del HUD se dibujan por código (EcoShard.draw_coin).
 ## Ejecutar: godot --headless --path . --script res://tools/art/extraer_bits.gd
 
 const SHEET := "res://docs/arte/referencias/bits_concepto.webp"

@@ -21,7 +21,7 @@ func _run() -> void:
 	# Progreso de una partida anterior: "Jugar" debe empezar de cero.
 	state.set_dash_level(2)
 	state.unlock_double_jump()
-	state.add_credits(300)
+	root.get_node("Economy").add_ecos(300)
 
 	change_scene_to_file(MENU)
 	await _frames(20)
@@ -56,7 +56,7 @@ func _test_new_game(room: Room, player: Player) -> void:
 	_check(player.dash_level == 0 and not player.can_double_jump and not player.can_wall_jump,
 		"partida nueva: Kai es un alumno común (sin dash, doble salto ni pared)")
 	_check(not state.vision_unlocked and state.nullblade_stage == 0, "partida nueva: sin Visión Digital ni Nullblade")
-	_check(state.credits == 0, "partida nueva: 0 créditos")
+	_check(root.get_node("Economy").ecos == 0, "partida nueva: 0 Ecos")
 	_check(room.get_node("CombatHUD/Masks").get_child_count() == 4, "el HUD muestra 4 máscaras")
 	await _until(func() -> bool: return player.is_on_floor())
 	_check(player.is_on_floor() and absf(player.global_position.y - FLOOR_Y) < 1.0, "Kai aparece de pie en la entrada")

@@ -65,11 +65,11 @@ func _run() -> void:
 	_check(&"enemy_death" in Sfx.history, "la desintegración del enemigo suena")
 	await _wait(0.5)
 	for coin in room.get_children():
-		if coin is BitCoin:
+		if coin is EcoShard:
 			player.teleport_to(coin.global_position)
 			break
 	await _wait(0.6)
-	_check(&"bit_pickup" in Sfx.history, "recoger BITS suena")
+	_check(&"eco_pickup" in Sfx.history, "recoger Ecos suena")
 
 	Sfx.history.clear()
 	player.health.current = 2.0

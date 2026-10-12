@@ -1,7 +1,7 @@
 extends SceneTree
 ## Prueba automática: H4d. El jugador crea la contraseña nueva (PasswordWindow; la ventana en sí se
 ## prueba en test_custom_password.gd) y elige el método de verificación en dos pasos (ChoiceWindow); al terminar: Visión Digital desbloqueada, misión completada con
-## sus BITS, el destello de la Nullblade se apaga y Kai vuelve al laboratorio.
+## sus Ecos, el destello de la Nullblade se apaga y Kai vuelve al laboratorio.
 ## Ejecutar: godot --headless --path . --script res://tests/test_account_security.gd
 
 const PC := "res://world/zones/pc_profesor/escritorio.tscn"
@@ -91,7 +91,7 @@ func _test_in_game() -> void:
 	_check(state.get_current_step(&"contrasena_profesor") == &"elegir_seguridad" and current_scene == room,
 		"Esc cierra sin completar y sin salir del juego")
 
-	var credits_before: int = state.credits
+	var ecos_before: int = root.get_node("Economy").ecos
 	_action("interact")
 	await _until(func() -> bool: return get_first_node_in_group(&"password_window") != null)
 	var create := get_first_node_in_group(&"password_window") as PasswordWindow
@@ -113,8 +113,8 @@ func _test_in_game() -> void:
 	await _advance(box)
 	await _frames(3)
 	_check(state.vision_unlocked, "la Visión Digital queda desbloqueada")
-	_check(state.is_quest_completed(&"contrasena_profesor") and state.credits == credits_before + 100,
-		"la misión se completa y da sus 100 BITS")
+	_check(state.is_quest_completed(&"contrasena_profesor") and root.get_node("Economy").ecos == ecos_before + 100,
+		"la misión se completa y da sus 100 Ecos")
 	_check(player.combat.weapon == null and state.nullblade_stage == 0, "el destello de la Nullblade se apaga")
 	_check(state.has_flag(&"cuenta_profesor_segura"), "queda registrado que la cuenta está segura")
 

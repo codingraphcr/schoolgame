@@ -1,8 +1,7 @@
-class_name CreditsDisplay
+class_name EcosDisplay
 extends HBoxContainer
-## BITS del jugador en el HUD (debajo de los cristales): la moneda girando, la cantidad
-## ("1,250") y la palabra BITS. Al ganar o perder BITS muestra brevemente la diferencia (+18 / −5).
-## Por dentro son los créditos de GameState (GameState.credits / add_credits).
+## Ecos del jugador en el HUD (debajo de los cristales): el ícono, la cantidad ("1.250") y la
+## palabra ECOS. Al ganar o perder Ecos muestra brevemente la diferencia (+18 / −5). Lee Economy.
 
 const GAIN_COLOR := Color(0.8, 0.7, 1.0)
 const LOSS_COLOR := Color(1.0, 0.45, 0.5)
@@ -24,27 +23,27 @@ func _ready() -> void:
 	_icon.custom_minimum_size = Vector2(22, 26)
 	_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_icon.draw.connect(func() -> void:
-		BitCoin.draw_coin(_icon, _icon.size / 2.0, 8.0, cos(_time * 1.6), false, 0.5 + _flash))
+		EcoShard.draw_coin(_icon, _icon.size / 2.0, 8.0, cos(_time * 1.6), false, 0.5 + _flash))
 	add_child(_icon)
 
 	_amount = _make_label(Color(0.95, 0.97, 1.0), 20)
 	var word := _make_label(LABEL_COLOR, 14)
-	word.text = "BITS"
+	word.text = "ECOS"
 	_delta = _make_label(GAIN_COLOR, 18)
 	_delta.modulate.a = 0.0
 
-	var game_state := get_node_or_null("/root/GameState")
-	if game_state:
-		game_state.credits_changed.connect(_on_credits_changed)
-		_amount.text = format_bits(game_state.credits)
+	var economy := get_node_or_null("/root/Economy")
+	if economy:
+		economy.ecos_changed.connect(_on_ecos_changed)
+		_amount.text = format_ecos(economy.ecos)
 
 
-## 1250 → "1,250"
-static func format_bits(amount: int) -> String:
+## 1250 → "1.250" (separador de miles como en Costa Rica).
+static func format_ecos(amount: int) -> String:
 	var digits := str(absi(amount))
 	var result := ""
 	while digits.length() > 3:
-		result = "," + digits.right(3) + result
+		result = "." + digits.right(3) + result
 		digits = digits.left(digits.length() - 3)
 	return ("-" if amount < 0 else "") + digits + result
 
@@ -67,8 +66,8 @@ func _make_label(color: Color, font_size: int) -> Label:
 	return label
 
 
-func _on_credits_changed(credits: int, delta: int) -> void:
-	_amount.text = format_bits(credits)
+func _on_ecos_changed(ecos: int, delta: int) -> void:
+	_amount.text = format_ecos(ecos)
 	if delta == 0:
 		return
 	if delta > 0:

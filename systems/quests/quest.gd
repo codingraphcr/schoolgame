@@ -12,8 +12,8 @@ extends Resource
 @export var completion_subtitle := ""
 ## Misión que empieza automáticamente al completar esta (vacío = ninguna).
 @export var next_quest: StringName = &""
-## BITS que se reciben al completarla (0 = ninguno).
-@export var bits_reward := 0
+## Ecos que se reciben al completarla (0 = ninguno).
+@export var ecos_reward := 0
 
 
 func get_step_index(step_id: StringName) -> int:
