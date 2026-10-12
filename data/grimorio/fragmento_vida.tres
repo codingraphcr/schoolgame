@@ -12,5 +12,5 @@ text = "Pedazos rotos de un núcleo de integridad, el cristal que sostiene la ex
 
 Puedes encontrarlos durante la historia y en encuentros con enemigos que tendrás que derrotar en el futuro."
 facts = Dictionary[String, String]({"Para una vida": "4 fragmentos", "Dónde": "En la historia y al derrotar enemigos poderosos"})
-shows_life_fragments = true
+inventory_kind = 5
 unlock_flag = &"fragmento_vida_obtenido"

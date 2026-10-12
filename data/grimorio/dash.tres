@@ -11,4 +11,6 @@ subtitle = "Habilidad · Movimiento"
 text = "Un impulso rápido en la dirección en la que miras. Sirve para esquivar y para cruzar huecos que no se pueden saltar."
 facts = Dictionary[String, String]({"Uso": "Esquivar"})
 action = &"dash"
+inventory_kind = 2
+icon = &"dash"
 unlock_property = &"dash_level"

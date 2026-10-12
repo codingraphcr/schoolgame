@@ -11,3 +11,5 @@ subtitle = "Habilidad · Restauración"
 text = "Kai concentra su propia energía para reparar su integridad. Mantén presionada la tecla: en el suelo se arrodilla y en el aire se queda flotando. Un golpe interrumpe la canalización."
 facts = Dictionary[String, String]({"Recupera": "1,5 cristales", "Gasta": "Media barrita de energía", "Primera": "1,1 s · luego cada 0,9 s"})
 action = &"heal"
+inventory_kind = 2
+icon = &"curacion"

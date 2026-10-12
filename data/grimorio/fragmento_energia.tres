@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 5
+order = 6
+title = "Fragmentos de energía"
+subtitle = "Recurso · Núcleo de energía"
+text = "Pedazos de un núcleo de energía. Con cuatro fragmentos se completa el núcleo y Kai gana una barrita más de energía para sus habilidades.
+
+Puedes encontrarlos durante la historia y en encuentros con enemigos que tendrás que derrotar en el futuro."
+facts = Dictionary[String, String]({"Para una barrita": "4 fragmentos", "Dónde": "En la historia y al derrotar enemigos poderosos"})
+inventory_kind = 6
+unlock_flag = &"fragmento_energia_obtenido"

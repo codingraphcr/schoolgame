@@ -111,7 +111,7 @@ func _run() -> void:
 	_check(got[0] and not paused and state.has_flag(&"fragmento_prueba"), "al continuar la ventana se cierra y el juego sigue")
 	_check(room.get_node("CombatHUD").get_node_or_null("LifeFragments") == null, "el fragmento no aparece junto a las vidas")
 	var entry: GrimorioEntry = load("res://data/grimorio/fragmento_vida.tres")
-	_check(entry.is_unlocked(state) and entry.shows_life_fragments, "se desbloquea su página del Grimorio (el cristal de vida que se llena)")
+	_check(entry.is_unlocked(state) and entry.inventory_kind == GrimorioEntry.InventoryKind.FRAGMENTO_VIDA, "aparece en el INVENTARIO del Grimorio (el símbolo que se llena)")
 	var masks: int = state.max_masks
 	state.add_life_fragment()
 	state.add_life_fragment()

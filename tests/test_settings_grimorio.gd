@@ -94,22 +94,43 @@ func _test_grimorio() -> void:
 	change_scene_to_file("res://ui/menus/grimorio/grimorio.tscn")
 	await _wait(0.4)
 	var grimorio := current_scene
-	_check(grimorio.get_node("%Tabs").get_child_count() == 6, "el Grimorio tiene 6 pestañas")
-	_check(grimorio.get_node("%CategoryTitle").text == "INVENTARIO" and grimorio.get_node("%Tabs").get_child(0).text == "INVENTARIO",
-		"se abre en el INVENTARIO, la primera pestaña")
-	# El inventario muestra solo lo que Kai tiene, con la cantidad de Ecos.
+	_check(grimorio.page == GrimorioScreen.Page.INVENTARIO and grimorio.get_node("Inventory").visible and not grimorio.get_node("%Book").visible,
+		"se abre en el INVENTARIO (la página principal)")
+	_check(grimorio.get_node("%Tabs").get_child_count() == 5, "el libro tiene 5 pestañas: mapa, comandos, conceptos, amenazas y registros")
+	# El inventario: fragmentos, arma, habilidades, coleccionables y Ecos (lo que no se tiene, apagado).
 	var game_state := root.get_node("GameState")
 	game_state.set_flag(&"ecos_descubiertos")
 	game_state.set_flag(&"fragmento_vida_obtenido")
+	game_state.add_life_fragment()
 	root.get_node("Economy").ecos = 42
 	grimorio.select_category(GrimorioEntry.Category.ARSENAL)
 	await process_frame
-	var slots: Array = grimorio.get_node("Book/LeftPage/Inventory").get_children().filter(func(s: Node) -> bool: return not s.is_queued_for_deletion())
-	var titles := slots.map(func(s: InventorySlot) -> String: return s.entry.title)
-	var ecos_slot = slots.filter(func(s: InventorySlot) -> bool: return s.entry.title == "ECOS")
-	_check("ECOS" in titles and "Fragmentos de vida" in titles and not "Nullblade" in titles, "el inventario muestra lo que Kai tiene (%s)" % ", ".join(titles))
-	_check(not ecos_slot.is_empty() and ecos_slot[0].amount == 42, "la casilla de los Ecos muestra cuántos tiene")
-	_check(not grimorio.get_node("%EntryScroll").visible, "en el inventario hay casillas en vez de una lista")
+	var page: InventoryPage = grimorio.get_node("Inventory")
+	var by_kind := {}
+	for slot in page.slots():
+		if slot.entry:
+			by_kind[slot.entry.inventory_kind] = by_kind.get(slot.entry.inventory_kind, []) + [slot]
+	var weapon: Array = by_kind.get(GrimorioEntry.InventoryKind.ARMA, [])
+	_check(weapon.size() == 1 and not weapon[0].unlocked, "la Nullblade tiene su lugar (apagada hasta obtenerla)")
+	var life: Array = by_kind.get(GrimorioEntry.InventoryKind.FRAGMENTO_VIDA, [])
+	var energy: Array = by_kind.get(GrimorioEntry.InventoryKind.FRAGMENTO_ENERGIA, [])
+	_check(life.size() == 1 and life[0].unlocked and energy.size() == 1, "un símbolo para los fragmentos de vida y otro para los de energía")
+	_check((life[0].get_child(0) as LifeFragmentIcon).count == 1 and (energy[0].get_child(0) as LifeFragmentIcon).energy,
+		"el de vida tiene una parte iluminada; el de energía es el cian")
+	_check(by_kind.get(GrimorioEntry.InventoryKind.HABILIDAD, []).size() >= 3 and by_kind.has(GrimorioEntry.InventoryKind.DEFINITIVA),
+		"las habilidades (dash, Visión Digital, curación…) y la definitiva")
+	_check(page._ecos_amount.text == "42", "los Ecos muestran cuántos hay")
+	page.show_entry(life[0].entry)
+	_check(page._title.text == "Fragmentos de vida", "a la derecha, la descripción de lo elegido")
+	# Q y E cambian de página: a la izquierda el mapa, a la derecha el archivo.
+	_action(&"interact")
+	await process_frame
+	_check(grimorio.page == GrimorioScreen.Page.ARCHIVO and grimorio.get_node("%Book").visible and not grimorio.get_node("%Tabs").get_child(0).visible,
+		"E abre el ARCHIVO (sin la pestaña del mapa)")
+	_action(&"vision")
+	_action(&"vision")
+	await process_frame
+	_check(grimorio.page == GrimorioScreen.Page.MAPA and grimorio.get_node("%Map").visible, "Q vuelve y luego abre el MAPA")
 	var firewall: GrimorioEntry = load("res://data/grimorio/firewall.tres")
 	var phishing: GrimorioEntry = load("res://data/grimorio/phishing.tres")
 	_check(grimorio.is_unlocked(firewall) and not grimorio.is_unlocked(phishing), "al empezar, Phishing está oculto")

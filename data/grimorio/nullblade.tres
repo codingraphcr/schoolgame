@@ -15,4 +15,5 @@ text = "Una espada formada por fragmentos de código estabilizado. Su filo puede
 facts = Dictionary[String, String]({"Tipo": "Arma", "Energía por golpe": "12,5 %"})
 action = &"attack"
 image = ExtResource("2_art")
+inventory_kind = 1
 unlock_property = &"nullblade_stage"

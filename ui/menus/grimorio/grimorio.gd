@@ -1,11 +1,13 @@
 class_name GrimorioScreen
 extends Control
-## El Grimorio: el glosario del juego con forma de libro (concepto de Ariel). Pestañas INVENTARIO (la
-## principal, estilo Hollow Knight: una cuadrícula con el arma, las habilidades y los recursos de Kai,
-## como los Ecos o los fragmentos de vida), MAPA, COMANDOS, CONCEPTOS, AMENAZAS y REGISTROS. La página
-## izquierda muestra el inventario, el mapa o la lista de entradas y la derecha la entrada elegida.
-## Las entradas son GrimorioEntry de data/grimorio/; las que todavía no se descubren aparecen como «???»
-## (en el inventario solo está lo que Kai ya tiene).
+## El Grimorio (conceptos de Ariel en docs/arte/referencias/grimorio_concepto.webp y
+## grimorio_inventario_concepto.webp). Tres páginas, como en Hollow Knight:
+##   INVENTARIO (la principal, InventoryPage): fragmentos de vida y de energía, la Nullblade, las
+##     habilidades, los coleccionables y los Ecos, con la descripción de lo elegido a la derecha.
+##   MAPA (a la izquierda, Q): el libro con el mapa de las zonas.
+##   ARCHIVO (a la derecha, E): el libro con las pestañas COMANDOS, CONCEPTOS, AMENAZAS y REGISTROS.
+## Arriba, GrimorioNav muestra el título y a qué página se pasa con Q y con E.
+## Las entradas son GrimorioEntry de data/grimorio/; las que todavía no se descubren aparecen como «???».
 ## Durante el juego se abre con G (acción "grimorio", ver CombatHUD) encima de la sala, que queda
 ## en pausa: GrimorioScreen.open(nodo). G, Esc o CERRAR lo cierran.
 
@@ -14,7 +16,10 @@ const SCENE_PATH := "res://ui/menus/grimorio/grimorio.tscn"
 ## Si se abre como escena suelta (sin juego detrás), al cerrar vuelve al menú.
 const RETURN_SCENE := "res://ui/menus/main_menu/main_menu.tscn"
 
-# El índice es la categoría (GrimorioEntry.Category); la de índice 5 (ARSENAL) se muestra como INVENTARIO.
+## Páginas del Grimorio (de izquierda a derecha).
+enum Page { MAPA, INVENTARIO, ARCHIVO }
+
+# El índice es la categoría (GrimorioEntry.Category); ARSENAL es el INVENTARIO (su propia página).
 const CATEGORY_TITLES: PackedStringArray = ["MAPA", "COMANDOS", "AMENAZAS", "CONCEPTOS", "REGISTROS", "INVENTARIO"]
 const CATEGORY_DESCRIPTIONS: PackedStringArray = [
 	"Explora las áreas que has visitado y descubre nuevas rutas, secretos y conexiones.",
@@ -32,12 +37,15 @@ const ACCENT := Color(0.29, 0.21, 0.7)
 
 ## Verdadero si está abierto encima del juego (con GrimorioScreen.open).
 var overlay := false
+var page := Page.INVENTARIO
 var _entries: Array[GrimorioEntry] = []
 var _category := 0
+## Última pestaña elegida en el ARCHIVO (para volver a ella).
+var _archive_category := GrimorioEntry.Category.COMANDOS
 var _entry_group := ButtonGroup.new()
 var _tab_group := ButtonGroup.new()
-## Cuadrícula del INVENTARIO (en el lugar de la lista de entradas).
-var _inventory: GridContainer
+var _inventory: InventoryPage
+var _nav: GrimorioNav
 
 @onready var _book: Control = %Book
 @onready var _tabs: Array[Node] = %Tabs.get_children()
@@ -65,7 +73,14 @@ func _ready() -> void:
 		$Background.visible = false
 		$Shade.color.a = 0.78
 	_load_entries()
-	_build_inventory()
+	_inventory = InventoryPage.new()
+	_inventory.name = "Inventory"
+	add_child(_inventory)
+	_inventory.close_requested.connect(close)
+	_nav = GrimorioNav.new()
+	_nav.name = "Nav"
+	add_child(_nav)
+	_nav.page_requested.connect(func(p: int) -> void: show_page(p as Page))
 	for i in _tabs.size():
 		var tab := _tabs[i] as Button
 		tab.button_group = _tab_group
@@ -77,22 +92,46 @@ func _ready() -> void:
 			if _category != category:
 				select_category(category))
 	_back_button.pressed.connect(close)
-	select_category(GrimorioEntry.Category.ARSENAL)
-	if not DisplayServer.is_touchscreen_available():
-		(_tabs[0] as Control).grab_focus()
+	show_page(Page.INVENTARIO)
 	Sfx.play(&"book_open")
-	# El libro se abre con un pequeño acercamiento.
-	_book.scale = Vector2.ONE * 0.96
-	_book.modulate.a = 0.0
-	var tween := create_tween().set_parallel().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_property(_book, "scale", Vector2.ONE, 0.3)
-	tween.tween_property(_book, "modulate:a", 1.0, 0.25)
+	# Se abre con un pequeño acercamiento.
+	for node: Control in [_book, _inventory]:
+		node.pivot_offset = Vector2(640, 360)
+		node.scale = Vector2.ONE * 0.96
+		var tween := create_tween().set_parallel().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_property(node, "scale", Vector2.ONE, 0.3)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed(&"grimorio"):
 		get_viewport().set_input_as_handled()
 		close()
+	elif event.is_action_pressed(&"vision") and page > Page.MAPA:
+		get_viewport().set_input_as_handled()
+		show_page((page - 1) as Page)
+	elif event.is_action_pressed(&"interact") and page < Page.ARCHIVO:
+		get_viewport().set_input_as_handled()
+		show_page((page + 1) as Page)
+
+
+## Cambia de página: el inventario, o el libro con el mapa o con el archivo.
+func show_page(new_page: Page) -> void:
+	if new_page != page:
+		Sfx.play(&"book_page", randf_range(0.95, 1.1))
+	page = new_page
+	_nav.page = page
+	var in_book := page != Page.INVENTARIO
+	_book.visible = in_book
+	_inventory.visible = not in_book
+	match page:
+		Page.INVENTARIO:
+			_inventory.setup(entries_in(GrimorioEntry.Category.ARSENAL))
+			if not DisplayServer.is_touchscreen_available():
+				_inventory.focus_first()
+		Page.MAPA:
+			_open_category(GrimorioEntry.Category.MAPA)
+		Page.ARCHIVO:
+			_open_category(_archive_category)
 
 
 ## Entradas de una categoría, en orden.
@@ -108,25 +147,41 @@ func is_unlocked(entry: GrimorioEntry) -> bool:
 	return entry.is_unlocked(get_node_or_null("/root/GameState"))
 
 
+## Abre la página de una categoría: ARSENAL es el inventario, MAPA el mapa y el resto el archivo.
 func select_category(category: int) -> void:
+	if category == GrimorioEntry.Category.ARSENAL:
+		show_page(Page.INVENTARIO)
+	elif category == GrimorioEntry.Category.MAPA:
+		show_page(Page.MAPA)
+	else:
+		_archive_category = category as GrimorioEntry.Category
+		if page != Page.ARCHIVO:
+			show_page(Page.ARCHIVO)
+		else:
+			_open_category(category)
+
+
+## Muestra una categoría en el libro. En el mapa no hay pestañas; en el archivo, solo las suyas.
+func _open_category(category: int) -> void:
 	_category = category
+	var is_map := category == GrimorioEntry.Category.MAPA
 	for i in _tabs.size():
-		(_tabs[i] as Button).set_pressed_no_signal((_tabs[i] as GrimorioTab).icon_kind == category)
+		var tab := _tabs[i] as GrimorioTab
+		tab.visible = not is_map and tab.icon_kind != GrimorioTab.Icon.MAPA
+		tab.set_pressed_no_signal(tab.icon_kind == category)
+	if not is_map and not DisplayServer.is_touchscreen_available():
+		for tab in _tabs:
+			if (tab as GrimorioTab).icon_kind == category and not (tab as Control).has_focus():
+				(tab as Control).grab_focus()
 	_category_title.text = CATEGORY_TITLES[category]
 	_category_description.text = CATEGORY_DESCRIPTIONS[category]
-	var is_map := category == GrimorioEntry.Category.MAPA
-	var is_inventory := category == GrimorioEntry.Category.ARSENAL
 	_map.visible = is_map
 	_zone_buttons.visible = is_map
-	_entry_scroll.visible = not is_map and not is_inventory
-	_inventory.visible = is_inventory
+	_entry_scroll.visible = not is_map
 	_entry_group = ButtonGroup.new()
 	var container: Container = _zone_buttons if is_map else _entry_list
-	for child in _zone_buttons.get_children() + _entry_list.get_children() + _inventory.get_children():
+	for child in _zone_buttons.get_children() + _entry_list.get_children():
 		child.queue_free()
-	if is_inventory:
-		_fill_inventory()
-		return
 	# Se muestra la primera entrada descubierta (o la primera, si no hay ninguna).
 	var first: Button
 	var first_entry: GrimorioEntry
@@ -144,15 +199,16 @@ func select_category(category: int) -> void:
 
 
 func show_entry(entry: GrimorioEntry) -> void:
+	if entry.category == GrimorioEntry.Category.ARSENAL:
+		_inventory.show_entry(entry)
+		return
 	var unlocked := is_unlocked(entry)
 	_entry_title.text = entry.title if unlocked else "???"
 	_entry_subtitle.text = entry.subtitle if unlocked else "Página sin descubrir"
 	_entry_text.text = entry.text if unlocked else LOCKED_TEXT
 	_illustration.texture = entry.image if unlocked else null
 	_illustration.visible = _illustration.texture != null
-	var fragments := unlocked and entry.shows_life_fragments
-	_show_life_fragments(fragments)
-	_emblem.visible = not _illustration.visible and not fragments
+	_emblem.visible = not _illustration.visible
 	_emblem.modulate = Color.WHITE if unlocked else Color(1, 1, 1, 0.35)
 	var facts: Dictionary[String, String] = {}
 	if entry.category == GrimorioEntry.Category.MAPA:
@@ -170,89 +226,8 @@ func show_entry(entry: GrimorioEntry) -> void:
 		if unlocked:
 			if entry.action != &"":
 				facts["Tecla"] = GameSettings.key_name(entry.action)
-			if entry.shows_life_fragments:
-				facts["Fragmentos"] = "%d / %d" % [_life_fragments(), GameState.LIFE_FRAGMENTS_PER_MASK]
-			if entry.shows_amount != &"":
-				facts["Tienes"] = str(_amount_of(entry))
 			facts.merge(entry.facts)
 	_fill_facts(facts)
-
-
-## La cuadrícula del inventario, en el mismo lugar que la lista de entradas.
-func _build_inventory() -> void:
-	_inventory = GridContainer.new()
-	_inventory.name = "Inventory"
-	_inventory.columns = 4
-	_inventory.add_theme_constant_override(&"h_separation", 12)
-	_inventory.add_theme_constant_override(&"v_separation", 12)
-	_entry_scroll.get_parent().add_child(_inventory)
-	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
-		_inventory.set_anchor(side, _entry_scroll.get_anchor(side))
-		_inventory.set_offset(side, _entry_scroll.get_offset(side))
-	_inventory.offset_top += 8.0
-	_inventory.visible = false
-
-
-## Una casilla por cada cosa que Kai ya tiene (en el orden de las entradas); muestra la primera.
-func _fill_inventory() -> void:
-	var first: InventorySlot
-	for entry in entries_in(GrimorioEntry.Category.ARSENAL):
-		if not is_unlocked(entry):
-			continue
-		var slot := InventorySlot.new()
-		slot.entry = entry
-		slot.button_group = _entry_group
-		slot.amount = _amount_of(entry) if entry.shows_amount != &"" else -1
-		slot.fragments = _life_fragments()
-		slot.pressed.connect(show_entry.bind(entry))
-		# Con teclado o mando, el objeto se muestra al pasar por él.
-		slot.focus_entered.connect(func() -> void:
-			slot.set_pressed_no_signal(true)
-			slot.pressed.emit())
-		_inventory.add_child(slot)
-		if first == null:
-			first = slot
-	if first:
-		first.set_pressed_no_signal(true)
-		show_entry(first.entry)
-	else:
-		var entries := entries_in(GrimorioEntry.Category.ARSENAL)
-		if not entries.is_empty():
-			show_entry(entries[0])
-
-
-## Cantidad de un recurso del inventario (p. ej. los Ecos).
-func _amount_of(entry: GrimorioEntry) -> int:
-	if entry.shows_amount == &"ecos":
-		var economy := get_node_or_null("/root/Economy")
-		return economy.ecos if economy else 0
-	return 0
-
-
-## El cristal de vida en negro que se va llenando (en el recuadro de la ilustración).
-func _show_life_fragments(on: bool) -> void:
-	var icon := _illustration.get_parent().get_node_or_null("LifeFragments") as LifeFragmentIcon
-	if not on:
-		if icon:
-			icon.visible = false
-		return
-	if icon == null:
-		icon = LifeFragmentIcon.new()
-		icon.name = "LifeFragments"
-		_illustration.get_parent().add_child(icon)
-		icon.set_anchors_preset(Control.PRESET_FULL_RECT)
-		icon.offset_left = 24.0
-		icon.offset_right = -24.0
-		icon.offset_top = 12.0
-		icon.offset_bottom = -12.0
-	icon.visible = true
-	icon.count = _life_fragments()
-
-
-func _life_fragments() -> int:
-	var game_state := get_node_or_null("/root/GameState")
-	return game_state.life_fragments if game_state else 0
-
 
 func _fill_facts(facts: Dictionary[String, String]) -> void:
 	for child in _facts_grid.get_children():

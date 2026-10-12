@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 5
+order = 9
+title = "Fragmento de datos"
+subtitle = "Coleccionable · Datos ocultos"
+text = "Un pedazo de información escondido en la red. Solo se ve con la Visión Digital activa. Al recogerlo libera Ecos."
+facts = Dictionary[String, String]({"Dónde": "Escondidos en la red (con la Visión Digital)"})
+icon = &"datos"
+unlock_flag = &"zona0_fragmento_recogido"

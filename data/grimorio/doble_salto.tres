@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 5
+order = 8
+title = "Doble salto"
+subtitle = "Habilidad · Movimiento"
+text = "Kai puede impulsarse una segunda vez en el aire. Se recupera al tocar el suelo, una plataforma o una estructura."
+facts = Dictionary[String, String]({"Uso": "Saltar en el aire"})
+action = &"jump"
+inventory_kind = 2
+icon = &"doble_salto"
+unlock_property = &"can_double_jump"

@@ -25,6 +25,8 @@ const START_TRUST := 60
 const START_MASKS := 4
 ## Fragmentos de vida que forman una vida nueva (un cristal de integridad completo).
 const LIFE_FRAGMENTS_PER_MASK := 4
+## Fragmentos de energía que forman una barrita de energía más.
+const ENERGY_FRAGMENTS_PER_CELL := 4
 ## Barritas de energía al empezar (suben con la historia).
 const START_ENERGY_CELLS := 2
 const MAX_ENERGY_CELLS := 8
@@ -62,6 +64,8 @@ var max_masks := START_MASKS
 var current_masks := -1.0
 ## Fragmentos de vida juntados hacia la próxima vida (0 a LIFE_FRAGMENTS_PER_MASK - 1).
 var life_fragments := 0
+## Fragmentos de energía juntados hacia la próxima barrita (0 a ENERGY_FRAGMENTS_PER_CELL - 1).
+var energy_fragments := 0
 ## Barritas de energía para habilidades (el HUD las muestra debajo de los cristales).
 var max_energy_cells := START_ENERGY_CELLS
 ## Energía al salir de una sala, en barritas (-1 = llena). Así cambiar de sala no la recarga.
@@ -251,6 +255,19 @@ func add_life_fragment() -> bool:
 	return completed
 
 
+## Suma un fragmento de energía. Al juntar ENERGY_FRAGMENTS_PER_CELL se agrega una barrita de energía
+## (llena): devuelve true en ese caso.
+func add_energy_fragment() -> bool:
+	energy_fragments += 1
+	var completed := energy_fragments >= ENERGY_FRAGMENTS_PER_CELL
+	if completed:
+		energy_fragments = 0
+		max_energy_cells = mini(max_energy_cells + 1, MAX_ENERGY_CELLS)
+		current_energy = -1.0
+	progress_changed.emit()
+	return completed
+
+
 func set_max_masks(masks: int) -> void:
 	max_masks = maxi(masks, 1)
 	progress_changed.emit()
@@ -274,6 +291,7 @@ func unlock_vision(unlocked := true) -> void:
 func _reset_progress() -> void:
 	max_masks = START_MASKS
 	life_fragments = 0
+	energy_fragments = 0
 	max_energy_cells = START_ENERGY_CELLS
 	current_energy = -1.0
 	current_masks = -1.0
@@ -447,6 +465,7 @@ func to_dict() -> Dictionary:
 			"max_masks": max_masks,
 			"current_masks": current_masks,
 			"life_fragments": life_fragments,
+			"energy_fragments": energy_fragments,
 			"max_energy_cells": max_energy_cells,
 			"current_energy": current_energy,
 			"dash_level": dash_level,
@@ -491,6 +510,7 @@ func from_dict(data: Dictionary) -> void:
 	max_masks = maxi(int(player.get("max_masks", START_MASKS)), 1)
 	current_masks = float(player.get("current_masks", -1.0))
 	life_fragments = clampi(int(player.get("life_fragments", 0)), 0, LIFE_FRAGMENTS_PER_MASK - 1)
+	energy_fragments = clampi(int(player.get("energy_fragments", 0)), 0, ENERGY_FRAGMENTS_PER_CELL - 1)
 	max_energy_cells = clampi(int(player.get("max_energy_cells", START_ENERGY_CELLS)), 1, MAX_ENERGY_CELLS)
 	current_energy = float(player.get("current_energy", -1.0))
 	dash_level = clampi(int(player.get("dash_level", 0)), 0, MAX_DASH_LEVEL)
