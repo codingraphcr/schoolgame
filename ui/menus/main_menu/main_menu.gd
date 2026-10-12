@@ -6,6 +6,7 @@ extends Control
 const BACKGROUND_ZOOM := 1.035
 const BACKGROUND_CYCLE := 18.0
 
+@onready var continue_button: Button = %ContinueButton
 @onready var play_button: Button = %PlayButton
 @onready var settings_button: Button = %SettingsButton
 @onready var credits_button: Button = %CreditsButton
@@ -22,6 +23,9 @@ func _ready() -> void:
 	GameSettings.ensure_loaded()
 	Music.play(&"menu")
 	play_button.pressed.connect(_on_play_pressed)
+	continue_button.pressed.connect(_on_continue_pressed)
+	# CONTINUAR solo aparece si hay una partida guardada.
+	continue_button.visible = SaveManager.has_save()
 	settings_button.pressed.connect(_on_settings_pressed)
 	credits_button.pressed.connect(_show_credits.bind(true))
 	credits_back_button.pressed.connect(_show_credits.bind(false))
@@ -34,7 +38,7 @@ func _ready() -> void:
 
 	# Foco inicial para poder navegar con teclado o mando (no se usa en pantallas táctiles).
 	if not DisplayServer.is_touchscreen_available():
-		play_button.grab_focus()
+		(continue_button if continue_button.visible else play_button).grab_focus()
 
 	_animate_background()
 	# Las opciones aparecen suavemente.
@@ -74,6 +78,13 @@ func _on_play_pressed() -> void:
 	DigitalVision.reset()
 	GameState.start_quest(&"prologo")
 	SceneManager.change_scene(SceneManager.FIRST_ROOM)
+
+
+## Sigue desde la última computadora segura donde se guardó.
+func _on_continue_pressed() -> void:
+	if not SaveManager.continue_game():
+		continue_button.visible = false
+		play_button.grab_focus()
 
 
 func _on_settings_pressed() -> void:

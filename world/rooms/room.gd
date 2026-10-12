@@ -84,6 +84,15 @@ func _place_player() -> void:
 	var entry: RoomEntry = null
 	if entry_id != &"":
 		entry = _find_entry(entry_id)
+	if entry == null and player != null:
+		# Al continuar una partida: la computadora segura donde se guardó.
+		var save_point := _find_save_point(entry_id)
+		if save_point:
+			player.teleport_to(save_point.global_position)
+			checkpoint = save_point
+			save_point.active = true
+			_snap_camera()
+			return
 	if entry == null or player == null:
 		respawn_player()
 		return
@@ -102,11 +111,21 @@ func _materialize_player() -> void:
 	player.controls_locked = false
 
 
+func _find_save_point(save_id: StringName) -> SavePoint:
+	if save_id == &"":
+		return null
+	for node in find_children("*", "SavePoint", true, false):
+		if (node as SavePoint).save_id == save_id:
+			return node
+	return null
+
+
 func _find_entry(entry_id: StringName) -> RoomEntry:
 	for node in find_children("*", "RoomEntry", true, false):
 		if (node as RoomEntry).id == entry_id:
 			return node
-	push_warning("Room: no existe la entrada '%s'; se usa el punto de aparición." % entry_id)
+	if _find_save_point(entry_id) == null:
+		push_warning("Room: no existe la entrada '%s'; se usa el punto de aparición." % entry_id)
 	return null
 
 

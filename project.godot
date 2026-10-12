@@ -24,6 +24,7 @@ SceneManager="*res://autoload/scene_manager.gd"
 GameState="*res://autoload/game_state.gd"
 DigitalVision="*res://autoload/digital_vision.gd"
 Economy="*res://autoload/economy.gd"
+SaveManager="*res://autoload/save_manager.gd"
 
 [display]
 

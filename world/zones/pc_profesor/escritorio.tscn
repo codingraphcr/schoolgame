@@ -16,7 +16,7 @@
 [ext_resource type="Script" path="res://world/zones/pc_profesor/account_tab.gd" id="9_huro6"]
 [ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="10_iofjp"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/pc_error_encontrado.tres" id="11_uw1aa"]
-[ext_resource type="Script" path="res://world/digital/restore_point.gd" id="12_rstpt"]
+[ext_resource type="Script" path="res://world/digital/save_point.gd" id="12_rstpt"]
 [ext_resource type="Script" path="res://world/digital/terminal_station.gd" id="13_trmst"]
 [ext_resource type="Resource" path="res://data/terminals/pc_profesor_cuenta.tres" id="14_trmch"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/pc_configuracion_encontrada.tres" id="15_cfgok"]
@@ -570,9 +570,10 @@ script = ExtResource("7_5aedr")
 width = 640.0
 interval = 1.8
 
-[node name="RestorePoint" type="Area2D" parent="." unique_id=1760161149]
+[node name="SavePointSpam" type="Area2D" parent="." unique_id=1760161149]
 position = Vector2(1400, 304)
 script = ExtResource("12_rstpt")
+save_id = &"pc_spam"
 
 [node name="TerminalStation" type="Area2D" parent="." unique_id=1816087198]
 position = Vector2(3036, 304)
@@ -584,9 +585,10 @@ success_dialogue = ExtResource("15_cfgok")
 prompt_text = "E: abrir la terminal"
 prompt_offset = Vector2(-40, -80)
 
-[node name="RestorePointFinal" type="Area2D" parent="." unique_id=1952099019]
+[node name="SavePointFinal" type="Area2D" parent="." unique_id=1952099019]
 position = Vector2(2975, 304)
 script = ExtResource("12_rstpt")
+save_id = &"pc_final"
 
 [node name="ArenaBarrier" type="StaticBody2D" parent="." unique_id=2137822335]
 position = Vector2(2992, 304)

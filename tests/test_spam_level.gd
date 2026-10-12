@@ -152,9 +152,9 @@ func _test_route() -> void:
 	await _hop(1268.0, FLOOR_Y, "Robucks → suelo después de las trampas", 0.0)
 	_check(player.global_position.x > 1300.0 and _hurts == 0, "la segunda zona de trampas se cruza sin daño (x=%.0f)" % player.global_position.x)
 	# Punto de restauración: desde aquí, morir ya no devuelve al principio.
-	var restore := room.get_node("RestorePoint") as RestorePoint
+	var restore := room.get_node("SavePointSpam") as SavePoint
 	await _walk_to(1410.0)
-	_check(room.checkpoint == restore and restore.active, "pasar por el punto de restauración lo activa")
+	_check(room.checkpoint == restore and restore.active, "pasar por la computadora segura la vuelve punto de control")
 	# Zona C: escalera de pop-ups (el último sube y baja) sobre un foso de trampas.
 	_hurts = 0
 	await _hop(1474.0, 246.0, "suelo → Stim")
@@ -185,7 +185,7 @@ func _test_route() -> void:
 	# Morir después del punto de restauración devuelve a él, no al principio.
 	player.damage.died.emit()
 	await _until(func() -> bool: return absf(player.global_position.x - restore.global_position.x) < 2.0)
-	_check(absf(player.global_position.x - restore.global_position.x) < 2.0, "al morir, Kai reaparece en el punto de restauración")
+	_check(absf(player.global_position.x - restore.global_position.x) < 2.0, "al morir, Kai reaparece en la computadora segura")
 	await _until(func() -> bool: return not player.damage.is_respawning and not player.controls_locked)
 
 

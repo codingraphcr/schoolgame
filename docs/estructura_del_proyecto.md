@@ -13,7 +13,7 @@ La historia, los personajes y el mundo se rigen por la **Biblia Narrativa** (`na
 | Pantalla | Diseño a **1280×720**, horizontal; el mundo en pixel art con la cámara a **×2** |
 | Plataformas | Windows y Android (después Linux, macOS, iOS, Steam) |
 | Dependencias | **Ninguna**: sin plugins ni librerías externas |
-| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 23 pruebas automáticas (478 comprobaciones) |
+| Tamaño | 98 scripts del juego (~10 500 líneas), 17 escenas, 47 recursos de datos, 25 pruebas automáticas (478 comprobaciones) |
 | Equipo | Yohanncillo (dirección y programación) y Ariel (arte y programación), en la cuenta `codingraphcr` |
 
 ## 2. Las ideas que guían todo
@@ -24,7 +24,7 @@ La historia, los personajes y el mundo se rigen por la **Biblia Narrativa** (`na
    Grimorio se crean y editan en el **Inspector** de Godot.
 3. **Señales para avisar, no referencias cruzadas.** Por ejemplo, el enemigo emite `died` y el combate lo escucha;
    el enemigo no sabe nada del combate.
-4. **Pocos autoloads** (piezas globales): solo cuatro. El resto vive en cada sala.
+4. **Pocos autoloads** (piezas globales): solo cinco. El resto vive en cada sala.
 5. **Todo se ve en el editor** (`@tool`): pop-ups, trampas, terminales y barreras se dibujan mientras se diseña el nivel.
 6. **Identificadores estables** (`contrasena_profesor`, `cambiar_contrasena`, `pc_profesor_cuenta`) para el guardado.
 7. **Nada se da por bueno sin probarlo:** cada sistema tiene su prueba automática.
@@ -68,7 +68,7 @@ flowchart TB
 
 ```
 schoolgame/
-├── autoload/          Las 4 piezas globales (SceneManager, GameState, DigitalVision, Economy)
+├── autoload/          Las 5 piezas globales (SceneManager, GameState, DigitalVision, Economy, SaveManager)
 ├── characters/        Personajes
 │   ├── player/          Kai: movimiento, daño, combate, curación, sonidos y su dibujo (kai/)
 │   ├── enemies/         EnemyBase y cada enemigo (weak_password/ = la «Contraseña débil»)
@@ -109,7 +109,7 @@ schoolgame/
 ├── data/              Contenido editable (.tres): diálogos, personajes, misiones, terminales,
 │                      armas, Grimorio, incidentes
 ├── assets/            Arte (de Ariel), audio, fuentes y shaders
-├── tests/             23 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
+├── tests/             25 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
 ├── tools/art/         Herramientas para recortar el arte de las hojas de concepto de Ariel
 ├── prototypes/        Muestras de estilos visuales (no forman parte del juego)
 └── docs/              Documentación del proyecto (la historia, en docs/narrativa/)
@@ -120,6 +120,7 @@ schoolgame/
 | Pieza | Tipo | Qué hace |
 |---|---|---|
 | `SceneManager` | Autoload | Cambia de sala con transición, recuerda por qué entrada se llega (`go_to_room`) |
+| `SaveManager` | Autoload | Guarda y continúa la partida (archivo con copia de respaldo); se guarda en las computadoras seguras |
 | `Economy` | Autoload | Saldo de **Ecos** (la moneda): sumar, gastar, si alcanza y la penalización al morir (10 %, máx. 100, nada en el tutorial) |
 | `GameState` | Autoload | Todo el progreso: misiones, cristales, energía, habilidades, etapas de Nullblade/Aegis/Dominio, comandos aprendidos, marcas de la historia, incidentes. Sabe convertirse a datos para guardar (`to_dict` / `from_dict`) |
 | `DigitalVision` | Autoload | Estado de la Visión Digital: lista, activa (10 s) o recargando (16 s), y el glitch involuntario del prólogo |
@@ -218,7 +219,7 @@ Opciones.
 **Capas de colisión:** 1 mundo · 2 jugador · 3 enemigos · 4 ataques del jugador · 5 ataques enemigos · 6 interactuables
 · 7 mundo digital.
 
-**Pruebas:** 23 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
+**Pruebas:** 25 archivos en `tests/` (478 comprobaciones). Cada uno se corre con
 `godot --headless --path . --script res://tests/test_<nombre>.gd` y termina en `RESULTADO: TODO OK`. Esperan a que
 pasen las cosas (en vez de tiempos fijos) para no fallar cuando la computadora está ocupada.
 
@@ -233,7 +234,7 @@ la contraseña que crea el jugador (se guarda solo su huella), la verificación 
 Grimorio, opciones, sonido provisional y voces.
 
 **Falta para el MVP:** H5 (invitación del profesor, desafío Visión Digital + terminal, cuarto viejo con la
-Nullblade oficial, dash, doble salto y «EL DESPERTAR»), **guardado en disco** con la computadora segura, controles táctiles, exportar a Windows y
+Nullblade oficial, dash, doble salto y «EL DESPERTAR»), controles táctiles, exportar a Windows y
 Android, pruebas en celular.
 
 ## 11. Observaciones y riesgos
@@ -244,4 +245,3 @@ Android, pruebas en celular.
   mueve y animar solo lo necesario).
 - **`GameState` crece rápido** (unas 470 líneas). Por ahora está bien; si sigue creciendo conviene separarlo por
   temas (misiones, jugador, conocimiento).
-- **El guardado todavía no escribe en disco:** el progreso se pierde al cerrar el juego.

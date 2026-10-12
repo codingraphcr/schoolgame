@@ -38,6 +38,7 @@ Las carpetas se crean cuando se necesitan, no antes.
 | Nombre | Archivo | Responsabilidad |
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
+| `SaveManager` | `autoload/save_manager.gd` | Guardar y continuar la partida (`user://partida.json`). Ver «Guardado». |
 | `Economy` | `autoload/economy.gd` | Saldo de **Ecos** (la moneda) y la penalización al morir. Ver «ECOS». |
 | `DigitalVision` | `autoload/digital_vision.gd` | Estado de la Visión Digital (lista, activa, recargando), duración, recarga y `blend` para los efectos. Ver "Visión Digital". |
 | `GameState` | `autoload/game_state.gd` | Presupuesto, seguridad y confianza; estado de incidentes, pistas, marcas y decisiones. **Progreso del jugador** (habilidades, evoluciones, misiones, comandos, contraseñas). Preparado para guardar partida (`to_dict` / `from_dict`). |
@@ -417,6 +418,21 @@ y Kai vuelve al laboratorio (entrada `desde_pc`).
 décimo de la tabla del MEP 2025 (Operaciones ciberseguras): seguridad en sistemas operativos de código abierto y
 conceptos básicos de gestión de contraseñas.
 
+## Guardado (`autoload/save_manager.gd`, `world/digital/save_point.gd`)
+
+**`SaveManager`** guarda todo el progreso (`GameState.to_dict()`: misiones, marcas, Ecos y recompensas cobradas,
+habilidades, evoluciones, comandos aprendidos, la huella de la contraseña, cristales y energía) y **dónde continuar**:
+la escena y la computadora segura (`{"version", "saved_at", "location": {"scene", "entry"}, "game"}`). Funciona sin
+conexión. **Escritura segura:** escribe un archivo temporal, comprueba que se puede leer y recién entonces reemplaza al
+guardado anterior, que queda como copia (`partida.respaldo.json`). Si el principal está dañado usa la copia; un guardado
+dañado, de una versión futura o con una sala inexistente no se usa. `VERSION` y `_migrate()` preparan los cambios de
+formato. `continue_game()` carga y lleva a la sala; `Room` coloca a Kai en la `SavePoint` cuyo `save_id` coincide.
+
+**Computadora segura** (`SavePoint`, un `Interactable`): monitor verde con un escudo (distinto de las terminales y de los
+nodos de Aegis). Al pasar queda como **punto de control** (si Kai muere, reaparece ahí); con **E** guarda la partida y
+llena los cristales y la energía. Hay una en la Entrada del colegio y dos en la PC del profesor (reemplazan a los
+puntos de restauración). El menú principal muestra **CONTINUAR** si hay una partida guardada.
+
 ## Misiones (`systems/quests/`)
 
 | Pieza | Responsabilidad |
@@ -544,6 +560,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_pogo.gd` | Cadencia de 0,45 s; abajo + J en el suelo ataca adelante; en el aire ataca hacia abajo y rebota en un enemigo (lo daña, recupera el doble salto), en los pinchos (sin daño) y en un nodo de rebote; sin nada debajo no rebota |
 | `test_combat.gd` | Ataque de Kai (sin arma no ataca, dirección, una vez por tajo, enfriamiento, animación), «Contraseña débil» (daño, empuje, fuerza bruta, muerte, contacto de medio cristal, salto hacia Kai) y el combate de la PC (diálogo, aparición de la Nullblade y su tarjeta, barrera, perder y reintentar, ganar y avanzar) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
+| `test_save.gd` | Guardar y continuar (todo el progreso), escritura segura con copia, archivos dañados o inválidos, la computadora segura (punto de control al pasar; con E guarda y cura) y CONTINUAR en el menú |
 | `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |
 | `test_ecos.gd` | Reparto en fragmentos, Ecos según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |
 | `test_entity_eye.gd` | El ojo de la entidad: vigila al entrar, sigue a la cámara, parpadea, se cierra y desaparece en la terminal y no vuelve después de resolverla |
