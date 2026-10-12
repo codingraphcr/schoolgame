@@ -351,7 +351,14 @@ Cuenta los errores por pregunta (`mistakes`) para registros futuros. Funciona co
 **Contraseña creada por el jugador** (`systems/security/password_rules.gd`, `ui/challenges/password_window.gd`):
 `PasswordRules.evaluate()` revisa 4 reglas (larga, no de las más usadas —también con trucos como `P@ssw0rd`—, sin datos
 personales, sin secuencias ni repeticiones) y estima la fortaleza (nivel, bits y tiempo para adivinarla); `suggest()`
-arma una frase de 4 palabras al azar y `backup_code()` un código de respaldo. `PasswordWindow` tiene 3 pasos: crearla
+arma una frase de 4 palabras al azar y `backup_code()` un código de respaldo. **Entrada segura:** `sanitize()` deja solo
+letras (también ñ y con tilde), números, espacios y `! @ # $ % ^ & * ( ) - _ = + . , ; : ? / ~`, hasta 64 caracteres;
+quita lo que parece código o etiquetas (`< > [ ] { } " ' \` | \`), saltos de línea, tabulaciones y caracteres
+invisibles mientras se escribe. El campo no permite copiar, pegar, arrastrar ni sugerencias del teclado del celular, y
+el juego queda en **pausa** mientras la ventana está abierta. `GameState.set_password` vuelve a validar (`is_clean`) y
+rechaza cualquier otra cosa sin tocar la partida. La contraseña nunca se ejecuta ni se interpreta: solo se calcula su
+huella. **Flechas:** en `PasswordWindow` y `ChoiceWindow` las flechas (o el mando) se mueven entre el campo y los
+botones (no por el texto); Enter activa. `PasswordWindow` tiene 3 pasos: crearla
 (medidor en vivo, mostrar/ocultar, «Sugerir frase»), confirmarla y anotar el código de respaldo. **Solo se guarda la
 huella** (SHA-256 con sal) en `GameState` (`set_password`, `check_password`, `check_backup_code`, `has_password`): ni el
 archivo de guardado contiene la contraseña. El jugador tendrá que recordarla en el **capítulo 4** y en **misiones

@@ -17,8 +17,10 @@ func _initialize() -> void:
 func _run() -> void:
 	state = root.get_node("GameState")
 	_test_rules()
+	_test_sanitize()
 	_test_vault()
 	await _test_window()
+	await _test_safe_input()
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
 
@@ -54,6 +56,16 @@ func _test_rules() -> void:
 		"el código de respaldo es legible (%s, sin letras que se confunden)" % code)
 
 
+func _test_sanitize() -> void:
+	_check(PasswordRules.sanitize("hola<script>alert(1)</script>") == "holascriptalert(1)/script", "se quitan las etiquetas (< >)")
+	_check(PasswordRules.sanitize("[b]negrita[/b]{x}\"'`|\\") == "bnegrita/bx", "se quitan corchetes, llaves, comillas y barras invertidas")
+	_check(PasswordRules.sanitize("linea1" + char(10) + "linea2" + char(9) + "fin" + char(0) + char(127)) == "linea1linea2fin", "se quitan saltos de línea, tabulaciones y caracteres invisibles")
+	_check(PasswordRules.sanitize("Ñandú-Ácido-pingüino 2!") == "Ñandú-Ácido-pingüino 2!", "se conservan letras con tilde, ñ, números, espacios y símbolos simples")
+	_check(PasswordRules.sanitize("a".repeat(200)).length() == PasswordRules.MAX_LENGTH, "como máximo %d caracteres" % PasswordRules.MAX_LENGTH)
+	_check(not PasswordRules.is_clean("OS.execute(\"rm\")") and PasswordRules.is_clean("tiza-ventana-cometa-mango-27"),
+		"un texto con código no es una contraseña aceptable")
+
+
 func _test_vault() -> void:
 	state.reset()
 	_check(not state.has_password(&"profesor"), "partida nueva: sin contraseña")
@@ -69,6 +81,11 @@ func _test_vault() -> void:
 	state.from_dict(JSON.parse_string(saved))
 	_check(state.check_password(&"profesor", SECRET), "después de cargar la partida, la sigue reconociendo")
 	state.set_password(&"otra_cuenta", SECRET)
+	var before := JSON.stringify(state.to_dict())
+	_check(not state.set_password(&"mala", "tiza<script>ventana") and not state.set_password(&"mala", "")
+		and not state.set_password(&"mala", "x".repeat(100)) and not state.has_password(&"mala"),
+		"GameState rechaza contraseñas vacías, muy largas o con caracteres no permitidos")
+	_check(JSON.stringify(state.to_dict()) == before, "un intento rechazado no cambia nada de la partida")
 	var data: Dictionary = state.to_dict()["passwords"]
 	_check(data["profesor"]["hash"] != data["otra_cuenta"]["hash"], "con la sal, la misma contraseña tiene huellas distintas")
 
@@ -103,6 +120,63 @@ func _test_window() -> void:
 	await _frames(2)
 	_check(result[0] == true and not is_instance_valid(window), "al terminar, la ventana se cierra")
 	_check(state.check_password(&"profesor", SECRET) and state.check_backup_code(&"profesor", code), "quedan guardadas la contraseña y el código (como huella)")
+
+
+func _test_safe_input() -> void:
+	state.reset()
+	var window := PasswordWindow.open(current_scene, &"profesor", "Prueba")
+	await _frames(2)
+	_check(paused, "con la ventana abierta el juego queda en pausa (nada más reacciona a las teclas)")
+	_check(not window._line.shortcut_keys_enabled and not window._line.context_menu_enabled
+		and not window._line.drag_and_drop_selection_enabled, "el campo no permite copiar, pegar ni arrastrar")
+	_check(window._line.virtual_keyboard_type == LineEdit.KEYBOARD_TYPE_PASSWORD, "en el celular usa el teclado de contraseñas (sin sugerencias)")
+	# Tecleado de verdad: un carácter prohibido no entra.
+	window._line.grab_focus()
+	await _frames(1)
+	for character in "mango<":
+		_type(character)
+	await _frames(2)
+	_check(window._line.text == "mango" and window._message.text.begins_with("Solo letras"), "al escribir un carácter prohibido se quita y se explica")
+	# Flechas: se mueven entre el campo y los botones, no por el texto.
+	_key(KEY_DOWN)
+	await _frames(2)
+	var focused := window.get_viewport().gui_get_focus_owner()
+	_check(focused is Button and focused != null, "la flecha ↓ pasa del campo a un botón (%s)" % (focused.text if focused is Button else "nada"))
+	_key(KEY_UP)
+	await _frames(2)
+	_check(window.get_viewport().gui_get_focus_owner() != focused, "la flecha ↑ vuelve a moverse por la pantalla")
+	var button_count := _all_buttons(window).filter(func(b: Button) -> bool: return b.focus_mode == Control.FOCUS_ALL).size()
+	_check(button_count == _all_buttons(window).size(), "todos los botones se pueden elegir con las flechas")
+	window.close()
+	await _frames(2)
+	_check(not paused, "al cerrar, el juego sigue")
+
+
+func _all_buttons(node: Node) -> Array:
+	var result := []
+	for child in node.get_children():
+		if child is Button:
+			result.append(child)
+		result.append_array(_all_buttons(child))
+	return result
+
+
+## Teclea un carácter como lo haría el jugador (evento de teclado con su letra).
+func _type(character: String) -> void:
+	for pressed in [true, false]:
+		var event := InputEventKey.new()
+		event.unicode = character.unicode_at(0)
+		event.pressed = pressed
+		Input.parse_input_event(event)
+
+
+func _key(keycode: Key) -> void:
+	for pressed in [true, false]:
+		var event := InputEventKey.new()
+		event.keycode = keycode
+		event.physical_keycode = keycode
+		event.pressed = pressed
+		Input.parse_input_event(event)
 
 
 func _frames(count: int) -> void:

@@ -22,8 +22,40 @@ const WORDS := ["tiza", "ventana", "cometa", "mango", "nube", "cactus", "tambor"
 	"murcielago", "papaya", "brujula", "escalera", "tucan", "almohada", "zapato", "planeta", "trueno", "lapiz"]
 const MIN_LENGTH := 14
 const MIN_WORDS := 4
+const MAX_LENGTH := 64
+## Símbolos permitidos en una contraseña. Todo lo que parece código o etiquetas (< > [ ] { } " ' `
+## \ |), los saltos de línea, tabulaciones y caracteres invisibles se quitan (sanitize).
+const ALLOWED_SYMBOLS := " !@#$%^&*()-_=+.,;:?/~"
 
 const LEVEL_NAMES: PackedStringArray = ["Muy débil", "Débil", "Aceptable", "Fuerte", "Muy fuerte"]
+
+
+## Deja solo los caracteres permitidos en una contraseña: letras (también ñ y con tilde), números y
+## ALLOWED_SYMBOLS, hasta MAX_LENGTH. La contraseña nunca se ejecuta ni se interpreta: solo se
+## calcula su huella; esto además impide escribir código, etiquetas o caracteres de control.
+static func sanitize(text: String) -> String:
+	var clean := ""
+	for character in text:
+		if is_allowed_character(character):
+			clean += character
+	return clean.left(MAX_LENGTH)
+
+
+## Si es una contraseña aceptable para guardar: no vacía, sin caracteres prohibidos y no muy larga.
+static func is_clean(text: String) -> bool:
+	return not text.is_empty() and text.length() <= MAX_LENGTH and sanitize(text) == text
+
+
+static func is_allowed_character(character: String) -> bool:
+	if character.length() != 1:
+		return false
+	var code := character.unicode_at(0)
+	if code < 32 or (code >= 127 and code < 160):
+		return false  # Caracteres de control e invisibles.
+	if character in ALLOWED_SYMBOLS or (code >= 48 and code <= 57):
+		return true
+	# Letras de cualquier alfabeto (también ñ, á, ü…): tienen mayúscula y minúscula distintas.
+	return character.to_lower() != character.to_upper()
 
 
 ## Revisa la contraseña. Devuelve:

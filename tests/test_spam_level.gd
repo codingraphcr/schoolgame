@@ -159,7 +159,7 @@ func _test_route() -> void:
 	_hurts = 0
 	await _hop(1474.0, 246.0, "suelo → Stim")
 	await _hop(1568.0, 226.0, "Stim → Pokimon (se cierra)")
-	await _hop(1688.0, 218.0, "Pokimon → Clash Royal (sube y baja)", 18.0)
+	await _hop(1688.0, 218.0, "Pokimon → Clash Royal (sube y baja)", 20.0)  # Se mueve entre y=200 y y=236.
 	await _walk_to(1830.0)
 	_check(player.global_position.x > 1800.0 and player.is_on_floor() and _hurts == 0,
 		"la tercera zona de trampas se cruza sin daño (x=%.0f)" % player.global_position.x)

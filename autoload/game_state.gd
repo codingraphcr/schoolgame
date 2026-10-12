@@ -397,13 +397,19 @@ func get_learned_commands() -> Array[String]:
 # ni el archivo de guardado ni otra persona pueden leerla. El jugador tiene que recordarla.
 
 ## Guarda la huella de una contraseña (y de su código de respaldo, si se da). Reemplaza la anterior.
-func set_password(id: StringName, password: String, backup_code := "") -> void:
+## Rechaza (false) un texto vacío, demasiado largo o con caracteres no permitidos (PasswordRules.sanitize):
+## así nada que no sea una contraseña llega al guardado.
+func set_password(id: StringName, password: String, backup_code := "") -> bool:
+	if id == &"" or not PasswordRules.is_clean(password) or backup_code.length() > 16:
+		push_warning("GameState: contraseña rechazada (vacía, muy larga o con caracteres no permitidos).")
+		return false
 	var entry := { "salt": _new_salt(), "hash": "", "backup_salt": "", "backup_hash": "" }
 	entry["hash"] = _fingerprint(entry["salt"], password)
 	if not backup_code.is_empty():
 		entry["backup_salt"] = _new_salt()
 		entry["backup_hash"] = _fingerprint(entry["backup_salt"], backup_code.strip_edges().to_upper())
 	_passwords[id] = entry
+	return true
 
 
 func has_password(id: StringName) -> bool:

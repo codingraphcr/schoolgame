@@ -3,6 +3,8 @@ extends CanvasLayer
 ## Ventana de un desafío de elección (ChoiceChallenge), encima del juego: pregunta, opciones grandes
 ## (teclado, mando, mouse o pantalla táctil) y la explicación de cada elección. Una opción incorrecta
 ## explica por qué y deja volver a elegir; la correcta habilita «Continuar».
+## Las flechas (o el mando) se mueven entre las opciones y los botones; Enter elige. El juego queda en
+## pausa mientras está abierta.
 ## Uso: var window := ChoiceWindow.open(self, desafio); var completed: bool = await window.closed
 
 signal answered(question: int, option: int, correct: bool)
@@ -29,6 +31,7 @@ var _options: VBoxContainer
 var _feedback: Label
 var _continue: Button
 var _buttons: Array[Button] = []
+var _was_paused := false
 
 
 static func open(from: Node, choice_challenge: ChoiceChallenge, offset := 0, total := 0) -> ChoiceWindow:
@@ -43,6 +46,9 @@ static func open(from: Node, choice_challenge: ChoiceChallenge, offset := 0, tot
 func _ready() -> void:
 	layer = 60
 	add_to_group(&"choice_window")
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_was_paused = get_tree().paused
+	get_tree().paused = true
 	mistakes.resize(challenge.questions.size())
 	mistakes.fill(0)
 	_build()
@@ -88,6 +94,7 @@ func next() -> void:
 
 
 func close() -> void:
+	get_tree().paused = _was_paused
 	closed.emit(completed)
 	queue_free()
 
@@ -192,7 +199,7 @@ func _build() -> void:
 	var close_button := Button.new()
 	close_button.text = "✕ Cerrar (Esc)"
 	close_button.custom_minimum_size = Vector2(0, 44)
-	close_button.focus_mode = Control.FOCUS_NONE
+	close_button.focus_mode = Control.FOCUS_ALL
 	close_button.pressed.connect(close)
 	buttons.add_child(close_button)
 	_continue = Button.new()

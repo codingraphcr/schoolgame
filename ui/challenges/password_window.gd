@@ -4,6 +4,11 @@ extends CanvasLayer
 ## Tres pasos: 1) escribirla, con el medidor que explica cada regla (PasswordRules) y «Sugerir frase»;
 ## 2) escribirla otra vez para confirmarla; 3) anotar el código de respaldo. Al terminar se guarda
 ## solo su huella (GameState.set_password): el jugador tendrá que recordarla más adelante.
+##
+## Entrada segura: solo acepta caracteres de contraseña (PasswordRules.sanitize; lo demás se quita al
+## escribir), sin copiar, pegar, arrastrar ni sugerencias del teclado, y el juego queda en pausa
+## mientras está abierta (nada más reacciona a las teclas). Las flechas (o el mando) se mueven entre
+## el campo y los botones; Enter los activa.
 ## Uso: var window := PasswordWindow.open(self, &"profesor", "TÍTULO · PASO 1 DE 2")
 ##      var completed: bool = await window.closed
 
@@ -29,6 +34,7 @@ var completed := false
 var backup := ""
 
 var _password := ""
+var _was_paused := false
 var _header_label: Label
 var _prompt: Label
 var _warning: Label
@@ -57,6 +63,10 @@ static func open(from: Node, id: StringName, title := "Crear contraseña", extra
 func _ready() -> void:
 	layer = 60
 	add_to_group(&"password_window")
+	# En pausa mientras se escribe: el juego no reacciona a las teclas (la ventana sí, PROCESS_MODE_ALWAYS).
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_was_paused = get_tree().paused
+	get_tree().paused = true
 	_build()
 	_show_step(Step.CREATE)
 
@@ -101,6 +111,8 @@ func back() -> void:
 
 func close() -> void:
 	_password = ""
+	_line.clear()
+	get_tree().paused = _was_paused
 	closed.emit(completed)
 	queue_free()
 
@@ -150,6 +162,16 @@ func _show_step(new_step: Step) -> void:
 
 
 func _on_text_changed(text: String) -> void:
+	var clean := PasswordRules.sanitize(text)
+	if clean != text:
+		# Se quitan los caracteres no permitidos sin perder la posición del cursor.
+		var caret := maxi(_line.caret_column - (text.length() - clean.length()), 0)
+		_line.text = clean
+		_line.caret_column = mini(caret, clean.length())
+		text = clean
+		Sfx.play(&"error")
+		_message.text = "Solo letras, números y estos símbolos: %s" % PasswordRules.ALLOWED_SYMBOLS.strip_edges()
+		_message.add_theme_color_override("font_color", YELLOW)
 	if step != Step.CREATE:
 		return
 	var result := PasswordRules.evaluate(text, personal_words)
@@ -165,6 +187,26 @@ func _on_text_changed(text: String) -> void:
 	_meter_label.text = "" if text.is_empty() else "%s · tiempo estimado para adivinarla: %s" % [PasswordRules.LEVEL_NAMES[level], result["time"]]
 	_meter_label.add_theme_color_override("font_color", METER_COLORS[level])
 	_next_button.disabled = not result["valid"]
+
+
+## Las flechas no mueven el cursor del texto: se mueven entre el campo y los botones.
+func _on_line_input(event: InputEvent) -> void:
+	for pair in [[&"ui_up", SIDE_TOP], [&"ui_down", SIDE_BOTTOM], [&"ui_left", SIDE_LEFT], [&"ui_right", SIDE_RIGHT]]:
+		if event.is_action_pressed(pair[0], true):
+			_line.accept_event()
+			_move_focus(_line, pair[1])
+			return
+
+
+func _move_focus(from: Control, side: Side) -> void:
+	var next := from.find_valid_focus_neighbor(side)
+	if side == SIDE_BOTTOM and not _next_button.disabled:
+		next = _next_button
+	if next == null and (side == SIDE_BOTTOM or side == SIDE_RIGHT):
+		next = _show_button
+	if next:
+		next.grab_focus()
+		Sfx.play(&"ui_move")
 
 
 func _toggle_secret() -> void:
@@ -211,8 +253,14 @@ func _build() -> void:
 	_line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_line.custom_minimum_size = Vector2(0, 46)
 	_line.add_theme_font_size_override("font_size", 20)
+	# Solo una contraseña: sin menú, copiar, pegar, arrastrar ni sugerencias del teclado del celular.
 	_line.context_menu_enabled = false
-	_line.max_length = 64
+	_line.shortcut_keys_enabled = false
+	_line.drag_and_drop_selection_enabled = false
+	_line.middle_mouse_paste_enabled = false
+	_line.virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_PASSWORD
+	_line.max_length = PasswordRules.MAX_LENGTH
+	_line.gui_input.connect(_on_line_input)
 	_line.placeholder_text = "escribe aquí"
 	_line.text_changed.connect(_on_text_changed)
 	_line.text_submitted.connect(func(_text: String) -> void: submit())
@@ -251,6 +299,10 @@ func _build() -> void:
 	_back_button = _button(buttons, "◀ Cambiarla", back)
 	_next_button = _button(buttons, "Guardar ▶", submit)
 	_next_button.custom_minimum_size = Vector2(170, 44)
+	# Con ↓ se llega al botón principal (Guardar / Confirmar), y con ↑ se vuelve al campo.
+	for control: Control in [_line, _show_button, _suggest_button]:
+		control.focus_neighbor_bottom = control.get_path_to(_next_button)
+	_next_button.focus_neighbor_top = _next_button.get_path_to(_line)
 
 
 func _label(parent: Control, text: String, color: Color, size: int) -> Label:
@@ -267,7 +319,7 @@ func _button(parent: Control, text: String, action: Callable) -> Button:
 	var button := Button.new()
 	button.text = text
 	button.custom_minimum_size = Vector2(0, 44)
-	button.focus_mode = Control.FOCUS_NONE
+	button.focus_mode = Control.FOCUS_ALL  # Se llega con las flechas o el mando.
 	button.pressed.connect(action)
 	parent.add_child(button)
 	return button
