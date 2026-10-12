@@ -430,8 +430,8 @@ formato. `continue_game()` carga y lleva a la sala; `Room` coloca a Kai en la `S
 
 **Computadora segura** (`SavePoint`, un `Interactable`): monitor verde con un escudo (distinto de las terminales y de los
 nodos de Aegis). Al pasar queda como **punto de control** (si Kai muere, reaparece ahí); con **E** guarda la partida y
-llena los cristales y la energía. Hay una en la Entrada del colegio y dos en la PC del profesor (reemplazan a los
-puntos de restauración). El menú principal muestra **CONTINUAR** si hay una partida guardada.
+llena los cristales y la energía. Por ahora hay una en la Entrada del colegio. En la PC del profesor (prólogo y combate) **no hay
+computadoras de guardado**: solo puntos de restauración (`RestorePoint`), que son puntos de control al pasar. El menú principal muestra **CONTINUAR** si hay una partida guardada.
 
 ## Misiones (`systems/quests/`)
 

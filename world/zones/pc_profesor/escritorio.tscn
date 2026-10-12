@@ -16,7 +16,7 @@
 [ext_resource type="Script" path="res://world/zones/pc_profesor/account_tab.gd" id="9_huro6"]
 [ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="10_iofjp"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/pc_error_encontrado.tres" id="11_uw1aa"]
-[ext_resource type="Script" path="res://world/digital/save_point.gd" id="12_rstpt"]
+[ext_resource type="Script" path="res://world/digital/restore_point.gd" id="12_rstpt"]
 [ext_resource type="Script" path="res://world/digital/terminal_station.gd" id="13_trmst"]
 [ext_resource type="Resource" path="res://data/terminals/pc_profesor_cuenta.tres" id="14_trmch"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/pc_configuracion_encontrada.tres" id="15_cfgok"]
@@ -199,7 +199,7 @@ ad_url = "minekraft-premium.xyz"
 accent = Color(0.18431373, 0.7490196, 0.3529412, 1)
 
 [node name="Popup2" type="AnimatableBody2D" parent="SpamPopups" unique_id=1383262591]
-position = Vector2(656, 230)
+position = Vector2(648, 230)
 script = ExtResource("3_5lg4o")
 size = Vector2(100, 38)
 ad_title = "Terrarya HACK"
@@ -208,7 +208,7 @@ ad_url = "terrarya-hacks.click"
 accent = Color(1, 0.54901963, 0.16470589, 1)
 
 [node name="Popup3" type="AnimatableBody2D" parent="SpamPopups" unique_id=1331003662]
-position = Vector2(780, 244)
+position = Vector2(764, 244)
 script = ExtResource("3_5lg4o")
 size = Vector2(100, 38)
 ad_title = "GTA 6 ANTICIPADO"
@@ -228,7 +228,7 @@ accent = Color(0.1764706, 0.43529412, 0.83137256, 1)
 move_offset = Vector2(120, 0)
 
 [node name="Popup5" type="AnimatableBody2D" parent="SpamPopups" unique_id=510920011]
-position = Vector2(1176, 226)
+position = Vector2(1168, 226)
 script = ExtResource("3_5lg4o")
 size = Vector2(100, 38)
 ad_title = "Robucks GRATIS"
@@ -247,7 +247,7 @@ ad_url = "stim-regalo.xyz"
 accent = Color(0.1764706, 0.43529412, 0.83137256, 1)
 
 [node name="Popup7" type="AnimatableBody2D" parent="SpamPopups" unique_id=1199130909]
-position = Vector2(1600, 226)
+position = Vector2(1592, 226)
 script = ExtResource("3_5lg4o")
 size = Vector2(96, 38)
 ad_title = "Pokimon GO+"
@@ -257,7 +257,7 @@ accent = Color(0.95, 0.75, 0.15, 1)
 closes_when_stepped = true
 
 [node name="Popup8" type="AnimatableBody2D" parent="SpamPopups" unique_id=1489847499]
-position = Vector2(1720, 236)
+position = Vector2(1704, 236)
 script = ExtResource("3_5lg4o")
 size = Vector2(96, 38)
 ad_title = "Clash Royal GEMAS"
@@ -277,7 +277,7 @@ ad_url = "diamantes-fri.xyz"
 accent = Color(1, 0.54901963, 0.16470589, 1)
 
 [node name="Popup10" type="AnimatableBody2D" parent="SpamPopups" unique_id=2146445860]
-position = Vector2(2440, 238)
+position = Vector2(2432, 238)
 script = ExtResource("3_5lg4o")
 size = Vector2(96, 38)
 ad_title = "Valorante PUNTOS"
@@ -288,7 +288,7 @@ move_offset = Vector2(110, 0)
 move_time = 1.8
 
 [node name="Popup11" type="AnimatableBody2D" parent="SpamPopups" unique_id=320410946]
-position = Vector2(2660, 230)
+position = Vector2(2646, 230)
 script = ExtResource("3_5lg4o")
 size = Vector2(96, 38)
 ad_title = "Brawl Starz"
@@ -298,7 +298,7 @@ accent = Color(0.18431373, 0.7490196, 0.3529412, 1)
 closes_when_stepped = true
 
 [node name="Popup12" type="AnimatableBody2D" parent="SpamPopups" unique_id=1998632805]
-position = Vector2(2780, 240)
+position = Vector2(2766, 240)
 script = ExtResource("3_5lg4o")
 size = Vector2(110, 38)
 ad_title = "Zeldo PIRATA"
@@ -377,7 +377,7 @@ position = Vector2(848, 304)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("6_4nbd3")
-size = Vector2(92, 14)
+size = Vector2(76, 14)
 is_hazard = true
 
 [node name="Trap6" type="Area2D" parent="TrapAds" unique_id=868703213]
@@ -429,7 +429,7 @@ position = Vector2(1700, 304)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("6_4nbd3")
-size = Vector2(100, 14)
+size = Vector2(92, 14)
 label = "¡GANASTE!"
 is_hazard = true
 
@@ -443,7 +443,7 @@ label = "CLIC AQUÍ"
 is_hazard = true
 
 [node name="Trap13" type="Area2D" parent="TrapAds" unique_id=1295201396]
-position = Vector2(2030, 304)
+position = Vector2(2022, 304)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("6_4nbd3")
@@ -452,7 +452,7 @@ label = "DESCARGAR"
 is_hazard = true
 
 [node name="Trap14" type="Area2D" parent="TrapAds" unique_id=1003263729]
-position = Vector2(2160, 304)
+position = Vector2(2144, 304)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("6_4nbd3")
@@ -508,7 +508,7 @@ position = Vector2(2800, 304)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("6_4nbd3")
-size = Vector2(80, 14)
+size = Vector2(72, 14)
 label = "CLIC AQUÍ"
 is_hazard = true
 
@@ -570,10 +570,9 @@ script = ExtResource("7_5aedr")
 width = 640.0
 interval = 1.8
 
-[node name="SavePointSpam" type="Area2D" parent="." unique_id=1760161149]
+[node name="RestorePoint" type="Area2D" parent="." unique_id=1760161149]
 position = Vector2(1400, 304)
 script = ExtResource("12_rstpt")
-save_id = &"pc_spam"
 
 [node name="TerminalStation" type="Area2D" parent="." unique_id=1816087198]
 position = Vector2(3036, 304)
@@ -585,10 +584,9 @@ success_dialogue = ExtResource("15_cfgok")
 prompt_text = "E: abrir la terminal"
 prompt_offset = Vector2(-40, -80)
 
-[node name="SavePointFinal" type="Area2D" parent="." unique_id=1952099019]
+[node name="RestorePointFinal" type="Area2D" parent="." unique_id=1952099019]
 position = Vector2(2975, 304)
 script = ExtResource("12_rstpt")
-save_id = &"pc_final"
 
 [node name="ArenaBarrier" type="StaticBody2D" parent="." unique_id=2137822335]
 position = Vector2(2992, 304)

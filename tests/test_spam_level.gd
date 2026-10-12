@@ -134,8 +134,8 @@ func _test_route() -> void:
 	await _drop_on(Vector2(500, 280))
 	await _hop(530.0, 250.0, "suelo → pop-up MineKraft")
 	await _hop(624.0, 230.0, "MineKraft → Terrarya")
-	await _hop(748.0, 244.0, "Terrarya → GTA 6 (se cierra)")
-	await _hop(872.0, FLOOR_Y, "GTA 6 → suelo después de las trampas", 0.0)
+	await _hop(740.0, 244.0, "Terrarya → GTA 6 (se cierra)")
+	await _hop(856.0, FLOOR_Y, "GTA 6 → suelo después de las trampas", 0.0)
 	_check(player.global_position.x > 940.0 and _hurts == 0, "la primera zona de trampas se cruza sin daño (x=%.0f)" % player.global_position.x)
 	# Zona de pop-ups que se mueven.
 	var moving := room.get_node("SpamPopups/Popup4") as SpamPopup
@@ -149,23 +149,23 @@ func _test_route() -> void:
 	await _hop(992.0, 250.0, "suelo → Fortnait (se mueve)")
 	# Corre sobre el pop-up mientras avanza y salta al siguiente desde la mitad del recorrido.
 	await _hop(1110.0, 226.0, "Fortnait → Robucks")
-	await _hop(1268.0, FLOOR_Y, "Robucks → suelo después de las trampas", 0.0)
+	await _hop(1260.0, FLOOR_Y, "Robucks → suelo después de las trampas", 0.0)
 	_check(player.global_position.x > 1300.0 and _hurts == 0, "la segunda zona de trampas se cruza sin daño (x=%.0f)" % player.global_position.x)
 	# Punto de restauración: desde aquí, morir ya no devuelve al principio.
-	var restore := room.get_node("SavePointSpam") as SavePoint
+	var restore := room.get_node("RestorePoint") as RestorePoint
 	await _walk_to(1410.0)
-	_check(room.checkpoint == restore and restore.active, "pasar por la computadora segura la vuelve punto de control")
+	_check(room.checkpoint == restore and restore.active, "pasar por el punto de restauración lo activa (es solo un punto de control)")
 	# Zona C: escalera de pop-ups (el último sube y baja) sobre un foso de trampas.
 	_hurts = 0
 	await _hop(1474.0, 246.0, "suelo → Stim")
 	await _hop(1568.0, 226.0, "Stim → Pokimon (se cierra)")
-	await _hop(1688.0, 218.0, "Pokimon → Clash Royal (sube y baja)", 20.0)  # Se mueve entre y=200 y y=236.
+	await _hop(1680.0, 218.0, "Pokimon → Clash Royal (sube y baja)", 20.0)  # Se mueve entre y=200 y y=236.
 	await _walk_to(1830.0)
 	_check(player.global_position.x > 1800.0 and player.is_on_floor() and _hurts == 0,
 		"la tercera zona de trampas se cruza sin daño (x=%.0f)" % player.global_position.x)
 	# Zona D: vallas cortas (bajo la lluvia de correos en el juego).
 	_hurts = 0
-	for trap_x in [1900.0, 2030.0, 2160.0]:
+	for trap_x in [1900.0, 2022.0, 2144.0]:
 		await _hop(trap_x - 32.0, FLOOR_Y, "valla en x=%.0f" % trap_x, 0.0)
 	_check(_hurts == 0, "las vallas se saltan sin daño (x=%.0f)" % player.global_position.x)
 	# Zona E: foso largo con un pop-up que se mueve y otro que se cierra.
@@ -174,18 +174,18 @@ func _test_route() -> void:
 	var sliding := room.get_node("SpamPopups/Popup10") as SpamPopup
 	for i in 400:
 		await physics_frame
-		if sliding.global_position.x < 2448.0:
+		if sliding.global_position.x < 2440.0:
 			break
 	await _hop(2408.0, 238.0, "Fri Fayer → Valorante (se mueve)")
-	await _hop(2560.0, 230.0, "Valorante → Brawl Starz (se cierra)")
-	await _hop(2748.0, 240.0, "Brawl Starz → Zeldo")
+	await _hop(2552.0, 230.0, "Valorante → Brawl Starz (se cierra)")
+	await _hop(2734.0, 240.0, "Brawl Starz → Zeldo")
 	await _walk_to(2920.0)
 	_check(player.global_position.x > 2880.0 and player.is_on_floor() and _hurts == 0,
 		"el foso largo se cruza sin daño (x=%.0f)" % player.global_position.x)
 	# Morir después del punto de restauración devuelve a él, no al principio.
 	player.damage.died.emit()
 	await _until(func() -> bool: return absf(player.global_position.x - restore.global_position.x) < 2.0)
-	_check(absf(player.global_position.x - restore.global_position.x) < 2.0, "al morir, Kai reaparece en la computadora segura")
+	_check(absf(player.global_position.x - restore.global_position.x) < 2.0, "al morir, Kai reaparece en el punto de restauración")
 	await _until(func() -> bool: return not player.damage.is_respawning and not player.controls_locked)
 
 

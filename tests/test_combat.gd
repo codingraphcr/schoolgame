@@ -172,7 +172,7 @@ func _test_fight() -> void:
 	# Kai llega caminando (pasa por el punto de restauración del final).
 	player.teleport_to(Vector2(2940, 304))
 	await _walk_to(player, 3172.0)
-	_check(room.checkpoint == room.get_node("SavePointFinal"), "hay una computadora segura justo antes del combate")
+	_check(room.checkpoint == room.get_node("RestorePointFinal"), "hay un punto de restauración (solo de control) justo antes del combate")
 	_check(tab._prompt.visible and tab._prompt.text == "E: cambiar la contraseña", "la pestaña ofrece «E: cambiar la contraseña»")
 
 	_action("interact")
@@ -211,7 +211,7 @@ func _test_fight() -> void:
 	await _until(func() -> bool: return not player.health.is_dead() and not player.controls_locked)
 	_check(not fight.running and not barrier.active and not is_instance_valid(fight.enemy), "si Kai muere, el combate se cancela")
 	_check(not room.get_node("SpamMail/MailRainFight").is_processing(), "fuera de la pelea no cae la lluvia de la arena")
-	_check(absf(player.global_position.x - 2975.0) < 2.0, "Kai reaparece en la computadora segura (x=%.0f)" % player.global_position.x)
+	_check(absf(player.global_position.x - 2975.0) < 2.0, "Kai reaparece en el punto de restauración (x=%.0f)" % player.global_position.x)
 	_check(state.get_current_step(&"contrasena_profesor") == &"cambiar_contrasena", "la misión sigue en «cambiar la contraseña»")
 
 	# Reintentar y ganar.
