@@ -2,6 +2,8 @@
 
 Resumen del análisis del **Documento maestro de desarrollo** (octubre 2026) y de las decisiones del equipo.
 Detalle técnico de cada sistema en `arquitectura.md`; combate e historia en `combate.md`.
+La historia se rige por la Biblia Narrativa (`narrativa/BIBLIA_NARRATIVA.md`); las diferencias entre este plan y la
+Biblia están anotadas, pendientes de decisión, en `narrativa/README.md`.
 
 ## Visión
 

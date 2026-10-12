@@ -5,6 +5,9 @@ desarrollado con **Godot 4.7.2** y **GDScript**.
 
 > Estado: **prototipo de combate en desarrollo.** Ver el plan en [`docs/combate.md`](docs/combate.md).
 
+> Historia: la referencia narrativa principal es la [Biblia Narrativa](docs/narrativa/BIBLIA_NARRATIVA.md)
+> (cómo usarla: [`docs/narrativa/README.md`](docs/narrativa/README.md)).
+
 ## Cómo ejecutar
 
 1. Instala [Godot 4.7.2](https://godotengine.org/download) (edición estándar). Todo el equipo debe usar la misma versión.

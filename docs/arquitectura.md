@@ -2,6 +2,9 @@
 
 Documento vivo: se actualiza cada vez que se agrega o cambia un sistema.
 
+Historia, personajes y mundo: [`narrativa/BIBLIA_NARRATIVA.md`](narrativa/BIBLIA_NARRATIVA.md), la referencia
+narrativa principal.
+
 ## Principios
 
 - **Carpetas por funcionalidad:** cada escena vive junto a su script (`player.tscn` + `player.gd`).

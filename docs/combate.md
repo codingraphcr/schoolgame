@@ -1,6 +1,7 @@
 # Diseño del sistema de combate
 
 Referencia acordada con el director del proyecto. Resume el diseño y las decisiones del MVP.
+La historia, los personajes y sus revelaciones se rigen por la Biblia Narrativa (`narrativa/BIBLIA_NARRATIVA.md`).
 
 ## Regla fundamental
 

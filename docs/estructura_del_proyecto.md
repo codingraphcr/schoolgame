@@ -3,6 +3,7 @@
 Guía de la arquitectura y la estructura del proyecto (actualizada al 12 de octubre de 2026). Explica **qué piezas
 hay, dónde están y cómo se conectan**. Los detalles técnicos de cada sistema están en `arquitectura.md`; el combate y
 la historia en `combate.md`; el plan del MVP en `plan_mvp.md`; el currículo en `curriculo_mep.md`.
+La historia, los personajes y el mundo se rigen por la **Biblia Narrativa** (`narrativa/BIBLIA_NARRATIVA.md`).
 
 ## 1. En pocas palabras
 
@@ -110,7 +111,7 @@ schoolgame/
 ├── tests/             22 pruebas automáticas + una sala gris solo para pruebas (fixtures/)
 ├── tools/art/         Herramientas para recortar el arte de las hojas de concepto de Ariel
 ├── prototypes/        Muestras de estilos visuales (no forman parte del juego)
-└── docs/              Documentación del proyecto
+└── docs/              Documentación del proyecto (la historia, en docs/narrativa/)
 ```
 
 ## 5. Las piezas globales

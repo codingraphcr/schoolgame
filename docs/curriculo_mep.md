@@ -8,6 +8,10 @@ ellos. No se inventan contenidos oficiales: cada nivel cita los indicadores de l
 **Distribución aprobada por el equipo** (octubre 2026). Se mantienen los nombres de capítulo del documento maestro;
 solo se reubica el contenido según la tabla.
 
+> La **Biblia Narrativa v1.0** (`narrativa/BIBLIA_NARRATIVA.md`) propone otra distribución narrativa de los niveles,
+> también provisional (por ejemplo, Aegis en el capítulo 3 y las redes en undécimo). Las diferencias están en
+> `narrativa/README.md`, pendientes de decisión del equipo.
+
 ## Contenidos por grado (según la tabla)
 
 | Grado | Contenidos |
