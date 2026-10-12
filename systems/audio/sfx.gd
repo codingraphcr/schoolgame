@@ -41,7 +41,7 @@ const RECIPES := {
 	&"reveal_flash": { "wave": "triangle", "freq": 1046.0, "freq_end": 700.0, "dur": 0.7, "volume": 0.22, "noise": 0.15, "arp": [[0.0, 1.0], [0.1, 1.25], [0.2, 1.5]], "lowpass": 5000.0 },
 	&"fanfare": { "wave": "triangle", "freq": 523.0, "dur": 0.8, "volume": 0.2, "arp": [[0.0, 1.0], [0.18, 1.25], [0.36, 1.5], [0.54, 2.0]] },
 	# Ecos y cofres
-	&"eco_pickup": { "wave": "sine", "freq": 1568.0, "dur": 0.08, "volume": 0.1, "arp": [[0.4, 1.5]] },
+	&"eco_pickup": { "wave": "triangle", "freq": 1760.0, "dur": 0.12, "volume": 0.09, "arp": [[0.0, 1.0], [0.35, 1.5], [0.7, 2.0]] },
 	&"chest_open": { "wave": "triangle", "freq": 392.0, "dur": 0.45, "volume": 0.16, "noise": 0.1, "arp": [[0.0, 0.5], [0.15, 1.0], [0.3, 1.5], [0.45, 2.0]], "lowpass": 4000.0 },
 	# Enemigos
 	&"enemy_hit": { "wave": "square", "freq": 260.0, "freq_end": 120.0, "dur": 0.08, "volume": 0.14, "noise": 0.45, "crush": 6.0, "lowpass": 2500.0 },

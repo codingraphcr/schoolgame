@@ -32,4 +32,5 @@ options = Array[ExtResource("2_wgvbl")]([SubResource("Resource_nj5li"), SubResou
 script = ExtResource("3_1g710")
 id = &"cuenta_profesor_seguridad"
 title = "Asegurar la cuenta del profesor"
+ecos_reward = 0
 questions = Array[ExtResource("1_eyx36")]([SubResource("Resource_i5ha7")])

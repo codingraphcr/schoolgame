@@ -46,6 +46,12 @@ func _test_split() -> void:
 		for coin in coins:
 			coin.discard()  # Solo para contar: no se suman al saldo.
 	holder.queue_free()
+	var big := EcoShard.split(200)
+	_check(big.has(25) and big.size() <= EcoShard.MAX_COINS and big.reduce(func(a: int, b: int) -> int: return a + b, 0) == 200,
+		"200 Ecos: fragmentos de 25, 5 y 1 (%d fragmentos)" % big.size())
+	_check(EcoShard.split(7) == [5, 1, 1] or EcoShard.split(7).size() == 7, "pocos Ecos: fragmentos de 1")
+	var pc: PackedScene = load("res://world/zones/pc_profesor/escritorio.tscn")
+	_check(not pc.instantiate().find_children("*", "EcoChest", true, false).size(), "el nivel de SPAM no tiene cofre")
 	var enemy := ENEMY.instantiate() as EnemyBase
 	root.add_child(enemy)
 	var reward := enemy.get_ecos_reward()

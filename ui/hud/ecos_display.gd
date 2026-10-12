@@ -23,7 +23,7 @@ func _ready() -> void:
 	_icon.custom_minimum_size = Vector2(22, 26)
 	_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_icon.draw.connect(func() -> void:
-		EcoShard.draw_coin(_icon, _icon.size / 2.0, 8.0, cos(_time * 1.6), false, 0.5 + _flash))
+		EcoShard.draw_shard(_icon, _icon.size / 2.0, 18.0, 0.7 + 0.3 * cos(_time * 1.6), 5, 0.5 + _flash))  # Gira apenas: siempre se ve de frente.
 	add_child(_icon)
 
 	_amount = _make_label(Color(0.95, 0.97, 1.0), 20)

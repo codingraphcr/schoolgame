@@ -193,11 +193,14 @@ Armas: `data/weapons/` (`nullblade.tres`, la que se obtiene en el prólogo; `min
 al final del prólogo). Señal `ecos_changed(ecos, delta)`. `GameState` la guarda y reinicia con el resto (`to_dict` →
 `"economy"`); las partidas viejas con «credits» se convierten en Ecos. `world/pickups/eco_shard.gd` (`EcoShard`):
 fragmento que salta, rebota en el mundo (capa 1), flota, brilla y vuela hacia Kai cuando se acerca (36 px); vale 1 o 5;
-`EcoShard.spawn_burst(sala, posición, cantidad)` reparte la cantidad (máx. 14 piezas). Por ahora se dibuja con la moneda
-del concepto de Ariel; el fragmento cristalino es la tarea E3. **Enemigos:** al morir, `EnemyBase` se desintegra en
-píxeles (`world/effects/pixel_burst.gd`) y suelta `get_ecos_reward()` (`ecos_reward`, o 3 por punto de vida máxima).
-**Misiones:** `Quest.ecos_reward` (prólogo 25, contraseña del profesor 100). **Cofres:** `world/pickups/eco_chest.gd`
-(`EcoChest`, un `Interactable`; queda abierto con la marca `cofre_<chest_id>`; el de la PC es `pc_profesor_1`). Al
+`EcoShard.spawn_burst(sala, posición, cantidad)` reparte la cantidad en fragmentos de **1, 5 y 25** (`EcoShard.split`,
+máx. 14 piezas). **Apariencia (E3):** fragmento **cristalino** dibujado por código (`EcoShard.draw_shard`, también el ícono
+del HUD): azul si vale 1, violeta si vale 5 y blanco violáceo, más grande, si vale 25; flota, gira, destella y al recogerlo
+se deshace en partículas con un anillo de luz y un tintineo de cristal (`eco_pickup`). **Enemigos:** al morir, `EnemyBase`
+se desintegra en píxeles (`world/effects/pixel_burst.gd`) y suelta `get_ecos_reward()` (según su rango, ver E2).
+**Misiones:** `Quest.ecos_reward` (prólogo 25). **Cofres:** `world/pickups/eco_chest.gd` (`EcoChest`, un `Interactable`;
+queda abierto con la marca `cofre_<chest_id>`). **En la PC del profesor los Ecos solo los da el villano** (la «Contraseña
+débil»): no hay cofre y la terminal, el desafío y la misión dan 0. Al
 recoger el primer Eco queda la marca `ecos_descubiertos` y se desbloquea su página del ARSENAL. HUD: `EcosDisplay`
 («1.250 ECOS», con +X / −X al cambiar).
 
@@ -218,10 +221,12 @@ golpe: destello, empuje y aturdimiento breve (`hurt_time`). Señales `damaged` y
 comportamiento en `_ai()` y sus reacciones en `_on_damaged()` / `_on_died()`. `ai_enabled = false` lo deja quieto
 (presentaciones y pruebas). Kai atraviesa a los enemigos recibiendo daño, como en Hollow Knight.
 
-**La «Contraseña débil»** (`characters/enemies/weak_password/`, `WeakPasswordEnemy`): 6 de vida, tipo de amenaza
-`credenciales`. Se agacha avisando (`TELEGRAPH`) y salta hacia Kai. Con la mitad de la vida entra en **fuerza bruta**
-(avisa menos y salta más seguido y más lejos). Cada golpe suelta una contraseña débil real (`123456`, `qwerty`…) y al
-morir se deshace en números. Dibujo vectorial provisional hasta que Ariel haga el suyo.
+**La «Contraseña débil»** (`characters/enemies/weak_password/`, `WeakPasswordEnemy`): **10 de vida**, tipo de amenaza
+`credenciales`, especial y de la historia (20–40 Ecos, una sola vez). Tres fases: 1) se agacha avisando (`TELEGRAPH`) y
+salta hacia Kai; 2) con la mitad de la vida, **fuerza bruta**: avisa menos, salta más seguido y más lejos y al caer lanza
+un **intento** (`PasswordGuess`: una contraseña débil real que corre a ras del suelo; hay que saltarla, quita medio
+cristal); 3) con el 30 %, **ataque de diccionario**: dos intentos seguidos (`dictionary_gap`). Cada golpe suelta una
+contraseña débil real (`123456`, `qwerty`…) y al morir se deshace en números. Dibujo vectorial provisional hasta que Ariel haga el suyo.
 
 **Curación:** `characters/player/player_heal.gd` (`PlayerHeal`, nodo `Heal`): manteniendo **L**, Kai canaliza su energía. Cada curación gasta **media barrita** (`Player.energy`, máximo `GameState.max_energy_cells`) y devuelve **1,5 cristales**. La primera tarda **1,141 s** (incluye **0,30 s** de inicio); manteniendo L y con energía, cada una más tarda **0,9 s**. Soltar antes cancela sin gastar; un golpe la corta; para volver a curarse hay que soltar y presionar L. En el suelo Kai se arrodilla y en el aire queda flotando (animaciones `curar_suelo*` / `curar_aire*` de `assets/art/characters/kai/hd/kai_hd_curacion.json`, extraídas de `docs/arte/referencias/kai_curacion_concepto.webp` con `tools/art/extraer_personajes_concepto.gd -- kai_curacion`). La energía se conserva entre salas (`GameState.current_energy`), se llena al reaparecer y `Player.add_energy()` queda para recompensas futuras.
 
@@ -312,7 +317,7 @@ Diálogos en `data/dialogues/prologo/`: `profesor_pedido.tres` (pide revisar la 
    cierra la pantalla de carga y Kai se arma desde píxeles (`DigitalDive.materialize()`).
 4. Las salas digitales usan `Room.player_tint` (Kai celeste: su alma digital) y `Room.room_size` (no tienen tiles).
 
-`world/zones/pc_profesor/escritorio.tscn`: **nivel de SPAM** dentro de la computadora del profesor (3360 px, solo caminar
+`world/zones/pc_profesor/escritorio.tscn`: **nivel de SPAM** dentro de la computadora del profesor (3920 px, solo caminar
 y saltar). La salida izquierda vuelve al laboratorio (entrada `desde_pc`, también con materialización).
 
 **Aspecto del escritorio (concepto de Ariel, `docs/arte/referencias/escritorio_entidad_concepto.webp`):** `escritorio_fondo.gd` dibuja una pantalla clara invadida por la entidad, en rosa: columnas de binario que caen y cambian, código hex, terminales que se escriben solas, paneles «ANALIZANDO», circuitos con pulsos y cuadritos; solo dibuja lo que está en pantalla. Los íconos del escritorio están corruptos (glitch de color, franjas y nombres dañados). `entity_eye.gd` (`EntityEye`): el ojo de la entidad en un monitor con el panel «OBSERVANDO»; acompaña a la cámara, mira hacia Kai y a veces hacia otros lados, parpadea, y al acercarse Kai a la terminal se cierra y desaparece; desde el paso `cambiar_contrasena` ya no está. El brillo `SoulGlow` de Kai se bajó a 0,35 para el fondo claro.
@@ -328,6 +333,7 @@ Recorrido, de izquierda a derecha:
 | D | 1820–2300 | Lluvia C (la más intensa) y 3 vallas cortas que hay que saltar |
 | E | 2320–2900 | Lluvia D, Fri Fayer → Valorante (se mueve) → Brawl Starz (se cierra) → Zeldo sobre un foso largo |
 | Final | 2956–3310 | «¡Profe, aquí está el error!», la **terminal** (x=3036) y la cuenta del profesor |
+| Arena | 2992–3920 | Combate contra la «Contraseña débil»: pop-ups, anuncios trampa y lluvia de correos solo durante la pelea |
 
 **Componentes de SPAM** (`world/digital/spam/`, se ven también en el editor y sirven para otros niveles):
 
@@ -368,7 +374,9 @@ en la sala; no hace falta programar.
 **Combate de la cuenta del profesor** (`world/zones/pc_profesor/password_fight.gd`, `PasswordFight`): la pestaña
 «Cambiar contraseña» (`AccountTab`, paso `cambiar_contrasena`) lo inicia. Aparece la «Contraseña débil» y dice
 «Tú no deberías poder vernos»; la Nullblade se materializa (`NullbladeReveal`) y aparece la tarjeta de equipamiento; al reintentar no se repite; una `ArenaBarrier`
-(`world/digital/`, un pequeño firewall) cierra la zona. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
+(`world/digital/`, un pequeño firewall) cierra la **arena** (~930 px, de la barrera a la pared): 3 pop-ups para saltar
+(uno sube y baja), 3 anuncios trampa y una lluvia de correos (`MailRainFight`, en `fight_hazards`) que **solo cae durante
+la pelea**. Al ganar: diálogo y paso `elegir_seguridad` (H4d). Si Kai
 muere, el combate se cancela, reaparece en `RestorePointFinal` (justo antes) y puede reintentarlo con un diálogo corto.
 
 **Desafíos de elección** (`systems/challenges/`, `ui/challenges/`): un `ChoiceChallenge` (en `data/challenges/`) tiene
@@ -396,7 +404,7 @@ extra** (`GameState.check_password(&"profesor", intento)`).
 la contraseña del profesor (`PasswordWindow`, paso 1 de 2; si cierra en el paso 2 no tiene que crearla otra vez) y luego
 elige el método de verificación en dos pasos (desafío `cuenta_profesor_seguridad`, paso 2 de 2). Al terminar: diálogo, Visión
 Digital desbloqueada, el destello de la Nullblade se apaga (`nullblade_stage` sigue en 0), la misión se completa
-(+100 Ecos) y Kai vuelve al laboratorio (entrada `desde_pc`).
+y Kai vuelve al laboratorio (entrada `desde_pc`).
 
 **Primera terminal** (PC del profesor, paso `revisar_configuracion`): encontrar y leer
 `~/cuenta/configuracion.txt` (contraseña 123456, sin verificación en dos pasos). Alineada con indicadores de

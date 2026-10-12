@@ -14,6 +14,8 @@ const STEP := &"cambiar_contrasena"
 
 @export var weapon: WeaponData
 @export var barrier: ArenaBarrier
+## Peligros que solo funcionan durante la pelea (p. ej. una lluvia de correos SPAM sobre la arena).
+@export var fight_hazards: Array[Node] = []
 ## Dónde aparece el enemigo.
 @export var spawn_point: Marker2D
 @export var intro_dialogue: Dialogue
@@ -26,6 +28,21 @@ var running := false
 
 var _player: Player
 var _intro_seen := false
+
+
+func _ready() -> void:
+	_set_hazards(false)
+
+
+## Enciende o apaga los peligros de la arena (y quita los correos que quedaron cayendo).
+func _set_hazards(on: bool) -> void:
+	for hazard in fight_hazards:
+		if hazard == null:
+			continue
+		hazard.set_process(on)
+		if not on:
+			for child in hazard.get_children():
+				child.queue_free()
 
 
 func start(player: Player) -> void:
@@ -62,6 +79,7 @@ func start(player: Player) -> void:
 	Music.play(&"pelea")
 	if barrier:
 		barrier.active = true
+	_set_hazards(true)
 	get_tree().call_group(&"toast", &"show_message", "%s: pulsa %s para atacar" % [weapon.display_name, _key_for(&"attack")], 4.0)
 	player.controls_locked = false
 	enemy.ai_enabled = true
@@ -86,6 +104,7 @@ func _end(won: bool) -> void:
 		_player.damage.died.disconnect(_on_player_died)
 	if barrier:
 		barrier.active = false
+	_set_hazards(false)
 	if not won:
 		enemy.queue_free()
 		finished.emit(false)

@@ -29,11 +29,10 @@
 [ext_resource type="Resource" path="res://data/dialogues/prologo/contrasena_debil_aparece.tres" id="19_wpin"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/contrasena_debil_reintento.tres" id="20_wpre"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/contrasena_debil_derrotada.tres" id="21_wpok"]
-[ext_resource type="Script" path="res://world/pickups/eco_chest.gd" id="40_chest"]
 [ext_resource type="Script" path="res://world/zones/pc_profesor/entity_eye.gd" id="41_eye"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5aedr"]
-size = Vector2(3424, 80)
+size = Vector2(3984, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nr2fl"]
 size = Vector2(32, 360)
@@ -59,14 +58,14 @@ script = ExtResource("1_7ma26")
 player = NodePath("Player")
 camera = NodePath("GameCamera")
 spawn_point = NodePath("SpawnPoint")
-room_size = Rect2(0, 0, 3360, 360)
+room_size = Rect2(0, 0, 3920, 360)
 player_tint = Color(0.7, 1, 1.15, 1)
 footstep = &"step_digital"
 music_track = &"computadora"
 
 [node name="Background" type="Node2D" parent="." unique_id=930290375]
 script = ExtResource("2_h6uko")
-area = Rect2(0, 0, 3360, 360)
+area = Rect2(0, 0, 3920, 360)
 construction_note = ""
 
 [node name="EntityEye" type="Node2D" parent="." node_paths=PackedStringArray("terminal")]
@@ -144,7 +143,7 @@ accent = Color(0.18431373, 0.7490196, 0.3529412, 1)
 collision_mask = 0
 
 [node name="Taskbar" type="CollisionShape2D" parent="Collisions" unique_id=1458307615]
-position = Vector2(1680, 344)
+position = Vector2(1960, 344)
 shape = SubResource("RectangleShape2D_5aedr")
 
 [node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=161144976]
@@ -152,7 +151,7 @@ position = Vector2(-16, 180)
 shape = SubResource("RectangleShape2D_nr2fl")
 
 [node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1292354208]
-position = Vector2(3376, 180)
+position = Vector2(3936, 180)
 shape = SubResource("RectangleShape2D_huro6")
 
 [node name="HintBack" type="Label" parent="." unique_id=1786122676]
@@ -306,6 +305,35 @@ ad_title = "Zeldo PIRATA"
 ad_lines = PackedStringArray("Descarga sin pagar", "Ejecuta instalador.exe")
 ad_url = "zeldo-free.xyz"
 accent = Color(0.1764706, 0.43529412, 0.83137256, 1)
+
+[node name="ArenaPopup1" type="AnimatableBody2D" parent="SpamPopups" unique_id=1560241127]
+position = Vector2(3350, 244)
+script = ExtResource("3_5lg4o")
+size = Vector2(96, 38)
+ad_title = "Antivirus GRATIS"
+ad_lines = PackedStringArray("Elimina 999 virus", "Instálalo sin preguntar")
+ad_url = "antivirus-ya.click"
+accent = Color(0.18431373, 0.7490196, 0.3529412, 1)
+
+[node name="ArenaPopup2" type="AnimatableBody2D" parent="SpamPopups" unique_id=1183081030]
+position = Vector2(3520, 214)
+script = ExtResource("3_5lg4o")
+size = Vector2(100, 38)
+ad_title = "¿Olvidaste tu clave?"
+ad_lines = PackedStringArray("Recupérala aquí", "Escribe tu clave actual")
+ad_url = "recupera-clave.xyz"
+accent = Color(0.8392157, 0.2, 0.2901961, 1)
+
+[node name="ArenaPopup3" type="AnimatableBody2D" parent="SpamPopups" unique_id=466655869]
+position = Vector2(3700, 240)
+script = ExtResource("3_5lg4o")
+size = Vector2(96, 38)
+ad_title = "Cuenta PREMIUM"
+ad_lines = PackedStringArray("Verifica tus datos", "o se bloqueará hoy")
+ad_url = "cuenta-premium.top"
+accent = Color(0.5411765, 0.30980393, 1, 1)
+move_offset = Vector2(0, -34)
+move_time = 1.6
 
 [node name="TrapAds" type="Node2D" parent="." unique_id=1055946313]
 
@@ -484,6 +512,33 @@ size = Vector2(80, 14)
 label = "CLIC AQUÍ"
 is_hazard = true
 
+[node name="ArenaTrap1" type="Area2D" parent="TrapAds" unique_id=748166977]
+position = Vector2(3470, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(44, 14)
+label = "CLIC AQUÍ"
+is_hazard = true
+
+[node name="ArenaTrap2" type="Area2D" parent="TrapAds" unique_id=2138240631]
+position = Vector2(3640, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(44, 14)
+label = "DESCARGAR"
+is_hazard = true
+
+[node name="ArenaTrap3" type="Area2D" parent="TrapAds" unique_id=1376898982]
+position = Vector2(3830, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_4nbd3")
+size = Vector2(44, 14)
+label = "¡GANASTE!"
+is_hazard = true
+
 [node name="SpamMail" type="Node2D" parent="." unique_id=2065767524]
 
 [node name="MailRainA" type="Node2D" parent="SpamMail" unique_id=311649468]
@@ -509,14 +564,15 @@ script = ExtResource("7_5aedr")
 width = 480.0
 interval = 0.85
 
+[node name="MailRainFight" type="Node2D" parent="SpamMail" unique_id=220694095]
+position = Vector2(3240, 64)
+script = ExtResource("7_5aedr")
+width = 640.0
+interval = 1.3
+
 [node name="RestorePoint" type="Area2D" parent="." unique_id=1760161149]
 position = Vector2(1400, 304)
 script = ExtResource("12_rstpt")
-
-[node name="EcoChest" type="Area2D" parent="."]
-position = Vector2(1462, 304)
-script = ExtResource("40_chest")
-chest_id = &"pc_profesor_restauracion"
 
 [node name="TerminalStation" type="Area2D" parent="." unique_id=1816087198]
 position = Vector2(3036, 304)
@@ -536,17 +592,18 @@ script = ExtResource("12_rstpt")
 position = Vector2(2992, 304)
 script = ExtResource("17_barrier")
 
-[node name="PasswordFight" type="Node2D" parent="." unique_id=992695476 node_paths=PackedStringArray("barrier", "spawn_point")]
+[node name="PasswordFight" type="Node2D" parent="." unique_id=992695476 node_paths=PackedStringArray("barrier", "spawn_point", "fight_hazards")]
 script = ExtResource("16_fight")
 weapon = ExtResource("18_sword")
 barrier = NodePath("../ArenaBarrier")
+fight_hazards = [NodePath("../SpamMail/MailRainFight")]
 spawn_point = NodePath("EnemySpawn")
 intro_dialogue = ExtResource("19_wpin")
 retry_dialogue = ExtResource("20_wpre")
 victory_dialogue = ExtResource("21_wpok")
 
 [node name="EnemySpawn" type="Marker2D" parent="PasswordFight" unique_id=382947329]
-position = Vector2(3250, 270)
+position = Vector2(3420, 250)
 
 [node name="AccountWindow" type="Node2D" parent="." unique_id=570698044]
 position = Vector2(3120, 304)
