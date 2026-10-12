@@ -4,7 +4,7 @@ extends SceneTree
 ##
 ## Los retratos grandes quedan con fondo transparente: se borra el fondo liso desde los bordes de
 ## arriba y de los costados (abajo no, porque ahí la ropa toca el borde) y después el halo oscuro
-## que queda alrededor. Las expresiones se recortan tal cual, con su fondo.
+## que queda alrededor, y se pixelan (ver PIXEL_BLOCK). Las expresiones se recortan tal cual, con su fondo.
 
 const SHEET := "res://docs/arte/referencias/dialogos_hoja_concepto.webp"
 const KAI := "res://assets/art/characters/kai/retratos/"
@@ -16,15 +16,28 @@ const CUTOUTS := {
 	PROFESOR + "profesor_retrato.png": Rect2i(850, 48, 344, 440),
 }
 ## Silueta del cuerpo (coordenadas dentro del recorte) que el borrado del fondo no puede atravesar:
-## la ropa negra de Kai es casi del color del fondo y, sin esto, se borraba por partes.
+## la ropa negra de Kai y el pelo del profesor detrás de la oreja son casi del color del fondo y,
+## sin esto, se borraban por partes.
 const KEEP := {
 	KAI + "kai_retrato.png": [Vector2(95, 205), Vector2(150, 225), Vector2(240, 225), Vector2(300, 215),
 		Vector2(348, 245), Vector2(348, 438), Vector2(40, 438), Vector2(48, 330), Vector2(60, 270), Vector2(95, 240)],
+	PROFESOR + "profesor_retrato.png": [Vector2(240, 82), Vector2(262, 90), Vector2(285, 100), Vector2(298, 115),
+		Vector2(300, 140), Vector2(296, 165), Vector2(285, 185), Vector2(270, 195), Vector2(255, 200), Vector2(240, 175), Vector2(238, 120)],
+}
+## Bolsillos de fondo encerrados entre mechones (no tocan el borde, así que el borrado desde los bordes
+## no llega): se borran también desde estos puntos (coordenadas dentro del recorte).
+const HOLES := {
+	PROFESOR + "profesor_retrato.png": [Vector2i(53, 62)],
 }
 ## Diferencia de color máxima con el fondo para borrarlo, y la más floja para el halo.
 const TOLERANCE := 0.075
 const HALO_TOLERANCE := 0.16
 const HALO_PASSES := 2
+## Pixelado (como el pixel art de Kai en el juego): bloques de PIXEL_BLOCK × PIXEL_BLOCK, paleta
+## de PIXEL_COLORS colores y contorno oscuro. Las líneas oscuras (ojos, cejas, lentes) se conservan.
+const PIXEL_BLOCK := 2
+const PIXEL_COLORS := 32
+const OUTLINE := Color("0a0d1c")
 
 ## Expresiones (primeros planos con fondo). No se usan como retrato porque cambian el encuadre;
 ## sirven de referencia para dibujarlas con el mismo encuadre que el retrato grande.
@@ -46,7 +59,7 @@ func _initialize() -> void:
 	sheet.convert(Image.FORMAT_RGBA8)
 	for out: String in CUTOUTS:
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out.get_base_dir()))
-		_cut_out(sheet.get_region(CUTOUTS[out]), PackedVector2Array(KEEP.get(out, []))).save_png(out)
+		_pixelate(_cut_out(sheet.get_region(CUTOUTS[out]), PackedVector2Array(KEEP.get(out, [])), HOLES.get(out, []))).save_png(out)
 		print(out.get_file())
 	for dir: String in EXPRESSIONS:
 		var prefix := "kai_" if dir == KAI else "profesor_"
@@ -57,7 +70,7 @@ func _initialize() -> void:
 	quit()
 
 
-func _cut_out(image: Image, keep: PackedVector2Array) -> Image:
+func _cut_out(image: Image, keep: PackedVector2Array, holes: Array = []) -> Image:
 	var w := image.get_width()
 	var h := image.get_height()
 	var background := image.get_pixel(2, 2)
@@ -66,6 +79,8 @@ func _cut_out(image: Image, keep: PackedVector2Array) -> Image:
 	var stack: Array[Vector2i] = []
 	for x in w:
 		stack.append(Vector2i(x, 0))
+	for hole: Vector2i in holes:
+		stack.append(hole)
 	for y in int(h * 0.75):
 		stack.append(Vector2i(0, y))
 		stack.append(Vector2i(w - 1, y))
@@ -100,3 +115,116 @@ func _distance(a: Color, b: Color) -> float:
 
 func _kept(p: Vector2i, keep: PackedVector2Array) -> bool:
 	return keep.size() >= 3 and Geometry2D.is_point_in_polygon(Vector2(p), keep)
+
+
+## Pixela el retrato: lo reduce por bloques (conservando el trazo), limita la paleta, le pone un
+## contorno oscuro y lo vuelve a agrandar sin suavizar (mismo tamaño que el original).
+func _pixelate(image: Image) -> Image:
+	var small := _downsample(image, PIXEL_BLOCK)
+	var w := small.get_width()
+	var h := small.get_height()
+	var pixels: Array[Color] = []
+	for y in h:
+		for x in w:
+			var c := small.get_pixel(x, y)
+			if c.a > 0.0:
+				pixels.append(c)
+	var palette := _palette(pixels, PIXEL_COLORS)
+	for y in h:
+		for x in w:
+			var c := small.get_pixel(x, y)
+			if c.a > 0.0:
+				small.set_pixel(x, y, _nearest(palette, c))
+	var shape := small.duplicate() as Image
+	for y in h:
+		for x in w:
+			if shape.get_pixel(x, y).a > 0.0:
+				continue
+			for d: Vector2i in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:
+				var q := Vector2i(x, y) + d
+				if q.x >= 0 and q.y >= 0 and q.x < w and q.y < h and shape.get_pixelv(q).a > 0.0:
+					small.set_pixel(x, y, OUTLINE)
+					break
+	small.resize(w * PIXEL_BLOCK, h * PIXEL_BLOCK, Image.INTERPOLATE_NEAREST)
+	return small
+
+
+## Reduce por bloques: promedio del bloque, pero si tiene una línea oscura gana la línea. Alfa duro
+## (o se ve o no se ve) y un poco más de contraste y color.
+func _downsample(image: Image, block: int) -> Image:
+	var w := image.get_width() / block
+	var h := image.get_height() / block
+	var small := Image.create(w, h, false, Image.FORMAT_RGBA8)
+	for y in h:
+		for x in w:
+			var sum := Vector3.ZERO
+			var alpha := 0.0
+			var count := 0
+			var dark := Color.WHITE
+			var dark_luminance := 2.0
+			for j in block:
+				for i in block:
+					var c := image.get_pixel(x * block + i, y * block + j)
+					alpha += c.a
+					if c.a < 0.5:
+						continue
+					sum += Vector3(c.r, c.g, c.b)
+					count += 1
+					if c.get_luminance() < dark_luminance:
+						dark_luminance = c.get_luminance()
+						dark = c
+			if count == 0 or alpha / (block * block) < 0.5:
+				continue
+			var avg := sum / count
+			var color := Color(avg.x, avg.y, avg.z)
+			if color.get_luminance() - dark_luminance > 0.18:
+				color = color.lerp(dark, 0.75)
+			color = Color((color.r - 0.5) * 1.1 + 0.5, (color.g - 0.5) * 1.1 + 0.5, (color.b - 0.5) * 1.1 + 0.5)
+			color.s = minf(color.s * 1.1, 1.0)
+			small.set_pixel(x, y, color)
+	return small
+
+
+## Paleta de "count" colores que mejor representa los píxeles (k-means sobre una muestra).
+func _palette(pixels: Array[Color], count: int) -> Array[Color]:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7
+	var sample: Array[Color] = []
+	for i in range(0, pixels.size(), maxi(pixels.size() / 6000, 1)):
+		sample.append(pixels[i])
+	var centers: Array[Color] = []
+	for i in count:
+		centers.append(sample[rng.randi_range(0, sample.size() - 1)])
+	for iteration in 12:
+		var sums: Array[Vector3] = []
+		var counts: Array[int] = []
+		sums.resize(count)
+		counts.resize(count)
+		sums.fill(Vector3.ZERO)
+		counts.fill(0)
+		for c in sample:
+			var best := _nearest_index(centers, c)
+			sums[best] += Vector3(c.r, c.g, c.b)
+			counts[best] += 1
+		for i in count:
+			if counts[i] > 0:
+				var mean := sums[i] / counts[i]
+				centers[i] = Color(mean.x, mean.y, mean.z)
+	return centers
+
+
+func _nearest(palette: Array[Color], c: Color) -> Color:
+	return palette[_nearest_index(palette, c)]
+
+
+func _nearest_index(palette: Array[Color], c: Color) -> int:
+	var best := 0
+	var best_distance := INF
+	for i in palette.size():
+		var p := palette[i]
+		# Distancia pesada como la percibe el ojo (el verde pesa más que el azul).
+		var d := (c.r - p.r) ** 2 * 0.3 + (c.g - p.g) ** 2 * 0.59 + (c.b - p.b) ** 2 * 0.11
+		if d < best_distance:
+			best_distance = d
+			best = i
+	return best
