@@ -49,7 +49,8 @@ func _run() -> void:
 		return
 	player = room.player
 	_check(player.controls_locked, "al llegar, Kai se está materializando")
-	await _wait(1.5)
+	var body_check := player.get_node("Visual/Body") as Node2D
+	await _until(func() -> bool: return not player.controls_locked and body_check.scale.is_equal_approx(Vector2.ONE))
 	_check(get_nodes_in_group(&"loading_screen").is_empty(), "la pantalla de carga se cierra")
 	var body := player.get_node("Visual/Body") as Node2D
 	_check(body.visible and body.scale.is_equal_approx(Vector2.ONE), "Kai termina de materializarse")
@@ -75,6 +76,15 @@ func _run() -> void:
 
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
+
+
+## Espera (en cuadros de física) a que se cumpla la condición, hasta unos 10 s de juego.
+func _until(condition: Callable) -> void:
+	for i in 600:
+		if condition.call():
+			return
+		await process_frame
+		await physics_frame
 
 
 func _action(action: StringName) -> void:
