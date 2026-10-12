@@ -25,6 +25,7 @@ func _run() -> void:
 	await _test_attack()
 	await _test_enemy()
 	await _test_fight()
+	await _test_chase()
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
 
@@ -177,6 +178,7 @@ func _test_fight() -> void:
 	_action("interact")
 	await _until(func() -> bool: return box.is_playing())
 	_check(fight.running and fight.enemy != null and not fight.enemy.ai_enabled, "aparece la «Contraseña débil» (quieta mientras habla)")
+	_check(fight.enemy.global_position.x > 3700.0, "aparece al fondo de la arena, lejos de Kai (x=%.0f)" % fight.enemy.global_position.x)
 	_check(await _dialogue_contains(box, "no deberías poder vernos"), "dice «Tú no deberías poder vernos»")
 	var zoom := room.camera.zoom
 	await _advance(box)
@@ -247,6 +249,33 @@ func _test_fight() -> void:
 	player.teleport_to(Vector2(3172, 304))
 	await _frames(8)
 	_check(tab._prompt.visible and tab._prompt.text == "E: elegir la nueva contraseña", "la pestaña ofrece elegir la nueva contraseña (H4d)")
+
+
+## El villano persigue a Kai por toda la arena: también salta a los pop-ups donde está él.
+func _test_chase() -> void:
+	var room := current_scene as Room
+	if room == null or room.name != "EscritorioProfesor":
+		return
+	var player := room.player
+	player.hurtbox.immune = true
+	var enemy := _spawn_enemy(room, Vector2(3800, 290))
+	enemy.ai_enabled = true
+	var popup := room.get_node("SpamPopups/ArenaPopup2") as SpamPopup
+	player.teleport_to(popup.global_position + Vector2(50, -14))
+	var reached := false
+	for i in 1200:
+		await physics_frame
+		if enemy.is_on_floor() and absf(enemy.global_position.y - popup.global_position.y) < 3.0 				and absf(enemy.global_position.x - player.global_position.x) < 60.0:
+			reached = true
+			break
+	_check(reached, "si Kai sube a un pop-up, el villano salta hasta ahí (y=%.0f)" % enemy.global_position.y)
+	player.teleport_to(Vector2(3100, 304))
+	var start := absf(enemy.global_position.x - player.global_position.x)
+	for i in 600:
+		await physics_frame
+	_check(absf(enemy.global_position.x - player.global_position.x) < start - 150.0, "si Kai se aleja, lo sigue por la arena")
+	enemy.queue_free()
+	player.hurtbox.immune = false
 
 
 func _guesses(room: Node) -> Array:

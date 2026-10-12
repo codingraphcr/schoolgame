@@ -568,7 +568,7 @@ interval = 0.85
 position = Vector2(3240, 64)
 script = ExtResource("7_5aedr")
 width = 640.0
-interval = 1.3
+interval = 1.8
 
 [node name="RestorePoint" type="Area2D" parent="." unique_id=1760161149]
 position = Vector2(1400, 304)
@@ -603,7 +603,7 @@ retry_dialogue = ExtResource("20_wpre")
 victory_dialogue = ExtResource("21_wpok")
 
 [node name="EnemySpawn" type="Marker2D" parent="PasswordFight" unique_id=382947329]
-position = Vector2(3420, 250)
+position = Vector2(3862, 200)
 
 [node name="AccountWindow" type="Node2D" parent="." unique_id=570698044]
 position = Vector2(3120, 304)
