@@ -12,14 +12,18 @@ extends Resource
 ## Segundos desde que se pulsa hasta que el golpe hace daño, y cuánto dura activo.
 @export var windup := 0.05
 @export var active_time := 0.1
-## Tiempo mínimo entre un ataque y el siguiente.
-@export var cooldown := 0.3
+## Tiempo mínimo entre un ataque y el siguiente (0,45 s: un ritmo pausado, como el aguijón de
+## Hollow Knight).
+@export var cooldown := 0.45
 @export var knockback := 180.0
 ## Retroceso de Kai al acertar (px/s), como en Hollow Knight.
 @export var recoil := 60.0
 ## Congelamiento breve al acertar (sensación de impacto).
 @export var hit_stop := 0.05
 @export var slash_color := Color("3ef2ff")
+## Dibujo del arma con la punta hacia abajo (para el ataque hacia abajo: Kai la clava). Si no tiene,
+## se dibuja una hoja simple del color del tajo.
+@export var sprite: Texture2D
 ## Fracción de la energía máxima que recupera cada golpe acertado a un enemigo (normal o aéreo).
 @export_range(0.0, 1.0) var energy_gain := 0.125
 ## Lo mismo para el ataque cargado (cuando exista, más adelante en la historia).

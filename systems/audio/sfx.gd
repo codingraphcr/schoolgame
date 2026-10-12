@@ -33,6 +33,7 @@ const RECIPES := {
 	&"heal_done": { "wave": "triangle", "freq": 880.0, "dur": 0.4, "volume": 0.18, "arp": [[0.0, 1.0], [0.25, 1.5], [0.5, 2.0]], "lowpass": 4000.0 },
 	# Nullblade: tajo digital con glitch (entrecortado y "roto").
 	&"slash": { "wave": "saw", "freq": 1800.0, "freq_end": 500.0, "dur": 0.15, "volume": 0.16, "noise": 0.55, "crush": 11.0, "lowpass": 6000.0, "arp": [[0.0, 1.0], [0.18, 0.0], [0.26, 1.6], [0.42, 0.0], [0.5, 0.8], [0.68, 0.0], [0.74, 1.3]] },
+	&"pogo": { "wave": "triangle", "freq": 520.0, "freq_end": 1040.0, "dur": 0.16, "volume": 0.15, "noise": 0.15, "crush": 6.0, "lowpass": 4500.0 },
 	&"hit": { "wave": "square", "freq": 180.0, "freq_end": 60.0, "dur": 0.09, "volume": 0.17, "noise": 0.5, "crush": 8.0, "lowpass": 2200.0 },
 	&"energy_gain": { "wave": "sine", "freq": 1500.0, "freq_end": 2100.0, "dur": 0.06, "volume": 0.08 },
 	&"reveal_gather": { "wave": "saw", "freq": 70.0, "freq_end": 700.0, "dur": 3.4, "attack": 1.6, "volume": 0.3, "vibrato": [6.0, 11.0], "noise": 0.25, "lowpass": 2000.0 },

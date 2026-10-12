@@ -1,7 +1,7 @@
 extends Node
 ## Sonidos de Kai (nodo "Sounds" del jugador): escucha lo que hace el jugador y reproduce el efecto
 ## que corresponde con Sfx. Pasos (distintos en el colegio y dentro de una computadora), saltos,
-## caída, dash, daño (con el crujido del cristal), muerte, curación, tajos, golpes y energía.
+## caída, dash, daño (con el crujido del cristal), muerte, curación, tajos, golpes, rebotes y energía.
 
 ## Segundos entre pasos al correr.
 const STEP_TIME := 0.27
@@ -32,6 +32,7 @@ func _connect() -> void:
 	player.heal.finished.connect(func(_completed: bool) -> void: Sfx.stop(_heal_sound))
 	player.combat.attacked.connect(func() -> void: Sfx.play(&"slash", randf_range(0.95, 1.08)))
 	player.combat.hit_landed.connect(func(_target: Node2D) -> void: Sfx.play(&"hit"))
+	player.combat.pogo.connect(func() -> void: Sfx.play(&"pogo", randf_range(0.95, 1.08)))
 	player.energy_changed.connect(_on_energy_changed)
 	player.health.health_changed.connect(func(current: float, _maximum: float) -> void: _last_health = current)
 	_last_health = player.health.current
