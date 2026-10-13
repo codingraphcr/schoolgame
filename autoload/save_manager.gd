@@ -97,6 +97,12 @@ func slot_info(slot: int) -> Dictionary:
 	return info
 
 
+## El contenido de una ranura usable (solo para leer, p. ej. «Mi perfil»); {} si no hay.
+func read_slot(slot: int) -> Dictionary:
+	var best := _best(slot)
+	return (best["body"] as Dictionary).duplicate(true) if best["estado"] in ["ok", "recuperada"] else {}
+
+
 func has_save() -> bool:
 	for slot in range(1, SLOTS + 1):
 		if slot_info(slot)["estado"] in ["ok", "recuperada"]:

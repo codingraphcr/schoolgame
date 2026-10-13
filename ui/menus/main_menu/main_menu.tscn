@@ -71,7 +71,7 @@ unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = 0.645
+anchor_top = 0.64
 anchor_right = 0.5
 offset_left = -160.0
 offset_right = 160.0
@@ -82,7 +82,7 @@ theme_override_constants/separation = 2
 [node name="ContinueButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(320, 40)
+custom_minimum_size = Vector2(320, 38)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_option")
 theme_override_font_sizes/font_size = 20
@@ -91,7 +91,7 @@ script = ExtResource("3_option")
 
 [node name="PlayButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 40)
+custom_minimum_size = Vector2(320, 38)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_option")
 theme_override_font_sizes/font_size = 20
@@ -100,16 +100,25 @@ script = ExtResource("3_option")
 
 [node name="LoadButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 40)
+custom_minimum_size = Vector2(320, 38)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_option")
 theme_override_font_sizes/font_size = 20
 text = "CARGAR PARTIDA"
 script = ExtResource("3_option")
 
+[node name="ProfileButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 38)
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 20
+text = "MI PERFIL"
+script = ExtResource("3_option")
+
 [node name="SettingsButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 40)
+custom_minimum_size = Vector2(320, 38)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_option")
 theme_override_font_sizes/font_size = 20
@@ -118,7 +127,7 @@ script = ExtResource("3_option")
 
 [node name="QuitButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 40)
+custom_minimum_size = Vector2(320, 38)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_option")
 theme_override_font_sizes/font_size = 20

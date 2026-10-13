@@ -81,7 +81,9 @@ func _on_stepped(body: Node) -> void:
 	var blink := create_tween().set_loops(int(close_delay / 0.1))
 	blink.tween_property(_canvas, "modulate:a", 0.35, 0.05)
 	blink.tween_property(_canvas, "modulate:a", 1.0, 0.05)
-	await get_tree().create_timer(close_delay).timeout
+	# Los tiempos corren con la física (como Kai y el movimiento del pop-up) y se detienen en pausa:
+	# aunque la computadora vaya lenta, el pop-up se cierra cuando Kai ya lleva ese tiempo encima.
+	await get_tree().create_timer(close_delay, false, true).timeout
 	blink.kill()
 	_closed = true
 	Sfx.play(&"popup_close", 1.0, -4.0)
@@ -89,7 +91,7 @@ func _on_stepped(body: Node) -> void:
 	_shape.set_deferred(&"disabled", true)
 	var close := create_tween()
 	close.tween_property(_canvas, "scale", Vector2(1.0, 0.0), 0.12)
-	await get_tree().create_timer(reopen_delay).timeout
+	await get_tree().create_timer(reopen_delay, false, true).timeout
 	_shape.set_deferred(&"disabled", false)
 	_closed = false
 	Sfx.play(&"popup_open", 1.0, -4.0)

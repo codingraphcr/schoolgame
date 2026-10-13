@@ -38,8 +38,9 @@ Para probar una versión nueva, repite los pasos y abre el `Nullveil.exe` nuevo 
 ## 5. Las partidas guardadas
 
 - Se guardan en tu computadora, **fuera** de la carpeta del juego: al cambiar de versión **no se pierden**.
-- Están en `%APPDATA%\Godot\app_userdata\Nullveil- Beyond the Firewall\partidas` (pega esa ruta en la barra
-  del Explorador de archivos para verlas).
+- Están en `%APPDATA%\Nullveil\partidas` (pega esa ruta en la barra del Explorador de archivos para verlas).
+  Si jugaste una versión anterior, la primera vez el juego copia ahí tus partidas y opciones de la carpeta
+  vieja (`%APPDATA%\Godot\app_userdata\Nullveil- Beyond the Firewall`), que queda intacta.
 - Puedes tener hasta **3 partidas**. Desde el menú: **Nueva partida**, **Cargar partida** o **Continuar**.
 - El juego guarda solo al avanzar en la historia, al obtener habilidades y en las computadoras seguras (tecla **E**).
 
@@ -50,7 +51,7 @@ Envía al equipo:
 1. **Qué estabas haciendo** y **qué pasó** (y qué esperabas que pasara).
 2. Una **captura de pantalla**, si puedes (tecla **Impr Pant** o **Windows + Shift + S**).
 3. El contenido de **VERSION.txt** (dice la versión, el commit y la fecha exacta de esa compilación).
-4. Si el juego se cerró solo, el registro: `%APPDATA%\Godot\app_userdata\Nullveil- Beyond the Firewall\logs\godot.log`.
+4. Si el juego se cerró solo, el registro: `%APPDATA%\Nullveil\logs\godot.log`.
 
 ## Controles básicos
 

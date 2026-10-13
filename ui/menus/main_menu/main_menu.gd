@@ -9,6 +9,7 @@ const BACKGROUND_CYCLE := 18.0
 @onready var continue_button: Button = %ContinueButton
 @onready var play_button: Button = %PlayButton
 @onready var load_button: Button = %LoadButton
+@onready var profile_button: Button = %ProfileButton
 @onready var identity_label: Label = %IdentityLabel
 @onready var _footer: Control = %Footer
 @onready var settings_button: Button = %SettingsButton
@@ -27,6 +28,7 @@ func _ready() -> void:
 	Music.play(&"menu")
 	play_button.pressed.connect(_on_play_pressed)
 	load_button.pressed.connect(_open_slots.bind(SlotSelect.Mode.LOAD))
+	profile_button.pressed.connect(_open_profile)
 	continue_button.pressed.connect(_on_continue_pressed)
 	identity_label.text = "Jugador: %s" % IdentityManager.display_name
 	# CONTINUAR solo aparece si hay una partida guardada.
@@ -80,6 +82,18 @@ func _show_credits(show: bool) -> void:
 
 func _on_play_pressed() -> void:
 	_open_slots(SlotSelect.Mode.NEW)
+
+
+## «Mi perfil».
+func _open_profile() -> void:
+	_buttons.visible = false
+	_footer.visible = false
+	var screen := ProfileScreen.open(self)
+	screen.closed.connect(func() -> void:
+		_buttons.visible = true
+		_footer.visible = true
+		if not DisplayServer.is_touchscreen_available():
+			profile_button.grab_focus())
 
 
 ## Selección de ranura (para una partida nueva o para cargar una).

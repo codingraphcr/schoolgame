@@ -32,6 +32,10 @@ func _ready() -> void:
 	if is_test_run():
 		base_root = "user://pruebas_partidas"
 		_remove_dir(ProjectSettings.globalize_path(base_root))
+	else:
+		# Los datos pasaron a una carpeta propia (%APPDATA%\Nullveil): la primera vez se copian los de
+		# la carpeta vieja de Godot, antes de leer la identidad, las partidas o las opciones.
+		UserDataMigration.migrate(UserDataMigration.old_dir(), OS.get_user_data_dir())
 	start_default()
 
 

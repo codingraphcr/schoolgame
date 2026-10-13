@@ -1,8 +1,9 @@
 # Sistema de usuarios, perfiles y partidas (Steam)
 
-**Estado:** Fase 1 aprobada. **T1–T7 hechas** (13 de octubre de 2026): identidad de desarrollo, formato v2 con
-migración, 3 ranuras con escritura segura, persistencia del mapa y del progreso, guardado automático y el menú
-con la selección de partida. Siguen T8–T11 (sección 14).
+**Estado:** Fase 1 aprobada. **T1–T8 y T11 hechas** (13 de octubre de 2026): identidad de desarrollo, formato v2
+con migración, 3 ranuras con escritura segura, persistencia del mapa y del progreso, guardado automático, el menú
+con la selección de partida, «Mi perfil», la carpeta propia `%APPDATA%\Nullveil` y el endurecimiento. Faltan T9
+(GodotSteam, pide permiso de descarga) y T10 (Steamworks, pide acceso) (sección 14).
 **Fecha:** 13 de octubre de 2026. **Motor:** Godot 4.7.2 (GDScript). **Plataforma:** Steam para PC (Windows).
 
 ## 0. Decisión de plataforma
@@ -90,7 +91,7 @@ GameState, Economy y RoomGraph).
 ## 4. Carpetas
 
 ```
-user://                                  (recomendado: carpeta propia "Nullveil" en vez de app_userdata, sección 12)
+user://  = %APPDATA%\Nullveil          (carpeta propia desde T11; antes Godot/app_userdata/…, se copia sola)
 ├── ajustes.cfg                          opciones del dispositivo (no se sincroniza)
 ├── identidad_desarrollo.cfg             solo modo desarrollo (no se sincroniza)
 └── partidas/
@@ -178,7 +179,7 @@ Primera opción: **Auto-Cloud** (sin código). Configuración en Steamworks (a h
 | Campo | Valor propuesto |
 |---|---|
 | Root | `WinAppDataRoaming` |
-| Subdirectory | `Nullveil/partidas/{64BitSteamID}` (con carpeta de usuario propia; si no, `Godot/app_userdata/Nullveil- Beyond the Firewall/partidas/{64BitSteamID}`) |
+| Subdirectory | `Nullveil/partidas/{64BitSteamID}` (carpeta propia activa desde T11) |
 | Pattern | `*.sav` (principal y respaldo; el temporal `.tmp`, el registro local `.dat`, los logs y las opciones quedan fuera) |
 | Recursive | Sí (las 3 ranuras) |
 | Cuota | 3 ranuras × 2 archivos ≈ 6 archivos, unos pocos MB en total (ajustar con los tamaños medidos) |
@@ -225,7 +226,7 @@ usuario de Steam, sin conexión, Auto-Cloud entre dos PC y conflictos.
 | **GodotSteam es un addon (GDExtension)** y la regla del proyecto era «sin plugins» | Pedir una excepción solo para GodotSteam: es la integración mantenida (GDExtension v4.23.1, Steamworks SDK 1.65, «Godot 4.4 y superior»). Se descarga de Codeberg (`godotsteam-4.23.1-gdextension-plugin-4.4.zip.tar.xz`, 17 MiB), con permiso. Antes de usar cualquier método, se verifica la API instalada |
 | **Hace falta un AppID propio** (cuenta de Steamworks; Valve cobra una tarifa por juego) | Lo gestiona el equipo. Mientras tanto, todo se desarrolla y se prueba con la identidad de desarrollo |
 | `rename` no es atómico en Windows | Estrategia de la sección 6 y prueba de recuperación |
-| Carpeta de usuario: hoy `Godot/app_userdata/Nullveil- Beyond the Firewall` | Usar una carpeta propia (`application/config/use_custom_user_dir`, nombre «Nullveil») **antes** de publicar, migrando lo existente |
+| ~~Carpeta de usuario en `Godot/app_userdata/…`~~ | **Hecho (T11):** carpeta propia `%APPDATA%\Nullveil`; lo existente se copia la primera vez |
 | Steam no disponible en una versión publicada | Decidir: permitir jugar con la última identidad conocida (solo su carpeta) o pedir abrir Steam |
 | **Capítulo 1 no está en la Biblia** («Inmersión Digital», persecución, «Jefe Chip y Glitch») | Diseñar el guardado genérico (marcas y puntos de control); el contenido narrativo se valida con la Biblia antes de implementarlo |
 | Partida actual de Yohann11 en `user://partida.json` | La migración la pasa a la ranura 1 de la primera identidad que abra el juego en ese equipo |
@@ -290,6 +291,26 @@ usuario de Steam, sin conexión, Auto-Cloud entre dos PC y conflictos.
   `user://pruebas_partidas` (se vacía al empezar) y `SaveManager` no migra la partida vieja real.
 - Prueba: `tests/test_slot_select.gd`.
 
+**T8 (Mi perfil):**
+- Botón «MI PERFIL» en el menú. `ProfileStats` (`systems/save/profile_stats.gd`) solo lee las ranuras de la identidad
+  actual; `ProfileScreen` (`ui/menus/profile/profile_screen.gd`) muestra el nombre del jugador, el tiempo total
+  (suma de las 3 ranuras), la partida más reciente (ranura, año, capítulo, nivel, lugar), Ecos, habilidades,
+  % de historia y educativo, comandos aprendidos, terminales resueltas, desafíos, logros (llegan con Steam) y el
+  último guardado. Nunca muestra ids técnicos ni datos privados de la cuenta. Esc o «Volver» regresa al menú.
+- Prueba: `tests/test_profile.gd`.
+
+**T11 (endurecimiento):**
+- **Carpeta propia:** `application/config/use_custom_user_dir` con el nombre «Nullveil» → `%APPDATA%\Nullveil`.
+  `UserDataMigration` (`systems/save/user_data_migration.gd`) copia, al arrancar y antes de leer nada, `partidas/`,
+  `ajustes.cfg` e `identidad_desarrollo.cfg` desde la carpeta vieja de Godot, solo si la nueva todavía no tiene
+  ninguno de esos datos. Nunca pisa ni borra: la carpeta vieja queda como copia y se deja una nota
+  (`migrado_desde_app_userdata.txt`). Las pruebas automáticas no migran.
+- **Medido** (esta PC, con las pruebas): 150 guardados seguidos sin perder la integridad (≈ 180 ms cada uno, con
+  respaldo y registro local); una partida con 2000 marcas y 300 recompensas pesa ≈ 43 KB, se guarda en ≈ 170 ms y
+  se carga en ≈ 75 ms. Un temporal viejo no reemplaza a una partida más nueva; al cambiar de identidad en plena
+  partida se suelta la ranura y no se guarda en la carpeta de la otra persona.
+- Prueba: `tests/test_hardening.gd` (además de los cortes simulados de `tests/test_save.gd`).
+
 ## 13. Lo que se descarta (exploración del 13 de octubre)
 
 Las cuentas con servidor propio (`server/`, `Profiles` en línea, `ApiClient`, `LocalServer`, `LoginPanel`,
@@ -308,10 +329,10 @@ rankings), que se diseñaría por separado.
 | T5 ✅ | 3 | Contratos de persistencia: mundo (semilla, generador, salas visitadas), tiempo jugado, año/capítulo/nivel, % historia y educativo |
 | T6 ✅ | 3 | Guardado automático y reglas de «es seguro guardar» |
 | T7 ✅ | 4 | Menú principal nuevo y selección de partida (3 tarjetas, confirmaciones, indicadores) |
-| T8 | 4 | Mi perfil |
+| T8 ✅ | 4 | Mi perfil |
 | T9 | 5 | Instalar GodotSteam (con permiso) y `SteamIdentityProvider` con la API verificada |
 | T10 | 6 | Auto-Cloud en Steamworks y pruebas entre dos PC (cuando haya acceso) |
-| T11 | 7 | Endurecimiento: cortes simulados, migraciones, conflictos, cambio de usuario, tamaños y tiempos |
+| T11 ✅ | 7 | Carpeta propia y endurecimiento: cortes simulados, migraciones, conflictos, cambio de usuario, tamaños y tiempos |
 
 Fuentes: documentación de Steam Cloud de Valve (https://partner.steamgames.com/doc/features/cloud), lanzamientos de
 GodotSteam (https://codeberg.org/godotsteam/godotsteam/releases) y el código de Godot
