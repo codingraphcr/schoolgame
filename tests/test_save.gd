@@ -1,7 +1,8 @@
 extends SceneTree
 ## Prueba automática: E4. Guardar y continuar la partida (SaveManager): todo el progreso, la
 ## escritura segura con copia de respaldo, archivos dañados o inválidos, la computadora segura
-## (punto de control al pasar; con E guarda y cura) y el botón CONTINUAR del menú.
+## (punto de control al pasar; con E guarda y cura) y el botón CONTINUAR del menú (con un usuario:
+## su partida va cifrada en su carpeta).
 ## Usa un archivo de prueba: nunca toca la partida del jugador.
 ## Ejecutar: godot --headless --path . --script res://tests/test_save.gd
 
@@ -13,6 +14,7 @@ var _failures := 0
 var state: Node
 var economy: Node
 var saves: Node
+var server: TestServer
 
 
 func _initialize() -> void:
@@ -29,6 +31,8 @@ func _run() -> void:
 	await _test_menu_and_continue()
 	await _test_save_point()
 	saves.delete_save()
+	if server:
+		server.stop(self)
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
 
@@ -74,9 +78,21 @@ func _test_files() -> void:
 
 
 func _test_menu_and_continue() -> void:
+	var profiles := root.get_node("Profiles")
+	server = await TestServer.start(self, "guardado")
+	if server == null:
+		_failures += 1
+		return
+	change_scene_to_file(MENU)
+	await _frames(10)
+	_check(current_scene.get_node_or_null("Login") != null and not current_scene.get_node("%Buttons").visible,
+		"sin sesión, el menú pide iniciar sesión")
+	_check((await profiles.create("Prueba_1", "faro cometa tambor mango 12"))["ok"], "se crea una cuenta de prueba")
+	_check(saves.key.size() == 32 and saves.path.begins_with(server.folder), "su partida va cifrada en su carpeta")
 	saves.delete_save()
 	change_scene_to_file(MENU)
 	await _frames(10)
+	_check(current_scene.get_node_or_null("Login") == null and current_scene.get_node("%Buttons").visible, "con sesión, aparecen las opciones")
 	_check(not current_scene.get_node("%ContinueButton").visible, "sin partida, el menú no muestra CONTINUAR")
 	_prepare_progress()
 	saves.save_game(ENTRADA, &"entrada")

@@ -38,6 +38,7 @@ Las carpetas se crean cuando se necesitan, no antes.
 | Nombre | Archivo | Responsabilidad |
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
+| `Profiles` | `autoload/profiles.gd` | Cuentas en el servidor: crear, entrar, recuperar; sube y baja la partida cifrada. Ver `usuarios_y_servidor.md`. |
 | `World` | `autoload/world.gd` | El mapa del mundo: grafos de los distritos, sala actual y a dónde lleva cada puerta. Ver «Mapa del mundo». |
 | `SaveManager` | `autoload/save_manager.gd` | Guardar y continuar la partida (`user://partida.json`). Ver «Guardado». |
 | `Economy` | `autoload/economy.gd` | Saldo de **Ecos** (la moneda) y la penalización al morir. Ver «ECOS». |
@@ -480,6 +481,11 @@ guardado anterior, que queda como copia (`partida.respaldo.json`). Si el princip
 dañado, de una versión futura o con una sala inexistente no se usa. `VERSION` y `_migrate()` preparan los cambios de
 formato. `continue_game()` carga y lleva a la sala; `Room` coloca a Kai en la `SavePoint` cuyo `save_id` coincide.
 
+**Cuentas:** con sesión iniciada (`Profiles`), `SaveManager.path` apunta a la copia local de la cuenta y
+`SaveManager.key` cifra la partida (AES-256); al guardar emite `saved` y `Profiles` la sube al servidor. Sin clave,
+los archivos van en texto (solo pruebas y la partida de antes de las cuentas).
+Detalle en `usuarios_y_servidor.md`.
+
 **Computadora segura** (`SavePoint`, un `Interactable`): monitor verde con un escudo (distinto de las terminales y de los
 nodos de Aegis). Al pasar queda como **punto de control** (si Kai muere, reaparece ahí); con **E** guarda la partida y
 llena los cristales y la energía. Por ahora hay una en la Entrada del colegio. En la PC del profesor (prólogo y combate) **no hay
@@ -676,6 +682,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
 | `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (el armario pide el doble salto) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
+| `test_profiles.gd` | Cuentas en el servidor: «ese nombre ya existe», contraseñas con reglas, la misma partida en dos dispositivos, partidas que nadie más (ni el servidor) puede leer, bloqueo, recuperación y sin conexión. Prende un servidor de prueba (Python 3) |
 | `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
 | `test_save.gd` | Guardar y continuar (todo el progreso), escritura segura con copia, archivos dañados o inválidos, la computadora segura (punto de control al pasar; con E guarda y cura) y CONTINUAR en el menú |
 | `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |

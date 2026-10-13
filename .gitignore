@@ -9,3 +9,10 @@
 # Sistema operativo
 .DS_Store
 Thumbs.db
+
+# Servidor de cuentas: datos de jugadores (nunca al repositorio) y caché de Python
+/server/datos/
+__pycache__/
+*.db
+*.db-wal
+*.db-shm

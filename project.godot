@@ -26,6 +26,7 @@ DigitalVision="*res://autoload/digital_vision.gd"
 Economy="*res://autoload/economy.gd"
 SaveManager="*res://autoload/save_manager.gd"
 World="*res://autoload/world.gd"
+Profiles="*res://autoload/profiles.gd"
 
 [display]
 
@@ -148,3 +149,7 @@ pause={
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+[nullveil]
+
+servidor/url="http://127.0.0.1:8787"

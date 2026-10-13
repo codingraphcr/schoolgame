@@ -9,17 +9,28 @@ extends Node
 ## reemplaza al guardado anterior, que queda como copia de respaldo. Si el principal está dañado,
 ## se usa la copia. Nunca se pierde la partida por cerrar el juego a mitad de un guardado.
 ##
+## Cada usuario (Profiles) tiene su propia partida, cifrada con su clave (AES-256): con key, los
+## archivos se escriben y leen cifrados; sin key (pruebas y la partida de antes de los usuarios), en
+## texto. Con una clave equivocada la partida simplemente no se puede abrir.
+##
 ## Uso: SaveManager.save_game(escena, id_del_punto) · SaveManager.has_save() · SaveManager.continue_game()
+
+## Se guardó la partida (Profiles la sube al servidor).
+signal saved
 
 ## Versión del formato. Si cambia, _migrate() adapta las partidas viejas.
 const VERSION := 1
 
-## Archivo principal (las pruebas usan otro para no tocar la partida del jugador).
-var path := "user://partida.json"
+const DEFAULT_PATH := "user://partida.json"
+
+## Archivo principal (el de cada usuario lo pone Profiles; las pruebas usan otro).
+var path := DEFAULT_PATH
+## Clave de la partida del usuario que inició sesión (vacía = archivos sin cifrar).
+var key := PackedByteArray()
 
 
 func backup_path() -> String:
-	return path.get_basename() + ".respaldo.json"
+	return path.get_basename() + ".respaldo." + path.get_extension()
 
 
 func has_save() -> bool:
@@ -31,15 +42,23 @@ func save_game(scene_path: String, entry: StringName) -> bool:
 	if scene_path.is_empty() or not ResourceLoader.exists(scene_path):
 		push_warning("SaveManager: escena inválida para guardar (%s)." % scene_path)
 		return false
-	var data := {
+	var ok := write_data({
 		"version": VERSION,
 		"saved_at": int(Time.get_unix_time_from_system()),
 		"location": { "scene": scene_path, "entry": String(entry) },
 		"game": get_node("/root/GameState").to_dict(),
-	}
+	})
+	if ok:
+		saved.emit()
+	return ok
+
+
+## Escribe datos de partida ya armados (con escritura segura). También la usa Profiles.
+func write_data(data: Dictionary) -> bool:
 	var text := JSON.stringify(data, "\t")
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	var temp := path + ".tmp"
-	var file := FileAccess.open(temp, FileAccess.WRITE)
+	var file := _open(temp, FileAccess.WRITE)
 	if file == null:
 		push_warning("SaveManager: no se pudo escribir el guardado (%s)." % error_string(FileAccess.get_open_error()))
 		return false
@@ -84,13 +103,35 @@ func delete_save() -> void:
 			DirAccess.remove_absolute(_absolute(file))
 
 
-## Lee y valida un archivo de guardado. {} si no existe, está dañado o no se puede usar.
+## Lee una partida sin cifrar (la de antes de los usuarios). {} si no hay o no sirve.
+func read_plain(file_path: String) -> Dictionary:
+	var saved_key := key
+	key = PackedByteArray()
+	var data := _read(file_path)
+	if data.is_empty():
+		data = _read(file_path.get_basename() + ".respaldo." + file_path.get_extension())
+	key = saved_key
+	return data
+
+
+## Abre un archivo de guardado: cifrado si hay clave.
+func _open(file_path: String, mode: FileAccess.ModeFlags) -> FileAccess:
+	if key.is_empty():
+		return FileAccess.open(file_path, mode)
+	return FileAccess.open_encrypted(file_path, mode, key)
+
+
+## Lee y valida un archivo de guardado. {} si no existe, está dañado, la clave no es la suya o no
+## se puede usar.
 func _read(file_path: String) -> Dictionary:
 	if not FileAccess.file_exists(file_path):
 		return {}
+	var file := _open(file_path, FileAccess.READ)
+	if file == null:
+		return {}
 	# JSON.parse (no parse_string): un archivo dañado no llena la consola de errores.
 	var json := JSON.new()
-	if json.parse(FileAccess.get_file_as_string(file_path)) != OK or not json.data is Dictionary:
+	if json.parse(file.get_as_text()) != OK or not json.data is Dictionary:
 		return {}
 	var data := _migrate(json.data)
 	var location: Variant = data.get("location")

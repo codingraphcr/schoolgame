@@ -1,6 +1,7 @@
 extends Control
 ## Menú principal: punto de entrada del juego.
 ## Fondo con el título (arte de Ariel) y las opciones al estilo de su concepto (MainMenuOption).
+## Primero hay que iniciar sesión (LoginPanel): cada usuario tiene su propia partida (Profiles).
 
 ## Cuánto se acerca el fondo en su movimiento lento (1.0 = nada) y cuánto tarda en ir y volver.
 const BACKGROUND_ZOOM := 1.035
@@ -11,11 +12,16 @@ const BACKGROUND_CYCLE := 18.0
 @onready var settings_button: Button = %SettingsButton
 @onready var credits_button: Button = %CreditsButton
 @onready var quit_button: Button = %QuitButton
+@onready var logout_button: Button = %LogoutButton
+@onready var user_label: Label = %UserLabel
+@onready var _session: Control = %Session
 @onready var credits_back_button: Button = %CreditsBackButton
 @onready var version_label: Label = %VersionLabel
 @onready var _background: TextureRect = %Background
 @onready var _buttons: Control = %Buttons
 @onready var _credits: Control = %Credits
+
+var _login: LoginPanel
 
 
 func _ready() -> void:
@@ -24,8 +30,7 @@ func _ready() -> void:
 	Music.play(&"menu")
 	play_button.pressed.connect(_on_play_pressed)
 	continue_button.pressed.connect(_on_continue_pressed)
-	# CONTINUAR solo aparece si hay una partida guardada.
-	continue_button.visible = SaveManager.has_save()
+	logout_button.pressed.connect(_on_logout_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	credits_button.pressed.connect(_show_credits.bind(true))
 	credits_back_button.pressed.connect(_show_credits.bind(false))
@@ -36,17 +41,51 @@ func _ready() -> void:
 	# En web no se puede cerrar la aplicación y en iOS no está permitido.
 	quit_button.visible = not (OS.has_feature("web") or OS.has_feature("ios"))
 
+	_animate_background()
+	if Profiles.is_logged_in():
+		_show_menu()
+	else:
+		_show_login()
+
+
+## Sin sesión: la pantalla de inicio de sesión (las opciones del menú se ocultan).
+func _show_login() -> void:
+	_buttons.visible = false
+	_session.visible = false
+	_login = LoginPanel.new()
+	_login.name = "Login"
+	add_child(_login)
+	_login.done.connect(_on_logged_in)
+
+
+func _on_logged_in() -> void:
+	_login.queue_free()
+	_login = null
+	_show_menu()
+
+
+## Con sesión: las opciones, con CONTINUAR si este usuario tiene una partida guardada.
+func _show_menu() -> void:
+	_buttons.visible = true
+	_session.visible = true
+	user_label.text = "Usuario: %s" % Profiles.current_name
+	continue_button.visible = SaveManager.has_save()
 	# Foco inicial para poder navegar con teclado o mando (no se usa en pantallas táctiles).
 	if not DisplayServer.is_touchscreen_available():
 		(continue_button if continue_button.visible else play_button).grab_focus()
-
-	_animate_background()
 	# Las opciones aparecen suavemente.
 	_buttons.modulate.a = 0.0
 	create_tween().tween_property(_buttons, "modulate:a", 1.0, 0.6).set_delay(0.2)
 
 
+func _on_logout_pressed() -> void:
+	Profiles.logout()
+	_show_login()
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if _login:
+		return
 	if _credits.visible and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		_show_credits(false)
