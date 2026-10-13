@@ -21,6 +21,14 @@ Visión Digital, Nullblade, el Grimorio, los Ecos, los personajes secundarios, l
 6. La historia se integra poco a poco con los aprendizajes del MEP, pero los contenidos narrativos **no se presentan como
    oficiales del MEP** mientras no se validen contra los programas completos (ver `../curriculo_mep.md`).
 
+## Capítulos
+
+Las especificaciones de cada capítulo van en [`capitulos/`](capitulos/). Detallan lo que la Biblia resume; si algo
+choca con ella, se anota en el propio documento y se decide antes de implementarlo.
+
+- [`CAPITULO_01.md`](capitulos/CAPITULO_01.md) — **El origen digital** (décimo): especificación oficial; implementación
+  pendiente de autorización.
+
 La Biblia no reemplaza la documentación técnica (`../arquitectura.md`, `../estructura_del_proyecto.md`) ni el plan del
 MVP (`../plan_mvp.md`).
 
