@@ -76,6 +76,9 @@ godot --headless --path . --script res://tests/test_cuarto_viejo.gd
 ## Versión de prueba para Windows
 
 - `export_presets.cfg`: exportación «Windows Desktop» (un solo `Nullveil.exe`, sin pruebas ni documentación).
+- Ícono del juego (escritorio, barra de tareas y ventana): el logo de Ariel
+  (`docs/arte/referencias/logo_nullveil.webp`) → `tools/art/generar_icono.gd` → `assets/icon/nullveil.ico`
+  (16 a 256 px, lo pone en el `.exe` con `application/modify_resources`) y `nullveil_icon.png` (`config/icon`).
 - `.github/workflows/version-de-prueba.yml`: GitHub Actions baja Godot 4.7.2 y sus plantillas oficiales (con su
   huella SHA-512), importa, verifica los scripts (`tools/ci/verificar_scripts.gd`), corre pruebas rápidas, exporta,
   publica el ZIP como artefacto (30 días) y lo arranca en Windows para comprobar que abre sin errores.
