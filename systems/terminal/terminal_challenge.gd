@@ -21,7 +21,7 @@ extends Resource
 @export var files: Dictionary[String, String] = {}
 ## Archivo que hay que leer con cat (relativo a la carpeta personal, o absoluto).
 @export var goal_file := ""
-## Comandos permitidos (vacío = todos los que conoce el intérprete).
+## Comandos permitidos, con sus opciones (p. ej. "ls -a"). Vacío = solo help (nunca todos por olvido).
 @export var allowed_commands: PackedStringArray = []
 ## Pistas, de la más general a la más concreta (se muestran de una en una).
 @export var hints: PackedStringArray = []
@@ -43,7 +43,10 @@ func create_interpreter() -> CommandInterpreter:
 	var interpreter := CommandInterpreter.new(VirtualFileSystem.from_files(files, "/home/" + user))
 	interpreter.user = user
 	interpreter.host = host
-	interpreter.allowed = allowed_commands
+	# Una terminal del juego sin lista de comandos solo tiene help: nunca se abren todos por olvido.
+	if allowed_commands.is_empty():
+		push_warning("TerminalChallenge %s: sin allowed_commands; solo se permite help." % id)
+	interpreter.allowed = allowed_commands if not allowed_commands.is_empty() else PackedStringArray(["help"])
 	if not protected_folder.is_empty():
 		interpreter.protected_dirs = [interpreter.fs.resolve(protected_folder)]
 	return interpreter

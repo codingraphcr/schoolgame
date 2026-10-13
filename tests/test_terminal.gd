@@ -27,6 +27,7 @@ func _run() -> void:
 	_test_safety()
 	_test_sanitization()
 	_test_hidden_and_password()
+	_test_every_game_terminal()
 	await _test_in_game()
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
@@ -236,6 +237,9 @@ func _test_hidden_and_password() -> void:
 		"tampoco se entra ni se lee lo oculto sin la contraseña (aunque se adivine el nombre)")
 	_check(not t.execute("ls -x")["ok"] and _out(t, "ls -x") == "ls -x: comando inejecutable", "una opción que no se necesita es inejecutable")
 	_check(t.complete("cd .p") == "cd .p" and t.complete("cat no") == "cat notas.txt ", "Tab no completa lo oculto hasta que se da la contraseña")
+	_check(t.complete("cat .puerta/") == "cat .puerta/" and t.complete("cat /home/alvarado/.puerta/co") == "cat /home/alvarado/.puerta/co"
+		and t.complete("ls ./.puerta/../.puerta/") == "ls ./.puerta/../.puerta/",
+		"Tab tampoco revela qué hay dentro de una carpeta oculta protegida (ni con rutas dando vueltas)")
 	t.unlock()
 	listing = _out(t, "ls -a")
 	_check(listing.begins_with(".  ..") and listing.contains(".puerta/") and listing.contains("notas.txt"),
@@ -251,6 +255,27 @@ func _test_hidden_and_password() -> void:
 		"la contraseña nueva del jugador no se muestra (solo se guarda su huella)")
 	var other := _full_terminal()
 	_check(not _out(other, "ls -a").contains("password") and _out(other, "ls -a").begins_with(".  .."), "en una terminal sin carpetas protegidas, ls -a funciona directo")
+
+
+## Todas las terminales del juego (data/terminals/) tienen su lista de comandos, y una sin lista
+## solo tiene help (nunca todos los comandos por olvido).
+func _test_every_game_terminal() -> void:
+	var missing: PackedStringArray = []
+	var count := 0
+	for file in ResourceLoader.list_directory("res://data/terminals"):
+		var challenge := load("res://data/terminals/" + file) as TerminalChallenge
+		if challenge == null:
+			continue
+		count += 1
+		if challenge.allowed_commands.is_empty() or challenge.allowed_commands.has("history"):
+			missing.append(file)
+	_check(count >= 2 and missing.is_empty(), "las %d terminales del juego tienen su propia lista corta de comandos %s" % [count, missing])
+	var forgotten := TerminalChallenge.new()
+	forgotten.id = &"olvidada"
+	forgotten.files = { "secreto.txt": "no" }
+	var t := forgotten.create_interpreter()
+	_check(t.available_commands() == PackedStringArray(["help"]) and _out(t, "cat secreto.txt") == "cat: comando inejecutable",
+		"una terminal sin lista de comandos solo tiene help")
 
 
 func _new_terminal() -> CommandInterpreter:
