@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 3
+order = 11
+title = "Acceso autorizado"
+subtitle = "Concepto · Confidencialidad"
+text = "Tener permiso para revisar algo no es tener permiso para todo. Solo se consulta la información autorizada; lo demás se respeta. Los controles de acceso hacen que cada persona entre solo a lo que le corresponde, y el mínimo privilegio da solo los permisos necesarios."
+facts = Dictionary[String, String]({"Regla": "Solo lo autorizado", "Herramientas": "Controles de acceso · Mínimo privilegio"})
+unlock_flag = &"cap1_archivo_protegido"

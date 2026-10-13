@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Option_1"]
+script = ExtResource("2_option")
+text = "Leerlo para saber de quién es"
+detail = "Así se lo devuelves a su dueño"
+feedback = "Aunque la intención sea buena, leerlo es acceder a información que no es tuya. No hace falta para protegerla."
+
+[sub_resource type="Resource" id="Option_2"]
+script = ExtResource("2_option")
+text = "Cerrar la sesión sin abrir nada y avisar al encargado"
+detail = "La bibliotecaria sabrá qué hacer"
+correct = true
+feedback = "¡Correcto! Proteges los datos sin mirarlos y avisas a quien tiene la autorización para resolverlo. Eso es uso ético de la información."
+
+[sub_resource type="Resource" id="Option_3"]
+script = ExtResource("2_option")
+text = "Guardar una copia en tu memoria USB"
+detail = "Por si se pierde"
+feedback = "No. Copiar datos personales ajenos, aunque sea «por si acaso», los expone todavía más. Solo quien tiene autorización debe manejarlos."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "En la pantalla pública de la biblioteca quedó abierto el archivo privado de un estudiante. ¿Qué haces?"
+options = Array[ExtResource("2_option")]([SubResource("Option_1"), SubResource("Option_2"), SubResource("Option_3")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap1_archivo_privado"
+title = "Un archivo que no es tuyo"
+ecos_reward = -1
+questions = Array[ExtResource("1_question")]([SubResource("Question_0")])

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 5
+order = 10
+title = "Inmersión Digital"
+subtitle = "Habilidad · Entrar a entornos digitales"
+text = "Kai puede entrar a ciertos entornos digitales simulados y explorarlos por dentro. No es lo mismo que la Visión Digital: la visión muestra lo que se esconde en el mundo; la inmersión deja entrar. La primera vez, la conexión solo apareció con la Visión Digital activa."
+facts = Dictionary[String, String]({"Cómo": "Busca la conexión con la Visión Digital y acércate", "Desde": "Capítulo 1"})
+inventory_kind = 2
+icon = &"inmersion"
+unlock_flag = &"inmersion_digital"

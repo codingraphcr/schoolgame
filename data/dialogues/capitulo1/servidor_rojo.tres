@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 2.1: en el cuarto técnico, Chip y Glitch se meten en la computadora.
+(El servidor del sistema de entrenamiento está en rojo. Dos risitas salen del monitor.)
+Glitch: ¡Jijiji! ¡Aquí adentro no nos puede seguir!
+Chip: Exacto. Fase dos del plan: desaparecer.
+(Chip y Glitch se hunden en la pantalla y desaparecen.)
+Kai [sorprendido]: ¡Se metieron en la computadora!
+Kai [pensativo]: ¿Y ahora cómo los sigo?"

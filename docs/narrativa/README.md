@@ -26,8 +26,8 @@ Visión Digital, Nullblade, el Grimorio, los Ecos, los personajes secundarios, l
 Las especificaciones de cada capítulo van en [`capitulos/`](capitulos/). Detallan lo que la Biblia resume; si algo
 choca con ella, se anota en el propio documento y se decide antes de implementarlo.
 
-- [`CAPITULO_01.md`](capitulos/CAPITULO_01.md) — **El origen digital** (décimo): especificación oficial; implementación
-  pendiente de autorización.
+- [`CAPITULO_01.md`](capitulos/CAPITULO_01.md) — **El origen digital** (décimo): especificación oficial, implementación
+  por etapas. Guion: [`CAPITULO_01_GUION.md`](capitulos/CAPITULO_01_GUION.md).
 
 La Biblia no reemplaza la documentación técnica (`../arquitectura.md`, `../estructura_del_proyecto.md`) ni el plan del
 MVP (`../plan_mvp.md`).

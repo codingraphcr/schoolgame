@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 2.6: el cierre (primera parte: texto de la especificación).
+Glitch: ¡Ay, ay, ay! ¡Ya no quiero jugar!
+Chip: Está bien, está bien. ¡Ganaste!
+Kai: ¿Por qué estaban dañando las computadoras?
+Glitch: Porque hacen ruidos graciosos cuando fallan.
+Chip [preocupado]: ¡No digás eso! ¡Teníamos un plan!
+Kai: ¿Cuál plan?
+Chip [pensativo]: ... Todavía estábamos trabajando en eso.
+Kai: Detrás de cada computadora hay personas. Si borran un trabajo, alguien pierde horas. Si muestran un archivo privado, alguien queda expuesto.
+Glitch [pensativo]: ...¿Como cuando Chip me borró mi colección de ruidos?
+Chip [sorprendido]: ¡Eso fue un accidente!
+Glitch: Igual me dolió.
+Chip [pensativo]: ...Ok. Ya entendimos.
+Chip: Tomá. Lo encontramos aquí adentro. No sabemos qué es."

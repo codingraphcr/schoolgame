@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 2.4: la arena (texto de la especificación).
+Glitch: ¡LO LOGRAMOS!
+Chip: Por supuesto. Era un plan perfecto.
+Glitch: ¿Y si sobrevivió?
+Chip: Imposible.
+(Kai entra a la arena.)
+Kai: ¿Decían algo?
+Chip: ...
+Glitch: ...
+Chip [sorprendido]: ¡PLAN B!"

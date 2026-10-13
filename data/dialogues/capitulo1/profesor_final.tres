@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 2.7: Kai habla con el profesor. Después, el profesor queda solo (sin diálogo).
+Prof. Alvarado: ¿Y? ¿Qué le pasaba al sistema de entrenamiento?
+Kai: Alguien estaba jugando con él. Ya no va a molestar... creo.
+Prof. Alvarado [sorprendido]: ¿Alguien? ¿Quién?
+Kai [sonriente]: Digamos que... aprendieron la lección.
+Prof. Alvarado [sonriente]: Buen trabajo, Kai. Andá a descansar."

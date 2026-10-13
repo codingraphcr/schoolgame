@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 3
+order = 12
+title = "Respaldos"
+subtitle = "Concepto · Mantenimiento seguro"
+text = "Una copia de la información para recuperarla si algo falla. Un respaldo solo sirve si funciona: antes de restaurar, se verifica que esté completo y se pueda leer. Nunca se borra lo actual antes de comprobarlo."
+facts = Dictionary[String, String]({"Antes de restaurar": "Verificar el respaldo", "Error común": "Borrar primero"})
+unlock_flag = &"cap1_checkpoint_2"

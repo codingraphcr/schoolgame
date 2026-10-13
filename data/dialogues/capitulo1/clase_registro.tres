@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 1.2: el profesor pide revisar el registro de eventos.
+Prof. Alvarado: Kai, ¿todo bien? Te quedaste viendo la pared.
+Kai [pensativo]: Sí, profe... ¿Puedo revisar el registro del sistema? Algo raro está pasando.
+Prof. Alvarado [sonriente]: Buena idea. El registro anota todo lo que pasa: quién entra, cuándo y qué cambia.
+Prof. Alvarado: Está en la terminal de tu puesto."

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 1.4: después de proteger el archivo.
+Kai: Listo. Sesión cerrada, y ya le avisé a la bibliotecaria.
+Chip: Bah. Igual ya nos íbamos. ¡Al cuarto técnico!
+Glitch: ¡Al cuarto técnico! ...¿Qué es un cuarto técnico?"

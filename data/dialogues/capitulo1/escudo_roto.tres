@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 2.5: Kai corrige la configuración y el escudo se apaga.
+Chip [sorprendido]: ¿Qué? ¿Quién te dio permiso de...?
+Kai: Nadie. Por eso ya no tenés permiso de todo."
