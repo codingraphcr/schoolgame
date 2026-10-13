@@ -62,4 +62,5 @@ godot --headless --path . --script res://tests/test_economy.gd
 godot --headless --path . --script res://tests/test_save.gd
 godot --headless --path . --script res://tests/test_room_graph.gd
 godot --headless --path . --script res://tests/test_world.gd
+godot --headless --path . --script res://tests/test_cuarto_viejo.gd
 ```

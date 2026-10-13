@@ -21,6 +21,12 @@ room_id = &"laboratorio"
 template_id = &"laboratorio"
 cell = Vector2i(2, 0)
 
+[sub_resource type="Resource" id="Resource_pasillo_viejo"]
+script = ExtResource("2_room")
+room_id = &"pasillo_viejo"
+template_id = &"pasillo_viejo"
+cell = Vector2i(3, 0)
+
 [sub_resource type="Resource" id="Resource_link1"]
 script = ExtResource("3_link")
 room_a = &"entrada"
@@ -35,10 +41,17 @@ door_a = &"este"
 room_b = &"laboratorio"
 door_b = &"oeste"
 
+[sub_resource type="Resource" id="Resource_link3"]
+script = ExtResource("3_link")
+room_a = &"laboratorio"
+door_a = &"este"
+room_b = &"pasillo_viejo"
+door_b = &"oeste"
+
 [resource]
 script = ExtResource("1_dist")
 id = &"colegio"
 display_name = "Colegio"
 start_room = &"entrada"
-rooms = Array[ExtResource("2_room")]([SubResource("Resource_entrada"), SubResource("Resource_pasillo"), SubResource("Resource_laboratorio")])
-links = Array[ExtResource("3_link")]([SubResource("Resource_link1"), SubResource("Resource_link2")])
+rooms = Array[ExtResource("2_room")]([SubResource("Resource_entrada"), SubResource("Resource_pasillo"), SubResource("Resource_laboratorio"), SubResource("Resource_pasillo_viejo")])
+links = Array[ExtResource("3_link")]([SubResource("Resource_link1"), SubResource("Resource_link2"), SubResource("Resource_link3")])

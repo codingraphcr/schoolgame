@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://world/effects/flicker.gd" id="10_fhapv"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/phish_lure.png" id="11_keyrc"]
 [ext_resource type="Script" path="res://world/effects/bob.gd" id="12_mjyh2"]
+[ext_resource type="Texture2D" path="res://assets/art/pixel/door.png" id="13_bu1ym"]
 [ext_resource type="Script" path="res://world/effects/packet_stream.gd" id="13_yicei"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/packet.png" id="14_xkdvc"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/packet_bad.png" id="15_tc3sw"]
@@ -162,6 +163,9 @@ animations = [{
 size = Vector2(40, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_odpsf"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5lmkb"]
 size = Vector2(12, 256)
 
 [node name="Laboratorio" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
@@ -337,6 +341,11 @@ centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 7, 192)
 
+[node name="OldHallwayDoor" type="Sprite2D" parent="Lab" unique_id=853651222]
+modulate = Color(0.7, 0.72, 0.8, 1)
+position = Vector2(700, 256)
+texture = ExtResource("13_bu1ym")
+
 [node name="Packets" type="Node2D" parent="." unique_id=1150446176]
 position = Vector2(0, 56)
 script = ExtResource("13_yicei")
@@ -409,6 +418,12 @@ script = ExtResource("25_sorln")
 id = &"desde_pc"
 arrival_effect = "materialize"
 
+[node name="FromPasilloViejo" type="Marker2D" parent="Entries" unique_id=1011692112]
+position = Vector2(680, 304)
+script = ExtResource("25_sorln")
+id = &"desde_pasillo_viejo"
+facing = -1
+
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 
 [node name="ToPasillo" type="Area2D" parent="Exits" unique_id=1554206632]
@@ -420,3 +435,16 @@ target_entry = &"desde_laboratorio"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToPasillo" unique_id=1946857122]
 shape = SubResource("RectangleShape2D_odpsf")
+
+[node name="ToPasilloViejo" type="Area2D" parent="Exits" unique_id=25575789]
+position = Vector2(714, 176)
+script = ExtResource("26_vubhy")
+door_id = &"este"
+target_scene = "res://world/zones/zone0/pasillo_viejo.tscn"
+target_entry = &"desde_laboratorio"
+requires_quest = &"cuarto_viejo"
+requires_step = &"ir_pasillo_viejo"
+locked_message = "La puerta del fondo está cerrada con llave."
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToPasilloViejo" unique_id=1086714050]
+shape = SubResource("RectangleShape2D_5lmkb")

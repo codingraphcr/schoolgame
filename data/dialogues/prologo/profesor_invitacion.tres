@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_invit"]
+
+[resource]
+script = ExtResource("1_invit")
+script_text = "# H5: al volver de la PC, el profesor invita a Kai al pasillo viejo.
+# Cuidado con la Biblia: el profesor no explica qué hay en el cuarto ni dice que no lo sabe (origen pendiente).
+Prof. Alvarado [sonriente]: ¡Kai! Ya entré a mi cuenta con el código del teléfono. Funciona perfecto.
+Prof. Alvarado [pensativo]: Lo que hiciste ahí adentro... no sé ni cómo explicarlo. Pero sabes de esto más que muchos.
+Prof. Alvarado: Al fondo del laboratorio hay un pasillo viejo. Ahí había otro laboratorio que estuvo a mi cargo hace años, hasta que lo cerraron.
+Prof. Alvarado [preocupado]: Desde ayer, la terminal de esa puerta me manda alertas de acceso al correo. Y hace años que nadie entra ahí.
+Kai [pensativo]: ¿Alertas de acceso? ¿Alguien intenta abrirla?
+Prof. Alvarado: Eso quisiera saber. Yo tengo clase ahora... ¿Podrías echarle un vistazo? Solo mira, y si algo se ve raro, me avisas.
+Kai [sonriente]: Cuente conmigo, profe."

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="1_tmpl"]
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="2_door"]
+
+[sub_resource type="Resource" id="Resource_oeste"]
+script = ExtResource("2_door")
+id = &"oeste"
+side = 0
+kind = 1
+entry_id = &"desde_laboratorio"
+
+[resource]
+script = ExtResource("1_tmpl")
+id = &"pasillo_viejo"
+display_name = "Pasillo viejo"
+scene_path = "res://world/zones/zone0/pasillo_viejo.tscn"
+room_type = &"corridor"
+size_cells = Vector2i(2, 1)
+doors = Array[ExtResource("2_door")]([SubResource("Resource_oeste")])
+fixed = true
+mission_ids = PackedStringArray("cuarto_viejo")

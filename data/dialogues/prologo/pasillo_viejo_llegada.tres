@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_pvlleg"]
+
+[resource]
+script = ExtResource("1_pvlleg")
+script_text = "# H5: Kai entra al pasillo viejo por primera vez.
+(Las luces parpadean. Huele a polvo y a cables viejos.)
+Kai [pensativo]: Así que este es el pasillo viejo... Hace años que nadie pasa por aquí.
+Kai: La puerta del fondo debe ser la del laboratorio que dijo el profe."

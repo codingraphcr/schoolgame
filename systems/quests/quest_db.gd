@@ -6,6 +6,7 @@ extends RefCounted
 const PATHS := {
 	&"prologo": "res://data/quests/prologo.tres",
 	&"contrasena_profesor": "res://data/quests/contrasena_profesor.tres",
+	&"cuarto_viejo": "res://data/quests/cuarto_viejo.tres",
 }
 
 

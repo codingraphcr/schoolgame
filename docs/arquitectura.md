@@ -497,8 +497,19 @@ Plan aprobado del mapa 2D semi-procedural, tareas **M1–M8**. **M1 (hecho): el 
   `target_scene` / `target_entry`, que quedan como respaldo. `test_world` comprueba que ambos coinciden.
 - Las marcas `visitada_<escena>` siguen igual (las usa el mapa del Grimorio hasta M5).
 
-**M3 (en curso, junto con H5):** ✅ Pasillo y Laboratorio son dos salas. Siguen las salas nuevas de H5 (el pasillo
-viejo y el cuarto viejo) con arte provisional.
+**M3 (en curso, junto con H5):** ✅ Pasillo y Laboratorio son dos salas. ✅ **Pasillo viejo** (`pasillo_viejo.tscn`,
+960 px, 2 celdas): al fondo del Laboratorio, con las baldosas y objetos de Ariel más oscuros y arte provisional por
+código (`old_hallway_props.gd`: cajas, sillas, telarañas, la puerta «LAB 2» con cinta). Sigue el cuarto viejo.
+
+**H5 · El cuarto viejo** (misión `cuarto_viejo`, empieza sola al terminar `contrasena_profesor`):
+1. `hablar_profesor`: el profesor invita a Kai al pasillo viejo (`profesor_invitacion.tres`). Cuidado con la Biblia:
+   no explica qué hay en el cuarto ni el origen de la Nullblade o del Grimorio.
+2. `ir_pasillo_viejo`: la puerta del fondo del Laboratorio (`RoomExit` con `requires_quest` / `requires_step`) está
+   cerrada hasta la invitación. Al llegar, un `QuestTrigger` con `on_ready` muestra el comentario de Kai (ahora
+   `on_ready` también muestra su diálogo).
+3. `abrir_puerta`: con la Visión Digital aparece una nota (`world/vision/vision_note.gd`, grupo `digital_only`,
+   dentro de la capa digital para que brille) con la pista «ls -a».
+4. y 5. `explorar_cuarto` y `salir_cuarto`: en construcción.
 
 ## Misiones (`systems/quests/`)
 
@@ -629,6 +640,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_boss.gd` | El jefe: ventanita al principio (sin golpes), se arma, camina hacia Kai, avisa y embiste, choca y queda agachado (más bajo), el pogo crítico, proyectiles, fase 2 con la mitad de la vida, «ACCESO DENEGADO» y desaparece; fragmentos de vida (recoger, HUD, 4 forman una vida) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
+| `test_cuarto_viejo.gd` | H5: la misión empieza al asegurar la cuenta, la puerta cerrada del Laboratorio, la invitación del profesor, la llegada al pasillo viejo y la nota que solo se ve con la Visión |
 | `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
 | `test_save.gd` | Guardar y continuar (todo el progreso), escritura segura con copia, archivos dañados o inválidos, la computadora segura (punto de control al pasar; con E guarda y cura) y CONTINUAR en el menú |
 | `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |

@@ -33,3 +33,4 @@ script = ExtResource("1_j10ej")
 id = &"contrasena_profesor"
 title = "La contraseña del profesor"
 steps = Array[ExtResource("2_gafkn")]([SubResource("Resource_j10ej"), SubResource("Resource_gafkn"), SubResource("Resource_trmnl"), SubResource("Resource_mltyb"), SubResource("Resource_elegir")])
+next_quest = &"cuarto_viejo"

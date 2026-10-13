@@ -48,8 +48,10 @@ func _test_real_templates() -> void:
 	colegio.add_room(&"entrada", &"entrada", Vector2i(0, 0))
 	colegio.add_room(&"pasillo", &"pasillo", Vector2i(1, 0))
 	colegio.add_room(&"laboratorio", &"laboratorio", Vector2i(2, 0))
+	colegio.add_room(&"pasillo_viejo", &"pasillo_viejo", Vector2i(3, 0))
 	_check(colegio.link(&"entrada", &"este", &"pasillo", &"oeste") and colegio.link(&"pasillo", &"este", &"laboratorio", &"oeste")
-		and colegio.open_doors().is_empty(), "el prólogo de hoy (Entrada ↔ Pasillo ↔ Laboratorio) arma un grafo sin puertas sueltas")
+		and colegio.link(&"laboratorio", &"este", &"pasillo_viejo", &"oeste") and colegio.open_doors().is_empty(),
+		"el prólogo de hoy (Entrada ↔ Pasillo ↔ Laboratorio ↔ Pasillo viejo) arma un grafo sin puertas sueltas")
 
 
 ## Un colegio de prueba, armado en el código:

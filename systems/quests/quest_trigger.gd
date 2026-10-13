@@ -18,7 +18,8 @@ func _ready() -> void:
 	collision_mask = 2  # Capa del jugador
 	body_entered.connect(_on_body_entered)
 	if on_ready:
-		_fire.call_deferred(null)
+		# Al cargar la sala también se muestra el diálogo: con el jugador de la sala.
+		_fire.call_deferred(_room_player())
 
 
 func _on_body_entered(body: Node) -> void:
@@ -39,3 +40,10 @@ func _fire(player: Player) -> void:
 		player.controls_locked = false
 	game_state.complete_step(quest_id, step_id)
 	_busy = false
+
+
+func _room_player() -> Player:
+	var node := get_parent()
+	while node and not node is Room:
+		node = node.get_parent()
+	return (node as Room).player if node else null

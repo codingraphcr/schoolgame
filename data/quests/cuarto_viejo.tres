@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_cvq"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_cvs"]
+
+[sub_resource type="Resource" id="Resource_hablar"]
+script = ExtResource("2_cvs")
+id = &"hablar_profesor"
+objective = "Habla con el profesor en el pasillo."
+
+[sub_resource type="Resource" id="Resource_pasillo"]
+script = ExtResource("2_cvs")
+id = &"ir_pasillo_viejo"
+objective = "Busca el pasillo viejo al fondo del laboratorio."
+
+[sub_resource type="Resource" id="Resource_puerta"]
+script = ExtResource("2_cvs")
+id = &"abrir_puerta"
+objective = "Descubre cómo abrir la puerta del cuarto viejo."
+
+[sub_resource type="Resource" id="Resource_explorar"]
+script = ExtResource("2_cvs")
+id = &"explorar_cuarto"
+objective = "Explora el cuarto viejo."
+
+[sub_resource type="Resource" id="Resource_salir"]
+script = ExtResource("2_cvs")
+id = &"salir_cuarto"
+objective = "Sal del cuarto viejo."
+
+[resource]
+script = ExtResource("1_cvq")
+id = &"cuarto_viejo"
+title = "El cuarto viejo"
+steps = Array[ExtResource("2_cvs")]([SubResource("Resource_hablar"), SubResource("Resource_pasillo"), SubResource("Resource_puerta"), SubResource("Resource_explorar"), SubResource("Resource_salir")])
