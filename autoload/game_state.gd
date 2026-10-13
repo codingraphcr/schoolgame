@@ -75,6 +75,9 @@ var dash_level := 0
 var can_double_jump := false
 var can_wall_jump := false
 var vision_unlocked := false
+## Inmersión Digital (Capítulo 1): entrar por la conexión de un monitor a un entorno digital.
+## No es lo mismo que la Visión Digital (que solo deja ver). Permanente.
+var immersion_unlocked := false
 ## 0 = no obtenida · 1 .exe · 2 .zero · 3 .void · 4 .max
 var nullblade_stage := 0
 ## 0 = no obtenido · 1 Pulse · 2 Bridge · 3 Sync
@@ -299,6 +302,11 @@ func unlock_vision(unlocked := true) -> void:
 	progress_changed.emit()
 
 
+func unlock_immersion(unlocked := true) -> void:
+	immersion_unlocked = unlocked
+	progress_changed.emit()
+
+
 func _reset_progress() -> void:
 	max_masks = START_MASKS
 	life_fragments = 0
@@ -310,6 +318,7 @@ func _reset_progress() -> void:
 	can_double_jump = false
 	can_wall_jump = false
 	vision_unlocked = false
+	immersion_unlocked = false
 	nullblade_stage = 0
 	aegis_stage = 0
 	domain_stage = 0
@@ -486,6 +495,7 @@ func to_dict() -> Dictionary:
 			"can_double_jump": can_double_jump,
 			"can_wall_jump": can_wall_jump,
 			"vision_unlocked": vision_unlocked,
+			"immersion_unlocked": immersion_unlocked,
 			"nullblade_stage": nullblade_stage,
 			"aegis_stage": aegis_stage,
 			"domain_stage": domain_stage,
@@ -532,6 +542,7 @@ func from_dict(data: Dictionary) -> void:
 	can_double_jump = bool(player.get("can_double_jump", false))
 	can_wall_jump = bool(player.get("can_wall_jump", false))
 	vision_unlocked = bool(player.get("vision_unlocked", false))
+	immersion_unlocked = bool(player.get("immersion_unlocked", false))
 	nullblade_stage = clampi(int(player.get("nullblade_stage", 0)), 0, MAX_NULLBLADE_STAGE)
 	aegis_stage = clampi(int(player.get("aegis_stage", 0)), 0, MAX_AEGIS_STAGE)
 	domain_stage = clampi(int(player.get("domain_stage", 0)), 0, MAX_DOMAIN_STAGE)

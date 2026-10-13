@@ -102,7 +102,7 @@ static func _state(state: Dictionary) -> String:
 	for key: String in ranges:
 		if player.has(key) and not is_int(player[key], ranges[key][0], ranges[key][1]):
 			return "valor fuera de rango: %s" % key
-	for key in ["can_double_jump", "can_wall_jump", "vision_unlocked"]:
+	for key in ["can_double_jump", "can_wall_jump", "vision_unlocked", "immersion_unlocked"]:
 		if player.has(key) and typeof(player[key]) != TYPE_BOOL:
 			return "valor inválido: %s" % key
 	return ""

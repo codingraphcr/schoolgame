@@ -12,4 +12,4 @@ text = "Kai puede entrar a ciertos entornos digitales simulados y explorarlos po
 facts = Dictionary[String, String]({"Cómo": "Busca la conexión con la Visión Digital y acércate", "Desde": "Capítulo 1"})
 inventory_kind = 2
 icon = &"inmersion"
-unlock_flag = &"inmersion_digital"
+unlock_property = &"immersion_unlocked"

@@ -110,9 +110,9 @@ func _test_pages_and_voices() -> void:
 	var missing: PackedStringArray = []
 	for page in PAGES:
 		var entry := load("res://data/grimorio/%s.tres" % page) as GrimorioEntry
-		if entry == null or entry.unlock_flag == &"":
+		if entry == null or (entry.unlock_flag == &"" and entry.unlock_property == &""):
 			missing.append(page)
-	_check(missing.is_empty(), "7 páginas del Grimorio del capítulo, cada una con su marca de desbloqueo %s" % [missing])
+	_check(missing.is_empty(), "7 páginas del Grimorio del capítulo, cada una con su condición de desbloqueo %s" % [missing])
 	var immersion := load("res://data/grimorio/inmersion_digital.tres") as GrimorioEntry
 	_check(immersion.inventory_kind == GrimorioEntry.InventoryKind.HABILIDAD and immersion.text.contains("No es lo mismo que la Visión Digital"),
 		"Inmersión Digital es una habilidad distinta de la Visión Digital")

@@ -59,6 +59,8 @@ static func abilities(player: Dictionary) -> PackedStringArray:
 		names.append(NULLBLADE_STAGES[nullblade])
 	if bool(player.get("vision_unlocked", false)):
 		names.append("Visión Digital")
+	if bool(player.get("immersion_unlocked", false)):
+		names.append("Inmersión Digital")
 	if int(player.get("dash_level", 0)) > 0:
 		names.append("Dash" if int(player["dash_level"]) == 1 else "Dash nivel %d" % int(player["dash_level"]))
 	if bool(player.get("can_double_jump", false)):

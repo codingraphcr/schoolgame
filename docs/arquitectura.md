@@ -601,6 +601,17 @@ explorar: siempre se encuadra con todas las salas del distrito.
    **«EL DESPERTAR»** (antes salía al terminar `prologo`) y después **«CAPÍTULO 1 · EL ORIGEN DIGITAL»**
    (`Quest.followup_title`), y la marca **`tutorial_terminado`** (`Quest.completion_flag`): desde ahí morir cuesta Ecos.
 
+## Inmersión Digital (Capítulo 1)
+
+`ImmersionPortal` (`world/digital/immersion_portal.gd`): la conexión de un monitor. Solo se ve y se usa con la Visión
+Digital activa (se dibuja en la capa digital, como `HiddenRelic`). Con E, Kai la atraviesa con el efecto de
+`DigitalDive` y entra a `target_scene` / `target_entry` (o a donde diga el mapa por `door_id`; respeta los capítulos
+con `World.lock_reason`). La primera vez reproduce `first_dialogue`, desbloquea la habilidad para siempre
+(`GameState.immersion_unlocked`, `unlock_immersion()`; se guarda en `player`, la valida `SaveValidator` y la muestra
+«Mi perfil») y la transición dice «INMERSIÓN DIGITAL». La transición es la `LoadingScreen` de siempre: se cierra sola
+cuando Kai se materializa en la entrada de destino (`arrival_effect = "materialize"`). No es la Visión Digital: la
+visión deja ver; la inmersión deja entrar.
+
 ## Misiones (`systems/quests/`)
 
 | Pieza | Responsabilidad |
@@ -734,6 +745,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (el armario pide el doble salto) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
 | `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas (y las escaleras) coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
 | `test_capitulo1_datos.gd` | Capítulo 1, etapa 1: misiones y su orden, diálogos con oradores conocidos y los textos de la especificación sin cambios, desafíos con una sola respuesta correcta y explicación, páginas del Grimorio, voces de Chip y Glitch, y ningún texto que revele el origen de Kai |
+| `test_inmersion.gd` | Capítulo 1, etapa 2: la conexión del monitor solo con la Visión Digital, la primera vez con diálogo y la transición «INMERSIÓN DIGITAL», la habilidad permanente (partida, validador, «Mi perfil», Grimorio) y la segunda vez sin repetir nada |
 | `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |
 | `test_generador.gd` | M4: con fichas de prueba, la parte fija intacta, misma semilla = mismo mapa, 40 semillas válidas y distintas, solo puertas compatibles, respaldo si la parte variable no valida y error si la fija está mal; con los datos reales, aula o depósito al este de la biblioteca, el mapa se rearma igual al cargar, dos aulas con la misma escena, la puerta libre cerrada y continuar en la misma aula |
 | `test_biblioteca.gd` | M3: escaleras y biblioteca en el mapa, cerradas hasta el Capítulo 1, Kai sube los descansos con la física real y sin doble salto, ida y vuelta entre Pasillo, escaleras y biblioteca, estanterías como plataforma y continuar una partida guardada en la biblioteca |

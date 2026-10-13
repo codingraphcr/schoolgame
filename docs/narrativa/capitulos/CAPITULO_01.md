@@ -1,7 +1,7 @@
 # Capítulo 1 — El origen digital
 
 **Estado:** especificación oficial del equipo (13 de octubre de 2026). Implementación autorizada por etapas
-(sección 19): **etapa 1 hecha** (guion en [`CAPITULO_01_GUION.md`](CAPITULO_01_GUION.md) y datos). Las notas de coherencia de la sección 18 están **pendientes de aprobación**: hasta entonces
+(sección 19): **etapas 1 y 2 hechas** (guion en [`CAPITULO_01_GUION.md`](CAPITULO_01_GUION.md), datos y la transición de la Inmersión Digital). Las notas de coherencia de la sección 18 están **pendientes de aprobación**: hasta entonces
 no son canon.
 **Grado:** Décimo. **Capítulo:** 1. **Niveles:** 1 · *Una clase diferente* — 2 · *Travesuras en el sistema*.
 **Referencia:** `docs/narrativa/BIBLIA_NARRATIVA.md` (v1.2). Este documento **no** reemplaza la Biblia.
@@ -251,7 +251,7 @@ recursos de datos (`data/`), separados de las escenas y de la lógica.
 | # | Etapa | Estado |
 |---|---|---|
 | 1 | Guion y datos de misión | ✅ Hecha (guion para revisar con el equipo) |
-| 2 | Inmersión Digital | Pendiente |
+| 2 | Inmersión Digital (solo la transición) | ✅ Hecha: `ImmersionPortal`, habilidad guardada; se coloca en el cuarto técnico en la etapa 3 |
 | 3 | Sala inicial de persecución | Pendiente |
 | 4 | Barrera, salud y caídas | Pendiente |
 | 5 | Checkpoints y preguntas | Pendiente |
