@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Option_1"]
+script = ExtResource("2_option")
+text = "Borrar primero todo lo que hay, para empezar limpio"
+detail = "Así no se mezcla nada"
+feedback = "Si el respaldo resulta dañado, ya no quedaría nada. Nunca se borra antes de saber que se puede restaurar."
+
+[sub_resource type="Resource" id="Option_2"]
+script = ExtResource("2_option")
+text = "Restaurar el respaldo más reciente sin revisarlo"
+detail = "Es el más actualizado"
+feedback = "El más reciente podría estar incompleto o dañado. Primero hay que comprobarlo."
+
+[sub_resource type="Resource" id="Option_3"]
+script = ExtResource("2_option")
+text = "Verificar que la copia de respaldo sea válida"
+detail = "Que esté completa y se pueda leer"
+correct = true
+feedback = "¡Correcto! Un respaldo solo sirve si funciona. Verificarlo antes de restaurar evita perder la información para siempre."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "¿Qué se recomienda antes de restaurar información importante?"
+options = Array[ExtResource("2_option")]([SubResource("Option_1"), SubResource("Option_2"), SubResource("Option_3")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap1_checkpoint_2"
+title = "Checkpoint 2 · Respaldos"
+ecos_reward = 0
+questions = Array[ExtResource("1_question")]([SubResource("Question_0")])

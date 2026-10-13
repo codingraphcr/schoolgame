@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 1.1: empieza la clase de «Uso ético de la información».
+Prof. Alvarado: Buenos días. Hoy toca «Uso ético de la información».
+Prof. Alvarado: Imaginen que les piden revisar una computadora del colegio. ¿Qué pueden mirar?
+Prof. Alvarado [pensativo]: Solo lo que el encargado autorizó. Ni un archivo más.
+Prof. Alvarado: Abran el sistema de entrenamiento en sus puestos, por favor.
+(Las computadoras de práctica empiezan a pitar una por una.)
+Prof. Alvarado [preocupado]: ¿Otra vez? Esta semana el sistema anda rarísimo."

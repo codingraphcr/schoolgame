@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 2
+order = 10
+title = "Chip"
+subtitle = "Criatura digital · El estratega"
+text = "El hermano que siempre tiene un plan... aunque casi nunca lo termina. Prepara trampas, dispara datos y altera plataformas. Con su hermano Glitch causaron las fallas del sistema de entrenamiento del colegio."
+facts = Dictionary[String, String]({"Peligro": "Medio", "Ataque": "Disparos, trampas y barreras", "Defensa": "Escudo de datos (configuración insegura)"})
+unlock_flag = &"cap1_hermanos_vencidos"

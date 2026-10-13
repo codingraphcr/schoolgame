@@ -28,3 +28,4 @@ size_cells = Vector2i(2, 1)
 doors = Array[ExtResource("2_door")]([SubResource("Resource_oeste"), SubResource("Resource_este")])
 fixed = true
 mission_ids = PackedStringArray("cuarto_viejo")
+has_terminal = true

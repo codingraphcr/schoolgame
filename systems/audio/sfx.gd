@@ -71,6 +71,9 @@ const RECIPES := {
 	# Voces de diálogo (estilo Zelda: una "sílaba" cada pocas letras, ver DialogueCharacter.voice)
 	&"voice_kai": { "wave": "square", "freq": 330.0, "freq_end": 350.0, "dur": 0.06, "volume": 0.07, "duty": 0.4, "vibrato": [10.0, 40.0], "arp": [[0.0, 1.0], [0.5, 1.12]], "lowpass": 2200.0 },
 	&"voice_profesor": { "wave": "triangle", "freq": 165.0, "freq_end": 148.0, "dur": 0.09, "attack": 0.01, "volume": 0.3, "vibrato": [3.0, 6.0], "noise": 0.04, "lowpass": 1200.0 },
+	# Chip: agudo y ordenado. Glitch: más rápido, con ruido y saltos de tono.
+	&"voice_chip": { "wave": "square", "freq": 520.0, "freq_end": 560.0, "dur": 0.045, "volume": 0.06, "duty": 0.25, "arp": [[0.0, 1.0], [0.5, 1.25]], "lowpass": 3000.0 },
+	&"voice_glitch": { "wave": "saw", "freq": 440.0, "freq_end": 300.0, "dur": 0.04, "volume": 0.07, "noise": 0.25, "crush": 7.0, "vibrato": [18.0, 60.0], "lowpass": 2600.0 },
 	&"voice_amenaza": { "wave": "saw", "freq": 230.0, "freq_end": 190.0, "dur": 0.06, "volume": 0.1, "noise": 0.2, "crush": 9.0, "lowpass": 2200.0 },
 	# Interfaz (suaves y bajos: en el menú se oyen solos)
 	&"ui_move": { "wave": "triangle", "freq": 900.0, "dur": 0.035, "volume": 0.07, "lowpass": 2400.0 },

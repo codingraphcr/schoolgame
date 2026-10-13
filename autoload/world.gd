@@ -33,6 +33,8 @@ var world_seed := 0
 var generator_version := GENERATOR_VERSION
 ## Salas donde estuvo Kai en esta partida.
 var visited: Dictionary[StringName, bool] = {}
+## district_id → nombre para mostrar (del DistrictLayout).
+var district_names: Dictionary[StringName, String] = {}
 
 ## room_id → district_id
 var _room_district: Dictionary[StringName, StringName] = {}
@@ -46,6 +48,7 @@ func _ready() -> void:
 func reset() -> void:
 	templates = RoomTemplate.load_folder(ROOMS_FOLDER)
 	districts.clear()
+	district_names.clear()
 	_room_district.clear()
 	current_room = &""
 	current_district = &""
@@ -58,6 +61,7 @@ func reset() -> void:
 		var graph := DistrictGenerator.new().generate(layout, templates, world_seed)
 		if graph:
 			_add_district(graph)
+			district_names[layout.id] = layout.display_name
 
 
 ## Mapa de una partida nueva: otra semilla y ninguna sala visitada.

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 2
+order = 11
+title = "Glitch"
+subtitle = "Criatura digital · El impulsivo"
+text = "El hermano que actúa primero y pregunta después. Corre, salta y embiste sin parar. Le encanta el ruido que hacen las computadoras cuando fallan, pero empieza a entender que detrás de cada una hay personas."
+facts = Dictionary[String, String]({"Peligro": "Medio", "Ataque": "Embestidas y saltos rápidos", "Defensa": "Esquivar y responder"})
+unlock_flag = &"cap1_hermanos_vencidos"

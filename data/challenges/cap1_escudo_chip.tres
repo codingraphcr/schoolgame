@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Option_1"]
+script = ExtResource("2_option")
+text = "Dar permiso de escritura solo a quien lo necesita"
+detail = "Mínimo privilegio"
+correct = true
+feedback = "¡Eso es! Con el mínimo privilegio, cada usuario tiene solo los permisos que necesita. Chip ya no puede cambiar lo que quiera."
+
+[sub_resource type="Resource" id="Option_2"]
+script = ExtResource("2_option")
+text = "Ponerle una contraseña más larga al archivo"
+detail = "Más caracteres, más seguro"
+feedback = "Una buena contraseña ayuda, pero el problema es otro: todos tienen permiso de escribir. Hay que corregir los permisos."
+
+[sub_resource type="Resource" id="Option_3"]
+script = ExtResource("2_option")
+text = "Dar permiso de escritura también a Kai"
+detail = "Así puede borrar el escudo"
+feedback = "Sumar más permisos empeora el problema. La solución es quitar los que sobran."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "El archivo escudo.cfg dice: «permisos = escritura para todos». ¿Qué cambio desactiva el escudo de Chip?"
+options = Array[ExtResource("2_option")]([SubResource("Option_1"), SubResource("Option_2"), SubResource("Option_3")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap1_escudo_chip"
+title = "El escudo de Chip · Permisos de más"
+ecos_reward = -1
+questions = Array[ExtResource("1_question")]([SubResource("Question_0")])

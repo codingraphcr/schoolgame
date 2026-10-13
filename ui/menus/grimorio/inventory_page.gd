@@ -102,8 +102,9 @@ func setup(entries: Array[GrimorioEntry]) -> void:
 				_add_slot(entry, Rect2(86, 624, 58, 58), InventorySlot.Frame.CIRCLE, _paint_ecos)
 			_:
 				collectibles.append(entry)
+	# Habilidades: 4 por fila (la quinta, la Inmersión Digital, va abajo).
 	for i in abilities.size():
-		_add_slot(abilities[i], Rect2(214 + i * 46, 524, 44, 44), InventorySlot.Frame.HEX, _paint_icon)
+		_add_slot(abilities[i], Rect2(214 + (i % 4) * 46, 524 + (i / 4) * 48, 44, 44), InventorySlot.Frame.HEX, _paint_icon)
 	# Coleccionables: los que ya tiene primero; el resto de las casillas, apagadas.
 	collectibles.sort_custom(func(a: GrimorioEntry, b: GrimorioEntry) -> bool: return _unlocked(a) and not _unlocked(b))
 	for i in GRID.x * GRID.y:
@@ -453,6 +454,12 @@ func _draw_glyph(canvas: CanvasItem, kind: StringName, c: Vector2, r: float, lit
 			for i in 3:
 				var y := -r * 0.3 + i * r * 0.4
 				canvas.draw_line(c + Vector2(-r * 0.35, y), c + Vector2(r * 0.35, y), color, w)
+		&"inmersion":
+			# Un monitor y una flecha que entra en él.
+			canvas.draw_rect(Rect2(c + Vector2(-r * 0.15, -r * 0.75), Vector2(r * 1.05, r * 1.1)), color, false, w)
+			canvas.draw_line(c + Vector2(r * 0.2, r * 0.55), c + Vector2(r * 0.55, r * 0.55), color, w)
+			canvas.draw_line(c + Vector2(-r, -r * 0.2), c + Vector2(r * 0.35, -r * 0.2), accent, w * 1.3)
+			canvas.draw_polyline(PackedVector2Array([c + Vector2(r * 0.05, -r * 0.5), c + Vector2(r * 0.35, -r * 0.2), c + Vector2(r * 0.05, r * 0.1)]), accent, w * 1.3)
 		&"candado":
 			canvas.draw_arc(c + Vector2(0, -r * 0.25), r * 0.45, PI, TAU, 12, color, w)
 			canvas.draw_rect(Rect2(c + Vector2(-r * 0.65, -r * 0.25), Vector2(r * 1.3, r * 1.05)), color, false, w)

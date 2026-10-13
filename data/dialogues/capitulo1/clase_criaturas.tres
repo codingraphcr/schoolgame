@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 1.1: con la Visión Digital, Kai ve a Chip y Glitch en los monitores.
+Glitch: ¡Jijiji! ¡Mirá cómo pita esta!
+Chip: Concentrate. El plan dice: tres computadoras más y nos vamos.
+Glitch [sorprendido]: Chip... ese de ahí nos está mirando.
+Chip: Imposible. Los humanos no pueden vernos.
+Kai: ...Hola.
+Chip [sorprendido]: ...
+Glitch: ...
+Chip [sorprendido]: ¡Eso NO estaba en el plan! ¡Corré!"

@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_quest"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_step"]
+
+[sub_resource type="Resource" id="Resource_0"]
+script = ExtResource("2_step")
+id = &"revisar_servidor"
+objective = "Revisa el servidor del sistema de entrenamiento."
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2_step")
+id = &"seguirlos_adentro"
+objective = "Chip y Glitch se metieron en la computadora. Busca cómo seguirlos."
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("2_step")
+id = &"persecucion"
+objective = "Persigue a Chip y Glitch por la red de entrenamiento."
+
+[sub_resource type="Resource" id="Resource_3"]
+script = ExtResource("2_step")
+id = &"vencer_hermanos"
+objective = "Detén a Chip y Glitch."
+
+[sub_resource type="Resource" id="Resource_4"]
+script = ExtResource("2_step")
+id = &"hablar_profesor"
+objective = "Cuéntale al profesor qué pasaba con el sistema."
+
+[resource]
+script = ExtResource("1_quest")
+id = &"travesuras_en_el_sistema"
+title = "Travesuras en el sistema"
+steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3"), SubResource("Resource_4")])
+completion_title = "FIN DEL CAPÍTULO 1"
+completion_subtitle = "EL ORIGEN DIGITAL"
+completion_flag = &"capitulo_1_completado"

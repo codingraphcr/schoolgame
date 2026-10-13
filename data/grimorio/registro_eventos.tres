@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 3
+order = 10
+title = "Registro de eventos"
+subtitle = "Concepto · Detectar comportamientos anómalos"
+text = "Un sistema anota lo que pasa: quién entra, cuándo y qué cambia. Revisar el registro ayuda a encontrar comportamientos anómalos: usuarios que nadie creó, horarios raros o cambios imposibles para una persona."
+facts = Dictionary[String, String]({"Señales de alerta": "Usuarios desconocidos, horarios raros, cambios masivos", "Qué hacer": "Investigar y avisar al responsable"})
+unlock_flag = &"cap1_registro_revisado"

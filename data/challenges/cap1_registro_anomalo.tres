@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Option_1"]
+script = ExtResource("2_option")
+text = "Un estudiante inició sesión a las 7:05 a. m."
+detail = "Antes de la primera clase"
+feedback = "Es normal: es la hora en que empiezan las clases. Un comportamiento anómalo es algo que se sale de lo habitual."
+
+[sub_resource type="Resource" id="Option_2"]
+script = ExtResource("2_option")
+text = "El usuario «chip_y_glitch» cambió 340 archivos en un minuto"
+detail = "Ese usuario no está en la lista del colegio"
+correct = true
+feedback = "¡Eso es! Un usuario que nadie creó y una cantidad de cambios imposible para una persona: dos señales de comportamiento anómalo. Hay que investigarlo."
+
+[sub_resource type="Resource" id="Option_3"]
+script = ExtResource("2_option")
+text = "El profesor abrió la carpeta de la clase"
+detail = "Durante su lección"
+feedback = "Es lo esperado: el profesor usa los archivos de su clase. Lo anómalo es lo que no tiene explicación."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "En el registro del sistema de entrenamiento, ¿qué entrada es la señal más clara de que algo anda mal?"
+options = Array[ExtResource("2_option")]([SubResource("Option_1"), SubResource("Option_2"), SubResource("Option_3")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap1_registro_anomalo"
+title = "Comportamiento anómalo"
+ecos_reward = -1
+questions = Array[ExtResource("1_question")]([SubResource("Question_0")])

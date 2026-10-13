@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 1.4: Glitch dejó abierto un archivo privado en el catálogo de la biblioteca.
+(La computadora del catálogo muestra un archivo: «Notas y datos personales - estudiante de 11-2».)
+Glitch: ¡Mirá todo lo que dice! ¡Hasta la dirección!
+Chip [preocupado]: ¡Glitch! ¡Así no era el plan!
+Kai [preocupado]: Eso es privado... y está en la pantalla que usa todo el mundo."

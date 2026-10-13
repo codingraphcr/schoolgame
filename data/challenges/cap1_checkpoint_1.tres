@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Option_1"]
+script = ExtResource("2_option")
+text = "Revisarlos todos: ya tienes permiso para revisar"
+detail = "La revisión está autorizada"
+feedback = "La autorización tiene límites: permite revisar lo que se pidió, no todo lo que se encuentre."
+
+[sub_resource type="Resource" id="Option_2"]
+script = ExtResource("2_option")
+text = "Consultar únicamente la información para la que se tiene autorización"
+detail = "Lo demás no se abre"
+correct = true
+feedback = "¡Correcto! Una revisión autorizada no da permiso para mirar todo. Solo se consulta lo autorizado; lo demás se respeta."
+
+[sub_resource type="Resource" id="Option_3"]
+script = ExtResource("2_option")
+text = "Copiarlos para revisarlos con calma después"
+detail = "Así no se pierde nada"
+feedback = "Copiar información privada sin autorización la expone y rompe la confianza. Solo se usa lo autorizado."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "¿Qué debe hacerse al encontrar archivos privados durante una revisión autorizada?"
+options = Array[ExtResource("2_option")]([SubResource("Option_1"), SubResource("Option_2"), SubResource("Option_3")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap1_checkpoint_1"
+title = "Checkpoint 1 · Revisión autorizada"
+ecos_reward = 0
+questions = Array[ExtResource("1_question")]([SubResource("Question_0")])

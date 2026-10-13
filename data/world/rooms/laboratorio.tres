@@ -25,3 +25,4 @@ room_type = &"laboratory"
 doors = Array[ExtResource("2_door")]([SubResource("Resource_oeste"), SubResource("Resource_este")])
 fixed = true
 mission_ids = PackedStringArray("prologo", "contrasena_profesor", "cuarto_viejo")
+has_terminal = true

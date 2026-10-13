@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 4
+order = 10
+title = "Registro: fragmento"
+subtitle = "Registro · Datos incompletos"
+text = "Un Fragmento de Datos que Chip y Glitch encontraron dentro del sistema de entrenamiento.\nORIGEN: DESCONOCIDO\nESTADO: INCOMPLETO\nOBSERVADOR: RECONOCIDO\nPROTOCOLO: [DATOS CORRUPTOS]"
+facts = Dictionary[String, String]({"Origen": "Desconocido", "Estado": "Incompleto"})
+unlock_flag = &"cap1_fragmento_leido"

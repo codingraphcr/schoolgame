@@ -31,6 +31,8 @@ extends Resource
 @export_group("Contenido")
 @export var educational_objectives: PackedStringArray = []
 @export var mission_ids: PackedStringArray = []
+## Si tiene una terminal (el mapa del Grimorio la marca).
+@export var has_terminal := false
 
 
 func door(door_id: StringName) -> DoorSpec:
