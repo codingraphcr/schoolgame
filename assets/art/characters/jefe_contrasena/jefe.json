@@ -2,98 +2,98 @@
 	"animations": {
 		"agachado": {
 			"feet": [
-				96,
-				144
+				91,
+				145
 			],
 			"file": "jefe_agachado.png",
 			"fps": 6.0,
 			"frame_size": [
-				192,
-				148
+				203,
+				149
 			],
 			"frames": 4,
 			"loop": true
 		},
 		"alerta": {
 			"feet": [
-				102,
-				179
+				114,
+				171
 			],
 			"file": "jefe_alerta.png",
 			"fps": 8.0,
 			"frame_size": [
-				199,
-				183
+				220,
+				175
 			],
 			"frames": 3,
 			"loop": false
 		},
 		"caminar": {
 			"feet": [
-				89,
-				194
+				104,
+				175
 			],
 			"file": "jefe_caminar.png",
 			"fps": 7.0,
 			"frame_size": [
-				190,
-				198
+				184,
+				179
 			],
 			"frames": 4,
 			"loop": true
 		},
 		"caminar_izq": {
 			"feet": [
-				100,
-				194
+				80,
+				175
 			],
 			"file": "jefe_caminar_izq.png",
 			"fps": 7.0,
 			"frame_size": [
-				190,
-				198
+				185,
+				179
 			],
 			"frames": 4,
 			"loop": true
 		},
 		"dano": {
 			"feet": [
-				84,
-				154
+				82,
+				156
 			],
 			"file": "jefe_dano.png",
 			"fps": 16.0,
 			"frame_size": [
-				182,
-				158
+				180,
+				160
 			],
 			"frames": 4,
 			"loop": false
 		},
 		"embestir": {
 			"feet": [
-				91,
-				140
+				132,
+				148
 			],
 			"file": "jefe_embestir.png",
-			"fps": 14.0,
+			"fps": 11.0,
 			"frame_size": [
-				178,
-				144
+				189,
+				152
 			],
 			"frames": 4,
 			"loop": true
 		},
 		"embestir_izq": {
 			"feet": [
-				86,
-				140
+				56,
+				148
 			],
 			"file": "jefe_embestir_izq.png",
-			"fps": 14.0,
+			"fps": 11.0,
 			"frame_size": [
-				178,
-				144
+				188,
+				152
 			],
 			"frames": 4,
 			"loop": true
@@ -101,41 +101,41 @@
 		"muerte": {
 			"feet": [
 				82,
-				170
+				166
 			],
 			"file": "jefe_muerte.png",
 			"fps": 6.0,
 			"frame_size": [
-				166,
-				174
+				168,
+				170
 			],
 			"frames": 6,
 			"loop": false
 		},
 		"preparar": {
 			"feet": [
-				87,
-				152
+				90,
+				151
 			],
 			"file": "jefe_preparar.png",
 			"fps": 8.0,
 			"frame_size": [
-				180,
-				156
+				190,
+				155
 			],
 			"frames": 4,
 			"loop": false
 		},
 		"quieto": {
 			"feet": [
-				101,
-				224
+				70,
+				175
 			],
 			"file": "jefe_quieto.png",
 			"fps": 6.0,
 			"frame_size": [
-				203,
-				228
+				161,
+				179
 			],
 			"frames": 4,
 			"loop": true

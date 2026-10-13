@@ -135,11 +135,18 @@ const CHARACTERS := {
 				"cover": [Vector2(333, 296), Vector2(357, 296), Vector2(359, 314), Vector2(333, 314)], "cover_color": Color("16151f") },
 			"suelo_restaurar": { "rect": Rect2i(515, 95, 235, 225), "feet_y": 310, "body": Rect2i(561, 196, 142, 120),
 				"cover": [Vector2(598, 297), Vector2(621, 297), Vector2(621, 314), Vector2(598, 314)], "cover_color": Color("16151f") },
-			"aire_inicio": { "rect": Rect2i(45, 545, 150, 200), "feet_y": 735, "body": Rect2i(48, 548, 145, 198) },
-			"aire_canalizar": { "rect": Rect2i(285, 550, 155, 195), "feet_y": 730, "body": Rect2i(288, 556, 152, 190) },
-			"aire_restaurar": { "rect": Rect2i(525, 520, 225, 240), "feet_y": 735, "body": Rect2i(540, 556, 182, 205) },
-			"aire_completar": { "rect": Rect2i(820, 555, 160, 200), "feet_y": 745, "body": Rect2i(846, 566, 136, 190) },
-			"aire_descenso": { "rect": Rect2i(1060, 555, 135, 195), "feet_y": 745, "body": Rect2i(1062, 558, 134, 192) },
+			# Flotando, Kai tiene los dos brazos abajo: la mano del pecho sobraba (se veían tres brazos).
+			# cover la tapa con el color de la camisa.
+			"aire_inicio": { "rect": Rect2i(45, 545, 150, 200), "feet_y": 735, "body": Rect2i(48, 548, 145, 198),
+				"cover": [Vector2(143, 608), Vector2(157, 608), Vector2(157, 624), Vector2(143, 624)], "cover_color": Color("14131b") },
+			"aire_canalizar": { "rect": Rect2i(285, 550, 155, 195), "feet_y": 730, "body": Rect2i(288, 556, 152, 190),
+				"cover": [Vector2(371, 616), Vector2(386, 616), Vector2(386, 631), Vector2(371, 631)], "cover_color": Color("14131b") },
+			"aire_restaurar": { "rect": Rect2i(525, 520, 225, 240), "feet_y": 735, "body": Rect2i(540, 556, 182, 205),
+				"cover": [Vector2(632, 612), Vector2(647, 612), Vector2(647, 629), Vector2(632, 629)], "cover_color": Color("14131b") },
+			"aire_completar": { "rect": Rect2i(820, 555, 160, 200), "feet_y": 745, "body": Rect2i(846, 566, 136, 190),
+				"cover": [Vector2(913, 635), Vector2(928, 635), Vector2(928, 650), Vector2(913, 650)], "cover_color": Color("14131b") },
+			"aire_descenso": { "rect": Rect2i(1060, 555, 135, 195), "feet_y": 745, "body": Rect2i(1062, 558, 134, 192),
+				"cover": [Vector2(1143, 618), Vector2(1158, 618), Vector2(1158, 634), Vector2(1143, 634)], "cover_color": Color("14131b") },
 		},
 		"animations": {
 			"curar_suelo_inicio": { "poses": ["suelo_quieto"], "fps": 1.0, "loop": false },

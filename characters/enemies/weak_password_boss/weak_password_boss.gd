@@ -30,12 +30,16 @@ const DARK := Color("12081f")
 const RED := Color("ff2a55")
 const WEAK_PASSWORDS: Array[String] = ["123456", "qwerty", "password", "111111", "abc123", "admin", "12345678"]
 ## Cuerpo de pie y agachado (tras la embestida: así queda al alcance del pogo).
-const STAND := Vector2(76, 92)
-const CROUCHED := Vector2(84, 62)
+## Tamaño del jefe respecto de los sprites (más chico que el dibujo, para no tapar tanto la arena).
+const SIZE := 0.8
+const STAND := Vector2(60, 74)
+const CROUCHED := Vector2(68, 50)
 ## Animaciones que miran a la derecha en la hoja (tienen su versión _izq hacia la izquierda).
 const SIDE_ANIMATIONS: Array[StringName] = [&"caminar", &"embestir"]
 ## Dónde están, más o menos, las ventanas del cuerpo (para "ACCESO DENEGADO" al morir).
-const DENIED_SPOTS: Array[Vector2] = [Vector2(-2, -88), Vector2(-30, -68), Vector2(28, -72), Vector2(-26, -46), Vector2(30, -50)]
+const DENIED_SPOTS: Array[Vector2] = [Vector2(-2, -70), Vector2(-24, -54), Vector2(22, -58), Vector2(-21, -37), Vector2(24, -40)]
+## Rayas de velocidad de la embestida: (altura, largo, grosor).
+const STREAK_ROWS: Array[Vector3] = [Vector3(-14, 34, 2), Vector3(-24, 52, 1), Vector3(-33, 44, 3), Vector3(-44, 60, 2), Vector3(-55, 38, 1), Vector3(-64, 30, 2)]
 
 @export var walk_speed := 32.0
 @export var charge_speed := 240.0
@@ -56,10 +60,15 @@ var _next_charge := true
 var _shots_left := 0
 var _charge_from := 0.0
 var _hurt_left := 0.0
+var _close := false
 var _assembly := 0.0
 var _flying: Array[Dictionary] = []
 var _code: Array[Dictionary] = []
-var _trail: Array[Vector2] = []
+## Fuerza de las rayas de velocidad de la embestida (0 a 1; se apagan de a poco al chocar).
+var _streak := 0.0
+## Segundos que lleva embistiendo (acelera al principio) y hasta el próximo fantasma de la estela.
+var _charge_time := 0.0
+var _ghost_left := 0.0
 var _denied := false
 var _sprite: AnimatedSprite2D
 var _offsets := {}
@@ -120,7 +129,7 @@ func _build_sprite() -> void:
 			frames.add_frame(anim_name, atlas)
 		_offsets[StringName(anim_name)] = size * 0.5 - Vector2(info.feet[0], info.feet[1])
 	_sprite.sprite_frames = frames
-	_base_scale = float(data.get("scale", 0.5))
+	_base_scale = float(data.get("scale", 0.5)) * SIZE
 	_sprite.scale = Vector2.ONE * _base_scale
 	add_child(_sprite)
 	_play(&"quieto")
@@ -136,7 +145,8 @@ func _play(anim: StringName, restart := false) -> void:
 	if not _sprite.sprite_frames.has_animation(anim):
 		return
 	_sprite.offset = _offsets.get(anim, Vector2.ZERO)
-	if _sprite.animation != anim or restart or not _sprite.is_playing():
+	# Una animación que no se repite (preparar, daño…) se queda en su último cuadro: no vuelve a empezar.
+	if _sprite.animation != anim or restart:
 		_sprite.play(anim)
 
 
@@ -213,7 +223,10 @@ func _ai(delta: float) -> void:
 	match state:
 		State.WALK:
 			var player := get_player()
-			var close := player != null and absf(player.global_position.x - global_position.x) < 24.0
+			# Se queda quieto con Kai encima; con un margen, para no alternar quieto y caminar cada cuadro.
+			var gap := absf(player.global_position.x - global_position.x) if player else 999.0
+			_close = gap < (40.0 if _close else 24.0)
+			var close := _close
 			if not close:
 				facing = direction_to_player()
 			velocity.x = 0.0 if close else facing * walk_speed * speed
@@ -227,18 +240,33 @@ func _ai(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0.0, 600.0 * delta)
 			_play(&"preparar")
 			_timer -= delta
+			# Se echa un poco hacia atrás, tomando impulso.
+			_sprite.rotation = lerp_angle(_sprite.rotation, -facing * 0.07, 1.0 - exp(-delta * 10.0))
 			if _timer <= 0.0:
 				state = State.CHARGE
 				_charge_from = global_position.x
+				_charge_time = 0.0
+				_ghost_left = 0.0
 				contact.damage = 2.0
-				_trail.clear()
 				Sfx.play(&"boss_charge")
 		State.CHARGE:
-			velocity.x = facing * charge_speed * speed
+			# Sale disparado: casi toda la velocidad de golpe (no pasa de quieto a tope en un cuadro).
+			_charge_time += delta
+			var ramp := ease(minf(_charge_time / 0.14, 1.0), 0.4)
+			velocity.x = facing * charge_speed * speed * ramp
+			# Los 4 cuadros de "EMBESTIDA (DASH)" de Ariel: ya va lanzado hacia adelante.
 			_play(&"embestir")
-			_trail.append(global_position)
-			if _trail.size() > 8:
-				_trail.remove_at(0)
+			_sprite.speed_scale = lerpf(0.9, 1.4, ramp)
+			# Apenas inclinado (el dibujo ya se inclina), con el rebote de cada zancada.
+			_sprite.rotation = lerp_angle(_sprite.rotation, facing * 0.03, 1.0 - exp(-delta * 14.0))
+			_sprite.position.y = -absf(sin(_charge_time * 24.0)) * 1.5
+			_streak = ramp
+			_ghost_left -= delta
+			if _ghost_left <= 0.0:
+				_ghost_left = 0.06
+				_spawn_ghost()
+				# Polvo digital que levanta al correr.
+				PixelBurst.spawn(get_parent(), global_position + Vector2(-facing * 18.0, -2.0), [Color("5a3a7a"), PINK, Color("2a1838")], 4, 40.0)
 			if is_on_wall() or absf(global_position.x - _charge_from) > 560.0:
 				_crash()
 		State.CROUCH:
@@ -262,8 +290,30 @@ func _ai(delta: float) -> void:
 					_walk(walk_time * 0.6)
 		_:
 			velocity.x = 0.0
-	if state != State.CHARGE and not _trail.is_empty():
-		_trail.remove_at(0)
+	if state != State.CHARGE:
+		_streak = move_toward(_streak, 0.0, delta * 5.0)
+	# Fuera de la preparación y la carrera vuelve a estar derecho.
+	if state not in [State.WINDUP, State.CHARGE]:
+		_sprite.rotation = lerp_angle(_sprite.rotation, 0.0, 1.0 - exp(-delta * 12.0))
+		_sprite.position.y = move_toward(_sprite.position.y, 0.0, delta * 30.0)
+
+
+## Fantasma de la carrera: una copia del cuadro actual que queda atrás, magenta, y se desvanece.
+func _spawn_ghost() -> void:
+	var ghost := Sprite2D.new()
+	ghost.texture = _sprite.sprite_frames.get_frame_texture(_sprite.animation, _sprite.frame)
+	ghost.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	ghost.offset = _sprite.offset
+	ghost.centered = _sprite.centered
+	ghost.scale = _sprite.scale
+	ghost.rotation = _sprite.rotation
+	ghost.modulate = Color(1.0, 0.35, 0.85, 0.32)
+	ghost.z_index = z_index - 1
+	get_parent().add_child(ghost)
+	ghost.global_position = _sprite.global_position
+	var tween := ghost.create_tween()
+	tween.tween_property(ghost, "modulate:a", 0.0, 0.22)
+	tween.tween_callback(ghost.queue_free)
 
 
 ## Alterna embestida y proyectiles (en la fase 2 la embestida ya trae sus proyectiles).
@@ -291,9 +341,13 @@ func _shoot(count: int) -> void:
 	_timer = shoot_windup / speed_scale()
 
 
+## Dispara una ventana de contraseña (hoja de Ariel): en línea recta, a la altura de las piernas (hay
+## que saltarla); en la fase 2, una de cada dos va en arco y cae cerca de Kai. A veces es un candado.
 func _throw() -> void:
 	var dir := facing
-	PasswordGuess.throw(get_parent(), global_position + Vector2(dir * 40.0, -8.0), dir, WEAK_PASSWORDS.pick_random())
+	var in_arc := phase == 2 and _shots_left % 2 == 1
+	var at := global_position + Vector2(dir * 34.0, -46.0 if in_arc else -12.0)
+	PasswordWindowShot.fire(get_parent(), at, dir, WEAK_PASSWORDS.pick_random(), in_arc, randf() < 0.25)
 	Sfx.play(&"popup_open", 0.7)
 	_squash(Vector2(1.08, 0.94))
 
@@ -439,13 +493,21 @@ func _process(delta: float) -> void:
 func _paint_overlay(c: VectorCanvas, t: float) -> void:
 	if state == State.HIDDEN or state == State.INTRO:
 		_paint_intro(c, t)
-	# Estela de la embestida (detrás del cuerpo, siguiendo su recorrido).
-	for i in range(1, _trail.size()):
-		var k := float(i) / _trail.size()
-		var from := _trail[i - 1] - global_position
-		var to := _trail[i] - global_position
-		for y: float in [-24.0, -46.0, -68.0]:
-			c.draw_line(from + Vector2(0, y), to + Vector2(0, y), Color(MAG, 0.5 * k), 1.0 + 3.0 * k)
+	# Rayas de velocidad de la embestida: salen de la espalda, como en la hoja de Ariel. Cada una
+	# cambia de largo (titila) pero siempre en el mismo lugar, para que no parpadeen.
+	if _streak > 0.01:
+		var back := -facing * 42.0
+		for i in STREAK_ROWS.size():
+			var row: Vector3 = STREAK_ROWS[i]
+			var wave := 0.6 + 0.4 * sin(t * 38.0 + i * 2.4)
+			var length := row.y * wave * _streak
+			var from := Vector2(back, row.x)
+			var mid := from + Vector2(-facing * length * 0.45, 0)
+			var to := from + Vector2(-facing * length, 0)
+			c.draw_line(from, mid, Color(MAG, 0.75 * _streak), row.z)
+			c.draw_line(mid, to, Color(MAG, 0.3 * _streak), maxf(row.z - 1.0, 1.0))
+			if row.z > 1.5:
+				c.draw_line(from, from.lerp(mid, 0.6), Color(PINK, 0.8 * _streak), 1.0)
 	if _denied:
 		for spot in DENIED_SPOTS:
 			var size := Vector2(34, 10)
