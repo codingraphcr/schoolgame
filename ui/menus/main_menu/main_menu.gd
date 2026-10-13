@@ -72,15 +72,22 @@ func _show_credits(show: bool) -> void:
 
 
 func _on_play_pressed() -> void:
-	# Partida nueva: Kai empieza como un alumno común, sin habilidades.
-	# (Cuando exista el guardado, aquí se ofrecerá continuar la partida.)
-	GameState.reset()
-	DigitalVision.reset()
+	# Partida nueva en la primera ranura vacía: Kai empieza como un alumno común, sin habilidades.
+	# (Provisorio hasta la pantalla de selección de ranuras: nunca pisa una partida guardada.)
+	var slot := SaveManager.first_empty_slot()
+	if slot == 0:
+		var notice := AcceptDialog.new()
+		notice.title = "Ranuras llenas"
+		notice.dialog_text = "Las 3 ranuras ya tienen una partida. Pronto podrás elegir cuál usar."
+		add_child(notice)
+		notice.popup_centered()
+		return
+	SaveManager.new_game(slot)
 	GameState.start_quest(&"prologo")
 	SceneManager.change_scene(SceneManager.FIRST_ROOM)
 
 
-## Sigue desde la última computadora segura donde se guardó.
+## Sigue la última partida usada, desde la computadora segura donde se guardó.
 func _on_continue_pressed() -> void:
 	if not SaveManager.continue_game():
 		continue_button.visible = false

@@ -1,18 +1,24 @@
 extends SceneTree
-## Prueba automática: E4. Guardar y continuar la partida (SaveManager): todo el progreso, la
-## escritura segura con copia de respaldo, archivos dañados o inválidos, la computadora segura
-## (punto de control al pasar; con E guarda y cura) y el botón CONTINUAR del menú.
-## Usa un archivo de prueba: nunca toca la partida del jugador.
+## Prueba automática: partidas guardadas (T2–T4 del sistema de usuarios, ver
+## docs/arquitectura/SISTEMA_USUARIOS_STEAM.md). Identidad de desarrollo y carpetas por identidad,
+## 3 ranuras independientes, escritura segura con respaldo, recuperación tras un cierre inesperado,
+## archivos dañados, alterados o de una versión futura, migración de la partida de antes, que las
+## recompensas no se dupliquen, otra persona en el mismo equipo, la computadora segura y CONTINUAR.
+## Usa carpetas de prueba: nunca toca las partidas del jugador.
 ## Ejecutar: godot --headless --path . --script res://tests/test_save.gd
 
 const MENU := "res://ui/menus/main_menu/main_menu.tscn"
 const ENTRADA := "res://world/zones/zone0/entrada.tscn"
+const LAB := "res://world/zones/zone0/laboratorio.tscn"
+const ROOT := "user://prueba_partidas"
+const LEGACY := "user://prueba_partida_vieja.json"
 const SECRET := "faro-cometa-tambor-mango-12"
 
 var _failures := 0
 var state: Node
 var economy: Node
 var saves: Node
+var identity: Node
 
 
 func _initialize() -> void:
@@ -23,107 +29,251 @@ func _run() -> void:
 	state = root.get_node("GameState")
 	economy = root.get_node("Economy")
 	saves = root.get_node("SaveManager")
-	saves.path = "user://partida_prueba.json"
-	saves.delete_save()
-	_test_files()
-	await _test_menu_and_continue()
+	identity = root.get_node("IdentityManager")
+	_clean()
+	identity.base_root = ROOT
+	saves.legacy_path = LEGACY
+	_test_identity()
+	_test_legacy_migration()
+	_test_three_slots()
+	_test_backups_and_crash()
+	_test_tampering()
+	_test_other_person()
 	await _test_save_point()
-	saves.delete_save()
+	await _test_menu_continue()
+	_clean()
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
 
 
-func _prepare_progress() -> void:
-	state.reset()
-	state.start_quest(&"prologo")
-	state.complete_step(&"prologo", &"hablar_profesor")
-	state.set_flag(&"marca_de_prueba")
-	state.learn_command(&"ls")
-	state.set_password(&"profesor", SECRET, "K7QM-4XPR")
-	state.set_dash_level(1)
-	state.unlock_vision()
-	economy.add_ecos(123)
-	economy.claim_reward(&"terminal:prueba", 10)
+func _use_identity(letter: String) -> void:
+	identity.use_provider(DevelopmentIdentityProvider.new("user://prueba_identidad_%s.cfg" % letter))
 
 
-func _test_files() -> void:
-	_check(not saves.has_save(), "sin partida guardada al principio")
-	_check(not saves.save_game("res://no/existe.tscn", &"x") and not saves.has_save(), "no guarda con una escena inválida")
-	_prepare_progress()
-	_check(saves.save_game(ENTRADA, &"entrada") and saves.has_save(), "guarda la partida")
-	var text := FileAccess.get_file_as_string(saves.path)
-	_check(not text.contains(SECRET), "el archivo no contiene la contraseña (solo su huella)")
-	_check(not FileAccess.file_exists(saves.path + ".tmp"), "no queda el archivo temporal")
-	saves.save_game(ENTRADA, &"entrada")
-	_check(FileAccess.file_exists(saves.backup_path()), "al volver a guardar, el anterior queda como copia de respaldo")
-	# Archivo principal dañado: se usa la copia.
-	var file := FileAccess.open(saves.path, FileAccess.WRITE)
-	file.store_string("{ roto")
+func _test_identity() -> void:
+	_use_identity("a")
+	_check(identity.kind == "dev" and DevelopmentIdentityProvider.is_valid_id(identity.identity_id), "sin Steam se usa una identidad de desarrollo (%s)" % identity.identity_id)
+	_check(identity.identity_id.begins_with("dev_") and not identity.is_steam(), "nunca se confunde con un Steam ID (empieza con dev_)")
+	var first: String = identity.identity_id
+	_use_identity("a")
+	_check(identity.identity_id == first, "la identidad de desarrollo es estable en este equipo")
+	_check(identity.saves_root() == ROOT.path_join(first), "cada identidad tiene su carpeta de partidas")
+	_check(PlayerIdentity.is_valid_folder("76561198000000000"), "un Steam ID (solo dígitos) es una carpeta válida")
+	for bad in ["../otro", "dev_zz", "abc", "-1234567", "7656119800000000000000", "dev_0123456789abcdeG", ""]:
+		_check(not PlayerIdentity.is_valid_folder(bad), "carpeta de identidad rechazada: «%s»" % bad)
+
+
+## La partida de antes (un solo archivo, versión 1) pasa a la ranura 1, con una copia del original.
+func _test_legacy_migration() -> void:
+	var v1 := {
+		"version": 1, "saved_at": 1760000000,
+		"location": { "scene": ENTRADA, "entry": "entrada" },
+		"game": { "flags": ["marca_vieja"], "quests": {}, "economy": { "ecos": 42, "claimed": ["mision:prologo"] },
+			"player": { "max_masks": 4, "dash_level": 0 } },
+		"campo_raro": "se conserva",
+	}
+	var file := FileAccess.open(LEGACY, FileAccess.WRITE)
+	file.store_string(JSON.stringify(v1))
 	file.close()
-	_check(saves.has_save() and saves.load_data()["game"]["flags"].has("marca_de_prueba"), "si el guardado se daña, se usa la copia de respaldo")
-	# Ambos dañados o inválidos: no hay partida.
-	for bad in ["{ roto", JSON.stringify({ "version": 99, "location": { "scene": ENTRADA, "entry": "x" }, "game": {} }),
-			JSON.stringify({ "version": 1, "location": { "scene": "res://no.tscn", "entry": "x" }, "game": {} })]:
-		for target in [saves.path, saves.backup_path()]:
-			var f := FileAccess.open(target, FileAccess.WRITE)
-			f.store_string(bad)
-			f.close()
-	_check(not saves.has_save(), "un guardado dañado, de una versión futura o con una sala inexistente no se usa")
-	saves.delete_save()
-	_check(not saves.has_save(), "borrar la partida quita también la copia")
+	_check(saves.migrate_legacy(), "la partida de antes se migra")
+	_check(not FileAccess.file_exists(LEGACY) and FileAccess.file_exists(saves.slot_path(1, "partida.v1.json")),
+		"el archivo viejo se quita y queda una copia del original en la ranura 1")
+	var info: Dictionary = saves.slot_info(1)
+	_check(info["estado"] == "ok" and int(info["meta"]["revision"]) == 1, "ahora es la ranura 1")
+	_check(saves.load_slot(1) and state.has_flag(&"marca_vieja") and economy.ecos == 42, "con su progreso y sus Ecos")
+	var raw := FileAccess.get_file_as_string(saves.slot_path(1))
+	_check(raw.begins_with("{\"formato\":\"nullveil-partida\"") and raw.contains("\"save_version\":2"), "en el formato nuevo (versión 2)")
+	_check(raw.contains("campo_raro"), "sin perder campos que la versión nueva no usa")
+	saves.delete_all()
 
 
-func _test_menu_and_continue() -> void:
-	saves.delete_save()
-	change_scene_to_file(MENU)
-	await _frames(10)
-	_check(not current_scene.get_node("%ContinueButton").visible, "sin partida, el menú no muestra CONTINUAR")
-	_prepare_progress()
+## Tres partidas independientes: nada se mezcla entre ranuras.
+func _test_three_slots() -> void:
+	_check(not saves.save_game(ENTRADA, &"entrada") or saves.active_slot != 0, "sin ranura activa no se guarda")
+	for slot in [1, 2, 3]:
+		_check(saves.new_game(slot), "partida nueva en la ranura %d" % slot)
+		economy.add_ecos(100 * slot)
+		state.set_flag(StringName("marca_ranura_%d" % slot))
+		state.learn_command(&"ls")
+		if slot == 2:
+			state.set_dash_level(1)
+			state.unlock_double_jump()
+			state.unlock_vision()
+			state.set_nullblade_stage(1)
+			state.set_password(&"profesor", SECRET, "K7QM-4XPR")
+		economy.claim_reward(StringName("terminal:prueba_%d" % slot), 10)
+		_check(saves.save_game(ENTRADA, &"entrada"), "se guarda la ranura %d" % slot)
+	for slot in [1, 2, 3]:
+		_check(saves.load_slot(slot), "se carga la ranura %d" % slot)
+		_check(economy.ecos == 100 * slot + 10 and state.has_flag(StringName("marca_ranura_%d" % slot)),
+			"ranura %d: sus Ecos (%d) y su progreso" % [slot, economy.ecos])
+		var others := [1, 2, 3].filter(func(other: int) -> bool: return other != slot)
+		_check(others.all(func(other: int) -> bool: return not state.has_flag(StringName("marca_ranura_%d" % other))),
+			"ranura %d: nada de las otras ranuras" % slot)
+		var skilled: bool = slot == 2
+		_check(state.dash_level == (1 if skilled else 0) and state.can_double_jump == skilled and state.vision_unlocked == skilled
+			and state.nullblade_stage == (1 if skilled else 0), "ranura %d: solo sus habilidades (sin adelantos)" % slot)
+	saves.load_slot(2)
+	_check(state.check_password(&"profesor", SECRET), "la huella de la contraseña del juego se conserva")
+	_check(economy.claim_reward(&"terminal:prueba_2", 10) == 0, "una recompensa ya cobrada no se cobra otra vez al recargar")
+	var id_before: String = saves.slot_info(2)["meta"]["partida_id"]
+	saves.save_game(LAB, &"desde_pc")
+	var info: Dictionary = saves.slot_info(2)
+	_check(int(info["meta"]["revision"]) == 2 and info["meta"]["partida_id"] == id_before, "cada guardado sube la revisión y conserva el id de la partida")
+	saves.new_game(2)
+	_check(saves._meta["partida_id"] != id_before, "una partida nueva tiene otro id")
+	saves.load_slot(2)
+	saves.delete_slot(3)
+	_check(saves.slot_info(3)["estado"] == "vacia" and saves.slot_info(1)["estado"] == "ok" and saves.slot_info(2)["estado"] == "ok",
+		"borrar una ranura no toca las otras")
+	_check(saves.first_empty_slot() == 3 and saves.last_slot() == 2, "primera ranura vacía y última usada")
+	var size := FileAccess.get_file_as_bytes(saves.slot_path(2)).size()
+	var start := Time.get_ticks_usec()
+	saves.save_game(LAB, &"desde_pc")
+	var micro := Time.get_ticks_usec() - start
+	_check(size < 100_000 and micro < 500_000, "una partida pesa %.1f KB y guardar tarda %.1f ms" % [size / 1024.0, micro / 1000.0])
+
+
+## Respaldo y cierre inesperado.
+func _test_backups_and_crash() -> void:
+	saves.load_slot(1)
+	state.set_flag(&"marca_revision_2")
 	saves.save_game(ENTRADA, &"entrada")
-	state.reset()
-	change_scene_to_file(MENU)
-	await _frames(10)
-	var continue_button := current_scene.get_node("%ContinueButton") as Button
-	_check(continue_button.visible, "con una partida guardada, aparece CONTINUAR")
-	continue_button.pressed.emit()
-	await _until(func() -> bool: return current_scene != null and current_scene.name == "Entrada")
-	await _frames(10)
-	var room := current_scene as Room
-	_check(room != null and room.name == "Entrada", "CONTINUAR lleva a la sala donde se guardó")
-	if room == null:
-		return
-	var save_point := room.get_node("SavePoint") as SavePoint
-	_check(absf(room.player.global_position.x - save_point.global_position.x) < 2.0 and room.checkpoint == save_point,
-		"Kai aparece en la computadora segura (y queda como punto de control)")
-	_check(state.get_current_step(&"prologo") == &"revisar_computadora" and state.has_flag(&"marca_de_prueba")
-		and state.has_learned_command(&"ls") and state.check_password(&"profesor", SECRET) and state.dash_level == 1
-		and state.vision_unlocked, "se recupera el progreso: misión, marcas, comandos, contraseña y habilidades")
-	_check(economy.ecos == 123 + 10 and economy.is_claimed(&"terminal:prueba"), "se recuperan los Ecos y las recompensas cobradas")
+	_check(FileAccess.file_exists(saves.slot_path(1, saves.BACKUP_FILE)), "al guardar otra vez, el anterior queda como respaldo")
+	_write(saves.slot_path(1), "{ roto")
+	var info: Dictionary = saves.slot_info(1)
+	_check(info["estado"] == "recuperada" and info["origen"] == "respaldo", "si la principal se daña, se usa el respaldo")
+	_check(saves.load_slot(1) and not state.has_flag(&"marca_revision_2"), "y se carga la versión anterior")
+	_check(saves.restore_backup(1) and saves.slot_info(1)["estado"] == "ok", "el respaldo puede volver a ser la principal")
+	# Cierre entre «la principal pasa a respaldo» y «el temporal pasa a principal».
+	saves.load_slot(1)
+	state.set_flag(&"marca_temporal")
+	var body: Dictionary = saves.build_body(ENTRADA, &"entrada")
+	_write(saves.slot_path(1, saves.TEMP_FILE), SaveSerializer.pack(body))
+	DirAccess.rename_absolute(ProjectSettings.globalize_path(saves.slot_path(1)), ProjectSettings.globalize_path(saves.slot_path(1, saves.BACKUP_FILE)))
+	info = saves.slot_info(1)
+	_check(info["estado"] == "recuperada" and info["origen"] == "temporal", "si el juego se cerró a mitad del guardado, se usa el temporal (más nuevo)")
+	_check(saves.load_slot(1) and state.has_flag(&"marca_temporal"), "sin perder lo último que se guardó")
+	_check(saves.save_game(ENTRADA, &"entrada") and saves.slot_info(1)["estado"] == "ok", "el siguiente guardado deja todo en orden")
+	# Los tres archivos dañados: la ranura queda marcada como dañada (no se borra).
+	for file in [saves.MAIN_FILE, saves.BACKUP_FILE, saves.TEMP_FILE]:
+		_write(saves.slot_path(1, file), "basura")
+	_check(saves.slot_info(1)["estado"] == "danada" and FileAccess.file_exists(saves.slot_path(1)), "con todo dañado, la ranura se marca «dañada» y no se borra")
+	saves.delete_slot(1)
+
+
+## Archivos alterados: se rechazan sin cargar nada raro.
+func _test_tampering() -> void:
+	saves.load_slot(2)
+	var good := FileAccess.get_file_as_string(saves.slot_path(2))
+	var main: String = saves.slot_path(2)
+	_remove(saves.slot_path(2, saves.BACKUP_FILE))
+	_write(main, good.replace("\"ecos\": 210", "\"ecos\": 999999"))
+	_check(saves.slot_info(2)["estado"] == "danada", "si se cambia el archivo a mano, la huella no coincide")
+	var cases := {
+		"Ecos negativos": func(b: Dictionary) -> void: b["estado"]["economy"]["ecos"] = -5,
+		"cristales de más": func(b: Dictionary) -> void: b["estado"]["player"]["max_masks"] = 999,
+		"escena fuera del juego": func(b: Dictionary) -> void: b["ubicacion"]["escena"] = "res://../../otra.tscn",
+		"punto con código": func(b: Dictionary) -> void: b["ubicacion"]["punto"] = "entrada; rm -rf",
+		"marca con código": func(b: Dictionary) -> void: b["estado"]["flags"].append("<script>"),
+		"archivo de otra ranura": func(b: Dictionary) -> void: b["meta"]["ranura"] = 3,
+		"id de partida inválido": func(b: Dictionary) -> void: b["meta"]["partida_id"] = "../../x",
+	}
+	var original: Dictionary = SaveSerializer.unpack(good)["body"]
+	for name: String in cases:
+		var body := original.duplicate(true)
+		cases[name].call(body)
+		_write(main, SaveSerializer.pack(body))
+		_check(saves.slot_info(2)["estado"] == "danada", "partida rechazada: %s" % name)
+	var future := "{\"formato\":\"nullveil-partida\",\"integridad\":\"%s\",\"save_version\":99}\n{}" % "{}".sha256_text()
+	_write(main, future)
+	_check(saves.slot_info(2)["estado"] == "incompatible" and FileAccess.get_file_as_string(main) == future,
+		"una partida de una versión más nueva se marca «incompatible» y no se toca")
+	_write(main, good)
+	_check(saves.slot_info(2)["estado"] == "ok", "el archivo correcto vuelve a cargarse")
+
+
+## Otra persona en el mismo equipo no ve ni carga las partidas de la primera.
+func _test_other_person() -> void:
+	var first: String = identity.identity_id
+	_use_identity("b")
+	_check(identity.identity_id != first and saves.active_slot == 0, "otra identidad en el mismo equipo")
+	_check(not saves.has_save() and [1, 2, 3].all(func(s: int) -> bool: return saves.slot_info(s)["estado"] == "vacia"),
+		"no ve ninguna partida de la otra persona")
+	saves.new_game(1)
+	state.set_flag(&"marca_de_b")
+	saves.save_game(ENTRADA, &"entrada")
+	_use_identity("a")
+	_check(saves.load_slot(2) and not state.has_flag(&"marca_de_b"), "y al volver, la primera sigue con sus partidas")
+	# Un conflicto: este equipo ya vio una revisión más nueva de la ranura 2 que la que hay ahora.
+	var ledger: Dictionary = saves._ledger()
+	ledger["revisiones"]["2"]["revision"] = 999
+	saves._save_ledger(ledger)
+	_check(saves.slot_info(2)["conflicto"], "si llega una revisión más vieja de la que vio este equipo, avisa «posible conflicto»")
 
 
 func _test_save_point() -> void:
-	saves.delete_save()
-	state.reset()
+	saves.new_game(3)
 	change_scene_to_file(ENTRADA)
 	await _wait(0.6)
 	var room := current_scene as Room
 	var player := room.player
 	var save_point := room.get_node("SavePoint") as SavePoint
-	_check(room.checkpoint != save_point, "antes de pasar, no es el punto de control")
 	player.teleport_to(save_point.global_position + Vector2(-60, 0))
 	await _frames(4)
 	Input.action_press("move_right")
 	await _until(func() -> bool: return player.global_position.x >= save_point.global_position.x)
 	Input.action_release("move_right")
 	await _frames(4)
-	_check(room.checkpoint == save_point and not saves.has_save(), "al pasar queda como punto de control, pero no guarda solo")
+	_check(room.checkpoint == save_point and saves.slot_info(3)["estado"] == "vacia", "al pasar queda como punto de control, pero no guarda solo")
 	player.health.take_damage(2.0)
 	player.set_energy(0.0)
 	_check(save_point._prompt.visible and save_point._prompt.text == "E: guardar partida", "aparece «E: guardar partida»")
 	_action("interact")
-	await _until(func() -> bool: return saves.has_save())
-	_check(saves.has_save() and saves.load_data()["location"]["entry"] == "entrada", "con E se guarda la partida en esa computadora")
+	await _until(func() -> bool: return saves.slot_info(3)["estado"] == "ok")
+	var info: Dictionary = saves.slot_info(3)
+	_check(info["estado"] == "ok" and info["meta"]["lugar"] == "Entrada", "con E se guarda en la ranura activa (lugar: %s)" % info["meta"]["lugar"])
 	_check(player.health.current == player.health.max_health and player.energy == player.max_energy, "y llena los cristales y la energía")
+
+
+func _test_menu_continue() -> void:
+	state.reset()
+	change_scene_to_file(MENU)
+	await _frames(10)
+	var continue_button := current_scene.get_node("%ContinueButton") as Button
+	_check(continue_button.visible, "con partidas guardadas aparece CONTINUAR")
+	continue_button.pressed.emit()
+	await _until(func() -> bool: return current_scene != null and current_scene.name == "Entrada")
+	await _frames(10)
+	_check(current_scene.name == "Entrada" and saves.active_slot == 3, "CONTINUAR abre la última ranura usada (la 3) donde se guardó")
+
+
+func _write(path: String, text: String) -> void:
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(text)
+	file.close()
+
+
+func _remove(path: String) -> void:
+	if FileAccess.file_exists(path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
+func _clean() -> void:
+	_remove_dir(ProjectSettings.globalize_path(ROOT))
+	for file in ["user://prueba_identidad_a.cfg", "user://prueba_identidad_b.cfg", LEGACY]:
+		_remove(file)
+
+
+func _remove_dir(path: String) -> void:
+	var dir := DirAccess.open(path)
+	if dir == null:
+		return
+	for file in dir.get_files():
+		dir.remove(file)
+	for sub in dir.get_directories():
+		_remove_dir(path.path_join(sub))
+	DirAccess.remove_absolute(path)
 
 
 ## Espera (en cuadros de física) a que se cumpla la condición, hasta unos 10 s de juego.

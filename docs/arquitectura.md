@@ -39,6 +39,7 @@ Las carpetas se crean cuando se necesitan, no antes.
 |---|---|---|
 | `SceneManager` | `autoload/scene_manager.gd` | Cambiar de pantalla con fundido. Contiene las rutas de las pantallas principales. |
 | `World` | `autoload/world.gd` | El mapa del mundo: grafos de los distritos, sala actual y a dónde lleva cada puerta. Ver «Mapa del mundo». |
+| `IdentityManager` | `autoload/identity_manager.gd` | Quién juega (Steam en T9; hoy identidad de desarrollo): la carpeta de partidas de cada identidad. Ver `arquitectura/SISTEMA_USUARIOS_STEAM.md`. |
 | `SaveManager` | `autoload/save_manager.gd` | Guardar y continuar la partida (`user://partida.json`). Ver «Guardado». |
 | `Economy` | `autoload/economy.gd` | Saldo de **Ecos** (la moneda) y la penalización al morir. Ver «ECOS». |
 | `DigitalVision` | `autoload/digital_vision.gd` | Estado de la Visión Digital (lista, activa, recargando), duración, recarga y `blend` para los efectos. Ver "Visión Digital". |
@@ -470,15 +471,15 @@ misión, con sus opciones (`"ls -a"`). Cualquier otro comando u opción responde
 - PC del profesor: `help`, `ls`, `cd`, `cat`; solo `cuenta/configuracion.txt`.
 - LAB 2: `help`, `ls`, `ls -a`, `cd`, `cat`; `LEEME.txt`, `/home/alvarado/notas.txt` y `.puerta/codigo.txt`.
 
-## Guardado (`autoload/save_manager.gd`, `world/digital/save_point.gd`)
+## Guardado (`autoload/save_manager.gd`, `systems/save/`, `world/digital/save_point.gd`)
 
-**`SaveManager`** guarda todo el progreso (`GameState.to_dict()`: misiones, marcas, Ecos y recompensas cobradas,
-habilidades, evoluciones, comandos aprendidos, la huella de la contraseña, cristales y energía) y **dónde continuar**:
-la escena y la computadora segura (`{"version", "saved_at", "location": {"scene", "entry"}, "game"}`). Funciona sin
-conexión. **Escritura segura:** escribe un archivo temporal, comprueba que se puede leer y recién entonces reemplaza al
-guardado anterior, que queda como copia (`partida.respaldo.json`). Si el principal está dañado usa la copia; un guardado
-dañado, de una versión futura o con una sala inexistente no se usa. `VERSION` y `_migrate()` preparan los cambios de
-formato. `continue_game()` carga y lleva a la sala; `Room` coloca a Kai en la `SavePoint` cuyo `save_id` coincide.
+**3 ranuras independientes por identidad** (`IdentityManager`), en `user://partidas/<identidad>/ranura_N/`
+(`partida.sav`, `partida.respaldo.sav` y el temporal `partida.sav.tmp`). Cada ranura guarda todo el progreso
+(`GameState.to_dict()`), dónde continuar y sus metadatos (id de la partida, revisión, tiempo jugado, año, capítulo,
+nivel, lugar). Formato v2 de `SaveSerializer` (JSON con huella de integridad), revisado por `SaveValidator` y adaptado
+por `SaveMigrator`. Escritura segura: temporal → verificación → la principal pasa a respaldo → el temporal pasa a
+principal; al cargar se elige la mejor copia (principal, temporal más nuevo o respaldo). Diseño completo en
+`arquitectura/SISTEMA_USUARIOS_STEAM.md`.
 
 **Computadora segura** (`SavePoint`, un `Interactable`): monitor verde con un escudo (distinto de las terminales y de los
 nodos de Aegis). Al pasar queda como **punto de control** (si Kai muere, reaparece ahí); con **E** guarda la partida y
