@@ -4,6 +4,12 @@ extends RefCounted
 ## un VirtualFileSystem: no ejecuta programas del dispositivo ni lee sus archivos.
 ## Los comandos y mensajes imitan a Linux (bash) para que lo aprendido sirva en una terminal real.
 ##
+## Seguridad (sanitización): cada línea se revisa antes de interpretarla. Solo se aceptan letras y
+## números sin tilde, espacios y . _ - / ~, hasta MAX_LINE caracteres; cualquier otro carácter
+## (; & | $ ` > < * ? comillas, saltos de línea, caracteres invisibles…) se rechaza sin ejecutar nada.
+## Solo funcionan los comandos de la lista allowed (y sus opciones, p. ej. "ls -a"): el resto
+## responde «comando inejecutable».
+##
 ## Archivos ocultos: los que empiezan con «.» no aparecen con ls, sí con ls -a.
 ## Carpetas protegidas (protected_dirs): ver o abrir su contenido oculto pide la contraseña de su
 ## dueño. Entonces execute() devuelve "password": true y la ventana la pide; unlock() la acepta.
@@ -24,10 +30,16 @@ const COMMANDS := {
 	"history": "muestra los comandos que escribiste",
 }
 
+## Largo máximo de una línea.
+const MAX_LINE := 120
+## Caracteres aceptados en una línea (todo lo demás se rechaza).
+const SAFE_CHARS := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ._~/-"
+
 var fs: VirtualFileSystem
 var user := "kai"
 var host := "colegio"
-## Comandos que se pueden usar en esta terminal (vacío = todos los de COMMANDS).
+## Comandos que se pueden usar en esta terminal, con sus opciones permitidas (p. ej. "ls -a").
+## Vacío = todos los de COMMANDS (solo para pruebas: cada terminal del juego tiene su lista).
 var allowed: PackedStringArray = []
 var history: PackedStringArray = []
 ## Carpetas (rutas absolutas) cuyo contenido oculto pide la contraseña de su dueño.
@@ -51,6 +63,23 @@ func is_available(command: String) -> bool:
 	return COMMANDS.has(command) and (allowed.is_empty() or allowed.has(command))
 
 
+## Si una opción de un comando está permitida (p. ej. is_option_allowed("ls", "a")).
+func is_option_allowed(command: String, option: String) -> bool:
+	return allowed.is_empty() or allowed.has("%s -%s" % [command, option])
+
+
+## Por qué una línea no es segura ("" si se puede interpretar). No ejecuta nada.
+static func unsafe_reason(line: String) -> String:
+	if line.length() > MAX_LINE:
+		return "entrada demasiado larga (máximo %d caracteres)" % MAX_LINE
+	for i in line.length():
+		var character := line[i]
+		if not SAFE_CHARS.contains(character):
+			var shown := character if character.unicode_at(0) > 32 and character.unicode_at(0) != 127 else "código %d" % character.unicode_at(0)
+			return "carácter no permitido «%s» · aquí solo se aceptan letras, números, espacios y . _ - / ~" % shown
+	return ""
+
+
 func available_commands() -> PackedStringArray:
 	var names: PackedStringArray = []
 	for command: String in COMMANDS:
@@ -65,16 +94,17 @@ func unlock() -> void:
 
 
 func execute(line: String) -> Dictionary:
+	var reason := unsafe_reason(line)
+	if not reason.is_empty():
+		return _error("Entrada rechazada: " + reason)
 	var words := line.strip_edges().split(" ", false)
 	if words.is_empty():
 		return _result("")
 	history.append(line.strip_edges())
 	var command := words[0]
 	var args := words.slice(1)
-	if not COMMANDS.has(command):
-		return _error("%s: orden no encontrada · escribe help para ver los comandos" % command)
 	if not is_available(command):
-		return _error("%s: todavía no puedes usar este comando aquí" % command)
+		return _error("%s: comando inejecutable" % command)
 	var result: Dictionary
 	match command:
 		"help":
@@ -134,8 +164,8 @@ func _ls(args: PackedStringArray) -> Dictionary:
 	for arg in args:
 		if arg.begins_with("-") and arg.length() > 1:
 			for letter in arg.substr(1):
-				if letter != "a":
-					return _error("ls: opción inválida -- '%s' · aquí solo existe ls -a" % letter)
+				if letter != "a" or not is_option_allowed("ls", letter):
+					return _error("ls %s: comando inejecutable" % arg)
 			show_all = true
 		else:
 			paths.append(arg)

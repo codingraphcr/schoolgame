@@ -456,6 +456,20 @@ conceptos básicos de gestión de contraseñas.
 repite el comando; cada opción explica por qué sí o por qué no. Tab no completa lo oculto sin la contraseña.
 `goal_file` puede ser una ruta absoluta. Al resolver una terminal se ocultan los botones de comandos.
 
+**Seguridad de la entrada (sanitización):** `CommandInterpreter.unsafe_reason()` revisa cada línea antes de
+interpretarla. Solo se aceptan letras y números sin tilde, espacios y `. _ - / ~`, hasta `MAX_LINE` (120)
+caracteres (la `LineEdit` tampoco deja escribir más). Todo lo demás (`;` `&&` `|` `$()` comillas invertidas `>` `<`
+`*` `?` comillas, saltos de línea, tabuladores, caracteres invisibles o de ancho completo, BBCode) se rechaza con
+«Entrada rechazada: …» sin ejecutar nada ni quedar en el historial. Además, la terminal es una simulación: no hay
+`OS.execute` ni acceso a archivos reales (`test_terminal` lo comprueba), y su sistema de archivos solo contiene los
+datos de esa terminal, así que rutas como `/etc/passwd` o `../../..` no llevan a nada.
+
+**Solo lo que pide la misión:** cada `TerminalChallenge` tiene en `allowed_commands` exactamente los comandos de su
+misión, con sus opciones (`"ls -a"`). Cualquier otro comando u opción responde «`<comando>`: comando inejecutable», y
+`help`, Tab y los botones solo muestran los permitidos. Cada terminal tiene solo los archivos que necesita:
+- PC del profesor: `help`, `ls`, `cd`, `cat`; solo `cuenta/configuracion.txt`.
+- LAB 2: `help`, `ls`, `ls -a`, `cd`, `cat`; `LEEME.txt`, `/home/alvarado/notas.txt` y `.puerta/codigo.txt`.
+
 ## Guardado (`autoload/save_manager.gd`, `world/digital/save_point.gd`)
 
 **`SaveManager`** guarda todo el progreso (`GameState.to_dict()`: misiones, marcas, Ecos y recompensas cobradas,

@@ -36,14 +36,12 @@ La configuración de la puerta está en la carpeta de su responsable: /home/alva
 "/home/alvarado/notas.txt": "- Laboratorio 2 cerrado por remodelación.
 - La configuración de la puerta la guardé donde no se vea a simple vista.
 ",
-"/home/alvarado/inventario.txt": "Laboratorio 2: monitores viejos, cables, sillas y cajas.
-",
 "/home/alvarado/.puerta/codigo.txt": "CÓDIGO DE APERTURA: 2719
 Puerta del Laboratorio 2: ABIERTA.
 "
 })
 goal_file = "/home/alvarado/.puerta/codigo.txt"
-allowed_commands = PackedStringArray("help", "pwd", "ls", "cd", "cat", "clear", "history")
+allowed_commands = PackedStringArray("help", "ls", "ls -a", "cd", "cat")
 hints = PackedStringArray("Empieza por leer el archivo LEEME.txt con cat.", "Entra a la carpeta del responsable con cd /home/alvarado y mira qué hay con ls.", "La nota de la Visión decía ls -a: muestra también los archivos ocultos, los que empiezan con un punto.", "Entra a la carpeta oculta con cd y lee el código con cat.")
 success_text = "Los archivos que empiezan con «.» están ocultos: ls no los muestra, pero ls -a sí.
 Y una cuenta vieja con 123456 sigue siendo un riesgo, aunque nadie la use."

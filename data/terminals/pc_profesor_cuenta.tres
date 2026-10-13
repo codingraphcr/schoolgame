@@ -18,23 +18,11 @@ correo: profesor@colegio
 contraseña: 123456
 ultimo_cambio_de_contraseña: hace 6 años
 verificacion_en_dos_pasos: desactivada
-",
-"cuenta/foto_perfil.png": "(es una imagen: aquí no se puede ver)
-",
-"descargas/MineKraft_GRATIS.exe": "MZ@#!%&... (archivo descargado de un anuncio)
-No ejecutes programas que vienen de anuncios: pueden ser malware.
-",
-"documentos/notas.txt": "- Pedirle a Kai que revise la computadora.
-- La computadora está rarísima desde ayer.
-",
-"documentos/plan_de_clase.txt": "Clase del lunes: introducción a la ciberseguridad.
-Pendiente: cambiar mi contraseña algún día...
-",
-"imagenes/": ""
+"
 })
 goal_file = "cuenta/configuracion.txt"
-allowed_commands = PackedStringArray()
+allowed_commands = PackedStringArray("help", "ls", "cd", "cat")
 hints = PackedStringArray("Escribe ls para ver qué carpetas hay aquí.", "La configuración de la cuenta debe estar en la carpeta cuenta: entra con cd cuenta", "Dentro de cuenta, escribe cat configuracion.txt para leer el archivo.")
 ecos_reward = 0
 success_text = "La contraseña 123456 es de las más usadas del mundo y la cuenta no tiene verificación en dos pasos: así cualquiera podría entrar.
-Con pwd, ls, cd y cat revisaste el sistema como lo hace un técnico en Linux."
+Con ls, cd y cat revisaste el sistema como lo hace un técnico en Linux."
