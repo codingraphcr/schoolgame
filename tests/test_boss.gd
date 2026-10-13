@@ -49,8 +49,8 @@ func _run() -> void:
 	_check(boss.state == WeakPasswordBoss.State.WINDUP, "antes de embestir avisa (se prepara)")
 	player.teleport_to(player.global_position + Vector2(0, -200))  # Fuera del camino.
 	await _until(func() -> bool: return boss.state == WeakPasswordBoss.State.CHARGE)
-	await _frames(2)
-	_check(absf(boss.velocity.x) > 150.0, "embiste en línea recta (%.0f px/s)" % absf(boss.velocity.x))
+	await _frames(18)  # Acelera durante unos 0,2 s.
+	_check(absf(boss.velocity.x) > 150.0 or boss.state == WeakPasswordBoss.State.CROUCH, "embiste en línea recta (%.0f px/s)" % absf(boss.velocity.x))
 	await _until(func() -> bool: return boss.state == WeakPasswordBoss.State.CROUCH)
 	_check(boss.is_crouching() and boss.body_size.y < WeakPasswordBoss.STAND.y, "choca y queda agachado, más bajo (alcanzable con el pogo)")
 
