@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_lab2ab"]
+
+[resource]
+script = ExtResource("1_lab2ab")
+script_text = "# H5: Kai abre la puerta del laboratorio viejo con el código de la terminal.
+(Un clic. La cinta se suelta y la puerta del Laboratorio 2 se entreabre.)
+Kai [sorprendido]: ¡Se abrió! Y con 123456... Tengo que decirle al profe que cambie esa cuenta vieja también.
+Kai [pensativo]: Adentro está todo oscuro."

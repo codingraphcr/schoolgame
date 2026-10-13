@@ -2,8 +2,9 @@ extends SceneTree
 ## Prueba automática: H5, el cuarto viejo. Al asegurar la cuenta del profesor empieza la misión
 ## «El cuarto viejo»; el profesor invita a Kai al pasillo viejo y, si se le vuelve a hablar, solo
 ## recuerda dónde queda. La puerta del fondo del Laboratorio está cerrada hasta la invitación; el
-## pasillo viejo tiene una nota que solo se ve con la Visión Digital. (Las tareas siguientes de H5
-## suman sus comprobaciones aquí.)
+## pasillo viejo tiene una nota que solo se ve con la Visión Digital, y la terminal de la puerta pide
+## la contraseña vieja del profe para ver los archivos ocultos. (Las tareas siguientes de H5 suman sus
+## comprobaciones aquí.)
 ## Ejecutar: godot --headless --path . --script res://tests/test_cuarto_viejo.gd
 
 const PASILLO := "res://world/zones/zone0/pasillo.tscn"
@@ -27,6 +28,7 @@ func _run() -> void:
 	await _test_locked_door()
 	await _test_invitation()
 	await _test_old_hallway()
+	await _test_door_terminal()
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
 
@@ -146,6 +148,59 @@ func _test_old_hallway() -> void:
 	room = current_scene as Room
 	_check(room != null and room.name == "Laboratorio" and absf(room.player.global_position.x - 680.0) < 16.0,
 		"la salida izquierda vuelve al fondo del laboratorio")
+
+
+## La terminal de la puerta: ls -a pide la contraseña; las incorrectas explican por qué; la vieja abre.
+func _test_door_terminal() -> void:
+	change_scene_to_file("res://world/zones/zone0/pasillo_viejo.tscn")
+	await _wait(0.6)
+	var room := current_scene as Room
+	var station := room.get_node("DoorTerminal") as TerminalStation
+	var props := room.get_node("Props")
+	_check(state.get_current_step(QUEST) == &"abrir_puerta" and station.is_usable(), "la terminal de la puerta se puede usar")
+	_check(not props.is_door_open(), "la puerta del LAB 2 sigue cerrada")
+	room.player.teleport_to(station.global_position + Vector2(-10, 0))
+	await _frames(8)
+	_action("interact")
+	await _until(func() -> bool: return get_first_node_in_group(&"terminal_window") != null)
+	var window := get_first_node_in_group(&"terminal_window") as TerminalWindow
+	_check(window != null, "con E se abre la terminal")
+	if window == null:
+		return
+	window.submit("cd /home/alvarado")
+	window.submit("ls -a")
+	_check(window.is_asking_password(), "ls -a pide la contraseña con las opciones")
+	var text := (window._output as RichTextLabel).get_parsed_text()
+	window.choose_password(0)
+	text = (window._output as RichTextLabel).get_parsed_text()
+	_check(not window.is_asking_password() and not window.interpreter.unlocked and text.contains("nunca se enteró"),
+		"la contraseña nueva no sirve aquí y explica por qué")
+	window.submit("ls -a")
+	window.choose_password(2)
+	_check(not window.interpreter.unlocked and (window._output as RichTextLabel).get_parsed_text().contains("nombre"),
+		"«PAlvarado» tampoco, y explica por qué")
+	window.submit("ls -a")
+	window.choose_password(1)
+	text = (window._output as RichTextLabel).get_parsed_text()
+	_check(window.interpreter.unlocked and text.contains("Acceso concedido") and text.contains(".puerta/"),
+		"123456 abre la carpeta y se repite ls -a: aparece .puerta/")
+	window.submit("cd .puerta")
+	window.submit("cat codigo.txt")
+	_check(window.is_solved, "leer el código cumple el objetivo")
+	_check(state.has_learned_command(&"ls -a") and (load("res://data/grimorio/comando_ls_a.tres") as GrimorioEntry).is_unlocked(state),
+		"ls -a queda aprendido, con su página del Grimorio")
+	window.close()
+	var box := room.get_node("CombatHUD/DialogueBox") as DialogueBox
+	await _until(func() -> bool: return box.is_playing())
+	_check(box.is_playing(), "Kai comenta que la puerta se abrió")
+	for i in 20:
+		if not box.is_playing():
+			break
+		_action("interact")
+		await _frames(3)
+	await _frames(5)
+	_check(state.get_current_step(QUEST) == &"explorar_cuarto", "la misión avanza: explorar el cuarto viejo")
+	_check(props.is_door_open(), "la puerta del LAB 2 queda entreabierta")
 
 
 ## Espera (en cuadros de física) a que se cumpla la condición, hasta unos 10 s de juego.

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 1
+order = 14
+title = "ls -a"
+subtitle = "Comando de terminal · Linux"
+text = "Lista todo lo que hay en una carpeta, también los archivos ocultos: los que empiezan con un punto (.config, .puerta). Aparecen además «.» (la carpeta actual) y «..» (la de arriba). Ocultar un archivo no lo protege: cualquiera que sepa usar ls -a lo ve."
+facts = Dictionary[String, String]({"Sintaxis": "ls -a [carpeta]", "Ejemplo": "ls -a /home/alvarado", "Resultado": ".  ..  .puerta/  notas.txt", "Relacionado": "ls, archivos ocultos"})
+unlock_command = &"ls -a"

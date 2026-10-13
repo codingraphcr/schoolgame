@@ -70,8 +70,12 @@ func _on_interacted(player: Player) -> void:
 	busy = false
 
 
-func _on_command_run(command: String, _args: PackedStringArray, _target: String) -> void:
-	get_node("/root/GameState").learn_command(StringName(command))
+func _on_command_run(command: String, args: PackedStringArray, _target: String) -> void:
+	var game_state := get_node("/root/GameState")
+	game_state.learn_command(StringName(command))
+	# ls -a tiene su propia página en el Grimorio.
+	if command == "ls" and Array(args).any(func(arg: String) -> bool: return arg.begins_with("-") and arg.contains("a")):
+		game_state.learn_command(&"ls -a")
 
 
 func _paint(c: VectorCanvas, t: float) -> void:

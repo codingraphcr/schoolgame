@@ -2,6 +2,7 @@ extends SceneTree
 ## Prueba automática: terminal simulada. Sistema de archivos ficticio, comandos (pwd, ls, cd, cat,
 ## clear, history, help), errores, autocompletado, comandos permitidos, que no toque el sistema real,
 ## y la primera terminal del juego en la PC del profesor (misión «La contraseña del profesor»).
+## También archivos ocultos (ls -a) y carpetas protegidas con contraseña (terminal del LAB 2, H5).
 ## Ejecutar: godot --headless --path . --script res://tests/test_terminal.gd
 
 const PC := "res://world/zones/pc_profesor/escritorio.tscn"
@@ -23,6 +24,7 @@ func _run() -> void:
 	_test_commands()
 	_test_completion_and_limits()
 	_test_safety()
+	_test_hidden_and_password()
 	await _test_in_game()
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
@@ -170,6 +172,38 @@ func _test_in_game() -> void:
 	player.teleport_to(station.global_position)
 	await _frames(8)
 	_check(not station._prompt.visible, "la terminal ya no se usa en este paso")
+
+
+## Archivos ocultos y la carpeta protegida de la terminal del LAB 2 (H5).
+func _test_hidden_and_password() -> void:
+	var challenge: TerminalChallenge = load("res://data/terminals/puerta_lab2.tres")
+	var t := challenge.create_interpreter()
+	_check(t.prompt() == "invitado@lab2-puerta:~$" and _out(t, "ls").contains("LEEME.txt"), "LAB 2: sesión de invitado con LEEME.txt")
+	t.execute("cd /home/alvarado")
+	var listing := _out(t, "ls")
+	_check(listing.contains("notas.txt") and not listing.contains(".puerta"), "ls no muestra los archivos ocultos (los que empiezan con punto)")
+	var asked := t.execute("ls -a")
+	_check(not asked["ok"] and asked["password"] and String(asked["output"]).contains("contraseña"), "ls -a en la carpeta protegida pide la contraseña")
+	_check(t.pending_line == "ls -a", "recuerda qué comando pidió la contraseña")
+	_check(t.execute("cd .puerta")["password"] and t.execute("cat .puerta/codigo.txt")["password"],
+		"tampoco se entra ni se lee lo oculto sin la contraseña (aunque se adivine el nombre)")
+	_check(not t.execute("ls -x")["ok"] and _out(t, "ls -x").contains("opción inválida"), "una opción que no existe da error, como en Linux")
+	_check(t.complete("cd .p") == "cd .p" and t.complete("cat no") == "cat notas.txt ", "Tab no completa lo oculto hasta que se da la contraseña")
+	t.unlock()
+	listing = _out(t, "ls -a")
+	_check(listing.begins_with(".  ..") and listing.contains(".puerta/") and listing.contains("notas.txt"),
+		"con la contraseña, ls -a muestra . .. y los ocultos")
+	t.execute("cd .puerta")
+	_check(t.fs.cwd == "/home/alvarado/.puerta" and challenge.is_goal(t, "cat", t.fs.resolve("codigo.txt")),
+		"el objetivo es leer el código dentro de la carpeta oculta (ruta absoluta)")
+	var correct := challenge.password_options.filter(func(o: ChoiceOption) -> bool: return o.correct)
+	_check(challenge.password_options.size() == 3 and correct.size() == 1 and correct[0].text == "123456",
+		"3 contraseñas para elegir; la correcta es la vieja del profe (123456)")
+	_check(challenge.password_options.all(func(o: ChoiceOption) -> bool: return not o.feedback.is_empty()), "cada contraseña explica por qué sí o por qué no")
+	_check(challenge.password_options.any(func(o: ChoiceOption) -> bool: return o.text.contains("••••")),
+		"la contraseña nueva del jugador no se muestra (solo se guarda su huella)")
+	var other := _new_terminal()
+	_check(not _out(other, "ls -a").contains("password") and _out(other, "ls -a").begins_with(".  .."), "en una terminal sin carpetas protegidas, ls -a funciona directo")
 
 
 func _new_terminal() -> CommandInterpreter:

@@ -7,8 +7,11 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixel/lockers.png" id="5_kip4k"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/board.png" id="6_tply6"]
 [ext_resource type="Script" path="res://world/zones/zone0/old_hallway_props.gd" id="7_wvmfx"]
+[ext_resource type="Script" path="res://world/digital/terminal_station.gd" id="8_pludg"]
 [ext_resource type="Texture2D" path="res://assets/art/light_soft.tres" id="8_rirh1"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="9_c3ars"]
+[ext_resource type="Resource" path="res://data/terminals/puerta_lab2.tres" id="9_kip4k"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/puerta_lab2_abierta.tres" id="10_tply6"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="10_v6ta0"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="11_01vs5"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="12_wr8fx"]
@@ -149,6 +152,14 @@ centered = false
 [node name="Props" type="Node2D" parent="." unique_id=1164489466]
 script = ExtResource("7_wvmfx")
 
+[node name="DoorTerminal" type="Area2D" parent="." unique_id=1122762000]
+position = Vector2(840, 304)
+script = ExtResource("8_pludg")
+challenge = ExtResource("9_kip4k")
+quest_id = &"cuarto_viejo"
+step_id = &"abrir_puerta"
+success_dialogue = ExtResource("10_tply6")
+
 [node name="Lights" type="Node2D" parent="." unique_id=1134096236]
 
 [node name="LampLight1" type="PointLight2D" parent="Lights" unique_id=62375334]
@@ -221,7 +232,7 @@ follow_viewport_enabled = true
 script = ExtResource("13_tl3m4")
 player = NodePath("../../Player")
 router = Vector2(-400, 152)
-racks = Array[Vector2]([])
+show_network = false
 show_bridge = false
 show_threat = false
 platforms = Array[Rect2]([])

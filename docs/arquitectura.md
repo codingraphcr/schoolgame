@@ -449,6 +449,13 @@ y Kai vuelve al laboratorio (entrada `desde_pc`).
 décimo de la tabla del MEP 2025 (Operaciones ciberseguras): seguridad en sistemas operativos de código abierto y
 conceptos básicos de gestión de contraseñas.
 
+**Archivos ocultos y carpetas protegidas (H5):** los nombres que empiezan con «.» no aparecen con `ls`, sí con `ls -a`
+(que muestra también `.` y `..`; otra opción da «opción inválida», como en Linux). Un `TerminalChallenge` puede tener
+`protected_folder`: ver o abrir su contenido oculto devuelve `"password": true` y la `TerminalWindow` muestra
+`password_options` (flechas y Enter, o 1/2/3; Esc cancela). La correcta llama a `CommandInterpreter.unlock()` y
+repite el comando; cada opción explica por qué sí o por qué no. Tab no completa lo oculto sin la contraseña.
+`goal_file` puede ser una ruta absoluta. Al resolver una terminal se ocultan los botones de comandos.
+
 ## Guardado (`autoload/save_manager.gd`, `world/digital/save_point.gd`)
 
 **`SaveManager`** guarda todo el progreso (`GameState.to_dict()`: misiones, marcas, Ecos y recompensas cobradas,
@@ -508,7 +515,12 @@ código (`old_hallway_props.gd`: cajas, sillas, telarañas, la puerta «LAB 2» 
    cerrada hasta la invitación. Al llegar, un `QuestTrigger` con `on_ready` muestra el comentario de Kai (ahora
    `on_ready` también muestra su diálogo).
 3. `abrir_puerta`: con la Visión Digital aparece una nota (`world/vision/vision_note.gd`, grupo `digital_only`,
-   dentro de la capa digital para que brille) con la pista «ls -a».
+   dentro de la capa digital para que brille) con la pista «ls -a». La terminal de la puerta
+   (`data/terminals/puerta_lab2.tres`, sesión `invitado`) tiene la carpeta protegida `/home/alvarado`: `ls -a` (o
+   entrar a lo oculto) pide la contraseña de la cuenta y se elige entre 3 (`password_options`, `ChoiceOption`):
+   **123456** abre (el equipo viejo nunca se actualizó); «la contraseña nueva que creaste (••••••••)» y «PAlvarado»
+   explican por qué no. La nueva no se muestra: solo se guarda su huella. Al leer `.puerta/codigo.txt` se abre la
+   puerta «LAB 2» (se dibuja entreabierta) y se aprende `ls -a`, con su página del Grimorio.
 4. y 5. `explorar_cuarto` y `salir_cuarto`: en construcción.
 
 ## Misiones (`systems/quests/`)

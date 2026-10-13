@@ -3,6 +3,8 @@ extends CanvasLayer
 ## Ventana de la terminal simulada (encima del juego). Muestra el objetivo, la salida de los
 ## comandos y una línea para escribir. Teclado: Enter ejecuta, ↑/↓ historial, Tab completa,
 ## Esc cierra. En celular, los botones de abajo escriben los comandos más usados.
+## Si un comando pide la contraseña de una carpeta protegida, aparecen las opciones del desafío
+## (flechas y Enter, o 1/2/3): la correcta desbloquea y repite el comando; cada una explica por qué.
 ## Uso: var window := TerminalWindow.open(self, challenge); var solved: bool = await window.closed
 
 signal solved
@@ -29,6 +31,9 @@ var _objective: Label
 var _continue: Button
 var _history_index := -1
 var _hint_index := 0
+var _password_panel: VBoxContainer
+var _quick_row: HBoxContainer
+var _password_buttons: Array[Button] = []
 
 
 static func open(from: Node, terminal_challenge: TerminalChallenge) -> TerminalWindow:
@@ -62,6 +67,41 @@ func submit(line: String) -> void:
 		_print_line(result["output"], TEXT if result["ok"] else MAG)
 	_history_index = -1
 	_refresh_prompt()
+	if result.get("password", false) and not challenge.password_options.is_empty():
+		_ask_password()
+
+
+## Muestra las contraseñas para elegir.
+func _ask_password() -> void:
+	_print_line(challenge.password_prompt if not challenge.password_prompt.is_empty() else "Elige la contraseña:", YELLOW)
+	_line.editable = false
+	_password_panel.show()
+	_password_buttons[0].grab_focus.call_deferred()
+
+
+## Elige una contraseña (índice en password_options).
+func choose_password(index: int) -> void:
+	if not _password_panel.visible or index < 0 or index >= challenge.password_options.size():
+		return
+	var option := challenge.password_options[index]
+	_password_panel.hide()
+	_line.editable = true
+	_print_line("[sudo] contraseña: ••••••••", CYAN)
+	if option.correct:
+		Sfx.play(&"terminal_ok")
+		_print_line("✔ " + option.feedback, GREEN)
+		interpreter.unlock()
+		var pending := interpreter.pending_line
+		if not pending.is_empty():
+			submit(pending)
+	else:
+		Sfx.play(&"error", 1.0, -6.0)
+		_print_line("✘ " + option.feedback, MAG)
+	_focus_input()
+
+
+func is_asking_password() -> bool:
+	return _password_panel.visible
 
 
 func show_hint() -> void:
@@ -87,6 +127,8 @@ func _on_command_run(command: String, _args: PackedStringArray, target: String) 
 	# La salida del comando se imprime después de esta señal: el mensaje va un instante más tarde.
 	_print_success.call_deferred()
 	_line.editable = false
+	# Resuelto: los botones de comandos ya no sirven (y así entran Continuar y Cerrar).
+	_quick_row.hide()
 	_continue.show()
 	_continue.grab_focus.call_deferred()
 	solved.emit()
@@ -99,8 +141,21 @@ func _print_success() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if _password_panel.visible and event is InputEventKey and event.pressed and not event.echo:
+		var number := (event as InputEventKey).keycode - KEY_1
+		if number >= 0 and number < challenge.password_options.size():
+			get_viewport().set_input_as_handled()
+			choose_password(number)
+			return
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause"):
 		get_viewport().set_input_as_handled()
+		if _password_panel.visible:
+			# Esc solo cancela la contraseña.
+			_password_panel.hide()
+			_line.editable = true
+			_print_line("Cancelado.", TEXT)
+			_focus_input()
+			return
 		close()
 
 
@@ -245,12 +300,28 @@ func _build() -> void:
 	_line.gui_input.connect(_on_input_key)
 	line.add_child(_line)
 
+	_password_panel = VBoxContainer.new()
+	_password_panel.add_theme_constant_override("separation", 6)
+	_password_panel.hide()
+	column.add_child(_password_panel)
+	for i in challenge.password_options.size():
+		var choice := _button("%d · %s" % [i + 1, challenge.password_options[i].text], choose_password.bind(i), font)
+		choice.focus_mode = Control.FOCUS_ALL
+		choice.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		_password_panel.add_child(choice)
+		_password_buttons.append(choice)
+
 	var buttons := HBoxContainer.new()
 	buttons.add_theme_constant_override("separation", 8)
 	column.add_child(buttons)
+	_quick_row = HBoxContainer.new()
+	_quick_row.add_theme_constant_override("separation", 8)
+	buttons.add_child(_quick_row)
 	for quick: Array in QUICK:
-		buttons.add_child(_button(quick[0], _on_quick.bind(quick[1]), font))
-	buttons.add_child(_button("Tab: completar", func() -> void:
+		_quick_row.add_child(_button(quick[0], _on_quick.bind(quick[1]), font))
+		if quick[0] == "ls" and not challenge.protected_folder.is_empty():
+			_quick_row.add_child(_button("ls -a", _on_quick.bind("ls -a⏎"), font))
+	_quick_row.add_child(_button("Tab: completar", func() -> void:
 		_line.text = interpreter.complete(_line.text)
 		_line.caret_column = _line.text.length()
 		_focus_input(), font))

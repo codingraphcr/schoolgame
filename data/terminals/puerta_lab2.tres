@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="TerminalChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/terminal/terminal_challenge.gd" id="1_lab2"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_opt"]
+
+[sub_resource type="Resource" id="Resource_vieja"]
+script = ExtResource("2_opt")
+text = "123456"
+correct = true
+feedback = "Acceso concedido. Este equipo viejo nunca se actualizó: aunque el profe ya cambió la contraseña de su cuenta, aquí sigue siendo 123456. Hay que cambiarla en cada sistema que la use, o dar de baja las cuentas que ya no se usan."
+
+[sub_resource type="Resource" id="Resource_nueva"]
+script = ExtResource("2_opt")
+text = "La contraseña nueva que creaste (••••••••)"
+feedback = "Acceso denegado. Esa es la contraseña nueva de la cuenta del profe, pero cambiarla en un lugar no la cambia en los equipos viejos: este nunca se enteró. ¿Cuál usó el profe durante años?"
+
+[sub_resource type="Resource" id="Resource_nombre"]
+script = ExtResource("2_opt")
+text = "PAlvarado"
+feedback = "Acceso denegado. Una contraseña hecha con el nombre y una inicial es muy fácil de adivinar... pero el profe no usó esta. ¿Cuál usó durante años?"
+
+[resource]
+script = ExtResource("1_lab2")
+id = &"puerta_lab2"
+title = "Terminal de la puerta · LAB 2"
+objective = "Encuentra el código que abre la puerta del laboratorio viejo."
+user = "invitado"
+host = "lab2-puerta"
+welcome = "Terminal de acceso del Laboratorio 2 · fuera de servicio desde hace años.
+Sesión de invitado. Escribe help para ver los comandos."
+files = Dictionary[String, String]({
+"LEEME.txt": "Terminal de acceso del Laboratorio 2.
+Responsable: alvarado (cuenta antigua).
+La configuración de la puerta está en la carpeta de su responsable: /home/alvarado
+",
+"/home/alvarado/notas.txt": "- Laboratorio 2 cerrado por remodelación.
+- La configuración de la puerta la guardé donde no se vea a simple vista.
+",
+"/home/alvarado/inventario.txt": "Laboratorio 2: monitores viejos, cables, sillas y cajas.
+",
+"/home/alvarado/.puerta/codigo.txt": "CÓDIGO DE APERTURA: 2719
+Puerta del Laboratorio 2: ABIERTA.
+"
+})
+goal_file = "/home/alvarado/.puerta/codigo.txt"
+allowed_commands = PackedStringArray("help", "pwd", "ls", "cd", "cat", "clear", "history")
+hints = PackedStringArray("Empieza por leer el archivo LEEME.txt con cat.", "Entra a la carpeta del responsable con cd /home/alvarado y mira qué hay con ls.", "La nota de la Visión decía ls -a: muestra también los archivos ocultos, los que empiezan con un punto.", "Entra a la carpeta oculta con cd y lee el código con cat.")
+success_text = "Los archivos que empiezan con «.» están ocultos: ls no los muestra, pero ls -a sí.
+Y una cuenta vieja con 123456 sigue siendo un riesgo, aunque nadie la use."
+protected_folder = "/home/alvarado"
+password_prompt = "[sudo] Escribe la contraseña de la cuenta alvarado:"
+password_options = Array[ExtResource("2_opt")]([SubResource("Resource_nueva"), SubResource("Resource_vieja"), SubResource("Resource_nombre")])

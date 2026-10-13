@@ -22,6 +22,8 @@ const ABYSS := Color(0.2, 0.01, 0.12, 0.85)
 ## Debe coincidir con la colisión del nodo DataBridge.
 @export var data_bridge := Rect2(556, 148, 112, 6)
 @export var fragment_position := Vector2(640, 126)
+## Dibuja el router con su cobertura y los enlaces a los servidores (no en salas sin red).
+@export var show_network := true
 ## Dibuja el puente de datos y su fragmento (solo en la sala que los tiene).
 @export var show_bridge := true
 ## Dibuja el pez del phishing con su carnada (solo en la sala que lo tiene).
@@ -46,7 +48,8 @@ func _ready() -> void:
 func _paint(c: VectorCanvas, t: float) -> void:
 	_paint_grid(c)
 	_paint_wireframe(c)
-	_paint_network(c, t)
+	if show_network:
+		_paint_network(c, t)
 	if show_bridge:
 		_paint_bridge(c, t)
 	if show_threat:
