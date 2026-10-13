@@ -11,6 +11,8 @@ extends Node
 ## reclamados se guardan con la partida. Los valores salen de EconomyConfig (data/economy/economia.tres).
 
 signal ecos_changed(ecos: int, delta: int)
+## Se cobró por primera vez una recompensa única (el guardado automático la guarda enseguida).
+signal reward_claimed(id: StringName)
 
 const CONFIG_PATH := "res://data/economy/economia.tres"
 ## Marca de GameState que termina el tutorial (al final del prólogo, «EL DESPERTAR»).
@@ -113,6 +115,7 @@ func claim_drop(id: StringName) -> bool:
 	if id == &"" or _claimed.has(id):
 		return false
 	_claimed[id] = true
+	reward_claimed.emit(id)
 	return true
 
 

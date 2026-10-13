@@ -1,6 +1,6 @@
 extends SceneTree
 ## Prueba automática: M2. El mapa fijo de cada distrito (DistrictLayout) y la pieza global World:
-## las salas actuales tienen su room_id, cada salida (RoomExit) tiene su door_id, el mapa y el
+## las salas actuales tienen su room_id, cada salida (RoomExit o Stairway) tiene su door_id, el mapa y el
 ## respaldo de cada salida (target_scene) coinciden, y al cambiar de sala World sabe dónde está Kai.
 ## Ejecutar: godot --headless --path . --script res://tests/test_world.gd
 
@@ -31,7 +31,11 @@ func _test_districts() -> void:
 	var colegio: RoomGraph = world.graph(&"colegio")
 	_check(colegio != null and colegio.rooms.has(&"entrada") and colegio.rooms.has(&"pasillo") and colegio.rooms.has(&"laboratorio"),
 		"el Colegio tiene la Entrada, el Pasillo y el Laboratorio (dos salas)")
-	_check(colegio != null and colegio.open_doors().is_empty(), "el Colegio no tiene puertas sin destino")
+	var loose: PackedStringArray = []
+	for open in colegio.open_doors():
+		if colegio.template_of(open["room"]).fixed:
+			loose.append("%s.%s" % [open["room"], open["door"]])
+	_check(loose.is_empty(), "en el Colegio solo pueden quedar libres puertas de salas opcionales %s" % [loose])
 	var wrong: PackedStringArray = []
 	for district_id: StringName in world.districts:
 		for room_id: StringName in world.districts[district_id].rooms:
@@ -64,17 +68,21 @@ func _test_scenes_match_map() -> void:
 			var template: RoomTemplate = graph.template_of(room_id)
 			var scene := (load(template.scene_path) as PackedScene).instantiate()
 			var exits_by_door := {}
-			for node in scene.find_children("*", "RoomExit", true, false):
-				var room_exit := node as RoomExit
-				if room_exit.door_id == &"":
+			# Salidas por los bordes (RoomExit) y escaleras (Stairway): las dos tienen door_id y respaldo.
+			for room_exit in scene.find_children("*", "RoomExit", true, false) + scene.find_children("*", "Stairway", true, false):
+				var door: StringName = room_exit.door_id
+				if door == &"":
 					continue
-				exits_by_door[room_exit.door_id] = true
-				if template.door(room_exit.door_id) == null:
-					problems.append("%s: la salida %s no está en la ficha" % [room_id, room_exit.door_id])
+				exits_by_door[door] = true
+				if template.door(door) == null:
+					problems.append("%s: la salida %s no está en la ficha" % [room_id, door])
 					continue
-				var target: Dictionary = world.destination(room_id, room_exit.door_id)
+				var target: Dictionary = world.destination(room_id, door)
+				# Las puertas que decide el generador (las de salas opcionales o hacia ellas) no tienen respaldo.
+				if not template.fixed or (not target.is_empty() and not world.template_of(target["room"]).fixed):
+					continue
 				if target.get("scene") != room_exit.target_scene or target.get("entry") != room_exit.target_entry:
-					problems.append("%s.%s: el mapa lleva a %s y la salida a %s" % [room_id, room_exit.door_id, target, room_exit.target_scene])
+					problems.append("%s.%s: el mapa lleva a %s y la salida a %s" % [room_id, door, target, room_exit.target_scene])
 			for spec in template.doors:
 				if graph.is_linked(room_id, spec.id) and not exits_by_door.has(spec.id):
 					problems.append("%s: la puerta %s no tiene salida en la escena" % [room_id, spec.id])

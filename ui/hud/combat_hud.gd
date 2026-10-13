@@ -29,6 +29,13 @@ func _ready() -> void:
 		player.connect(&"energy_changed", set_energy)
 
 
+func _enter_tree() -> void:
+	if get_node_or_null("SaveIndicator") == null:
+		var indicator := SaveIndicator.new()
+		indicator.name = "SaveIndicator"
+		add_child(indicator)
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"grimorio") and _can_open_grimorio():
 		get_viewport().set_input_as_handled()

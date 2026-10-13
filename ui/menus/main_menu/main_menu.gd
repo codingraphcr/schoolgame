@@ -8,6 +8,10 @@ const BACKGROUND_CYCLE := 18.0
 
 @onready var continue_button: Button = %ContinueButton
 @onready var play_button: Button = %PlayButton
+@onready var load_button: Button = %LoadButton
+@onready var profile_button: Button = %ProfileButton
+@onready var identity_label: Label = %IdentityLabel
+@onready var _footer: Control = %Footer
 @onready var settings_button: Button = %SettingsButton
 @onready var credits_button: Button = %CreditsButton
 @onready var quit_button: Button = %QuitButton
@@ -23,9 +27,13 @@ func _ready() -> void:
 	GameSettings.ensure_loaded()
 	Music.play(&"menu")
 	play_button.pressed.connect(_on_play_pressed)
+	load_button.pressed.connect(_open_slots.bind(SlotSelect.Mode.LOAD))
+	profile_button.pressed.connect(_open_profile)
 	continue_button.pressed.connect(_on_continue_pressed)
+	identity_label.text = "Jugador: %s" % IdentityManager.display_name
 	# CONTINUAR solo aparece si hay una partida guardada.
 	continue_button.visible = SaveManager.has_save()
+	load_button.visible = continue_button.visible
 	settings_button.pressed.connect(_on_settings_pressed)
 	credits_button.pressed.connect(_show_credits.bind(true))
 	credits_back_button.pressed.connect(_show_credits.bind(false))
@@ -63,6 +71,7 @@ func _animate_background() -> void:
 func _show_credits(show: bool) -> void:
 	_credits.visible = show
 	_buttons.visible = not show
+	_footer.visible = not show
 	if DisplayServer.is_touchscreen_available():
 		return
 	if show:
@@ -72,16 +81,45 @@ func _show_credits(show: bool) -> void:
 
 
 func _on_play_pressed() -> void:
-	# Partida nueva en la primera ranura vacía: Kai empieza como un alumno común, sin habilidades.
-	# (Provisorio hasta la pantalla de selección de ranuras: nunca pisa una partida guardada.)
-	var slot := SaveManager.first_empty_slot()
-	if slot == 0:
-		var notice := AcceptDialog.new()
-		notice.title = "Ranuras llenas"
-		notice.dialog_text = "Las 3 ranuras ya tienen una partida. Pronto podrás elegir cuál usar."
-		add_child(notice)
-		notice.popup_centered()
-		return
+	_open_slots(SlotSelect.Mode.NEW)
+
+
+## «Mi perfil».
+func _open_profile() -> void:
+	_buttons.visible = false
+	_footer.visible = false
+	var screen := ProfileScreen.open(self)
+	screen.closed.connect(func() -> void:
+		_buttons.visible = true
+		_footer.visible = true
+		if not DisplayServer.is_touchscreen_available():
+			profile_button.grab_focus())
+
+
+## Selección de ranura (para una partida nueva o para cargar una).
+func _open_slots(mode: SlotSelect.Mode) -> void:
+	_buttons.visible = false
+	_footer.visible = false
+	var screen := SlotSelect.open(self, mode)
+	screen.chosen.connect(_on_slot_chosen.bind(mode))
+	screen.cancelled.connect(func() -> void:
+		_buttons.visible = true
+		_footer.visible = true
+		continue_button.visible = SaveManager.has_save()
+		load_button.visible = continue_button.visible
+		if not DisplayServer.is_touchscreen_available():
+			(continue_button if continue_button.visible else play_button).grab_focus())
+
+
+func _on_slot_chosen(slot: int, mode: SlotSelect.Mode) -> void:
+	if mode == SlotSelect.Mode.NEW:
+		start_new_game(slot)
+	elif not SaveManager.continue_game(slot):
+		_open_slots(SlotSelect.Mode.LOAD)
+
+
+## Partida nueva en esa ranura: Kai empieza como un alumno común, sin habilidades.
+func start_new_game(slot: int) -> void:
 	SaveManager.new_game(slot)
 	GameState.start_quest(&"prologo")
 	SceneManager.change_scene(SceneManager.FIRST_ROOM)

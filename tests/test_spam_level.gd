@@ -15,6 +15,10 @@ var player: Player
 
 
 func _initialize() -> void:
+	# Un paso de física por cuadro: si la computadora está cargada, la prueba va más lenta pero los
+	# saltos y los tiempos dan igual (si no, en un cuadro lento se juntan varios pasos de física).
+	Engine.max_physics_steps_per_frame = 1
+	Engine.physics_jitter_fix = 0.0
 	_run.call_deferred()
 
 
@@ -25,6 +29,7 @@ func _run() -> void:
 	for step in [&"hablar_profesor", &"revisar_computadora", &"volver_profesor"]:
 		state.complete_step(&"prologo", step)
 	change_scene_to_file(PC)
+	await _until(func() -> bool: return current_scene is Room)
 	await _wait(0.6)
 	room = current_scene as Room
 	player = room.player
@@ -53,12 +58,19 @@ func _test_popups() -> void:
 	await _drop_on(Vector2(830, 200))
 	_check(absf(player.global_position.y - 244.0) < 1.0, "Kai se para sobre el pop-up que se cierra")
 	await _wait(1.0)
-	_check(closing.is_closed() and player.global_position.y > 260.0, "el pop-up se cierra y Kai cae")
+	_check(closing.is_closed() and player.global_position.y > 260.0, "el pop-up se cierra y Kai cae (y=%.0f)" % player.global_position.y)
 	await _wait(2.6)
 	_check(not closing.is_closed(), "el pop-up vuelve a abrirse")
 	await _wait(1.2)  # Invulnerabilidad del golpe por caer en las trampas
 	# Se mueve y lleva a Kai.
 	var moving := room.get_node("SpamPopups/Popup4") as SpamPopup
+	# Se suelta a Kai cuando el pop-up está al principio de su recorrido: al final queda encimado con
+	# el pop-up 5 (que no se mueve) y Kai caería sobre ese.
+	var origin_x: float = moving.global_position.x - moving.position.x + 1008.0
+	# Mientras tanto, Kai espera a salvo sobre el pop-up fijo (no sobre las trampas).
+	await _drop_on(Vector2(700, 190))
+	await _until_vulnerable()
+	await _until(func() -> bool: return absf(moving.global_position.x - origin_x) < 8.0)
 	await _drop_on(moving.global_position + Vector2(48, -30))
 	var start_x := player.global_position.x
 	var popup_start_x := moving.global_position.x
@@ -306,8 +318,9 @@ func _frames(count: int) -> void:
 		await physics_frame
 
 
+## Espera ese tiempo de juego, contado en pasos de física (como Kai y los pop-ups).
 func _wait(seconds: float) -> void:
-	await create_timer(seconds, true, false, true).timeout
+	await create_timer(seconds, true, true).timeout
 
 
 func _check(condition: bool, message: String) -> void:

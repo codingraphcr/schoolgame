@@ -58,6 +58,8 @@ func start(player: Player) -> void:
 	if running:
 		return
 	running = true
+	# Durante la pelea no se guarda la partida (AutoSave).
+	add_to_group(AutoSave.BLOCK_GROUP)
 	_player = player
 	player.controls_locked = true
 	player.velocity.x = 0.0
@@ -121,6 +123,7 @@ func _end(won: bool) -> void:
 	if not running:
 		return
 	running = false
+	remove_from_group(AutoSave.BLOCK_GROUP)
 	Music.play(&"computadora")
 	if enemy.died.is_connected(_on_enemy_died):
 		enemy.died.disconnect(_on_enemy_died)

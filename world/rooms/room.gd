@@ -26,6 +26,8 @@ extends Node2D
 var bounds: Rect2
 ## Id de esta sala en el mapa (World); vacío si la escena no está en el mapa.
 var room_id: StringName = &""
+## Entrada (RoomEntry.id) por la que llegó Kai: un punto de reaparición válido para guardar.
+var arrival_entry: StringName = &""
 
 
 func _ready() -> void:
@@ -66,6 +68,13 @@ func _exit_tree() -> void:
 		game_state.current_energy = player.energy
 
 
+func _process(delta: float) -> void:
+	# Tiempo jugado: solo mientras se juega en una sala (con el juego en pausa este nodo no corre).
+	var game_state := _game_state()
+	if game_state:
+		game_state.play_time += delta
+
+
 func _physics_process(_delta: float) -> void:
 	if player and player.global_position.y > bounds.end.y + fall_limit_margin:
 		player.damage.fall_out_of_bounds()
@@ -79,6 +88,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_node("/root/DigitalVision").toggle()
 	elif event.is_action_pressed("pause"):
 		get_viewport().set_input_as_handled()
+		# Al salir por el menú se guarda (si es seguro).
+		var saves := get_node_or_null("/root/SaveManager")
+		if saves:
+			saves.auto_save.save_now("salir")
 		var scene_manager := _scene_manager()
 		scene_manager.change_scene(scene_manager.MAIN_MENU)
 
@@ -93,6 +106,7 @@ func _place_player() -> void:
 		# Al continuar una partida: la computadora segura donde se guardó.
 		var save_point := _find_save_point(entry_id)
 		if save_point:
+			arrival_entry = save_point.save_id
 			player.teleport_to(save_point.global_position)
 			checkpoint = save_point
 			save_point.active = true
@@ -101,6 +115,7 @@ func _place_player() -> void:
 	if entry == null or player == null:
 		respawn_player()
 		return
+	arrival_entry = entry.id
 	player.teleport_to(entry.global_position)
 	player.face(entry.facing)
 	_snap_camera()
@@ -114,6 +129,14 @@ func _materialize_player() -> void:
 	LoadingScreen.dismiss_all(get_tree())
 	await DigitalDive.materialize(player)
 	player.controls_locked = false
+
+
+## Dónde reaparecer si se guarda ahora: la computadora segura activa o la entrada por la que llegó
+## Kai (nunca su posición exacta). Vacío = el punto de aparición de la sala.
+func save_point_id() -> StringName:
+	if checkpoint is SavePoint:
+		return (checkpoint as SavePoint).save_id
+	return arrival_entry
 
 
 func _find_save_point(save_id: StringName) -> SavePoint:

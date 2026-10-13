@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixel/wifi_waves.png" id="13_obplk"]
 [ext_resource type="Texture2D" path="res://assets/art/light_soft.tres" id="14_fcr8f"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/cable_tray.png" id="15_y5gqw"]
+[ext_resource type="Script" path="res://world/rooms/stairway.gd" id="16_kdcgm"]
 [ext_resource type="Script" path="res://world/effects/packet_stream.gd" id="16_xu24j"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/packet.png" id="17_oveq7"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/packet_bad.png" id="18_xu5ga"]
@@ -376,6 +377,15 @@ centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 40, 6)
 
+[node name="Subida" type="Area2D" parent="." unique_id=1586604702]
+position = Vector2(330, 304)
+script = ExtResource("16_kdcgm")
+door_id = &"escalera"
+target_scene = "res://world/zones/zone0/escaleras.tscn"
+target_entry = &"desde_pasillo"
+prompt_text = "E: subir"
+prompt_offset = Vector2(-20, -90)
+
 [node name="Packets" type="Node2D" parent="." unique_id=1150446176]
 position = Vector2(0, 56)
 script = ExtResource("16_xu24j")
@@ -484,6 +494,11 @@ position = Vector2(648, 304)
 script = ExtResource("27_ligia")
 id = &"desde_laboratorio"
 facing = -1
+
+[node name="FromEscaleras" type="Marker2D" parent="Entries" unique_id=265793046]
+position = Vector2(330, 304)
+script = ExtResource("27_ligia")
+id = &"desde_escaleras"
 
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 

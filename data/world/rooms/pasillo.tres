@@ -12,15 +12,23 @@ entry_id = &"desde_entrada"
 [sub_resource type="Resource" id="Resource_este"]
 script = ExtResource("2_door")
 id = &"este"
-side = 1
 entry_id = &"desde_laboratorio"
+
+[sub_resource type="Resource" id="Resource_j6jtq"]
+script = ExtResource("2_door")
+id = &"escalera"
+side = 2
+kind = 2
+entry_id = &"desde_escaleras"
 
 [resource]
 script = ExtResource("1_tmpl")
 id = &"pasillo"
 display_name = "Pasillo"
 scene_path = "res://world/zones/zone0/pasillo.tscn"
-room_type = &"corridor"
-doors = Array[ExtResource("2_door")]([SubResource("Resource_oeste"), SubResource("Resource_este")])
+doors = Array[ExtResource("2_door")]([SubResource("Resource_oeste"), SubResource("Resource_este"), SubResource("Resource_j6jtq")])
 fixed = true
+minimum_player_abilities = PackedStringArray()
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
 mission_ids = PackedStringArray("prologo")

@@ -71,18 +71,18 @@ unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = 0.665
+anchor_top = 0.64
 anchor_right = 0.5
 offset_left = -160.0
 offset_right = 160.0
 offset_bottom = 200.0
 grow_horizontal = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 
 [node name="ContinueButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(320, 46)
+custom_minimum_size = Vector2(320, 38)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_option")
 theme_override_font_sizes/font_size = 20
@@ -91,34 +91,43 @@ script = ExtResource("3_option")
 
 [node name="PlayButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 46)
+custom_minimum_size = Vector2(320, 38)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_option")
 theme_override_font_sizes/font_size = 20
-text = "INICIAR"
+text = "NUEVA PARTIDA"
+script = ExtResource("3_option")
+
+[node name="LoadButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 38)
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 20
+text = "CARGAR PARTIDA"
+script = ExtResource("3_option")
+
+[node name="ProfileButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 38)
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 20
+text = "MI PERFIL"
 script = ExtResource("3_option")
 
 [node name="SettingsButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 46)
+custom_minimum_size = Vector2(320, 38)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_option")
 theme_override_font_sizes/font_size = 20
 text = "OPCIONES"
 script = ExtResource("3_option")
 
-[node name="CreditsButton" type="Button" parent="Buttons"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 46)
-layout_mode = 2
-theme_override_fonts/font = SubResource("FontVariation_option")
-theme_override_font_sizes/font_size = 20
-text = "CRÉDITOS"
-script = ExtResource("3_option")
-
 [node name="QuitButton" type="Button" parent="Buttons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 46)
+custom_minimum_size = Vector2(320, 38)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_option")
 theme_override_font_sizes/font_size = 20
@@ -203,3 +212,40 @@ theme_override_colors/font_color = Color(0.62, 0.56, 0.86, 0.8)
 theme_override_font_sizes/font_size = 16
 text = "v0.1.0"
 horizontal_alignment = 2
+
+[node name="Footer" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -420.0
+offset_top = -46.0
+offset_right = -236.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+alignment = 2
+
+[node name="CreditsButton" type="Button" parent="Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Créditos"
+flat = true
+
+[node name="IdentityLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -40.0
+offset_right = 520.0
+offset_bottom = -14.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.62, 0.56, 0.86, 0.9)
+theme_override_font_sizes/font_size = 16

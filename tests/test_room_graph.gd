@@ -50,9 +50,13 @@ func _test_real_templates() -> void:
 	colegio.add_room(&"laboratorio", &"laboratorio", Vector2i(2, 0))
 	colegio.add_room(&"pasillo_viejo", &"pasillo_viejo", Vector2i(3, 0))
 	colegio.add_room(&"cuarto_viejo", &"cuarto_viejo", Vector2i(5, 0))
+	colegio.add_room(&"escaleras", &"escaleras", Vector2i(1, -2))
+	colegio.add_room(&"biblioteca", &"biblioteca", Vector2i(2, -2))
 	_check(colegio.link(&"entrada", &"este", &"pasillo", &"oeste") and colegio.link(&"pasillo", &"este", &"laboratorio", &"oeste")
-		and colegio.link(&"laboratorio", &"este", &"pasillo_viejo", &"oeste") and colegio.link(&"pasillo_viejo", &"este", &"cuarto_viejo", &"oeste")
-		and colegio.open_doors().is_empty(), "el prólogo de hoy (Entrada ↔ Pasillo ↔ Laboratorio ↔ Pasillo viejo ↔ Cuarto viejo) arma un grafo sin puertas sueltas")
+		and colegio.link(&"laboratorio", &"este", &"pasillo_viejo", &"oeste") and colegio.link(&"pasillo_viejo", &"este", &"cuarto_viejo", &"oeste"),
+		"el prólogo de hoy: Entrada ↔ Pasillo ↔ Laboratorio ↔ Pasillo viejo ↔ Cuarto viejo")
+	_check(colegio.link(&"pasillo", &"escalera", &"escaleras", &"abajo") and colegio.link(&"escaleras", &"este", &"biblioteca", &"oeste"),
+		"la escalera del Pasillo sube (puertas de escalera, arriba ↔ abajo) y el segundo piso da a la biblioteca")
 
 
 ## Un colegio de prueba, armado en el código:

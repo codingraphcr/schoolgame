@@ -1,0 +1,163 @@
+# Versión de prueba para Windows (uso interno).
+# Exporta el juego con Godot y publica un ZIP como artefacto de esta ejecución (solo lo descargan quienes
+# tienen acceso al repositorio). Guía para el supervisor: docs/GUIA_SUPERVISOR.md.
+#
+# Cuándo corre: a mano (Actions → «Versión de prueba (Windows)» → Run workflow).
+# Cuando el repositorio sea privado, se activa también sola al subir cambios del juego a main: quitar los
+# «#» del bloque «push» de abajo. Mientras sea público no conviene, porque cualquiera con cuenta de GitHub
+# podría descargar los artefactos.
+
+name: Versión de prueba (Windows)
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+  #   paths-ignore:
+  #     - "docs/**"
+  #     - "**/*.md"
+  #     - "tests/**"
+  #     - "tools/art/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: version-de-prueba-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.7.2"
+  GODOT_RELEASE: "4.7.2-stable"
+
+jobs:
+  exportar:
+    name: Exportar para Windows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      artefacto: ${{ steps.datos.outputs.nombre }}
+    steps:
+      - name: Obtener el código (este commit)
+        uses: actions/checkout@v4
+
+      - name: Caché de Godot y plantillas
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-${{ env.GODOT_RELEASE }}-windows-v1
+
+      - name: Descargar Godot y las plantillas oficiales (con su huella verificada)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p ~/godot && cd ~/godot
+          base="https://github.com/godotengine/godot-builds/releases/download/${GODOT_RELEASE}"
+          curl -fsSL -o SHA512-SUMS.txt "$base/SHA512-SUMS.txt"
+          for f in "Godot_v${GODOT_RELEASE}_linux.x86_64.zip" "Godot_v${GODOT_RELEASE}_export_templates.tpz"; do
+            curl -fsSL -o "$f" "$base/$f"
+            if ! grep " $f\$" SHA512-SUMS.txt | sha512sum -c -; then
+              echo "::error::La huella SHA-512 de $f no coincide con la oficial de Godot. Se detiene la compilación."
+              exit 1
+            fi
+          done
+          unzip -q "Godot_v${GODOT_RELEASE}_linux.x86_64.zip"
+          mv "Godot_v${GODOT_RELEASE}_linux.x86_64" godot
+          mkdir -p plantillas
+          unzip -q -j "Godot_v${GODOT_RELEASE}_export_templates.tpz" "templates/windows_release_x86_64.exe" "templates/version.txt" -d plantillas
+          rm -f ./*.zip ./*.tpz
+
+      - name: Instalar las plantillas de exportación
+        run: |
+          dest="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$dest"
+          cp ~/godot/plantillas/* "$dest/"
+
+      - name: Importar el proyecto
+        run: |
+          set -o pipefail
+          ~/godot/godot --headless --path . --import 2>&1 | tee import.log
+          if grep -E "SCRIPT ERROR|Parse Error|Failed to load" import.log; then
+            echo "::error::Godot encontró errores al importar el proyecto (ver el registro de arriba)."
+            exit 1
+          fi
+
+      - name: Verificar que todos los scripts compilen
+        run: |
+          if ! ~/godot/godot --headless --path . --script res://tools/ci/verificar_scripts.gd; then
+            echo "::error::Hay scripts que no compilan (ver «NO COMPILA» arriba)."
+            exit 1
+          fi
+
+      - name: Pruebas rápidas (guardado, mapa y terminal)
+        run: |
+          for prueba in test_save test_room_graph test_terminal; do
+            salida=$(~/godot/godot --headless --path . --script "res://tests/${prueba}.gd" 2>&1) || true
+            echo "$salida" | grep -E "FAIL|RESULTADO" || true
+            if ! echo "$salida" | grep -q "RESULTADO: TODO OK"; then
+              echo "::error::La prueba ${prueba} falló."
+              exit 1
+            fi
+          done
+
+      - name: Exportar el juego
+        run: |
+          set -o pipefail
+          mkdir -p build/windows
+          ~/godot/godot --headless --path . --export-release "Windows Desktop" build/windows/Nullveil.exe 2>&1 | tee export.log
+          if [ ! -s build/windows/Nullveil.exe ]; then
+            echo "::error::La exportación no generó Nullveil.exe (ver el registro de arriba)."
+            exit 1
+          fi
+
+      - name: Datos de la versión
+        id: datos
+        run: |
+          version=$(sed -n 's/^config\/version="\(.*\)"/\1/p' project.godot)
+          corto="${GITHUB_SHA::7}"
+          {
+            echo "Nullveil: Beyond the Firewall — versión de prueba interna"
+            echo "Versión: ${version}"
+            echo "Rama: ${GITHUB_REF_NAME}"
+            echo "Commit: ${GITHUB_SHA}"
+            echo "Compilado: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo "Godot: ${GODOT_RELEASE}"
+            echo "Ejecución: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo ""
+            echo "Para reportar un error, copia este archivo completo en el reporte."
+          } > build/windows/VERSION.txt
+          echo "nombre=Nullveil-windows-v${version}-${corto}" >> "$GITHUB_OUTPUT"
+          ls -la build/windows
+
+      - name: Publicar el ZIP (artefacto de esta ejecución)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.datos.outputs.nombre }}
+          path: |
+            build/windows/Nullveil.exe
+            build/windows/VERSION.txt
+          retention-days: 30
+          if-no-files-found: error
+
+  probar-en-windows:
+    name: Arrancar el juego en Windows
+    needs: exportar
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Bajar el ZIP recién compilado
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.exportar.outputs.artefacto }}
+
+      - name: Abrir el juego sin ventana unos segundos
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath .\Nullveil.exe -ArgumentList '--headless', '--quit-after', '900' -PassThru -Wait `
+            -RedirectStandardOutput salida.txt -RedirectStandardError errores.txt
+          Get-Content salida.txt, errores.txt
+          $texto = (Get-Content salida.txt, errores.txt) -join "`n"
+          if ($p.ExitCode -ne 0) { Write-Output "::error::El juego terminó con el código $($p.ExitCode)."; exit 1 }
+          if ($texto -match 'SCRIPT ERROR|Parse Error|Failed to load') { Write-Output "::error::El juego mostró errores al arrancar."; exit 1 }
+          Write-Output "El juego arrancó y cerró sin errores."

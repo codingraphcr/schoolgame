@@ -27,12 +27,27 @@ var _provider: IdentityProvider
 
 
 func _ready() -> void:
+	# Al correr las pruebas automáticas (--script), las partidas van a una carpeta aparte que se
+	# vacía al empezar: una prueba nunca toca las partidas reales del equipo.
+	if is_test_run():
+		base_root = "user://pruebas_partidas"
+		_remove_dir(ProjectSettings.globalize_path(base_root))
+	else:
+		# Los datos pasaron a una carpeta propia (%APPDATA%\Nullveil): la primera vez se copian los de
+		# la carpeta vieja de Godot, antes de leer la identidad, las partidas o las opciones.
+		UserDataMigration.migrate(UserDataMigration.old_dir(), OS.get_user_data_dir())
 	start_default()
+
+
+## Si el juego corre una prueba automática (godot --script …).
+static func is_test_run() -> bool:
+	return OS.get_cmdline_args().has("--script")
 
 
 ## Elige el proveedor: Steam si está disponible (T9); si no, la identidad de desarrollo.
 func start_default() -> void:
-	use_provider(DevelopmentIdentityProvider.new())
+	var file := "user://pruebas_identidad.cfg" if is_test_run() else DevelopmentIdentityProvider.DEFAULT_FILE
+	use_provider(DevelopmentIdentityProvider.new(file))
 
 
 ## Usa ese proveedor (también para las pruebas: simular otra persona en el mismo equipo).
@@ -61,6 +76,17 @@ func saves_root() -> String:
 	if not has_identity():
 		return ""
 	return base_root.path_join(identity_id)
+
+
+static func _remove_dir(path: String) -> void:
+	var dir := DirAccess.open(path)
+	if dir == null:
+		return
+	for file in dir.get_files():
+		dir.remove(file)
+	for sub in dir.get_directories():
+		_remove_dir(path.path_join(sub))
+	DirAccess.remove_absolute(path)
 
 
 ## Solo nombres de carpeta seguros: un Steam ID (solo dígitos) o un id de desarrollo. Así un id

@@ -81,6 +81,8 @@ var nullblade_stage := 0
 var aegis_stage := 0
 ## 0 = bloqueado · 1, 2, 3 = versiones I, II, III
 var domain_stage := 0
+## Segundos jugados en esta partida (solo cuentan dentro de una sala y sin pausa: ver Room).
+var play_time := 0.0
 
 # --- Misiones ---
 ## Misión que se muestra como OBJETIVO (vacío = ninguna).
@@ -311,6 +313,7 @@ func _reset_progress() -> void:
 	nullblade_stage = 0
 	aegis_stage = 0
 	domain_stage = 0
+	play_time = 0.0
 
 
 # --- Misiones ---
@@ -487,6 +490,7 @@ func to_dict() -> Dictionary:
 			"aegis_stage": aegis_stage,
 			"domain_stage": domain_stage,
 		},
+		"play_time": int(play_time),
 	}
 
 
@@ -531,6 +535,7 @@ func from_dict(data: Dictionary) -> void:
 	nullblade_stage = clampi(int(player.get("nullblade_stage", 0)), 0, MAX_NULLBLADE_STAGE)
 	aegis_stage = clampi(int(player.get("aegis_stage", 0)), 0, MAX_AEGIS_STAGE)
 	domain_stage = clampi(int(player.get("domain_stage", 0)), 0, MAX_DOMAIN_STAGE)
+	play_time = maxf(float(data.get("play_time", 0)), 0.0)
 	stats_changed.emit()
 	progress_changed.emit()
 
