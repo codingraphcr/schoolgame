@@ -13,3 +13,4 @@ size_cells = Vector2i(6, 1)
 fixed = true
 difficulty = 2
 mission_ids = PackedStringArray("contrasena_profesor")
+has_terminal = true

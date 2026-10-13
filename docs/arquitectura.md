@@ -568,6 +568,15 @@ código (`old_hallway_props.gd`: cajas, sillas, telarañas, la puerta «LAB 2» 
 - Pendiente (M6): guardar el grafo armado en la partida, para que sumar fichas nuevas en una actualización no cambie el
   mapa de una partida existente (hoy el mapa sale de la semilla y de las fichas actuales).
 
+**M5 (hecho): el mapa del Grimorio** (`ui/menus/grimorio/grimorio_map.gd`) se dibuja con el mapa real (`World`): el
+grafo del distrito, con sus salas en la cuadrícula (también las del generador) y sus conexiones (las escaleras con
+peldaños). Estados (`GrimorioMap.State`): **desconocida** (no se dibuja), **descubierta** (conectada con una visitada:
+gris con «?»), **se abre más adelante** (descubierta pero de un capítulo que no empezó, `World.lock_reason`: rayada con
+candado), **visitada** (con nombre) y **completada** (visitada y con todas sus `mission_ids` terminadas: marca verde).
+Marca las terminales (`RoomTemplate.has_terminal`) y dónde está Kai (rombo cian). Visitada = `World.visited` o, en
+partidas anteriores, la marca `visitada_<escena>`. El título sale de `World.district_names`. El mapa no se mueve al
+explorar: siempre se encuadra con todas las salas del distrito.
+
 **H5 · El cuarto viejo** (misión `cuarto_viejo`, empieza sola al terminar `contrasena_profesor`):
 1. `hablar_profesor`: el profesor invita a Kai al pasillo viejo (`profesor_invitacion.tres`). Cuidado con la Biblia:
    no explica qué hay en el cuarto ni el origen de la Nullblade o del Grimorio.
@@ -724,6 +733,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
 | `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (el armario pide el doble salto) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
 | `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas (y las escaleras) coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
+| `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |
 | `test_generador.gd` | M4: con fichas de prueba, la parte fija intacta, misma semilla = mismo mapa, 40 semillas válidas y distintas, solo puertas compatibles, respaldo si la parte variable no valida y error si la fija está mal; con los datos reales, aula o depósito al este de la biblioteca, el mapa se rearma igual al cargar, dos aulas con la misma escena, la puerta libre cerrada y continuar en la misma aula |
 | `test_biblioteca.gd` | M3: escaleras y biblioteca en el mapa, cerradas hasta el Capítulo 1, Kai sube los descansos con la física real y sin doble salto, ida y vuelta entre Pasillo, escaleras y biblioteca, estanterías como plataforma y continuar una partida guardada en la biblioteca |
 | `test_autosave.gd` | Guardado automático: al avanzar una misión, al obtener una habilidad, al cobrar una recompensa y al salir; nunca sin control, en el aire, en una pelea o en una transición |
