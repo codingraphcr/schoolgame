@@ -18,7 +18,8 @@ config/use_custom_user_dir=true
 config/custom_user_dir_name="Nullveil"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0.039, 0.067, 0.141, 1)
-config/icon="res://icon.svg"
+config/icon="res://assets/icon/nullveil_icon.png"
+config/windows_native_icon="res://assets/icon/nullveil.ico"
 
 [autoload]
 
