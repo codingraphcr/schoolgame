@@ -4,6 +4,8 @@ extends SceneTree
 ## 3 ranuras independientes, escritura segura con respaldo, recuperación tras un cierre inesperado,
 ## archivos dañados, alterados o de una versión futura, migración de la partida de antes, que las
 ## recompensas no se dupliquen, otra persona en el mismo equipo, la computadora segura y CONTINUAR.
+## T5: el mapa (semilla y salas visitadas) igual al recargar, el tiempo jugado (solo en una sala y sin
+## pausa), año / capítulo / nivel / % de historia y educativo, y la política de recursos al cargar.
 ## Usa carpetas de prueba: nunca toca las partidas del jugador.
 ## Ejecutar: godot --headless --path . --script res://tests/test_save.gd
 
@@ -19,6 +21,7 @@ var state: Node
 var economy: Node
 var saves: Node
 var identity: Node
+var world: Node
 
 
 func _initialize() -> void:
@@ -30,6 +33,7 @@ func _run() -> void:
 	economy = root.get_node("Economy")
 	saves = root.get_node("SaveManager")
 	identity = root.get_node("IdentityManager")
+	world = root.get_node("World")
 	_clean()
 	identity.base_root = ROOT
 	saves.legacy_path = LEGACY
@@ -39,6 +43,8 @@ func _run() -> void:
 	_test_backups_and_crash()
 	_test_tampering()
 	_test_other_person()
+	_test_world_and_progress()
+	await _test_play_time()
 	await _test_save_point()
 	await _test_menu_continue()
 	_clean()
@@ -210,6 +216,66 @@ func _test_other_person() -> void:
 	ledger["revisiones"]["2"]["revision"] = 999
 	saves._save_ledger(ledger)
 	_check(saves.slot_info(2)["conflicto"], "si llega una revisión más vieja de la que vio este equipo, avisa «posible conflicto»")
+
+
+## El mapa, el progreso y lo educativo se guardan y vuelven igual.
+func _test_world_and_progress() -> void:
+	saves.new_game(1)
+	var seed_value: int = world.world_seed
+	_check(world.visited.is_empty() and world.generator_version == world.GENERATOR_VERSION, "una partida nueva tiene su semilla y ninguna sala visitada")
+	world.enter(ENTRADA)
+	world.enter(LAB)
+	state.play_time = 4321.7
+	state.set_flag(&"tutorial_terminado")
+	for quest in [&"prologo", &"contrasena_profesor", &"cuarto_viejo"]:
+		state.start_quest(quest)
+		for step: QuestStep in QuestDB.get_quest(quest).steps:
+			state.complete_step(quest, step.id)
+	economy.claim_reward(&"terminal:pc_profesor_cuenta", 0)
+	state.learn_command(&"ls -a")
+	state.current_masks = 1.0
+	state.current_energy = 0.0
+	_check(saves.save_game(LAB, &"desde_pc"), "se guarda la partida con mapa y progreso")
+	var meta: Dictionary = saves.slot_info(1)["meta"]
+	_check(int(meta["tiempo_jugado"]) == 4321, "la tarjeta tiene el tiempo jugado (%s s)" % meta["tiempo_jugado"])
+	_check(meta["anio"] == "decimo" and int(meta["capitulo"]) == 1 and int(meta["nivel"]) == 1,
+		"y el año, capítulo y nivel (décimo, cap. %s, nivel %s)" % [meta["capitulo"], meta["nivel"]])
+	_check(int(meta["historia"]) == 4 and int(meta["educativo"]) > 0,
+		"y los porcentajes: historia %s %% (prólogo completo = 1 de 25) y educativo %s %%" % [meta["historia"], meta["educativo"]])
+	_check(meta["lugar"] == "Laboratorio", "y el lugar (%s)" % meta["lugar"])
+	world.new_world()
+	state.reset()
+	_check(world.world_seed != seed_value or world.visited.is_empty(), "otra partida cambia el mapa")
+	_check(saves.load_slot(1), "se vuelve a cargar")
+	_check(world.world_seed == seed_value and world.visited.has(&"entrada") and world.visited.has(&"laboratorio"),
+		"el mapa es el mismo: misma semilla (%d) y salas visitadas" % world.world_seed)
+	_check(is_equal_approx(state.play_time, 4321.0), "el tiempo jugado sigue desde donde estaba")
+	_check(state.current_masks < 0.0 and state.current_energy < 0.0, "al cargar, cristales y energía llenos (política de recursos)")
+	var body: Dictionary = SaveSerializer.unpack(FileAccess.get_file_as_string(saves.slot_path(1)))["body"]
+	_check(body["educativo"]["terminales"].has("pc_profesor_cuenta") and body["educativo"]["comandos"].has("ls -a"),
+		"lo educativo queda registrado (terminales resueltas y comandos)")
+	_check(body["mundo"]["semilla"] == str(seed_value), "la semilla va como texto (sin perder precisión)")
+
+
+## El tiempo jugado solo avanza dentro de una sala y sin pausa.
+func _test_play_time() -> void:
+	saves.load_slot(1)
+	change_scene_to_file(ENTRADA)
+	await _wait(0.4)
+	await _frames(20)
+	var before: float = state.play_time
+	var elapsed := 0.0
+	for i in 60:
+		await process_frame
+		elapsed += root.get_process_delta_time()
+	var playing: float = state.play_time - before
+	_check(elapsed > 0.0 and absf(playing - elapsed) < elapsed * 0.1, "jugando, el tiempo avanza al ritmo del juego (%.3f s de %.3f s)" % [playing, elapsed])
+	paused = true
+	before = state.play_time
+	for i in 30:
+		await process_frame
+	paused = false
+	_check(is_equal_approx(state.play_time, before), "en pausa no avanza")
 
 
 func _test_save_point() -> void:

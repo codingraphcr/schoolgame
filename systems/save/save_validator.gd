@@ -22,7 +22,25 @@ static func validate(body: Dictionary) -> String:
 		error = _location(body["ubicacion"])
 	if error.is_empty():
 		error = _state(body["estado"])
+	if error.is_empty():
+		error = _world(body["mundo"])
+	if error.is_empty():
+		for key in ["terminales", "desafios", "comandos"]:
+			if not is_id_list(body["educativo"].get(key, []), 64, " -"):
+				return "progreso educativo inválido"
 	return error
+
+
+## El mapa: la semilla va como texto con dígitos; las salas visitadas son ids.
+static func _world(world: Dictionary) -> String:
+	if world.is_empty():
+		return ""
+	var seed_text: Variant = world.get("semilla", "0")
+	if typeof(seed_text) != TYPE_STRING or not String(seed_text).is_valid_int() or String(seed_text).length() > 20:
+		return "semilla inválida"
+	if not is_int(world.get("generador", 1), 0, 1000) or not is_id_list(world.get("visitadas", []), 64):
+		return "mapa inválido"
+	return ""
 
 
 static func _meta(meta: Dictionary) -> String:
@@ -38,6 +56,8 @@ static func _meta(meta: Dictionary) -> String:
 		return "año, capítulo o nivel inválidos"
 	if not is_text(meta.get("lugar"), 60) or not is_text(meta.get("version_juego"), 20):
 		return "textos de la ranura inválidos"
+	if not is_int(meta.get("historia", 0), 0, 100) or not is_int(meta.get("educativo", 0), 0, 100):
+		return "porcentajes inválidos"
 	return ""
 
 
@@ -46,7 +66,9 @@ static func _location(location: Dictionary) -> String:
 	if typeof(scene) != TYPE_STRING or not String(scene).begins_with(SCENES_ROOT) or not String(scene).ends_with(".tscn") \
 			or String(scene).contains("..") or not ResourceLoader.exists(scene):
 		return "escena inválida"
-	if not is_id(location.get("punto"), 40):
+	# Vacío = el punto de aparición de la sala (p. ej. al empezar una partida).
+	var point: Variant = location.get("punto")
+	if not (typeof(point) == TYPE_STRING and String(point).is_empty()) and not is_id(point, 40):
 		return "punto de guardado inválido"
 	return ""
 

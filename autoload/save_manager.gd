@@ -42,11 +42,14 @@ var active_slot := 0
 var _meta := {}
 ## Campos del archivo que esta versión no conoce: se conservan al volver a guardar.
 var _extra := {}
-var _played_since := 0
+## Guardado automático (misiones, habilidades, recompensas, al salir).
+var auto_save: AutoSave
 
 
 func _ready() -> void:
-	_played_since = Time.get_ticks_msec()
+	auto_save = AutoSave.new()
+	auto_save.name = "AutoSave"
+	add_child(auto_save)
 	get_node("/root/IdentityManager").identity_changed.connect(_on_identity_changed)
 	migrate_legacy()
 
@@ -127,12 +130,14 @@ func last_slot() -> int:
 func new_game(slot: int) -> bool:
 	if not is_valid_slot(slot):
 		return false
+	auto_save.quiet(true)
 	get_node("/root/GameState").reset()
 	get_node("/root/DigitalVision").reset()
+	get_node("/root/World").new_world()
 	active_slot = slot
-	_meta = { "partida_id": Crypto.new().generate_random_bytes(16).hex_encode(), "revision": 0, "tiempo_jugado": 0 }
+	_meta = { "partida_id": Crypto.new().generate_random_bytes(16).hex_encode(), "revision": 0 }
 	_extra = {}
-	_played_since = Time.get_ticks_msec()
+	auto_save.quiet(false)
 	return true
 
 
@@ -143,21 +148,23 @@ func load_slot(slot: int) -> bool:
 		return false
 	var body: Dictionary = best["body"]
 	var game_state := get_node("/root/GameState")
+	auto_save.quiet(true)
 	game_state.reset()
 	game_state.from_dict(body["estado"])
+	# Política de recursos: al cargar, Kai aparece en su punto de guardado con los cristales y la
+	# energía llenos (como en un banco); no se restaura la vida exacta del momento.
+	game_state.current_masks = -1.0
+	game_state.current_energy = -1.0
+	get_node("/root/World").from_dict(body["mundo"])
 	get_node("/root/DigitalVision").reset()
 	active_slot = slot
-	_meta = {
-		"partida_id": body["meta"]["partida_id"],
-		"revision": int(body["meta"]["revision"]),
-		"tiempo_jugado": int(body["meta"]["tiempo_jugado"]),
-	}
+	_meta = { "partida_id": body["meta"]["partida_id"], "revision": int(body["meta"]["revision"]) }
 	_extra = {}
 	for key: String in body:
 		if not key in ["meta", "ubicacion", "estado", "mundo", "educativo"]:
 			_extra[key] = body[key]
-	_played_since = Time.get_ticks_msec()
 	_remember(slot, body["meta"])
+	auto_save.quiet(false)
 	return true
 
 
@@ -187,7 +194,6 @@ func save_game(scene_path: String, entry: StringName) -> bool:
 		save_failed.emit(active_slot, "escritura")
 		return false
 	_meta["revision"] = body["meta"]["revision"]
-	_meta["tiempo_jugado"] = body["meta"]["tiempo_jugado"]
 	_remember(active_slot, body["meta"])
 	saved.emit(active_slot)
 	slots_changed.emit()
@@ -197,26 +203,27 @@ func save_game(scene_path: String, entry: StringName) -> bool:
 ## Arma el cuerpo de la partida en juego (versión actual del formato).
 func build_body(scene_path: String, entry: StringName) -> Dictionary:
 	var game_state := get_node("/root/GameState")
-	var now := Time.get_ticks_msec()
-	var played := int(_meta.get("tiempo_jugado", 0)) + int((now - _played_since) / 1000)
-	_played_since = now - ((now - _played_since) % 1000)
+	var economy := get_node("/root/Economy")
+	var progress := ProgressTracker.summary(game_state, economy)
 	var body := {
 		"meta": {
 			"ranura": active_slot,
 			"partida_id": String(_meta.get("partida_id", Crypto.new().generate_random_bytes(16).hex_encode())),
 			"revision": int(_meta.get("revision", 0)) + 1,
 			"guardada": int(Time.get_unix_time_from_system()),
-			"tiempo_jugado": played,
+			"tiempo_jugado": int(game_state.play_time),
 			"version_juego": String(ProjectSettings.get_setting("application/config/version", "")),
 			"lugar": _place_name(),
-			"anio": "decimo",
-			"capitulo": 1 if game_state.has_flag(&"tutorial_terminado") else 0,
-			"nivel": 0,
+			"anio": progress["anio"],
+			"capitulo": progress["capitulo"],
+			"nivel": progress["nivel"],
+			"historia": progress["historia"],
+			"educativo": progress["educativo"],
 		},
 		"ubicacion": { "escena": scene_path, "punto": String(entry) },
 		"estado": game_state.to_dict(),
-		"mundo": {},
-		"educativo": {},
+		"mundo": get_node("/root/World").to_dict(),
+		"educativo": ProgressTracker.education(game_state, economy),
 	}
 	for key: String in _extra:
 		body[key] = _extra[key]

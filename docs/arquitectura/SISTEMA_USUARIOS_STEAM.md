@@ -1,7 +1,8 @@
 # Sistema de usuarios, perfiles y partidas (Steam)
 
-**Estado:** Fase 1 aprobada. **T1–T4 hechas** (13 de octubre de 2026): identidad de desarrollo, formato v2 con
-migración y 3 ranuras con escritura segura. Siguen T5–T11 (sección 14).
+**Estado:** Fase 1 aprobada. **T1–T6 hechas** (13 de octubre de 2026): identidad de desarrollo, formato v2 con
+migración, 3 ranuras con escritura segura, persistencia del mapa y del progreso, y guardado automático. Siguen
+T7–T11 (sección 14).
 **Fecha:** 13 de octubre de 2026. **Motor:** Godot 4.7.2 (GDScript). **Plataforma:** Steam para PC (Windows).
 
 ## 0. Decisión de plataforma
@@ -247,7 +248,34 @@ usuario de Steam, sin conexión, Auto-Cloud entre dos PC y conflictos.
 - **Menú (provisorio hasta T7):** CONTINUAR abre la última ranura usada; INICIAR empieza en la primera ranura vacía y,
   si las tres están ocupadas, avisa (nunca pisa una partida).
 - **Medido:** una partida pesa ~1,4 KB y guardar tarda ~30 ms.
-- Prueba: `tests/test_save.gd` (74 comprobaciones).
+- Prueba: `tests/test_save.gd`.
+
+**T5:**
+- `GameState.play_time`: avanza solo dentro de una sala (`Room._process`) y sin pausa; se guarda en el estado y en la
+  tarjeta (`tiempo_jugado`).
+- `systems/save/progress_tracker.gd` (`ProgressTracker`): año, capítulo y nivel (marcas `capitulo_N` y
+  `nivel_N_completado` que dejará el contenido; el prólogo cuenta por sus misiones), % de historia (prólogo + 24
+  niveles) y % educativo (terminales y desafíos resueltos sobre los que existen hoy). Van en `meta` (para las
+  tarjetas) y en la sección `educativo`.
+- `World.to_dict()/from_dict()`: semilla (como texto), versión del generador y salas visitadas. **Política:** los
+  distritos fijos se arman siempre con los datos actuales (una actualización puede sumar salas); lo procedural
+  (M4) usará la semilla y la versión del generador guardadas, así el mapa de una partida no cambia al actualizar.
+- **Política de recursos:** al cargar, Kai aparece en su punto de guardado con cristales y energía llenos.
+
+**T6:** `systems/save/auto_save.gd` (`AutoSave`, hijo de `SaveManager`: `SaveManager.auto_save`).
+- **Pide guardar** al avanzar un paso o una misión (señales de `GameState`; el cambio de capítulo llega por una
+  misión), al obtener una habilidad o mejora permanente (compara una foto de dash, doble salto, pared, Visión,
+  Nullblade, Aegis, Dominio, cristales y energía máximos), al cobrar una recompensa única (señal nueva
+  `Economy.reward_claimed`: terminales, desafíos, jefes, fragmentos) y al salir al menú con Esc (`save_now`).
+- **Solo si es seguro** (`is_safe()`): ranura activa, sala cargada, Kai vivo y sin reaparecer, en el suelo, con
+  control (sin diálogo ni cinemática), sin transición de escena (`SceneManager.is_changing()`), sin pausa y sin nada
+  en el grupo **`guardado_bloqueado`** (la pelea de la «Contraseña débil» se agrega mientras dura; la persecución
+  del capítulo 1 deberá hacer lo mismo). Si no es seguro, el pedido queda pendiente y se reintenta cada 0,5 s.
+- **Punto de reaparición** (`Room.save_point_id()`): la computadora segura activa o la entrada por la que llegó Kai
+  (`Room.arrival_entry`); vacío = el punto de aparición de la sala. Nunca la posición exacta.
+- Cargar o empezar una partida no dispara guardados (`quiet`). El guardado automático no muestra aviso todavía:
+  los indicadores llegan con el menú (T7).
+- Prueba: `tests/test_autosave.gd`.
 
 ## 13. Lo que se descarta (exploración del 13 de octubre)
 
@@ -264,8 +292,8 @@ rankings), que se diseñaría por separado.
 | T2 ✅ | 2 | `IdentityManager` (clase `PlayerIdentity`) + `DevelopmentIdentityProvider` y carpetas por identidad |
 | T3 ✅ | 2 | Formato v2: `SaveSerializer`, `SaveValidator` e integridad; `SaveMigrator` (v1 → v2) |
 | T4 ✅ | 2 | 3 ranuras en `SaveManager`: escritura segura, respaldo, recuperación tras corte, estados de la tarjeta |
-| T5 | 3 | Contratos de persistencia: mundo (semilla, grafo, salas), tiempo jugado, año/capítulo/nivel, educativo |
-| T6 | 3 | Guardado automático y reglas de «es seguro guardar» |
+| T5 ✅ | 3 | Contratos de persistencia: mundo (semilla, generador, salas visitadas), tiempo jugado, año/capítulo/nivel, % historia y educativo |
+| T6 ✅ | 3 | Guardado automático y reglas de «es seguro guardar» |
 | T7 | 4 | Menú principal nuevo y selección de partida (3 tarjetas, confirmaciones, indicadores) |
 | T8 | 4 | Mi perfil |
 | T9 | 5 | Instalar GodotSteam (con permiso) y `SteamIdentityProvider` con la API verificada |

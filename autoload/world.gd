@@ -2,7 +2,12 @@ extends Node
 ## El mapa del mundo: los grafos de los distritos (RoomGraph) y en qué sala está Kai.
 ##
 ## Hoy cada distrito es fijo (DistrictLayout en data/world/districts/); más adelante el generador
-## (M4) armará la parte variable y la partida guardará el grafo (M6).
+## (M4) armará la parte variable a partir de world_seed.
+##
+## Lo que se guarda en la partida (to_dict / from_dict): la semilla, la versión del generador y las
+## salas visitadas. Política: los distritos fijos se arman siempre desde los datos actuales (así una
+## actualización puede sumar salas); lo procedural se arma con la semilla y la versión del generador
+## guardadas, para que una partida existente no cambie de mapa al actualizar el juego.
 ##
 ## Las salas (Room) avisan al entrar con enter(); las salidas (RoomExit) preguntan a dónde lleva su
 ## puerta con destination(). Si una sala o una puerta no está en el mapa, siguen funcionando como
@@ -14,12 +19,20 @@ signal room_entered(room_id: StringName, district_id: StringName)
 
 const ROOMS_FOLDER := "res://data/world/rooms"
 const DISTRICTS_FOLDER := "res://data/world/districts"
+## Versión del generador del mapa. Si cambia el algoritmo, sube; las partidas guardan la suya.
+const GENERATOR_VERSION := 1
 
 var templates: Dictionary[StringName, RoomTemplate] = {}
 ## district_id → RoomGraph
 var districts: Dictionary[StringName, RoomGraph] = {}
 var current_room: StringName = &""
 var current_district: StringName = &""
+## Semilla del mapa de esta partida (la usará el generador, M4).
+var world_seed := 0
+## Versión del generador con la que se creó el mapa de esta partida.
+var generator_version := GENERATOR_VERSION
+## Salas donde estuvo Kai en esta partida.
+var visited: Dictionary[StringName, bool] = {}
 
 ## room_id → district_id
 var _room_district: Dictionary[StringName, StringName] = {}
@@ -45,6 +58,39 @@ func reset() -> void:
 		var graph := layout.build(templates)
 		if graph:
 			_add_district(graph)
+
+
+## Mapa de una partida nueva: otra semilla y ninguna sala visitada.
+func new_world(seed_value := -1) -> void:
+	reset()
+	world_seed = seed_value if seed_value >= 0 else int(Crypto.new().generate_random_bytes(4).decode_u32(0) & 0x7fffffff)
+	generator_version = GENERATOR_VERSION
+	visited.clear()
+
+
+## Lo que se guarda del mapa. La semilla va como texto (el JSON de Godot pierde precisión en
+## números grandes).
+func to_dict() -> Dictionary:
+	var rooms: Array[String] = []
+	for room_id: StringName in visited:
+		rooms.append(String(room_id))
+	rooms.sort()
+	return { "generador": generator_version, "semilla": str(world_seed), "visitadas": rooms }
+
+
+## Restaura el mapa de una partida guardada. Sin datos (partidas viejas), crea una semilla nueva.
+func from_dict(data: Dictionary) -> void:
+	reset()
+	visited.clear()
+	var seed_text := String(data.get("semilla", ""))
+	if seed_text.is_valid_int():
+		world_seed = int(seed_text)
+		generator_version = int(data.get("generador", GENERATOR_VERSION))
+	else:
+		new_world()
+	for room_id: Variant in data.get("visitadas", []):
+		if typeof(room_id) == TYPE_STRING and _room_district.has(StringName(room_id)):
+			visited[StringName(room_id)] = true
 
 
 func graph(district_id: StringName) -> RoomGraph:
@@ -84,6 +130,7 @@ func enter(scene_path: String, hint: StringName = &"") -> StringName:
 	current_room = room_id
 	current_district = district_of(room_id)
 	if room_id != &"":
+		visited[room_id] = true
 		room_entered.emit(room_id, current_district)
 	return room_id
 

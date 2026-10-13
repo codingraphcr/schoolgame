@@ -31,6 +31,11 @@ func _ready() -> void:
 	add_child(_fade_rect)
 
 
+## Si hay un cambio de escena en curso (no se guarda la partida a mitad de una transición).
+func is_changing() -> bool:
+	return _is_changing
+
+
 ## Cambia a la escena indicada. Ignora nuevas peticiones mientras hay una transición en curso.
 func change_scene(scene_path: String) -> void:
 	if _is_changing:
