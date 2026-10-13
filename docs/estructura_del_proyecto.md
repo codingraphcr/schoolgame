@@ -68,7 +68,7 @@ flowchart TB
 
 ```
 schoolgame/
-├── autoload/          Las 6 piezas globales (SceneManager, GameState, DigitalVision, Economy, SaveManager, World)
+├── autoload/          Las 7 piezas globales (SceneManager, GameState, DigitalVision, Economy, IdentityManager, SaveManager, World)
 ├── characters/        Personajes
 │   ├── player/          Kai: movimiento, daño, combate, curación, sonidos y su dibujo (kai/)
 │   ├── enemies/         EnemyBase y cada enemigo (weak_password/ = la «Contraseña débil»)
@@ -121,7 +121,8 @@ schoolgame/
 | Pieza | Tipo | Qué hace |
 |---|---|---|
 | `SceneManager` | Autoload | Cambia de sala con transición, recuerda por qué entrada se llega (`go_to_room`) |
-| `SaveManager` | Autoload | Guarda y continúa la partida (archivo con copia de respaldo); se guarda en las computadoras seguras |
+| `IdentityManager` | Autoload | Quién juega (Steam más adelante; hoy identidad de desarrollo) y su carpeta de partidas |
+| `SaveManager` | Autoload | 3 ranuras de partida por identidad (escritura segura, respaldo, migración); se guarda en las computadoras seguras |
 | `World` | Autoload | El mapa: los grafos de los distritos y en qué sala está Kai; dice a dónde lleva cada puerta |
 | `Economy` | Autoload | Saldo de **Ecos** (la moneda): sumar, gastar, si alcanza y la penalización al morir (10 %, máx. 100, nada en el tutorial) |
 | `GameState` | Autoload | Todo el progreso: misiones, cristales, energía, habilidades, etapas de Nullblade/Aegis/Dominio, comandos aprendidos, marcas de la historia, incidentes. Sabe convertirse a datos para guardar (`to_dict` / `from_dict`) |

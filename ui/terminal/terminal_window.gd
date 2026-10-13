@@ -289,6 +289,7 @@ func _build() -> void:
 	_line.placeholder_text = "escribe un comando y pulsa Enter"
 	_line.caret_blink = true
 	_line.context_menu_enabled = false
+	_line.max_length = CommandInterpreter.MAX_LINE
 	_line.add_theme_font_override("font", font)
 	_line.add_theme_font_size_override("font_size", FONT_SIZE)
 	var input_style := StyleBoxFlat.new()
@@ -317,9 +318,12 @@ func _build() -> void:
 	_quick_row = HBoxContainer.new()
 	_quick_row.add_theme_constant_override("separation", 8)
 	buttons.add_child(_quick_row)
+	# Solo los comandos que esta terminal permite.
 	for quick: Array in QUICK:
+		if not interpreter.is_available(String(quick[1]).trim_suffix("⏎").get_slice(" ", 0)):
+			continue
 		_quick_row.add_child(_button(quick[0], _on_quick.bind(quick[1]), font))
-		if quick[0] == "ls" and not challenge.protected_folder.is_empty():
+		if quick[0] == "ls" and interpreter.is_option_allowed("ls", "a") and not interpreter.allowed.is_empty():
 			_quick_row.add_child(_button("ls -a", _on_quick.bind("ls -a⏎"), font))
 	_quick_row.add_child(_button("Tab: completar", func() -> void:
 		_line.text = interpreter.complete(_line.text)
