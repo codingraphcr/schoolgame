@@ -406,7 +406,7 @@ character = "f3"
 mode = 4
 
 [node name="ChicoCharla" type="Node2D" parent="Gente"]
-position = Vector2(548, 304)
+position = Vector2(268, 304)
 script = ExtResource("29_bgnpc")
 character = "m1"
 mode = 2
@@ -414,7 +414,7 @@ partner = NodePath("../ChicoAudifonos")
 chat_offset = 2.0
 
 [node name="ChicoAudifonos" type="Node2D" parent="Gente"]
-position = Vector2(573, 304)
+position = Vector2(292, 304)
 script = ExtResource("29_bgnpc")
 character = "x2"
 mode = 2
@@ -423,13 +423,13 @@ talks_first = false
 chat_offset = 2.0
 
 [node name="Profesora" type="Node2D" parent="Gente"]
-position = Vector2(300, 304)
+position = Vector2(575, 304)
 script = ExtResource("29_bgnpc")
 character = "pf"
 mode = 1
 facing = -1
 walk_left = -45.0
-walk_right = 50.0
+walk_right = 45.0
 
 [node name="Npcs" type="Node2D" parent="." unique_id=1595665627]
 
