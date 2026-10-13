@@ -14,15 +14,18 @@ const TERMINALS_FOLDER := "res://data/terminals"
 const CHALLENGES_FOLDER := "res://data/challenges"
 
 
-## { anio, capitulo, nivel, historia, educativo } (historia y educativo: 0–100).
-static func summary(game_state: Node, economy: Node) -> Dictionary:
-	var chapter := 0
+## Capítulo en curso: 0 = prólogo; 1 al terminar «EL DESPERTAR» (tutorial_terminado); después, el
+## último «capitulo_N». El mapa se abre según esto (World.lock_reason()).
+static func chapter(game_state: Node) -> int:
 	for n in range(12, 0, -1):
 		if game_state.has_flag(StringName("capitulo_%d" % n)):
-			chapter = n
-			break
-	if chapter == 0 and game_state.has_flag(&"tutorial_terminado"):
-		chapter = 1
+			return n
+	return 1 if game_state.has_flag(&"tutorial_terminado") else 0
+
+
+## { anio, capitulo, nivel, historia, educativo } (historia y educativo: 0–100).
+static func summary(game_state: Node, economy: Node) -> Dictionary:
+	var chapter := chapter(game_state)
 	var levels_done := 0
 	for n in range(1, TOTAL_LEVELS + 1):
 		if game_state.has_flag(StringName("nivel_%d_completado" % n)):

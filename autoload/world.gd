@@ -148,6 +148,17 @@ func destination(room_id: StringName, door_id: StringName) -> Dictionary:
 	return { "room": target_room, "scene": scene_of(target_room), "entry": spec.entry_id }
 
 
+## Por qué todavía no se puede entrar a una sala ("" = se puede). El mapa se abre por capítulos:
+## una sala con chapter_requirement N se abre al llegar al capítulo N (ProgressTracker.chapter()).
+func lock_reason(room_id: StringName) -> String:
+	var template := template_of(room_id)
+	if template == null or template.chapter_requirement <= 0:
+		return ""
+	if ProgressTracker.chapter(get_node("/root/GameState")) >= template.chapter_requirement:
+		return ""
+	return "Por ahora no se puede pasar por aquí. (Se abre en el Capítulo %d)" % template.chapter_requirement
+
+
 func _add_district(district: RoomGraph) -> void:
 	for room_id: StringName in district.rooms:
 		if _room_district.has(room_id):

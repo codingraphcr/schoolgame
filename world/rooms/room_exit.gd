@@ -28,13 +28,36 @@ func _ready() -> void:
 
 ## A dónde lleva: { "scene", "entry", "room" } (room vacío si no viene del mapa).
 func resolve() -> Dictionary:
-	var room := _room()
-	var world := get_node_or_null("/root/World")
-	if world and room and room.room_id != &"" and door_id != &"":
-		var target: Dictionary = world.destination(room.room_id, door_id)
+	return destination_of(self, door_id, target_scene, target_entry)
+
+
+## A dónde lleva la puerta door_id de la sala donde está node: lo que diga el mapa (World) o, si no
+## lo sabe, el respaldo. También lo usan las escaleras (Stairway).
+static func destination_of(node: Node, door: StringName, fallback_scene: String, fallback_entry: StringName) -> Dictionary:
+	var room := _room_of(node)
+	var world := node.get_node_or_null("/root/World")
+	if world and room and room.room_id != &"" and door != &"":
+		var target: Dictionary = world.destination(room.room_id, door)
 		if not target.is_empty():
 			return target
-	return { "scene": target_scene, "entry": target_entry, "room": &"" }
+	return { "scene": fallback_scene, "entry": fallback_entry, "room": &"" }
+
+
+## Lleva a Kai por esa puerta. false si no lleva a ningún lado o si la sala de destino todavía está
+## cerrada (es de un capítulo que no empezó: avisa por qué).
+static func travel(node: Node, player: Player, door: StringName, fallback_scene: String, fallback_entry: StringName) -> bool:
+	var target := destination_of(node, door, fallback_scene, fallback_entry)
+	if String(target["scene"]).is_empty():
+		return false
+	var world := node.get_node_or_null("/root/World")
+	if world and target["room"] != &"":
+		var reason: String = world.lock_reason(target["room"])
+		if not reason.is_empty():
+			node.get_tree().call_group(&"toast", &"show_message", reason, 2.5)
+			return false
+	player.controls_locked = true
+	node.get_node("/root/SceneManager").go_to_room(target["scene"], target["entry"], target["room"])
+	return true
 
 
 ## Si se puede pasar (no pide misión, o la misión ya llegó a ese paso).
@@ -51,16 +74,11 @@ func _on_body_entered(body: Node) -> void:
 		if not locked_message.is_empty():
 			get_tree().call_group(&"toast", &"show_message", locked_message, 2.5)
 		return
-	var target := resolve()
-	if String(target["scene"]).is_empty():
-		return
-	_used = true
-	(body as Player).controls_locked = true
-	get_node("/root/SceneManager").go_to_room(target["scene"], target["entry"], target["room"])
+	_used = travel(self, body as Player, door_id, target_scene, target_entry)
 
 
-func _room() -> Room:
-	var node := get_parent()
-	while node and not node is Room:
-		node = node.get_parent()
-	return node as Room
+static func _room_of(node: Node) -> Room:
+	var parent := node.get_parent()
+	while parent and not parent is Room:
+		parent = parent.get_parent()
+	return parent as Room

@@ -519,9 +519,26 @@ Plan aprobado del mapa 2D semi-procedural, tareas **M1–M8**. **M1 (hecho): el 
   `target_scene` / `target_entry`, que quedan como respaldo. `test_world` comprueba que ambos coinciden.
 - Las marcas `visitada_<escena>` siguen igual (las usa el mapa del Grimorio hasta M5).
 
-**M3 (en curso, junto con H5):** ✅ Pasillo y Laboratorio son dos salas. ✅ **Pasillo viejo** (`pasillo_viejo.tscn`,
+**M3 (hecho, junto con H5):** ✅ Pasillo y Laboratorio son dos salas. ✅ **Pasillo viejo** (`pasillo_viejo.tscn`,
 960 px, 2 celdas): al fondo del Laboratorio, con las baldosas y objetos de Ariel más oscuros y arte provisional por
-código (`old_hallway_props.gd`: cajas, sillas, telarañas, la puerta «LAB 2» con cinta). Sigue el cuarto viejo.
+código (`old_hallway_props.gd`: cajas, sillas, telarañas, la puerta «LAB 2» con cinta). ✅ Cuarto viejo (H5).
+✅ **Escaleras y biblioteca** (arte provisional por código, hasta que Ariel las dibuje):
+
+- **`Stairway`** (`world/rooms/stairway.gd`): una escalera entre pisos. Es como una salida (`door_id`, respaldo
+  `target_scene` / `target_entry`), pero se usa con **E** («E: subir» / «E: bajar») y se dibuja sola (el hueco con los
+  escalones y un cartel). `RoomExit.destination_of()` y `RoomExit.travel()` son comunes a las dos.
+- **Escaleras** (`escaleras.tscn`, ficha `escaleras`: tipo `stairs`, 1 × 2 celdas, 640 px de ancho): se entra desde la
+  escalera del **Pasillo** (puerta `escalera`, clase escalera, hacia arriba). Kai sube saltando de descanso en descanso
+  (plataformas de un solo sentido, 58–62 px de alto: alcanza el salto simple) y arriba sale a la biblioteca. Arte:
+  `stairs_props.gd` (descansos, tramos, baranda, ventanas, carteles «1° PISO» y «2° PISO · BIBLIOTECA»).
+- **Biblioteca** (`biblioteca.tscn`, ficha `biblioteca`: tipo `library`, 2 × 1 celdas): estanterías con libros (las
+  bajas sirven de plataforma), mesas de lectura, el mostrador con una computadora y una ventana grande
+  (`library_props.gd`). Todavía no tiene contenido de historia: lo pondrá el Capítulo 1 (consultar la Biblia).
+- En el mapa del Colegio: Pasillo (1,0) ↑ Escaleras (1,−2)–(1,−1) → Biblioteca (2,−2)–(3,−2).
+- **El mapa se abre por capítulos:** `RoomTemplate.chapter_requirement` ya se usa. `World.lock_reason(sala)` dice por
+  qué no se puede entrar todavía; el capítulo actual sale de `ProgressTracker.chapter()` (0 = prólogo, 1 desde
+  `tutorial_terminado`, después la última marca `capitulo_N`). Las escaleras y la biblioteca piden el Capítulo 1: en el
+  prólogo la escalera del Pasillo avisa «Por ahora no se puede pasar por aquí. (Se abre en el Capítulo 1)».
 
 **H5 · El cuarto viejo** (misión `cuarto_viejo`, empieza sola al terminar `contrasena_profesor`):
 1. `hablar_profesor`: el profesor invita a Kai al pasillo viejo (`profesor_invitacion.tres`). Cuidado con la Biblia:
@@ -677,9 +694,12 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
 | `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (el armario pide el doble salto) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
-| `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
+| `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas (y las escaleras) coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
+| `test_biblioteca.gd` | M3: escaleras y biblioteca en el mapa, cerradas hasta el Capítulo 1, Kai sube los descansos con la física real y sin doble salto, ida y vuelta entre Pasillo, escaleras y biblioteca, estanterías como plataforma y continuar una partida guardada en la biblioteca |
 | `test_autosave.gd` | Guardado automático: al avanzar una misión, al obtener una habilidad, al cobrar una recompensa y al salir; nunca sin control, en el aire, en una pelea o en una transición |
 | `test_slot_select.gd` | Selección de partida: tarjetas con resumen y estado, cargar solo lo usable, sobrescribir con confirmación, borrar con doble confirmación, posible conflicto y el indicador de guardado |
+| `test_profile.gd` | Mi perfil: tiempo total de las ranuras, partida más reciente, habilidades, estadísticas educativas, sin ids ni datos privados, y el botón del menú |
+| `test_hardening.gd` | Endurecimiento: mudanza a la carpeta propia sin pisar ni borrar, 150 guardados seguidos, temporal viejo, cambio de identidad en plena partida, tamaño y tiempos de una partida grande |
 | `test_save.gd` | Guardar y continuar (todo el progreso), escritura segura con copia, archivos dañados o inválidos, la computadora segura (punto de control al pasar; con E guarda y cura) y CONTINUAR en el menú |
 | `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |
 | `test_ecos.gd` | Reparto en fragmentos, Ecos según la fuerza del enemigo, desintegración, rebote, recoger al acercarse, HUD, página del Grimorio, cofre (una sola vez y queda abierto) y recompensa de misión |

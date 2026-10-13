@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_qv00d"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_r22xb"]
+
+[sub_resource type="Resource" id="Resource_a2jjh"]
+script = ExtResource("1_qv00d")
+id = &"oeste"
+side = 0
+kind = 1
+entry_id = &"desde_escaleras"
+
+[resource]
+script = ExtResource("2_r22xb")
+id = &"biblioteca"
+display_name = "Biblioteca"
+scene_path = "res://world/zones/zone0/biblioteca.tscn"
+room_type = &"library"
+size_cells = Vector2i(2, 1)
+doors = Array[ExtResource("1_qv00d")]([SubResource("Resource_a2jjh")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 1
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray()
