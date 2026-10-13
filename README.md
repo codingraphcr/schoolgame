@@ -61,6 +61,7 @@ godot --headless --path . --script res://tests/test_custom_password.gd
 godot --headless --path . --script res://tests/test_economy.gd
 godot --headless --path . --script res://tests/test_save.gd
 godot --headless --path . --script res://tests/test_autosave.gd
+godot --headless --path . --script res://tests/test_slot_select.gd
 godot --headless --path . --script res://tests/test_room_graph.gd
 godot --headless --path . --script res://tests/test_world.gd
 godot --headless --path . --script res://tests/test_cuarto_viejo.gd

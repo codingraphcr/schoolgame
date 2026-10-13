@@ -31,7 +31,14 @@ func _run() -> void:
 	await _wait(1.0)
 	_expect_scene("MainMenu")
 
+	_check(not current_scene.get_node("%LoadButton").visible, "sin partidas no aparece CARGAR PARTIDA")
 	_press("PlayButton")
+	await _wait(0.2)
+	var slots := current_scene.get_node_or_null("SlotSelect") as SlotSelect
+	_check(slots != null and slots.mode == SlotSelect.Mode.NEW and not current_scene.get_node("%Buttons").visible,
+		"NUEVA PARTIDA abre la selección de ranuras")
+	if slots:
+		slots.pick(1)
 	await _wait(1.0)
 	_expect_not_scene("MainMenu")
 

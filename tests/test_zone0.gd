@@ -26,6 +26,8 @@ func _run() -> void:
 	change_scene_to_file(MENU)
 	await _frames(20)
 	current_scene.get_node("%PlayButton").pressed.emit()
+	await process_frame
+	(current_scene.get_node("SlotSelect") as SlotSelect).pick(1)
 	await create_timer(1.2, true, false, true).timeout
 	var room := current_scene as Room
 	_check(room != null and room.name == "Entrada", "Jugar abre la Entrada del colegio")

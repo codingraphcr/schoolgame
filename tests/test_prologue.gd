@@ -28,6 +28,8 @@ func _run() -> void:
 	change_scene_to_file(MENU)
 	await _frames(20)
 	current_scene.get_node("%PlayButton").pressed.emit()
+	await process_frame
+	(current_scene.get_node("SlotSelect") as SlotSelect).pick(1)
 	await _wait(1.2)
 	_check(state.get_current_step(&"prologo") == &"hablar_profesor", "Jugar empieza el prólogo")
 	var objective: Label = current_scene.get_node("CombatHUD/Objective")._text

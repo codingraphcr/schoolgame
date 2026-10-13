@@ -1,8 +1,8 @@
 # Sistema de usuarios, perfiles y partidas (Steam)
 
-**Estado:** Fase 1 aprobada. **T1–T6 hechas** (13 de octubre de 2026): identidad de desarrollo, formato v2 con
-migración, 3 ranuras con escritura segura, persistencia del mapa y del progreso, y guardado automático. Siguen
-T7–T11 (sección 14).
+**Estado:** Fase 1 aprobada. **T1–T7 hechas** (13 de octubre de 2026): identidad de desarrollo, formato v2 con
+migración, 3 ranuras con escritura segura, persistencia del mapa y del progreso, guardado automático y el menú
+con la selección de partida. Siguen T8–T11 (sección 14).
 **Fecha:** 13 de octubre de 2026. **Motor:** Godot 4.7.2 (GDScript). **Plataforma:** Steam para PC (Windows).
 
 ## 0. Decisión de plataforma
@@ -277,6 +277,19 @@ usuario de Steam, sin conexión, Auto-Cloud entre dos PC y conflictos.
   los indicadores llegan con el menú (T7).
 - Prueba: `tests/test_autosave.gd`.
 
+**T7:**
+- **Menú principal:** Continuar (la última ranura usada) · Nueva partida · Cargar partida · Opciones · Salir; abajo,
+  «Jugador: …» (hoy «Desarrollo (sin Steam)») y Créditos junto a la versión. «Mi perfil» llega con T8.
+- **Selección de partida** (`ui/menus/slots/slot_select.gd`, `SlotSelect`): 3 tarjetas con año, capítulo y nivel (o
+  «Prólogo»), lugar, tiempo jugado (hh:mm:ss), fecha del último guardado y estado (correcta, recuperada desde el
+  respaldo, dañada, de una versión más nueva). Nueva partida en una ranura ocupada pide confirmación; borrar pide
+  doble confirmación; una partida en posible conflicto avisa y pregunta antes de cargar. Flechas, Enter y Esc.
+- **Indicador de guardado** en el HUD (`ui/hud/save_indicator.gd`): «✔ Partida guardada» o «✘ Error al guardar».
+  Nunca dice nada de la nube.
+- **Las pruebas automáticas nunca tocan las partidas reales:** con `--script`, `IdentityManager` usa
+  `user://pruebas_partidas` (se vacía al empezar) y `SaveManager` no migra la partida vieja real.
+- Prueba: `tests/test_slot_select.gd`.
+
 ## 13. Lo que se descarta (exploración del 13 de octubre)
 
 Las cuentas con servidor propio (`server/`, `Profiles` en línea, `ApiClient`, `LocalServer`, `LoginPanel`,
@@ -294,7 +307,7 @@ rankings), que se diseñaría por separado.
 | T4 ✅ | 2 | 3 ranuras en `SaveManager`: escritura segura, respaldo, recuperación tras corte, estados de la tarjeta |
 | T5 ✅ | 3 | Contratos de persistencia: mundo (semilla, generador, salas visitadas), tiempo jugado, año/capítulo/nivel, % historia y educativo |
 | T6 ✅ | 3 | Guardado automático y reglas de «es seguro guardar» |
-| T7 | 4 | Menú principal nuevo y selección de partida (3 tarjetas, confirmaciones, indicadores) |
+| T7 ✅ | 4 | Menú principal nuevo y selección de partida (3 tarjetas, confirmaciones, indicadores) |
 | T8 | 4 | Mi perfil |
 | T9 | 5 | Instalar GodotSteam (con permiso) y `SteamIdentityProvider` con la API verificada |
 | T10 | 6 | Auto-Cloud en Steamworks y pruebas entre dos PC (cuando haya acceso) |

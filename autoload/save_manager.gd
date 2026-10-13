@@ -47,6 +47,9 @@ var auto_save: AutoSave
 
 
 func _ready() -> void:
+	# En las pruebas automáticas nunca se migra la partida vieja real del equipo.
+	if PlayerIdentity.is_test_run():
+		legacy_path = "user://pruebas_partida_vieja.json"
 	auto_save = AutoSave.new()
 	auto_save.name = "AutoSave"
 	add_child(auto_save)
