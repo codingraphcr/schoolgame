@@ -184,7 +184,7 @@ func continue_game(slot := 0) -> bool:
 	if not is_valid_slot(slot) or not load_slot(slot):
 		return false
 	var location: Dictionary = _best(slot)["body"]["ubicacion"]
-	get_node("/root/SceneManager").go_to_room(location["escena"], StringName(location["punto"]))
+	get_node("/root/SceneManager").go_to_room(location["escena"], StringName(location["punto"]), StringName(location.get("sala", "")))
 	return true
 
 
@@ -229,7 +229,8 @@ func build_body(scene_path: String, entry: StringName) -> Dictionary:
 			"historia": progress["historia"],
 			"educativo": progress["educativo"],
 		},
-		"ubicacion": { "escena": scene_path, "punto": String(entry) },
+		# sala: el room_id del mapa (una sala opcional puede repetir escena, p. ej. dos aulas).
+		"ubicacion": { "escena": scene_path, "punto": String(entry), "sala": String(get_node("/root/World").current_room) },
 		"estado": game_state.to_dict(),
 		"mundo": get_node("/root/World").to_dict(),
 		"educativo": ProgressTracker.education(game_state, economy),

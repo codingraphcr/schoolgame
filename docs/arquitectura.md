@@ -540,6 +540,33 @@ código (`old_hallway_props.gd`: cajas, sillas, telarañas, la puerta «LAB 2» 
   `tutorial_terminado`, después la última marca `capitulo_N`). Las escaleras y la biblioteca piden el Capítulo 1: en el
   prólogo la escalera del Pasillo avisa «Por ahora no se puede pasar por aquí. (Se abre en el Capítulo 1)».
 
+**M4 (hecho): el generador, fases A–C y F** (`systems/world/district_generator.gd`, `DistrictGenerator`).
+
+- **A · Estructura fija:** las salas y conexiones del `DistrictLayout`, tal cual.
+- **B · Conectividad:** desde la sala de inicio se llega a todas las salas; las del prólogo (capítulo 0), sin
+  habilidades.
+- **C · Salas opcionales:** de las puertas que quedan libres se cuelgan salas de la biblioteca de plantillas (fichas
+  `fixed = false`, no secretas, del mismo distrito, `generation_weight` > 0), elegidas al azar según su peso, sin chocar
+  y solo entre puertas enfrentadas y compatibles. Una opcional puede abrir otra, hasta `DistrictLayout.optional_rooms`.
+  Los ids son `<ficha>_<n>` (p. ej. `aula_1`, `aula_2`: la misma escena, dos salas distintas del mapa).
+- **F · Validación:** conexiones, compatibilidad y vecindad de puertas, salas alcanzables, prólogo sin habilidades,
+  escena y punto de aparición de cada puerta usada, opcionales a 3 puertas como mucho de una obligatoria. Si falla, se
+  rearma solo la parte variable (hasta 8 tiradas); la fija nunca se toca. Si se agotan, queda solo la parte fija (la
+  distribución de respaldo). Si la parte fija está mal, el distrito no se arma (error de datos).
+- **Determinista:** `RandomNumberGenerator` con la semilla `hash("semilla|distrito|versión")`. `World.reset()` arma cada
+  distrito con `World.world_seed`; `new_world()` y `from_dict()` fijan la semilla antes de armar. Misma semilla y misma
+  versión = mismo mapa (también al cargar la partida). D (secretos) y E (contenido) llegan después.
+- **Colegio:** `optional_rooms = 2`. La biblioteca tiene una puerta libre al este; ahí el generador cuelga un **aula**
+  (`aula.tscn`, puertas oeste y este, peso 2: puede seguir otra sala) o un **depósito** (`deposito.tscn`, solo oeste,
+  peso 1, con cajas que sirven de plataforma). Resultados posibles: aula → aula, aula → depósito o depósito. Arte
+  provisional: `classroom_props.gd` y `storage_props.gd`. Ambas piden el Capítulo 1.
+- Una puerta que el generador deja libre queda **cerrada** (`RoomExit.closed_message`: «La puerta está cerrada.»).
+  Las salidas hacia salas opcionales no tienen respaldo (`target_scene` vacío): solo el mapa sabe a dónde llevan.
+- **La partida guarda la sala del mapa** (`ubicacion.sala`), porque dos salas pueden usar la misma escena; al continuar
+  se vuelve a esa sala. Las partidas anteriores no la tienen (se busca por la escena, como antes).
+- Pendiente (M6): guardar el grafo armado en la partida, para que sumar fichas nuevas en una actualización no cambie el
+  mapa de una partida existente (hoy el mapa sale de la semilla y de las fichas actuales).
+
 **H5 · El cuarto viejo** (misión `cuarto_viejo`, empieza sola al terminar `contrasena_profesor`):
 1. `hablar_profesor`: el profesor invita a Kai al pasillo viejo (`profesor_invitacion.tres`). Cuidado con la Biblia:
    no explica qué hay en el cuarto ni el origen de la Nullblade o del Grimorio.
@@ -695,6 +722,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
 | `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (el armario pide el doble salto) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
 | `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas (y las escaleras) coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
+| `test_generador.gd` | M4: con fichas de prueba, la parte fija intacta, misma semilla = mismo mapa, 40 semillas válidas y distintas, solo puertas compatibles, respaldo si la parte variable no valida y error si la fija está mal; con los datos reales, aula o depósito al este de la biblioteca, el mapa se rearma igual al cargar, dos aulas con la misma escena, la puerta libre cerrada y continuar en la misma aula |
 | `test_biblioteca.gd` | M3: escaleras y biblioteca en el mapa, cerradas hasta el Capítulo 1, Kai sube los descansos con la física real y sin doble salto, ida y vuelta entre Pasillo, escaleras y biblioteca, estanterías como plataforma y continuar una partida guardada en la biblioteca |
 | `test_autosave.gd` | Guardado automático: al avanzar una misión, al obtener una habilidad, al cobrar una recompensa y al salir; nunca sin control, en el aire, en una pelea o en una transición |
 | `test_slot_select.gd` | Selección de partida: tarjetas con resumen y estado, cargar solo lo usable, sobrescribir con confirmación, borrar con doble confirmación, posible conflicto y el indicador de guardado |

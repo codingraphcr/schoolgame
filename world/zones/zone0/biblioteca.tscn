@@ -39,6 +39,9 @@ size = Vector2(80, 8)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_odpsf"]
 size = Vector2(12, 256)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ettuj"]
+size = Vector2(12, 256)
+
 [node name="Biblioteca" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
 script = ExtResource("1_ettuj")
@@ -62,8 +65,9 @@ tile_set = ExtResource("2_ponvu")
 [node name="Props" type="Node2D" parent="." unique_id=1358571015]
 script = ExtResource("3_f23xm")
 shelves = Array[Rect2]([Rect2(150, 240, 90, 64), Rect2(250, 208, 70, 96), Rect2(560, 224, 100, 80), Rect2(680, 192, 80, 112)])
-tables = Array[float]([410.0, 820.0])
-counter = Rect2(872, 268, 72, 36)
+tables = Array[float]([410.0, 770.0])
+counter = Rect2(836, 268, 72, 36)
+doors = Array[float]([944.0])
 
 [node name="Collisions" type="StaticBody2D" parent="." unique_id=295226447]
 collision_mask = 0
@@ -229,6 +233,12 @@ position = Vector2(40, 304)
 script = ExtResource("13_okeg1")
 id = &"desde_escaleras"
 
+[node name="FromEste" type="Marker2D" parent="Entries" unique_id=2142977847]
+position = Vector2(912, 304)
+script = ExtResource("13_okeg1")
+id = &"desde_este"
+facing = -1
+
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 
 [node name="ToEscaleras" type="Area2D" parent="Exits" unique_id=1554206632]
@@ -240,3 +250,11 @@ target_entry = &"desde_biblioteca"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToEscaleras" unique_id=1946857122]
 shape = SubResource("RectangleShape2D_odpsf")
+
+[node name="ToEste" type="Area2D" parent="Exits" unique_id=626312397]
+position = Vector2(954, 176)
+script = ExtResource("14_7qgb7")
+door_id = &"este"
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToEste" unique_id=727380059]
+shape = SubResource("RectangleShape2D_ettuj")

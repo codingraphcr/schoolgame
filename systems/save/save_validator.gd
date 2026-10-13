@@ -70,6 +70,10 @@ static func _location(location: Dictionary) -> String:
 	var point: Variant = location.get("punto")
 	if not (typeof(point) == TYPE_STRING and String(point).is_empty()) and not is_id(point, 40):
 		return "punto de guardado inválido"
+	# La sala del mapa (desde M4; las partidas anteriores no la tienen). Vacío = se busca por la escena.
+	var room: Variant = location.get("sala", "")
+	if not (typeof(room) == TYPE_STRING and String(room).is_empty()) and not is_id(room, 40):
+		return "sala inválida"
 	return ""
 
 

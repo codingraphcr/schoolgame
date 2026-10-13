@@ -19,6 +19,8 @@ const SIGN := Color("1f6f5a")
 @export var window := Rect2(330, 96, 150, 90)
 @export var sign_center := Vector2(120, 80)
 @export var floor_y := 304.0
+## Puertas dibujadas (x del centro).
+@export var doors: Array[float] = []
 
 var _canvas: VectorCanvas
 
@@ -50,6 +52,12 @@ func _paint(c: VectorCanvas, _t: float) -> void:
 	c.draw_rect(box.grow(2), WOOD_DARK)
 	c.draw_rect(box, SIGN)
 	c.crisp_text(Vector2(box.position.x, box.end.y - 5), "BIBLIOTECA", 10, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+	for x in doors:
+		var door := Rect2(x - 14, floor_y - 64, 28, 64)
+		c.draw_rect(door.grow(2), WOOD_DARK)
+		c.gradient_rect(door, WOOD.lightened(0.1), WOOD)
+		c.draw_rect(Rect2(door.position.x + 6, door.position.y + 8, 16, 14), Color("8ab4e8"))
+		c.draw_circle(Vector2(x - 8, floor_y - 32), 2.0, Color("d8c060"))
 
 
 func _paint_shelf(c: VectorCanvas, rect: Rect2, index: int) -> void:

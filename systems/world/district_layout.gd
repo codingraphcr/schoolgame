@@ -1,8 +1,8 @@
 class_name DistrictLayout
 extends Resource
 ## La parte fija de un distrito (data/world/districts/): sus salas obligatorias, en qué celda está
-## cada una y cómo se conectan. Hoy todo el mapa es fijo; más adelante el generador (M4) parte de
-## esto y cuelga las salas opcionales de las puertas que quedan libres.
+## cada una y cómo se conectan. El generador (DistrictGenerator, M4) parte de esto y cuelga salas
+## opcionales de las puertas que quedan libres.
 
 @export var id: StringName = &""
 @export var display_name := ""
@@ -10,6 +10,8 @@ extends Resource
 @export var start_room: StringName = &""
 @export var rooms: Array[LayoutRoom] = []
 @export var links: Array[LayoutLink] = []
+## Cuántas salas opcionales puede colgar el generador como máximo (0 = el distrito es todo fijo).
+@export_range(0, 20) var optional_rooms := 0
 
 
 ## Arma el grafo del distrito. null (y un error en la consola) si algo no encaja.

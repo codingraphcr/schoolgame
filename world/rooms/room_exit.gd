@@ -16,6 +16,8 @@ extends Area2D
 ## Paso de requires_quest desde el que se abre (vacío = basta con que la misión haya empezado).
 @export var requires_step: StringName = &""
 @export var locked_message := ""
+## Aviso si la puerta no lleva a ningún lado (una puerta de la sala que el generador dejó libre).
+@export var closed_message := "La puerta está cerrada."
 
 var _used := false
 
@@ -73,6 +75,10 @@ func _on_body_entered(body: Node) -> void:
 	if not is_open():
 		if not locked_message.is_empty():
 			get_tree().call_group(&"toast", &"show_message", locked_message, 2.5)
+		return
+	if String(resolve()["scene"]).is_empty():
+		if not closed_message.is_empty():
+			get_tree().call_group(&"toast", &"show_message", closed_message, 2.0)
 		return
 	_used = travel(self, body as Player, door_id, target_scene, target_entry)
 

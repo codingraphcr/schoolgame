@@ -122,7 +122,7 @@ JSON en texto (legible, fácil de validar y de migrar; la partida pesa pocos KB)
     "anio": "decimo", "capitulo": 1, "nivel": 1, "lugar": "Laboratorio del colegio",
     "integridad": "sha256 de las secciones"
   },
-  "ubicacion": { "escena": "res://world/zones/zone0/laboratorio.tscn", "punto": "entrada" },
+  "ubicacion": { "escena": "res://world/zones/zone0/laboratorio.tscn", "punto": "entrada", "sala": "laboratorio" },
   "estado": { "...": "GameState.to_dict() (incluye economía, comandos, marcas, misiones, habilidades)" },
   "mundo": { "generador": 1, "semilla": 0, "distritos": { "colegio": "RoomGraph.to_dict()" },
              "salas": { "visitadas": [], "descubiertas": [] }, "puertas_abiertas": [], "objetos": [] },

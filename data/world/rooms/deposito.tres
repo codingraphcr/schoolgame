@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_ve36f"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_yqtbc"]
+
+[sub_resource type="Resource" id="Resource_d8egc"]
+script = ExtResource("1_ve36f")
+id = &"oeste"
+side = 0
+kind = 1
+entry_id = &"desde_oeste"
+
+[resource]
+script = ExtResource("2_yqtbc")
+id = &"deposito"
+display_name = "Depósito"
+scene_path = "res://world/zones/zone0/deposito.tscn"
+room_type = &"storage"
+doors = Array[ExtResource("1_ve36f")]([SubResource("Resource_d8egc")])
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 1
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray()

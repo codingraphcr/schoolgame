@@ -43,8 +43,8 @@ func _run() -> void:
 
 func _test_map() -> void:
 	var school: RoomGraph = world.graph(&"colegio")
-	_check(school.rooms.has(&"escaleras") and school.rooms.has(&"biblioteca") and school.open_doors().is_empty(),
-		"el Colegio tiene las escaleras y la biblioteca, sin puertas sueltas")
+	_check(school.rooms.has(&"escaleras") and school.rooms.has(&"biblioteca") and school.is_linked(&"pasillo", &"escalera")
+		and school.is_linked(&"escaleras", &"este"), "el Colegio tiene las escaleras y la biblioteca, conectadas")
 	var up: Dictionary = world.destination(&"pasillo", &"escalera")
 	var library: Dictionary = world.destination(&"escaleras", &"este")
 	_check(up.get("scene") == STAIRS and up.get("entry") == &"desde_pasillo", "la escalera del Pasillo sube a las escaleras")

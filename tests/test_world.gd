@@ -31,7 +31,11 @@ func _test_districts() -> void:
 	var colegio: RoomGraph = world.graph(&"colegio")
 	_check(colegio != null and colegio.rooms.has(&"entrada") and colegio.rooms.has(&"pasillo") and colegio.rooms.has(&"laboratorio"),
 		"el Colegio tiene la Entrada, el Pasillo y el Laboratorio (dos salas)")
-	_check(colegio != null and colegio.open_doors().is_empty(), "el Colegio no tiene puertas sin destino")
+	var loose: PackedStringArray = []
+	for open in colegio.open_doors():
+		if colegio.template_of(open["room"]).fixed:
+			loose.append("%s.%s" % [open["room"], open["door"]])
+	_check(loose.is_empty(), "en el Colegio solo pueden quedar libres puertas de salas opcionales %s" % [loose])
 	var wrong: PackedStringArray = []
 	for district_id: StringName in world.districts:
 		for room_id: StringName in world.districts[district_id].rooms:
@@ -74,6 +78,9 @@ func _test_scenes_match_map() -> void:
 					problems.append("%s: la salida %s no está en la ficha" % [room_id, door])
 					continue
 				var target: Dictionary = world.destination(room_id, door)
+				# Las puertas que decide el generador (las de salas opcionales o hacia ellas) no tienen respaldo.
+				if not template.fixed or (not target.is_empty() and not world.template_of(target["room"]).fixed):
+					continue
 				if target.get("scene") != room_exit.target_scene or target.get("entry") != room_exit.target_entry:
 					problems.append("%s.%s: el mapa lleva a %s y la salida a %s" % [room_id, door, target, room_exit.target_scene])
 			for spec in template.doors:

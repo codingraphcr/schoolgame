@@ -100,3 +100,4 @@ display_name = "Colegio"
 start_room = &"entrada"
 rooms = Array[ExtResource("2_room")]([SubResource("Resource_entrada"), SubResource("Resource_pasillo"), SubResource("Resource_laboratorio"), SubResource("Resource_pasillo_viejo"), SubResource("Resource_cuarto_viejo"), SubResource("Resource_ymgt7"), SubResource("Resource_q2v3j")])
 links = Array[ExtResource("3_link")]([SubResource("Resource_link1"), SubResource("Resource_link2"), SubResource("Resource_link3"), SubResource("Resource_link4"), SubResource("Resource_wl8p2"), SubResource("Resource_ipydh")])
+optional_rooms = 2

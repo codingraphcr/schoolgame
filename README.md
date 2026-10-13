@@ -67,6 +67,7 @@ godot --headless --path . --script res://tests/test_hardening.gd
 godot --headless --path . --script res://tests/test_room_graph.gd
 godot --headless --path . --script res://tests/test_world.gd
 godot --headless --path . --script res://tests/test_biblioteca.gd
+godot --headless --path . --script res://tests/test_generador.gd
 godot --headless --path . --script res://tests/test_cuarto_viejo.gd
 ```
 
