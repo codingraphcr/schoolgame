@@ -26,9 +26,12 @@ const OUTLINE := Color("0a0d1c")
 ##   frame_height (opcional): alto de los cuadros (128 si no se pone; los pies siempre en FEET_Y).
 ##   poses: zona de cada pose en la hoja. feet_y (opcional): fila de los pies, si debajo hay efectos.
 ##          body (opcional): zona del cuerpo que el borrado del resplandor no toca.
+##          tolerance (opcional): tolerancia del fondo solo para esa pose (pelo muy oscuro).
 ##          cover + cover_color (opcional): polígono (en la hoja) que se tapa con ese color
 ##          (para quitar algo que sobra).
+##          recolor + recolor_color (opcional): polígono donde lo café/rosado de la figura se pinta de ese color.
 ##          clip (opcional): contorno (en la hoja) fuera del cual se borra todo (efectos pegados).
+##          refill (opcional, con clip): vuelve a borrar el fondo que quedó encerrado y ahora toca lo recortado.
 ##          anchor_x (opcional): columna del centro del cuerpo si el
 ##          cálculo automático (centro de la cabeza) no sirve. only_body: conserva solo la figura
 ##          principal (descarta, por ejemplo, un globo de diálogo que quedó dentro de la zona).
@@ -157,6 +160,147 @@ const CHARACTERS := {
 			"curar_aire_fin": { "poses": ["aire_completar", "aire_descenso"], "fps": 6.0, "loop": false },
 		},
 	},
+	# NPC de fondo (hoja de Ariel "npcs_fondo_concepto"): no se habla con ellos, solo dan vida al colegio.
+	# Cada personaje: quieto (mirando a la derecha; a la izquierda se espeja), caminar y espalda (el
+	# conserje, sin espalda).
+	# m1-m3 / f1-f3: estudiantes; pm / pf: profesor y profesora; cj: conserje (con el trapeador);
+	# x1-x3 y v1-v21: variantes de estudiantes de un solo cuadro. Los estudiantes, como Kai (92 px).
+	"npcs_fondo": {
+		"source": "res://docs/arte/referencias/npcs_fondo_concepto.webp",
+		"out": "res://assets/art/characters/npcs_fondo/",
+		"prefix": "npc",
+		"background": Color("060915"),
+		"tolerance": 0.03,
+		"reference": "m1_quieto",
+		"height": 92,
+		"poses": {
+			"m1_quieto": { "rect": Rect2i(37, 62, 48, 114), "only_body": true },
+			"m1_caminar_1": { "rect": Rect2i(185, 62, 41, 114), "only_body": true },
+			"m1_caminar_2": { "rect": Rect2i(235, 62, 43, 114), "only_body": true },
+			"m1_caminar_3": { "rect": Rect2i(279, 62, 41, 114), "only_body": true },
+			"m1_espalda": { "rect": Rect2i(491, 62, 41, 114), "only_body": true, "tolerance": 0.025 },
+			"m2_quieto": { "rect": Rect2i(582, 62, 46, 114), "only_body": true },
+			"m2_caminar_1": { "rect": Rect2i(730, 62, 44, 114), "only_body": true },
+			"m2_caminar_2": { "rect": Rect2i(779, 62, 44, 114), "only_body": true },
+			"m2_caminar_3": { "rect": Rect2i(824, 62, 40, 114), "only_body": true },
+			"m2_espalda": { "rect": Rect2i(1032, 62, 41, 114), "only_body": true },
+			"m3_quieto": { "rect": Rect2i(1117, 62, 49, 114), "only_body": true },
+			"m3_caminar_1": { "rect": Rect2i(1262, 62, 43, 114), "only_body": true },
+			"m3_caminar_2": { "rect": Rect2i(1310, 62, 42, 114), "only_body": true },
+			"m3_caminar_3": { "rect": Rect2i(1355, 62, 40, 114), "only_body": true },
+			"m3_espalda": { "rect": Rect2i(1523, 62, 43, 114), "only_body": true },
+			"f1_quieto": { "rect": Rect2i(37, 282, 50, 110), "only_body": true },
+			"f1_caminar_1": { "rect": Rect2i(184, 282, 41, 110), "only_body": true },
+			"f1_caminar_2": { "rect": Rect2i(236, 282, 42, 110), "only_body": true },
+			"f1_caminar_3": { "rect": Rect2i(277, 282, 44, 110), "only_body": true },
+			"f1_espalda": { "rect": Rect2i(490, 282, 42, 110), "only_body": true },
+			"f2_quieto": { "rect": Rect2i(580, 282, 54, 110), "only_body": true },
+			"f2_caminar_1": { "rect": Rect2i(727, 282, 46, 110), "only_body": true },
+			"f2_caminar_2": { "rect": Rect2i(780, 282, 43, 110), "only_body": true },
+			"f2_espalda": { "rect": Rect2i(1031, 282, 41, 110), "only_body": true },
+			"f3_quieto": { "rect": Rect2i(1116, 282, 51, 110), "only_body": true },
+			"f3_caminar_1": { "rect": Rect2i(1256, 282, 43, 110), "only_body": true },
+			"f3_caminar_2": { "rect": Rect2i(1300, 282, 41, 110), "only_body": true },
+			"f3_caminar_3": { "rect": Rect2i(1339, 282, 41, 110), "only_body": true },
+			"f3_espalda": { "rect": Rect2i(1510, 282, 39, 110), "only_body": true, "tolerance": 0.025 },
+			"pm_quieto": { "rect": Rect2i(35, 498, 47, 135), "only_body": true },
+			"pm_caminar_1": { "rect": Rect2i(196, 498, 39, 135), "only_body": true },
+			"pm_caminar_2": { "rect": Rect2i(250, 498, 53, 135), "only_body": true },
+			"pm_espalda": { "rect": Rect2i(445, 498, 52, 135), "only_body": true },
+			"pf_quieto": { "rect": Rect2i(542, 498, 43, 135), "only_body": true },
+			"pf_caminar_2": { "rect": Rect2i(743, 498, 43, 135), "only_body": true },
+			"pf_espalda": { "rect": Rect2i(927, 498, 44, 135), "only_body": true },
+			# El conserje: clip le quita la sombra del suelo y el montoncito de polvo del trapeador.
+			"cj_quieto": { "rect": Rect2i(1012, 498, 100, 135), "only_body": true, "refill": true, "tolerance": 0.05,
+				"clip": [Vector2(1012, 498), Vector2(1112, 498), Vector2(1112, 617), Vector2(1071, 617), Vector2(1070, 627), Vector2(1028, 627), Vector2(1028, 621), Vector2(1012, 621)] },
+			"cj_caminar_1": { "rect": Rect2i(1193, 498, 99, 135), "only_body": true, "refill": true, "tolerance": 0.05,
+				"clip": [Vector2(1189, 498), Vector2(1296, 498), Vector2(1296, 624), Vector2(1268, 624), Vector2(1268, 627), Vector2(1249, 627), Vector2(1249, 623), Vector2(1223, 623), Vector2(1223, 627), Vector2(1205, 627), Vector2(1205, 623), Vector2(1189, 623)] },
+			# Su otro cuadro de caminar (en la hoja dice "izquierda", pero también mira a la derecha: es el otro paso).
+			"cj_caminar_2": { "rect": Rect2i(1300, 498, 101, 135), "only_body": true, "refill": true, "tolerance": 0.05,
+				"clip": [Vector2(1300, 498), Vector2(1401, 498), Vector2(1401, 617), Vector2(1365, 617), Vector2(1365, 627), Vector2(1349, 627), Vector2(1349, 621), Vector2(1324, 621), Vector2(1324, 627), Vector2(1304, 627), Vector2(1304, 623), Vector2(1300, 623)] },
+			"x1_quieto": { "rect": Rect2i(1524, 538, 59, 124), "only_body": true },
+			# x2 (audífonos): la pierna de adelante era café, como sin pantalón; se pinta como la otra.
+			"x2_quieto": { "rect": Rect2i(1605, 538, 54, 124), "only_body": true,
+				"recolor": [Vector2(1636, 629), Vector2(1648, 629), Vector2(1648, 652), Vector2(1636, 652)], "recolor_color": Color("141322") },
+			"x3_quieto": { "rect": Rect2i(1687, 538, 55, 124), "only_body": true },
+			"v1_quieto": { "rect": Rect2i(52, 740, 50, 118), "only_body": true },
+			"v2_quieto": { "rect": Rect2i(133, 740, 49, 118), "only_body": true },
+			"v3_quieto": { "rect": Rect2i(216, 740, 53, 118), "only_body": true },
+			"v4_quieto": { "rect": Rect2i(305, 740, 46, 118), "only_body": true },
+			"v5_quieto": { "rect": Rect2i(385, 740, 49, 118), "only_body": true },
+			"v6_quieto": { "rect": Rect2i(469, 740, 52, 118), "only_body": true },
+			"v7_quieto": { "rect": Rect2i(549, 740, 54, 118), "only_body": true },
+			"v8_quieto": { "rect": Rect2i(641, 740, 68, 118), "only_body": true },
+			"v9_quieto": { "rect": Rect2i(728, 740, 51, 118), "only_body": true },
+			"v10_quieto": { "rect": Rect2i(811, 740, 56, 118), "only_body": true },
+			"v11_quieto": { "rect": Rect2i(890, 740, 54, 118), "only_body": true },
+			"v12_quieto": { "rect": Rect2i(980, 740, 40, 118), "only_body": true },
+			"v13_quieto": { "rect": Rect2i(1053, 740, 51, 118), "only_body": true },
+			"v14_quieto": { "rect": Rect2i(1138, 740, 53, 118), "only_body": true },
+			"v15_quieto": { "rect": Rect2i(1220, 740, 47, 118), "only_body": true },
+			"v16_quieto": { "rect": Rect2i(1299, 740, 57, 118), "only_body": true },
+			"v17_quieto": { "rect": Rect2i(1377, 740, 55, 118), "only_body": true },
+			"v18_quieto": { "rect": Rect2i(1448, 740, 54, 118), "only_body": true },
+			"v19_quieto": { "rect": Rect2i(1525, 740, 46, 118), "only_body": true },
+			"v20_quieto": { "rect": Rect2i(1610, 740, 44, 118), "only_body": true },
+			"v21_quieto": { "rect": Rect2i(1687, 740, 52, 118), "only_body": true },
+		},
+		"animations": {
+			"m1_quieto": { "poses": ["m1_quieto"], "fps": 1.0, "loop": true },
+			"m1_caminar": { "poses": ["m1_caminar_1", "m1_caminar_2", "m1_caminar_3", "m1_caminar_2"], "fps": 6.0, "loop": true },
+			"m1_espalda": { "poses": ["m1_espalda"], "fps": 1.0, "loop": true },
+			"m2_quieto": { "poses": ["m2_quieto"], "fps": 1.0, "loop": true },
+			"m2_caminar": { "poses": ["m2_caminar_1", "m2_caminar_2", "m2_caminar_3", "m2_caminar_2"], "fps": 6.0, "loop": true },
+			"m2_espalda": { "poses": ["m2_espalda"], "fps": 1.0, "loop": true },
+			"m3_quieto": { "poses": ["m3_quieto"], "fps": 1.0, "loop": true },
+			"m3_caminar": { "poses": ["m3_caminar_1", "m3_caminar_2", "m3_caminar_3", "m3_caminar_2"], "fps": 6.0, "loop": true },
+			"m3_espalda": { "poses": ["m3_espalda"], "fps": 1.0, "loop": true },
+			"f1_quieto": { "poses": ["f1_quieto"], "fps": 1.0, "loop": true },
+			"f1_caminar": { "poses": ["f1_caminar_1", "f1_caminar_2", "f1_caminar_3", "f1_caminar_2"], "fps": 6.0, "loop": true },
+			"f1_espalda": { "poses": ["f1_espalda"], "fps": 1.0, "loop": true },
+			"f2_quieto": { "poses": ["f2_quieto"], "fps": 1.0, "loop": true },
+			# f2: su tercer cuadro tiene una pierna con media oscura (las otras no): se camina con dos.
+			"f2_caminar": { "poses": ["f2_caminar_1", "f2_caminar_2"], "fps": 4.0, "loop": true },
+			"f2_espalda": { "poses": ["f2_espalda"], "fps": 1.0, "loop": true },
+			"f3_quieto": { "poses": ["f3_quieto"], "fps": 1.0, "loop": true },
+			"f3_caminar": { "poses": ["f3_caminar_1", "f3_caminar_2", "f3_caminar_3", "f3_caminar_2"], "fps": 6.0, "loop": true },
+			"f3_espalda": { "poses": ["f3_espalda"], "fps": 1.0, "loop": true },
+			"pm_quieto": { "poses": ["pm_quieto"], "fps": 1.0, "loop": true },
+			"pm_caminar": { "poses": ["pm_caminar_1", "pm_caminar_2"], "fps": 4.0, "loop": true },
+			"pm_espalda": { "poses": ["pm_espalda"], "fps": 1.0, "loop": true },
+			"pf_quieto": { "poses": ["pf_quieto"], "fps": 1.0, "loop": true },
+			# La profesora: su otro cuadro de caminar tiene otra ropa (cárdigan morado); da el paso y junta los pies.
+			"pf_caminar": { "poses": ["pf_caminar_2", "pf_quieto"], "fps": 3.0, "loop": true },
+			"pf_espalda": { "poses": ["pf_espalda"], "fps": 1.0, "loop": true },
+			"cj_quieto": { "poses": ["cj_quieto"], "fps": 1.0, "loop": true },
+			# El conserje camina despacio empujando el trapeador (sus dos pasos).
+			"cj_caminar": { "poses": ["cj_caminar_1", "cj_caminar_2"], "fps": 3.0, "loop": true },
+			"x1_quieto": { "poses": ["x1_quieto"], "fps": 1.0, "loop": true },
+			"x2_quieto": { "poses": ["x2_quieto"], "fps": 1.0, "loop": true },
+			"x3_quieto": { "poses": ["x3_quieto"], "fps": 1.0, "loop": true },
+			"v1_quieto": { "poses": ["v1_quieto"], "fps": 1.0, "loop": true },
+			"v2_quieto": { "poses": ["v2_quieto"], "fps": 1.0, "loop": true },
+			"v3_quieto": { "poses": ["v3_quieto"], "fps": 1.0, "loop": true },
+			"v4_quieto": { "poses": ["v4_quieto"], "fps": 1.0, "loop": true },
+			"v5_quieto": { "poses": ["v5_quieto"], "fps": 1.0, "loop": true },
+			"v6_quieto": { "poses": ["v6_quieto"], "fps": 1.0, "loop": true },
+			"v7_quieto": { "poses": ["v7_quieto"], "fps": 1.0, "loop": true },
+			"v8_quieto": { "poses": ["v8_quieto"], "fps": 1.0, "loop": true },
+			"v9_quieto": { "poses": ["v9_quieto"], "fps": 1.0, "loop": true },
+			"v10_quieto": { "poses": ["v10_quieto"], "fps": 1.0, "loop": true },
+			"v11_quieto": { "poses": ["v11_quieto"], "fps": 1.0, "loop": true },
+			"v12_quieto": { "poses": ["v12_quieto"], "fps": 1.0, "loop": true },
+			"v13_quieto": { "poses": ["v13_quieto"], "fps": 1.0, "loop": true },
+			"v14_quieto": { "poses": ["v14_quieto"], "fps": 1.0, "loop": true },
+			"v15_quieto": { "poses": ["v15_quieto"], "fps": 1.0, "loop": true },
+			"v16_quieto": { "poses": ["v16_quieto"], "fps": 1.0, "loop": true },
+			"v17_quieto": { "poses": ["v17_quieto"], "fps": 1.0, "loop": true },
+			"v18_quieto": { "poses": ["v18_quieto"], "fps": 1.0, "loop": true },
+			"v19_quieto": { "poses": ["v19_quieto"], "fps": 1.0, "loop": true },
+			"v20_quieto": { "poses": ["v20_quieto"], "fps": 1.0, "loop": true },
+			"v21_quieto": { "poses": ["v21_quieto"], "fps": 1.0, "loop": true },
+		},
+	},
 	# Pogo con la Nullblade (hoja de Ariel "Animación de pogo"): la fila de arriba, de a una fase.
 	# "salto" solo fija la escala (mismo alto que la pose de salto del juego: 88 px). feet_y: fila de
 	# los pies (la espada que apunta hacia abajo no empuja a Kai hacia arriba). El impacto (4) tiene
@@ -274,6 +418,21 @@ func _cover(region: Image, pose: Dictionary) -> void:
 				region.set_pixel(x, y, color.lightened(0.07) if (x * 7 + y * 13) % 5 == 0 else color)
 
 
+## Pinta con "recolor_color" lo café/rosado de la figura dentro del polígono "recolor" (una pierna
+## que en la hoja parecía sin pantalón), conservando un poco de su luz. No toca el fondo.
+func _recolor(region: Image, pose: Dictionary) -> void:
+	var polygon := _local_polygon(pose, "recolor")
+	if polygon.is_empty():
+		return
+	var color: Color = pose.recolor_color
+	for y in region.get_height():
+		for x in region.get_width():
+			var c := region.get_pixel(x, y)
+			if c.a == 0.0 or c.r < c.b + 0.05 or c.v < 0.15 or not Geometry2D.is_point_in_polygon(Vector2(x, y), polygon):
+				continue
+			region.set_pixel(x, y, color.lightened(clampf((c.v - 0.3) * 0.5, 0.0, 0.15)))
+
+
 ## Borra todo lo que queda fuera del contorno "clip" de la pose (aura y efectos pegados a la figura).
 func _clip(region: Image, pose: Dictionary) -> void:
 	var polygon := _local_polygon(pose, "clip")
@@ -289,10 +448,14 @@ func _clip(region: Image, pose: Dictionary) -> void:
 func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 	var rect: Rect2i = pose.rect
 	var region := sheet.get_region(rect)
-	_remove_background(region)
+	_remove_background(region, pose.get("tolerance", _config.tolerance))
 	_remove_glow(region, pose)
 	_cover(region, pose)
+	_recolor(region, pose)
 	_clip(region, pose)
+	if pose.get("refill", false):
+		# El fondo que quedó encerrado (entre una pierna y el trapeador) ahora toca lo recortado: se borra.
+		_remove_background(region, pose.get("tolerance", _config.tolerance))
 	if pose.get("only_body", false):
 		var body := _largest_component(region)
 		var kept := Image.create_empty(region.get_width(), region.get_height(), false, Image.FORMAT_RGBA8)
@@ -415,10 +578,9 @@ func _clean_edges(img: Image) -> void:
 					break
 
 
-## Vuelve transparente el fondo conectado con los bordes de la zona.
-func _remove_background(img: Image) -> void:
+## Vuelve transparente el fondo conectado con los bordes de la zona (o con lo que ya es transparente).
+func _remove_background(img: Image, tolerance: float) -> void:
 	var background: Color = _config.background
-	var tolerance: float = _config.tolerance
 	var w := img.get_width()
 	var h := img.get_height()
 	var seen := PackedByteArray()
@@ -430,13 +592,16 @@ func _remove_background(img: Image) -> void:
 	for y in h:
 		stack.append(Vector2i(0, y))
 		stack.append(Vector2i(w - 1, y))
+		for x in w:
+			if img.get_pixel(x, y).a == 0.0:
+				stack.append(Vector2i(x, y))
 	while not stack.is_empty():
 		var p: Vector2i = stack.pop_back()
 		if p.x < 0 or p.y < 0 or p.x >= w or p.y >= h or seen[p.y * w + p.x]:
 			continue
 		seen[p.y * w + p.x] = 1
 		var c := img.get_pixelv(p)
-		if Vector3(c.r - background.r, c.g - background.g, c.b - background.b).length() > tolerance:
+		if c.a > 0.0 and Vector3(c.r - background.r, c.g - background.g, c.b - background.b).length() > tolerance:
 			continue
 		img.set_pixelv(p, Color(0, 0, 0, 0))
 		for step in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:

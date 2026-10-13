@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="17_ly34l"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="18_0p42w"]
 [ext_resource type="Script" path="res://world/digital/save_point.gd" id="19_savep"]
+[ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="20_bgnpc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_stp1f"]
 size = Vector2(864, 80)
@@ -181,6 +182,31 @@ position = Vector2(712, 264)
 texture = ExtResource("10_jo5h4")
 centered = false
 hframes = 2
+
+[node name="Gente" type="Node2D" parent="."]
+
+[node name="ChicaCharla" type="Node2D" parent="Gente"]
+position = Vector2(300, 304)
+script = ExtResource("20_bgnpc")
+character = "f1"
+mode = 2
+partner = NodePath("../ChicoCharla")
+
+[node name="ChicoCharla" type="Node2D" parent="Gente"]
+position = Vector2(326, 304)
+script = ExtResource("20_bgnpc")
+character = "m2"
+mode = 2
+partner = NodePath("../ChicaCharla")
+talks_first = false
+
+[node name="Conserje" type="Node2D" parent="Gente"]
+position = Vector2(560, 304)
+script = ExtResource("20_bgnpc")
+character = "cj"
+mode = 3
+walk_left = -30.0
+walk_right = 30.0
 
 [node name="Lights" type="Node2D" parent="." unique_id=539833872]
 

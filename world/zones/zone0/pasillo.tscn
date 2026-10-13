@@ -28,6 +28,7 @@
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="26_0ow0d"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="27_ligia"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="28_6effe"]
+[ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="29_bgnpc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_730qw"]
 size = Vector2(752, 80)
@@ -385,6 +386,40 @@ infected_from_x = -1.0
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=739778107]
 position = Vector2(56, 304)
+
+[node name="Gente" type="Node2D" parent="."]
+
+[node name="ChicaCasillero" type="Node2D" parent="Gente"]
+position = Vector2(392, 304)
+script = ExtResource("29_bgnpc")
+character = "f3"
+mode = 4
+
+[node name="ChicoCharla" type="Node2D" parent="Gente"]
+position = Vector2(548, 304)
+script = ExtResource("29_bgnpc")
+character = "m1"
+mode = 2
+partner = NodePath("../ChicoAudifonos")
+chat_offset = 2.0
+
+[node name="ChicoAudifonos" type="Node2D" parent="Gente"]
+position = Vector2(573, 304)
+script = ExtResource("29_bgnpc")
+character = "x2"
+mode = 2
+partner = NodePath("../ChicoCharla")
+talks_first = false
+chat_offset = 2.0
+
+[node name="Profesora" type="Node2D" parent="Gente"]
+position = Vector2(300, 304)
+script = ExtResource("29_bgnpc")
+character = "pf"
+mode = 1
+facing = -1
+walk_left = -45.0
+walk_right = 50.0
 
 [node name="Npcs" type="Node2D" parent="." unique_id=1595665627]
 

@@ -1,0 +1,705 @@
+{
+	"animations": {
+		"cj_caminar": {
+			"feet": [
+				52,
+				119
+			],
+			"file": "npc_cj_caminar.png",
+			"fps": 3.0,
+			"frame_size": [
+				104,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"cj_quieto": {
+			"feet": [
+				52,
+				119
+			],
+			"file": "npc_cj_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				104,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"f1_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_f1_caminar.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"f1_espalda": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_f1_espalda.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"f1_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_f1_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"f2_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_f2_caminar.png",
+			"fps": 4.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"f2_espalda": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_f2_espalda.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"f2_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_f2_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"f3_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_f3_caminar.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"f3_espalda": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_f3_espalda.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"f3_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_f3_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"m1_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_m1_caminar.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"m1_espalda": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_m1_espalda.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"m1_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_m1_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"m2_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_m2_caminar.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"m2_espalda": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_m2_espalda.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"m2_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_m2_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"m3_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_m3_caminar.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"m3_espalda": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_m3_espalda.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"m3_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_m3_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"pf_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_pf_caminar.png",
+			"fps": 3.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"pf_espalda": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_pf_espalda.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"pf_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_pf_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"pm_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_pm_caminar.png",
+			"fps": 4.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"pm_espalda": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_pm_espalda.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"pm_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_pm_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v10_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v10_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v11_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v11_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v12_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v12_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v13_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v13_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v14_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v14_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v15_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v15_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v16_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v16_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v17_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v17_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v18_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v18_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v19_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v19_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v1_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v1_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v20_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v20_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v21_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v21_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v2_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v2_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v3_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v3_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v4_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v4_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v5_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v5_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v6_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v6_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v7_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v7_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v8_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v8_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"v9_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_v9_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"x1_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_x1_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"x2_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_x2_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"x3_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "npc_x3_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		}
+	},
+	"scale": 0.5
+}
