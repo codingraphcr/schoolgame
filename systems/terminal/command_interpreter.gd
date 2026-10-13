@@ -148,7 +148,9 @@ func complete(line: String) -> String:
 		var partial := last.substr(slash + 1)
 		var folder := base if not base.is_empty() else "."
 		for name in fs.list(folder):
-			if name.begins_with(".") and (not partial.begins_with(".") or _needs_password(fs.resolve(base + name))):
+			# Nunca se completa (ni se insinúa) nada que pida la contraseña: ni los archivos ocultos
+			# de una carpeta protegida ni lo que hay dentro de ellos.
+			if _needs_password(fs.resolve(base + name)) or (name.begins_with(".") and not partial.begins_with(".")):
 				continue
 			if name.begins_with(partial):
 				options.append(base + name + ("/" if fs.is_dir(base + name) else " "))
