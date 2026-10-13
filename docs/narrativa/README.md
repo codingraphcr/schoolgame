@@ -31,6 +31,8 @@ MVP (`../plan_mvp.md`).
 | Nombres | **Oficiales:** el juego *Nullveil: Beyond the Firewall*, el protagonista **Kai** y el profesor **Prof. Alvarado** (ya incorporados a la Biblia) |
 | Aegis | Aparece en la misión especial **«Eco en la Red»** (décimo, capítulo 3), donde Kai lo rescata y lo repara con comandos |
 | Temas de los niveles | Se combinan: los títulos e historia de los 24 niveles de la Biblia, con los contenidos de la tabla del MEP ubicados en cada uno (`../curriculo_mep.md`) |
+| El cuarto viejo (H5, v1.2) | Laboratorio 2, cerrado, que estuvo a cargo del profesor; su terminal guarda la cuenta vieja (123456). El profesor no entra ni explica qué hay. Ahí, a oscuras y con la Visión Digital, Kai encuentra `Nullblade.exe` (con el dash y el doble salto) y el Grimorio, **sin explicar su origen** |
+| Fin del prólogo (v1.2) | «EL DESPERTAR» al salir del cuarto viejo; sigue el Capítulo 1 y el mapa se abre por capítulos |
 
 ## Diferencias que siguen abiertas
 
@@ -40,7 +42,7 @@ que el equipo decida.
 | Tema | En el juego y la documentación actual | En la Biblia |
 |---|---|---|
 | La entidad «???» | `../plan_mvp.md` la anota como primera manifestación de «El Núcleo» | Relación entre «El Núcleo» y el «Proyecto Génesis», y el nombre del antagonista (AXIOM es propuesta), pendientes |
-| Origen de Nullblade | En el plan, la Nullblade oficial se encuentra en el cuarto viejo al que invita el profesor (H5) | Origen pendiente: no asumir que la creó el profesor ni que su nombre la vincula al antagonista |
+| Origen de Nullblade y del Grimorio | Se encuentran en el cuarto viejo (H5, implementado); el juego no dice quién los dejó | Origen pendiente: no asumir que los creó el profesor ni que el nombre de la Nullblade la vincula al antagonista. Ojo: la Biblia dice que «uno de sus profesores» creó a Kai; que el Laboratorio 2 fuera del Prof. Alvarado no lo decide, pero no hay que reforzarlo sin decidirlo |
 | Detonante de la Visión Digital | Implementado: el mensaje de la computadora la activa sola, como un glitch | Detonante preciso pendiente |
 
 **Coinciden** con la Biblia: el prólogo (computadora, «Por fin alguien está mirando», «Tú no deberías poder vernos»,

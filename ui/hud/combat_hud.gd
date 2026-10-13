@@ -3,7 +3,8 @@ extends CanvasLayer
 ## indicador de la Visión Digital y mensajes. Cada cristal vale 1 de vida: completo, a la mitad o
 ## vacío. Las barritas de energía salen de GameState.max_energy_cells (suben con la historia) y se
 ## gastarán en habilidades futuras: set_energy() las actualiza (por ahora están llenas).
-## Con G (acción "grimorio") se abre el Grimorio encima del juego, que queda en pausa.
+## Con G (acción "grimorio") se abre el Grimorio encima del juego, que queda en pausa (solo después
+## de encontrarlo en el cuarto viejo: GameState.has_grimorio()).
 
 @export var player: Player
 
@@ -52,9 +53,11 @@ func _refresh_energy_cells() -> void:
 		_energy.energy = cells
 
 
-## No se abre en medio de un diálogo, de una escena con Kai sin control ni con el juego en pausa.
+## No se abre antes de encontrarlo, en medio de un diálogo, de una escena con Kai sin control ni
+## con el juego en pausa.
 func _can_open_grimorio() -> bool:
-	if get_tree().paused:
+	var game_state := get_node_or_null("/root/GameState")
+	if get_tree().paused or (game_state and not game_state.has_grimorio()):
 		return false
 	var box := DialogueBox.find(self)
 	if box and box.is_playing():

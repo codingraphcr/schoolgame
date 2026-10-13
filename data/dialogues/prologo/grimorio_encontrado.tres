@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_grimenc"]
+
+[resource]
+script = ExtResource("1_grimenc")
+script_text = "# H5: Kai encuentra el Grimorio en el cuarto viejo. No se explica su origen (pendiente en la Biblia).
+(Kai abre el libro. Las páginas se encienden: ahí están los comandos que usó y todo lo que aprendió hoy.)
+Kai [sorprendido]: ¿Un libro con circuitos...? Tiene escrito lo que aprendí hoy.
+Kai [pensativo]: ¿Quién lo habrá dejado aquí?"

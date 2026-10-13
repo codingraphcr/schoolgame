@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_cvder"]
+
+[resource]
+script = ExtResource("1_cvder")
+script_text = "# H5: con la Nullblade y el Grimorio, el cuarto se corrompe y bloquea la salida.
+(Un crujido. El piso cerca de la puerta se llena de datos corruptos y un armario viejo cae.)
+Kai [preocupado]: ¡La salida!
+Kai [pensativo]: Tendré que usar lo que acabo de aprender."

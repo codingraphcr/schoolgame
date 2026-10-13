@@ -1,6 +1,7 @@
 extends SceneTree
 ## Prueba automática: el prólogo completo como misión (objetivo en pantalla, profesor,
-## computadora del laboratorio con la Visión Digital involuntaria, título "EL DESPERTAR")
+## computadora del laboratorio con la Visión Digital involuntaria; el título «EL DESPERTAR» ahora
+## cierra el prólogo al final de H5, ver test_cuarto_viejo.gd)
 ## y el comienzo de la misión de la contraseña del profesor. También misiones en GameState.
 ## Ejecutar: godot --headless --path . --script res://tests/test_prologue.gd
 
@@ -61,7 +62,7 @@ func _run() -> void:
 	await _until(func() -> bool: return state.is_quest_completed(&"prologo"))
 	_check(state.is_quest_completed(&"prologo"), "contarle al profesor completa el prólogo")
 	var title := room.get_node("CombatHUD/TitleCard") as TitleCard
-	_check(title.is_showing() and title._title.text == "EL DESPERTAR", "aparece el título «EL DESPERTAR»")
+	_check(not title.is_showing(), "todavía no aparece «EL DESPERTAR» (cierra el prólogo al final de H5)")
 	_check(state.active_quest == &"contrasena_profesor" and state.get_current_step(&"contrasena_profesor") == &"entrar_pc",
 		"empieza la misión «La contraseña del profesor»")
 	objective = room.get_node("CombatHUD/Objective")._text

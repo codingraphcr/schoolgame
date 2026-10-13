@@ -388,6 +388,18 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
   de la tabla del MEP se ubican dentro de ellos (`docs/curriculo_mep.md`). Sigue siendo una distribución provisional
   hasta validarla con los programas completos del MEP.
 
-**FIN — BIBLIA NARRATIVA V1.1**
+**v1.2 — 13 de octubre de 2026** (aprobado por el equipo; detalle del prólogo, no cambia el lore):
+
+- **El cuarto viejo (final del prólogo):** el profesor invita a Kai a revisar un pasillo viejo del colegio, donde está
+  el **Laboratorio 2**, un laboratorio que estuvo a su cargo hace años y se cerró. Su terminal conserva la cuenta
+  vieja del profesor (123456); los archivos ocultos solo dicen cómo abrir la puerta. **El profesor no entra** y no
+  explica qué hay adentro (ni afirma ni niega saberlo).
+- **`Nullblade.exe` y el Grimorio** se encuentran en ese cuarto, a oscuras: Kai los distingue con la Visión Digital.
+  **El origen de los dos sigue pendiente** (sección XVI): el juego no dice quién los dejó ahí.
+- **Habilidades:** con la Nullblade, Kai obtiene el **dash** y el **doble salto** (decisión de diseño del equipo).
+- **«EL DESPERTAR»** cierra el prólogo al salir del cuarto viejo; después empieza el **Capítulo 1 — El origen digital**.
+  Desde ahí el mapa se va abriendo por capítulos.
+
+**FIN — BIBLIA NARRATIVA V1.2**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.

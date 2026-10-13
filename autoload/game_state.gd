@@ -205,6 +205,15 @@ func set_flag(flag: StringName) -> void:
 	_flags[flag] = true
 
 
+## Kai encuentra el Grimorio en el cuarto viejo (H5). Hasta entonces G no lo abre; lo aprendido
+## antes (comandos, conceptos) ya queda anotado y aparece en sus páginas al encontrarlo.
+const GRIMORIO_FLAG := &"grimorio_obtenido"
+
+
+func has_grimorio() -> bool:
+	return has_flag(GRIMORIO_FLAG)
+
+
 func get_decision_log() -> Array[Dictionary]:
 	return _decision_log.duplicate(true)
 
@@ -345,6 +354,8 @@ func complete_step(quest_id: StringName, step_id: StringName) -> bool:
 	# Recompensa única: aunque se repitiera el último paso, no se cobra dos veces.
 	if quest.ecos_reward > 0:
 		_economy().claim_reward(StringName("mision:%s" % quest_id), quest.ecos_reward)
+	if quest.completion_flag != &"":
+		set_flag(quest.completion_flag)
 	quest_completed.emit(quest_id)
 	if quest.next_quest != &"":
 		start_quest(quest.next_quest)

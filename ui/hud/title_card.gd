@@ -51,6 +51,9 @@ func _on_quest_completed(quest_id: StringName) -> void:
 	var quest := QuestDB.get_quest(quest_id)
 	if quest and not quest.completion_title.is_empty():
 		show_title(quest.completion_title, quest.completion_subtitle)
+		# Después, el título que sigue (p. ej. el capítulo que empieza).
+		if not quest.followup_title.is_empty():
+			_tween.tween_callback(show_title.bind(quest.followup_title, quest.followup_subtitle))
 
 
 func _make_label(parent: Node, font_size: int, color: Color) -> Label:

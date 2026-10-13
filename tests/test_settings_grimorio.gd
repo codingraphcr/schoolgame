@@ -184,6 +184,10 @@ func _test_in_game() -> void:
 	_check(InputMap.has_action(&"grimorio") and GameSettings.key_name(&"grimorio") == "G", "la tecla del Grimorio es G")
 	_action(&"grimorio")
 	await _frames(3)
+	_check(root.get_node_or_null("GrimorioLayer") == null and not paused, "antes de encontrar el Grimorio, G no hace nada")
+	state.set_flag(GameState.GRIMORIO_FLAG)
+	_action(&"grimorio")
+	await _frames(3)
 	var screen := root.get_node_or_null("GrimorioLayer/Grimorio") as GrimorioScreen
 	_check(screen != null and paused, "G abre el Grimorio y pausa el juego")
 	_check(current_scene == room, "la sala sigue debajo del Grimorio")

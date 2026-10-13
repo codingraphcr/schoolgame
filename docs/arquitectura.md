@@ -521,7 +521,16 @@ código (`old_hallway_props.gd`: cajas, sillas, telarañas, la puerta «LAB 2» 
    **123456** abre (el equipo viejo nunca se actualizó); «la contraseña nueva que creaste (••••••••)» y «PAlvarado»
    explican por qué no. La nueva no se muestra: solo se guarda su huella. Al leer `.puerta/codigo.txt` se abre la
    puerta «LAB 2» (se dibuja entreabierta) y se aprende `ls -a`, con su página del Grimorio.
-4. y 5. `explorar_cuarto` y `salir_cuarto`: en construcción.
+4. `explorar_cuarto`: el **cuarto viejo** (`cuarto_viejo.tscn`, 720 px) está a oscuras (el color lo pone
+   `DigitalWorld.physical_ambient`; Kai lleva un brillo tenue). Con la Visión Digital se ven y se toman dos
+   `HiddenRelic` (`world/vision/hidden_relic.gd`, dibujadas en la capa digital): el **Grimorio** (marca
+   `GameState.GRIMORIO_FLAG`: desde ahí **G lo abre**; antes no hace nada) y la **Nullblade oficial**
+   (`NullbladeReveal` con su tarjeta, `nullblade_stage` 1, **dash** y **doble salto**). Lo maneja
+   `world/zones/zone0/old_room.gd`; arte provisional en `old_room_props.gd`.
+5. `salir_cuarto`: con las dos, el piso cerca de la puerta se corrompe (`Spikes`, 136 px) y cae un armario (96 px):
+   se sale con el doble salto y el dash. Al volver al pasillo viejo, un `QuestTrigger` cierra la misión: título
+   **«EL DESPERTAR»** (antes salía al terminar `prologo`) y después **«CAPÍTULO 1 · EL ORIGEN DIGITAL»**
+   (`Quest.followup_title`), y la marca **`tutorial_terminado`** (`Quest.completion_flag`): desde ahí morir cuesta Ecos.
 
 ## Misiones (`systems/quests/`)
 
@@ -652,7 +661,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_boss.gd` | El jefe: ventanita al principio (sin golpes), se arma, camina hacia Kai, avisa y embiste, choca y queda agachado (más bajo), el pogo crítico, proyectiles, fase 2 con la mitad de la vida, «ACCESO DENEGADO» y desaparece; fragmentos de vida (recoger, HUD, 4 forman una vida) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
-| `test_cuarto_viejo.gd` | H5: la misión empieza al asegurar la cuenta, la puerta cerrada del Laboratorio, la invitación del profesor, la llegada al pasillo viejo y la nota que solo se ve con la Visión |
+| `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (el armario pide el doble salto) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
 | `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
 | `test_save.gd` | Guardar y continuar (todo el progreso), escritura segura con copia, archivos dañados o inválidos, la computadora segura (punto de control al pasar; con E guarda y cura) y CONTINUAR en el menú |
 | `test_economy.gd` | Rangos de `EconomyConfig` y sorteo, recompensas únicas (no se cobran dos veces, se guardan), misiones, enemigos por rango y de la historia, cofres aunque se pierda su marca, y fragmentos que se suman al salir de la sala |

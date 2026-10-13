@@ -10,6 +10,11 @@ extends Resource
 ## Título grande que aparece al completarla (p. ej. "EL DESPERTAR"). Vacío = ninguno.
 @export var completion_title := ""
 @export var completion_subtitle := ""
+## Título que aparece después del de completar (p. ej. el capítulo que empieza). Vacío = ninguno.
+@export var followup_title := ""
+@export var followup_subtitle := ""
+## Marca que queda en GameState al completarla (p. ej. &"tutorial_terminado").
+@export var completion_flag: StringName = &""
 ## Misión que empieza automáticamente al completar esta (vacío = ninguna).
 @export var next_quest: StringName = &""
 ## Ecos que se reciben al completarla (0 = ninguno).

@@ -22,6 +22,7 @@
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="17_sftow"]
 [ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="18_2gook"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/pasillo_viejo_llegada.tres" id="19_1607t"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/cuarto_viejo_salida.tres" id="23_kip4k"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1mwm3"]
 size = Vector2(1024, 80)
@@ -33,6 +34,9 @@ size = Vector2(32, 360)
 size = Vector2(32, 360)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_odpsf"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tply6"]
 size = Vector2(12, 256)
 
 [node name="PasilloViejo" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
@@ -151,6 +155,7 @@ centered = false
 
 [node name="Props" type="Node2D" parent="." unique_id=1164489466]
 script = ExtResource("7_wvmfx")
+door_center = Vector2(930, 304)
 
 [node name="DoorTerminal" type="Area2D" parent="." unique_id=1122762000]
 position = Vector2(840, 304)
@@ -236,7 +241,7 @@ show_network = false
 show_bridge = false
 show_threat = false
 platforms = Array[Rect2]([])
-outlines = Array[Rect2]([Rect2(404, 264, 80, 40), Rect2(770, 232, 36, 24), Rect2(880, 248, 40, 56)])
+outlines = Array[Rect2]([Rect2(404, 264, 80, 40), Rect2(770, 232, 36, 24), Rect2(910, 248, 40, 56)])
 
 [node name="VisionNote" type="Node2D" parent="DigitalLayer" unique_id=1883075221]
 position = Vector2(540, 190)
@@ -245,6 +250,7 @@ lines = PackedStringArray("LO QUE BUSCAS", "NO SE VE", "A SIMPLE VISTA", "> ls -
 
 [node name="DigitalWorld" type="Node" parent="." unique_id=848190948 node_paths=PackedStringArray("player", "ambient", "digital_layer")]
 script = ExtResource("15_qwfqt")
+physical_ambient = Color(0.4, 0.42, 0.62, 1)
 player = NodePath("../Player")
 ambient = NodePath("../Ambient")
 digital_layer = NodePath("../DigitalLayer/Network")
@@ -255,6 +261,12 @@ digital_layer = NodePath("../DigitalLayer/Network")
 position = Vector2(40, 304)
 script = ExtResource("16_bpgao")
 id = &"desde_laboratorio"
+
+[node name="FromCuartoViejo" type="Marker2D" parent="Entries" unique_id=1065333564]
+position = Vector2(900, 304)
+script = ExtResource("16_bpgao")
+id = &"desde_cuarto_viejo"
+facing = -1
 
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 
@@ -268,9 +280,29 @@ target_entry = &"desde_pasillo_viejo"
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToLab" unique_id=1946857122]
 shape = SubResource("RectangleShape2D_odpsf")
 
+[node name="ToCuartoViejo" type="Area2D" parent="Exits" unique_id=503695291]
+position = Vector2(954, 176)
+script = ExtResource("17_sftow")
+door_id = &"este"
+target_scene = "res://world/zones/zone0/cuarto_viejo.tscn"
+target_entry = &"desde_pasillo_viejo"
+requires_quest = &"cuarto_viejo"
+requires_step = &"explorar_cuarto"
+locked_message = "La puerta del LAB 2 está cerrada. La terminal de al lado la controla."
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToCuartoViejo" unique_id=1491336831]
+shape = SubResource("RectangleShape2D_tply6")
+
 [node name="Arrival" type="Area2D" parent="." unique_id=257539335]
 script = ExtResource("18_2gook")
 quest_id = &"cuarto_viejo"
 step_id = &"ir_pasillo_viejo"
 dialogue = ExtResource("19_1607t")
+on_ready = true
+
+[node name="BackFromRoom" type="Area2D" parent="." unique_id=178451580]
+script = ExtResource("18_2gook")
+quest_id = &"cuarto_viejo"
+step_id = &"salir_cuarto"
+dialogue = ExtResource("23_kip4k")
 on_ready = true

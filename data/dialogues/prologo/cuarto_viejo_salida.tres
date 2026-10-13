@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_cvsal"]
+
+[resource]
+script = ExtResource("1_cvsal")
+script_text = "# H5: Kai sale del cuarto viejo con la Nullblade y el Grimorio. Cierra el prólogo.
+Kai [pensativo]: Una espada que aparece de la nada, un libro que se escribe solo...
+Kai: ¿Qué me está pasando?"
