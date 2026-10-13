@@ -36,6 +36,8 @@ const DEFAULT_ACCENT := Color(0.243, 0.949, 1.0)
 const TEXT_COLOR := Color(0.1, 0.09, 0.11)
 
 var _lines: Array[Dictionary] = []
+## Del diálogo actual (Dialogue.plate_right): la placa de quien no tiene retrato va a la derecha.
+var _plate_right := false
 var _index := -1
 var _is_playing := false
 ## Si el texto de la línea actual tiembla (DialogueCharacter.glitch).
@@ -96,6 +98,7 @@ func is_playing() -> bool:
 ## Muestra el diálogo completo y termina cuando el jugador pasa la última línea.
 func play(dialogue: Dialogue) -> void:
 	_lines = dialogue.get_lines() if dialogue else ([] as Array[Dictionary])
+	_plate_right = dialogue != null and dialogue.plate_right
 	if _lines.is_empty():
 		return
 	_is_playing = true
@@ -178,7 +181,11 @@ func _show_line(index: int) -> void:
 	_voiced_letters = 0
 	_update_glitch()
 	var active_side := _update_portraits(character, String(line.get("expression", "")))
-	_place_frame(active_side, index == 0 or previous_speaker != _speaker.text)
+	# Sin retrato la placa va a la izquierda, o a la derecha si el diálogo lo pide (la caja sigue centrada).
+	var plate_side := active_side
+	if active_side == -1 and character and _plate_right:
+		plate_side = DialogueCharacter.Side.RIGHT
+	_place_frame(active_side, plate_side, index == 0 or previous_speaker != _speaker.text)
 	_text.text = line["text"]
 	_text.visible_ratio = 0.0
 	_type_pause = 0.0
@@ -233,8 +240,9 @@ func _place_portrait(portrait: TextureRect, texture: Texture2D, side: int, flipp
 
 
 ## Corre la caja hacia el lado contrario al retrato del que habla (centrada si es narración) y,
-## si cambió quien habla, la hace aparecer con un pequeño salto, como en Hades.
-func _place_frame(active_side: int, pop: bool) -> void:
+## si cambió quien habla, la hace aparecer con un pequeño salto, como en Hades. La placa del nombre
+## va en plate_side (el lado del retrato; sin retrato, la izquierda o la derecha si el diálogo lo pide).
+func _place_frame(active_side: int, plate_side: int, pop: bool) -> void:
 	var left := BOX_NARRATION_MARGIN
 	var right := BOX_NARRATION_MARGIN
 	if active_side == DialogueCharacter.Side.LEFT:
@@ -243,7 +251,7 @@ func _place_frame(active_side: int, pop: bool) -> void:
 	elif active_side == DialogueCharacter.Side.RIGHT:
 		left = BOX_SIDE_MARGIN
 		right = BOX_PORTRAIT_GAP
-	var mirrored := active_side == DialogueCharacter.Side.RIGHT
+	var mirrored := plate_side == DialogueCharacter.Side.RIGHT
 	_box.mirrored = mirrored
 	_name_plate.mirrored = mirrored
 	_frame.offset_left = left

@@ -15,6 +15,9 @@ extends Resource
 ##   (La pantalla parpadea.)
 
 @export_multiline var script_text := ""
+## Solo en este diálogo: la placa del nombre de quien no tiene retrato va a la derecha (en la
+## pantalla del laboratorio, a la izquierda tapaba el monitor).
+@export var plate_right := false
 
 
 ## Devuelve las líneas como [{ "speaker": String, "expression": String, "text": String }, ...].
