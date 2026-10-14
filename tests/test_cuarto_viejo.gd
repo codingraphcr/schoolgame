@@ -256,8 +256,8 @@ func _test_old_room() -> void:
 		_action("interact")
 	await _until(func() -> bool: return box.is_playing())
 	_check(state.nullblade_stage == 1 and player.combat.weapon != null, "la Nullblade queda equipada para siempre")
-	_check(state.dash_level >= 1 and state.can_double_jump and player.dash_level >= 1 and player.can_double_jump,
-		"con ella, Kai obtiene el dash y el doble salto")
+	_check(state.dash_level >= 1 and player.dash_level >= 1, "con ella, Kai obtiene el dash")
+	_check(not state.can_double_jump and not player.can_double_jump, "el doble salto todavía no (llega más adelante en la historia)")
 	await _advance(box)
 	await _until(func() -> bool: return box.is_playing())
 	_check(box.is_playing(), "con las dos, el cuarto se derrumba y Kai lo nota")
@@ -265,34 +265,11 @@ func _test_old_room() -> void:
 	await _frames(5)
 	_check(state.get_current_step(QUEST) == &"salir_cuarto", "la misión avanza: salir del cuarto viejo")
 	var spikes := room.get_node("CorruptFloor") as Spikes
-	var cabinet := room.get_node("FallenCabinet") as StaticBody2D
-	_check(spikes.visible and spikes.monitorable and cabinet.visible and not (cabinet.get_node("Shape") as CollisionShape2D).disabled,
-		"aparecen el piso corrupto y el armario caído")
-	# El armario (96 px) no se pasa con un salto simple; con el doble salto sí.
-	player.teleport_to(Vector2(400, FLOOR_Y))
-	await _frames(6)
-	Input.action_press("move_left")
-	Input.action_press("jump")
-	await _wait(0.9)
-	Input.action_release("jump")
-	await _wait(0.4)
-	Input.action_release("move_left")
-	_check(player.global_position.x > 362.0, "con un salto simple no se pasa el armario (x=%.0f)" % player.global_position.x)
-	await _until(func() -> bool: return player.is_on_floor())
-	player.teleport_to(Vector2(400, FLOOR_Y))
-	await _frames(6)
-	Input.action_press("move_left")
-	Input.action_press("jump")
-	await _wait(0.3)
-	Input.action_release("jump")
-	await _frames(2)
-	Input.action_press("jump")
-	await _wait(0.3)
-	Input.action_release("jump")
-	await _wait(0.2)
-	await _until(func() -> bool: return player.is_on_floor())
-	Input.action_release("move_left")
-	_check(player.global_position.x < 330.0, "con el doble salto se pasa el armario (x=%.0f)" % player.global_position.x)
+	_check(spikes.visible and spikes.monitorable, "aparece el piso corrupto")
+	_check(room.get_node_or_null("FallenCabinet") == null, "no hay armario que pida el doble salto")
+	# El piso corrupto (x 166 a 286) no se cruza con un salto simple; con salto + dash sí.
+	_check(not await _cross_spikes(player, false), "con un salto simple no se cruza el piso corrupto")
+	_check(await _cross_spikes(player, true), "con salto + dash se cruza el piso corrupto")
 	# A la salida (los pinchos los prueba test_player_health: devuelven al suelo seguro).
 	player.teleport_to(Vector2(60, FLOOR_Y))
 	await _frames(4)
@@ -379,3 +356,28 @@ func _check(condition: bool, message: String) -> void:
 	if not condition:
 		_failures += 1
 	print("%s %s" % ["OK  " if condition else "FAIL", message])
+
+
+## Desde el borde derecho del piso corrupto, corre a la izquierda y salta (con dash cerca de lo más alto
+## del salto, si se pide: así llega más lejos).
+## Devuelve true si cae del otro lado sin lastimarse (los pinchos quitan vida y devuelven al suelo seguro).
+func _cross_spikes(player: Player, with_dash: bool) -> bool:
+	player.teleport_to(Vector2(298, FLOOR_Y))
+	player.velocity = Vector2.ZERO
+	await _frames(6)
+	var health_before: float = player.health.current
+	Input.action_press("move_left")
+	await _wait(0.08)
+	Input.action_press("jump")
+	await _wait(0.38)
+	if with_dash:
+		_action("dash")
+	await _wait(0.1)
+	Input.action_release("jump")
+	await _until(func() -> bool: return player.is_on_floor())
+	Input.action_release("move_left")
+	await _wait(0.6)
+	var spikes_left := (current_scene.get_node("CorruptFloor") as Node2D).global_position.x
+	var crossed := player.global_position.x < spikes_left and player.health.current == health_before
+	player.health.current = health_before
+	return crossed

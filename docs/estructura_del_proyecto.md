@@ -238,7 +238,7 @@ la contraseña que crea el jugador (se guarda solo su huella), la verificación 
 Grimorio, opciones, sonido provisional y voces.
 
 **Falta para el MVP:** H5 (invitación del profesor, desafío Visión Digital + terminal, cuarto viejo con la
-Nullblade oficial, dash, doble salto y «EL DESPERTAR»), controles táctiles, exportar a Windows y
+Nullblade oficial, dash y «EL DESPERTAR»), controles táctiles, exportar a Windows y
 Android, pruebas en celular.
 
 ## 11. Observaciones y riesgos
