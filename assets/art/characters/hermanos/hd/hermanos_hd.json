@@ -1,39 +1,11 @@
 {
 	"animations": {
-		"chip": {
-			"feet": [
-				48,
-				119
-			],
-			"file": "hermanos_hd_chip.png",
-			"fps": 1.0,
-			"frame_size": [
-				96,
-				128
-			],
-			"frames": 1,
-			"loop": true
-		},
 		"disco": {
 			"feet": [
 				48,
 				119
 			],
 			"file": "hermanos_hd_disco.png",
-			"fps": 1.0,
-			"frame_size": [
-				96,
-				128
-			],
-			"frames": 1,
-			"loop": true
-		},
-		"glitch": {
-			"feet": [
-				48,
-				119
-			],
-			"file": "hermanos_hd_glitch.png",
 			"fps": 1.0,
 			"frame_size": [
 				96,

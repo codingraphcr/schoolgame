@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u5pynm88e2na"
-path="res://.godot/imported/hermanos_hd_chip.png-752c28d0a2fc268a12f2f8ce5bf8a83a.ctex"
+uid="uid://nf2hp6oy8fvg"
+path="res://.godot/imported/hermanos_px_chip_rayo.png-e6a76b4d9dc4723d510a5bc3a10388b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/characters/hermanos/hd/hermanos_hd_chip.png"
-dest_files=["res://.godot/imported/hermanos_hd_chip.png-752c28d0a2fc268a12f2f8ce5bf8a83a.ctex"]
+source_file="res://assets/art/characters/hermanos/hd/hermanos_px_chip_rayo.png"
+dest_files=["res://.godot/imported/hermanos_px_chip_rayo.png-e6a76b4d9dc4723d510a5bc3a10388b8.ctex"]
 
 [params]
 

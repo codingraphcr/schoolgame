@@ -56,6 +56,17 @@ var _hits: Array[float] = []
 var _trail: Array[Vector2] = []
 var _lean := 0.0
 var _squash := Vector2.ONE
+## Pose del sprite (SiblingArt): la cambian los ataques; vuelve a «quieto» al terminar.
+var _pose: StringName = &"quieto"
+var _pose_until := 0.0
+## Altura a la que se sostiene en el aire (INF = con gravedad, en el piso).
+var _hover := INF
+## x donde se sostiene en el aire (hold_at; INF = libre en x).
+var _hold_x := INF
+## Dónde va a caer en la picada (INF = no está en una).
+var _dive_mark := Vector2.INF
+## Altura (pies) del barrido en curso (INF = no está barriendo; para las pruebas).
+var sweep_line := INF
 
 
 func _ready() -> void:
@@ -63,7 +74,7 @@ func _ready() -> void:
 	ecos_reward = 0  # La recompensa la da el final del capítulo (una sola vez).
 	knockback_resistance = 0.9
 	hurt_time = 0.1
-	body_size = Vector2(18, 42)
+	body_size = Vector2(16, 30)
 	super()
 	home = global_position
 	hurtbox.hit_blocked.connect(_on_hit_blocked)
@@ -79,7 +90,13 @@ func _physics_process(delta: float) -> void:
 	_lean = lerpf(_lean, clampf(velocity.x / 900.0, -0.25, 0.25), 1.0 - exp(-delta * 12.0))
 	_squash = _squash.lerp(Vector2.ONE, 1.0 - exp(-delta * 10.0))
 	queue_redraw()
-	velocity.y = minf(velocity.y + _gravity() * delta, max_fall_speed)
+	if _hover != INF and not is_dead and not stunned:
+		velocity.y = (_hover - global_position.y) * 12.0
+		if _hold_x != INF:
+			velocity.x = clampf((_hold_x - global_position.x) * 12.0, -600.0, 600.0)
+			face = signf(player_position().x - global_position.x) if player_position().x != global_position.x else face
+	else:
+		velocity.y = minf(velocity.y + _gravity() * delta, max_fall_speed)
 	if is_dead or stunned or frozen:
 		velocity.x = move_toward(velocity.x, 0.0, 700.0 * delta)
 		if stunned and not is_dead:
@@ -108,6 +125,38 @@ func interrupt() -> void:
 	_epoch += 1
 	busy = false
 	_telegraph = 0.0
+	_hover = INF
+	_hold_x = INF
+	_dive_mark = Vector2.INF
+	_pose = &"quieto"
+
+
+## Cambia la pose del sprite (si hold > 0, solo por ese tiempo; si no, hasta que termine el ataque).
+func set_pose(pose: StringName, hold := 0.0) -> void:
+	_pose = pose
+	_pose_until = _clock + hold if hold > 0.0 else INF
+
+
+## Pose del sprite: la del ataque si hay una; si no, según cómo se mueve (caminar, correr, saltar,
+## aire, caer). Aturdido o neutralizado: tirado en el piso.
+func current_pose() -> StringName:
+	if stunned or is_dead:
+		return &"aturdido"
+	if _pose != &"quieto" and (busy or _clock < _pose_until):
+		return _pose
+	if not is_on_floor():
+		if velocity.y < -80.0:
+			return &"saltar"
+		return &"caer" if velocity.y > 80.0 else &"aire"
+	var speed := absf(velocity.x)
+	if speed > 150.0:
+		return &"correr"
+	return &"caminar" if speed > 15.0 else &"quieto"
+
+
+## Pose mientras avisa un ataque.
+func _ready_pose() -> StringName:
+	return &"quieto"
 
 
 func is_telegraphing() -> bool:
@@ -143,6 +192,8 @@ func telegraph(kind: StringName, seconds: float, epoch: int) -> bool:
 	_telegraph_kind = kind
 	_telegraph = seconds * telegraph_scale
 	last_attack = kind
+	set_pose(_ready_pose())
+	_squash = Vector2(1.1, 0.9)
 	attack_started.emit(kind)
 	return await wait(seconds * telegraph_scale, epoch)
 
@@ -158,6 +209,10 @@ func begin_attack() -> int:
 func end_attack(epoch: int) -> void:
 	if epoch == _epoch:
 		busy = false
+		_hover = INF
+		_hold_x = INF
+		if _clock >= _pose_until or _pose_until == INF:
+			_pose = &"quieto"
 
 
 ## Camina hasta x (o hasta que pasen max_time segundos). Devuelve false si se interrumpió.
@@ -177,7 +232,7 @@ func walk_to(x: float, speed: float, epoch: int, max_time := 2.5) -> bool:
 
 ## Desaparece en un parpadeo de interferencia y aparece en x (Cambio de posición).
 func blink_to(x: float, epoch: int) -> bool:
-	PixelBurst.spawn(get_parent(), global_position + Vector2(0, -22), _colors(), 10, 60.0, Vector2(18, 40), 0.35)
+	PixelBurst.spawn(get_parent(), global_position + Vector2(0, -16), _colors(), 10, 60.0, Vector2(16, 30), 0.35)
 	modulate.a = 0.0
 	if not await wait(0.18, epoch):
 		modulate.a = 1.0
@@ -185,7 +240,7 @@ func blink_to(x: float, epoch: int) -> bool:
 	global_position = Vector2(clampf(x, arena_left, arena_right), FLOOR_Y)
 	velocity = Vector2.ZERO
 	face_player()
-	PixelBurst.spawn(get_parent(), global_position + Vector2(0, -22), _colors(), 10, 60.0, Vector2(18, 40), 0.35)
+	PixelBurst.spawn(get_parent(), global_position + Vector2(0, -16), _colors(), 10, 60.0, Vector2(16, 30), 0.35)
 	modulate.a = 1.0
 	return true
 
@@ -204,6 +259,237 @@ func jump(height: float, epoch: int, horizontal := 0.0) -> bool:
 	_squash = Vector2(1.2, 0.85)
 	velocity.x = 0.0
 	return true
+
+
+## Salto en picada (los dos lo hacen; en las Picadas alternas se turnan): sube sobre Kai, marca dónde
+## va a caer y cae en diagonal.
+func salto_en_picada(target_x := INF) -> void:
+	var epoch := begin_attack()
+	if epoch < 0:
+		return
+	velocity.x = 0.0
+	face_player()
+	if not await telegraph(&"salto_en_picada", config.glitch_dive_telegraph * 0.5, epoch):
+		end_attack(epoch)
+		return
+	# Sube alto, pasándose un poco del lado de Kai (para caer en diagonal).
+	var aim := clampf(player_position().x if target_x == INF else target_x, arena_left, arena_right)
+	var side := -signf(aim - global_position.x) if aim != global_position.x else 1.0
+	var apex_x := clampf(aim + side * 50.0, arena_left, arena_right)
+	velocity = Vector2((apex_x - global_position.x) / 0.45, -430.0)
+	set_pose(_dive_pose())
+	var elapsed := 0.0
+	while velocity.y < 0.0 and elapsed < 1.0:
+		await get_tree().physics_frame
+		if not still(epoch):
+			end_attack(epoch)
+			return
+		elapsed += get_physics_process_delta_time()
+	# Queda arriba un instante: la marca en el piso dice dónde va a caer.
+	_dive_mark = Vector2(aim, FLOOR_Y)
+	_hover = global_position.y
+	var hang := config.glitch_dive_telegraph * telegraph_scale
+	_telegraph_kind = &"salto_en_picada"
+	_telegraph = hang
+	elapsed = 0.0
+	while elapsed < hang:
+		velocity.x = 0.0
+		face = signf(aim - global_position.x) if aim != global_position.x else face
+		await get_tree().physics_frame
+		if not still(epoch):
+			end_attack(epoch)
+			return
+		elapsed += get_physics_process_delta_time()
+	_hover = INF
+	var dir := (_dive_mark - global_position).normalized()
+	elapsed = 0.0
+	while not is_on_floor() and elapsed < 1.2:
+		velocity = dir * config.glitch_dive_speed * tempo
+		await get_tree().physics_frame
+		if not still(epoch):
+			end_attack(epoch)
+			return
+		elapsed += get_physics_process_delta_time()
+	_dive_mark = Vector2.INF
+	velocity = Vector2.ZERO
+	_squash = Vector2(1.3, 0.75)
+	PixelBurst.spawn(get_parent(), global_position, _colors(), 14, 110.0)
+	Sfx.play(&"boss_charge", 1.4, -4.0)
+	await _recover(epoch)
+
+
+## Cruza la arena en línea recta hasta to_x (Danza espejo): por el piso (height 0) o volando a esa altura.
+## Hace daño al tocarlo (su cuerpo). Devuelve false si se interrumpió.
+func dash_across(to_x: float, height: float, epoch: int) -> bool:
+	face = signf(to_x - global_position.x) if to_x != global_position.x else face
+	_hold_x = INF
+	set_pose(_dash_pose())
+	if height > 0.0:
+		_hover = FLOOR_Y - height
+	var elapsed := 0.0
+	Sfx.play(&"dash", 1.1 if _kind() == &"glitch" else 0.9)
+	while (to_x - global_position.x) * face > 4.0 and elapsed < 2.5:
+		velocity.x = face * config.glitch_cut_speed * 1.1 * tempo
+		await get_tree().physics_frame
+		if not still(epoch):
+			return false
+		elapsed += get_physics_process_delta_time()
+	velocity.x = 0.0
+	_hover = INF
+	return true
+
+
+## Aparece en pos con un parpadeo de interferencia (en el aire se queda flotando ahí).
+func appear_at(pos: Vector2, epoch: int) -> bool:
+	PixelBurst.spawn(get_parent(), global_position + Vector2(0, -16), _colors(), 8, 60.0, Vector2(16, 30), 0.3)
+	modulate.a = 0.0
+	if not await wait(0.14, epoch):
+		modulate.a = 1.0
+		return false
+	global_position = Vector2(clampf(pos.x, arena_left, arena_right), minf(pos.y, FLOOR_Y))
+	velocity = Vector2.ZERO
+	if pos.y < FLOOR_Y - 2.0:
+		hold_at(global_position)
+	else:
+		release_hold()
+	PixelBurst.spawn(get_parent(), global_position + Vector2(0, -16), _colors(), 8, 60.0, Vector2(16, 30), 0.3)
+	modulate.a = 1.0
+	return true
+
+
+## Altura a la que apuntar (los pies): la de Kai (en el piso, en una plataforma o en el aire) o,
+## si height >= 0, esa altura sobre el piso.
+func aim_y(height := -1.0) -> float:
+	if height >= 0.0:
+		return FLOOR_Y - height
+	return clampf(player_position().y, 60.0, FLOOR_Y)
+
+
+## Barrido (como las Mantis Lords): aparece en una pared y cruza la arena en línea recta a la altura de
+## Kai. Durante el aviso lo sigue (si sube a una plataforma, el barrido va ahí); al lanzarse ya no.
+## height >= 0: cruza a esa altura fija. lead: espera más antes de lanzarse (para encadenar con el otro).
+func barrido(from_left: bool, height := -1.0, lead := 0.0) -> void:
+	var epoch := begin_attack()
+	if epoch < 0:
+		return
+	var x := arena_left + 4.0 if from_left else arena_right - 4.0
+	var y := aim_y(height)
+	if not await appear_at(Vector2(x, y), epoch):
+		end_attack(epoch)
+		return
+	face = 1.0 if from_left else -1.0
+	set_pose(_ready_pose())
+	last_attack = &"barrido"
+	_telegraph_kind = &"barrido"
+	attack_started.emit(&"barrido")
+	var total := config.sweep_telegraph * telegraph_scale + lead
+	var elapsed := 0.0
+	while elapsed < total:
+		_telegraph = maxf(total - elapsed, 0.01)
+		if elapsed < total - 0.15:
+			y = aim_y(height)
+		if y < FLOOR_Y - 2.0:
+			hold_at(Vector2(x, y))
+		face = 1.0 if from_left else -1.0
+		await get_tree().physics_frame
+		if not still(epoch):
+			end_attack(epoch)
+			return
+		elapsed += get_physics_process_delta_time()
+	_telegraph = 0.0
+	sweep_line = y
+	_hold_x = INF
+	_hover = y if y < FLOOR_Y - 2.0 else INF
+	set_pose(_dash_pose())
+	Sfx.play(&"dash", 1.0 if _kind() == &"glitch" else 0.85)
+	var to_x := arena_right + 10.0 if from_left else arena_left - 10.0
+	elapsed = 0.0
+	while (to_x - global_position.x) * face > 6.0 and elapsed < 2.0:
+		velocity.x = face * config.sweep_speed * tempo
+		await get_tree().physics_frame
+		if not still(epoch):
+			sweep_line = INF
+			end_attack(epoch)
+			return
+		elapsed += get_physics_process_delta_time()
+		if is_on_wall():
+			break
+	sweep_line = INF
+	velocity.x = 0.0
+	release_hold()
+	await _recover(epoch)
+
+
+## Caída (como las Mantis Lords): aparece arriba de Kai, lo sigue un instante (marca en el piso) y
+## cae en vertical. offset: cae corrido de Kai (en la Doble caída, uno a cada lado).
+func caida(offset := 0.0) -> void:
+	var epoch := begin_attack()
+	if epoch < 0:
+		return
+	var top := 72.0  # Debajo de la barra de vida del HUD.
+	var x := clampf(player_position().x + offset, arena_left, arena_right)
+	if not await appear_at(Vector2(x, top), epoch):
+		end_attack(epoch)
+		return
+	set_pose(_dive_pose())
+	last_attack = &"caida"
+	_telegraph_kind = &"caida"
+	attack_started.emit(&"caida")
+	var total := config.drop_telegraph * telegraph_scale
+	var elapsed := 0.0
+	while elapsed < total:
+		_telegraph = maxf(total - elapsed, 0.01)
+		if elapsed < total * 0.65:
+			x = clampf(player_position().x + offset, arena_left, arena_right)
+		hold_at(Vector2(x, top))
+		_dive_mark = Vector2(x, FLOOR_Y)
+		await get_tree().physics_frame
+		if not still(epoch):
+			end_attack(epoch)
+			return
+		elapsed += get_physics_process_delta_time()
+	_telegraph = 0.0
+	release_hold()
+	elapsed = 0.0
+	while not is_on_floor() and elapsed < 1.2:
+		velocity = Vector2(0, config.drop_speed * tempo)
+		await get_tree().physics_frame
+		if not still(epoch):
+			end_attack(epoch)
+			return
+		elapsed += get_physics_process_delta_time()
+	_dive_mark = Vector2.INF
+	velocity = Vector2.ZERO
+	_squash = Vector2(1.3, 0.75)
+	PixelBurst.spawn(get_parent(), global_position, _colors(), 14, 110.0)
+	Sfx.play(&"boss_charge", 1.5, -4.0)
+	await _recover(epoch)
+
+
+## Se sostiene en el aire en target (lo usa el Remolino doble, cuadro a cuadro).
+func hold_at(target: Vector2) -> void:
+	_hover = target.y
+	_hold_x = target.x
+
+
+func release_hold() -> void:
+	_hover = INF
+	_hold_x = INF
+
+
+## Pose para lanzarse en picada y para los dashes (cada hermano la suya).
+func _dive_pose() -> StringName:
+	return &"quieto"
+
+
+func _dash_pose() -> StringName:
+	return &"quieto"
+
+
+func _recover(epoch: int) -> void:
+	velocity.x = 0.0
+	await wait(0.5 / tempo, epoch)
+	end_attack(epoch)
 
 
 ## --- Aturdido y protección ---
@@ -273,7 +559,7 @@ func _on_hit_blocked(_hit: HitData) -> void:
 	var away := 1.0 if kai.global_position.x >= global_position.x else -1.0
 	kai.velocity = Vector2(away * 260.0, -140.0)
 	Sfx.play(&"enemy_hit", 1.6, -6.0)
-	PixelBurst.spawn(get_parent(), global_position + Vector2(away * 16.0, -26), [SiblingArt.CHIP_LIGHT, Color.WHITE], 8, 80.0)
+	PixelBurst.spawn(get_parent(), global_position + Vector2(away * 12.0, -18), [SiblingArt.CHIP_LIGHT, Color.WHITE], 8, 80.0)
 
 
 ## --- Final y reinicio ---
@@ -291,7 +577,7 @@ func neutralize() -> void:
 	collision_layer = 0
 	velocity = Vector2(0, -60)
 	Sfx.play(&"enemy_death", 1.2)
-	PixelBurst.spawn(get_parent(), global_position + Vector2(0, -22), death_colors, 18, 70.0, Vector2(18, 40), 0.5)
+	PixelBurst.spawn(get_parent(), global_position + Vector2(0, -16), death_colors, 18, 70.0, Vector2(16, 30), 0.5)
 	neutralized.emit(self)
 
 
@@ -363,18 +649,20 @@ func _draw() -> void:
 	if absf(velocity.x) > 200.0 or absf(velocity.y) > 300.0:
 		for i in _trail.size():
 			var k := float(i + 1) / _trail.size()
-			SiblingArt.draw_twin(self, _kind(), _clock, face, { "offset": _trail[i] - global_position, "alpha": 0.18 * k, "tint": color * 2.0 })
+			SiblingArt.draw_twin(self, _kind(), _clock, face, { "pose": current_pose(), "offset": _trail[i] - global_position, "alpha": 0.18 * k, "tint": color * 2.0 })
+	_draw_dive_mark(color)
 	_draw_effects_behind()
 	SiblingArt.draw_twin(self, _kind(), _clock, face, {
+		"pose": current_pose(),
 		"lean": _lean, "squash": _squash, "dizzy": stunned or is_dead, "enraged": enraged and not is_dead,
 		"shielded": _shield_visible(),
 	})
 	_draw_effects_front()
 	if is_telegraphing() and not is_dead:
 		var blink := int(_clock / 0.06) % 2 == 0
-		var top := Vector2(0, -58 - _telegraph * 10.0)
+		var top := Vector2(0, -44 - _telegraph * 10.0)
 		draw_string(ThemeDB.fallback_font, top + Vector2(-3, 0), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(color, 1.0 if blink else 0.5))
-		draw_arc(Vector2(0, -24), 16.0 + _telegraph * 14.0, 0.0, TAU, 24, Color(color, 0.8 if blink else 0.35), 1.5)
+		draw_arc(Vector2(0, -16), 13.0 + _telegraph * 12.0, 0.0, TAU, 24, Color(color, 0.8 if blink else 0.35), 1.5)
 
 
 func _shield_visible() -> bool:
@@ -387,3 +675,16 @@ func _draw_effects_behind() -> void:
 
 func _draw_effects_front() -> void:
 	pass
+
+
+## La marca en el piso de la picada (dónde va a caer) y la línea de puntos hasta ella.
+func _draw_dive_mark(color: Color) -> void:
+	if _dive_mark == Vector2.INF:
+		return
+	var mark := _dive_mark - global_position
+	var blink := int(_clock / 0.07) % 2 == 0
+	draw_line(mark + Vector2(-16, 0), mark + Vector2(16, 0), Color(color, 0.9 if blink else 0.4), 2.0)
+	draw_line(mark + Vector2(-8, -8), mark + Vector2(8, 8), Color(Color.WHITE, 0.6), 1.0)
+	draw_line(mark + Vector2(-8, 8), mark + Vector2(8, -8), Color(Color.WHITE, 0.6), 1.0)
+	for k in 6:
+		draw_circle(Vector2.ZERO.lerp(mark, k / 6.0) + Vector2(0, -16), 1.0, Color(color, 0.5))

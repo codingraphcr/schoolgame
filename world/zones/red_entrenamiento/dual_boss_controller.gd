@@ -15,8 +15,11 @@ extends Node
 ## - Furia fraternal: si un hermano queda neutralizado, el otro se vuelve más fuerte (más rápido, avisos
 ##   más cortos, más proyectiles y recupera parte de su vida) y sigue solo con sus ataques. Y viceversa.
 ##
-## Ataques en conjunto: Intercepción cruzada, Corte y respuesta, Sincronización aérea, Cambio de
-## posición, Cadena de proyecciones y Campo Dual.
+## Ataques en conjunto (la hoja de Ariel y, como en Hollow Knight, las Mantis Lords y los Cogwork Dancers):
+## Intercepción cruzada, Corte y respuesta, Sincronización aérea, Cambio de posición, Cadena de
+## proyecciones, Campo Dual, Danza espejo, Picadas alternas, Discos cruzados, Remolino doble (en el
+## anillo), Tijera, Doble caída y Caída y barrido. Sus barridos (desde la pared) y caídas (desde arriba)
+## siguen a Kai durante el aviso; en la Fase 1 atacan de a uno y desde la Fase 2 los dos sincronizados.
 ## Vínculo: cuando uno queda aturdido (varios golpes seguidos), el otro abandona su ataque para
 ## protegerlo hasta que se recupera.
 ## Si Kai pierde, reaparece en la entrada y la pelea vuelve a empezar (sin la introducción). Con su vida
@@ -40,18 +43,22 @@ const DONE_FLAG := &"cap1_hermanos_vencidos"
 const READING_FLAG := &"cap1_fragmento_leido"
 const REWARD_ID := &"capitulo1:hermanos"
 const FRAGMENT_LINES: PackedStringArray = ["ORIGEN: DESCONOCIDO", "ESTADO: INCOMPLETO", "OBSERVADOR: RECONOCIDO", "PROTOCOLO: [DATOS CORRUPTOS]"]
-## Secuencias de cada fase (se repiten en orden).
-const PHASE1: Array[StringName] = [&"corte_acelerado", &"discos_orbitales", &"salto_en_picada", &"zona_de_control",
-	&"intercepcion_cruzada", &"lanzamiento_de_fragmentos", &"rayo_de_sincronia", &"corte_y_respuesta"]
-const PHASE2: Array[StringName] = [&"cambio_de_posicion", &"embestida_y_discos", &"sincronizacion_aerea", &"proyecciones",
-	&"cadena_de_proyecciones", &"corte_y_respuesta", &"zona_y_picada"]
-const PHASE3: Array[StringName] = [&"cambio_de_posicion", &"intercepcion_cruzada", &"cadena_de_proyecciones",
-	&"sincronizacion_aerea", &"campo_dual"]
+## Secuencias de cada fase (se repiten en orden). Como las Mantis Lords: en la Fase 1 atacan de a uno
+## (barridos desde la pared y caídas sobre Kai, que lo siguen) y desde la Fase 2 los dos a la vez y
+## sincronizados, como los Cogwork Dancers. «a+b»: Glitch hace a y Chip hace b a la vez.
+const PHASE1: Array[StringName] = [&"barrido_glitch", &"caida_chip", &"discos_orbitales", &"caida_glitch",
+	&"barrido_chip", &"lanzamiento_de_fragmentos", &"corte_y_respuesta"]
+const PHASE2: Array[StringName] = [&"tijera", &"doble_caida", &"caida_y_barrido", &"picada_alterna", &"danza_espejo",
+	&"cadena_de_proyecciones", &"tijera", &"corte_acelerado+discos_orbitales"]
+const PHASE3: Array[StringName] = [&"tijera", &"caida_y_barrido", &"remolino_doble", &"doble_caida", &"danza_espejo",
+	&"picada_alterna", &"campo_dual"]
+## Altura a la que Chip cruza volando en la Danza espejo (por encima de la cabeza de Kai parado).
+const CHIP_DASH_HEIGHT := 64.0
 ## Furia fraternal: lo que hace el que queda en pie (solo, más fuerte).
-const GLITCH_RAGE: Array[StringName] = [&"corte_acelerado", &"embestida_en_cadena", &"lanzamiento_de_fragmentos",
-	&"salto_en_picada", &"corte_acelerado", &"lanzamiento_de_fragmentos"]
-const CHIP_RAGE: Array[StringName] = [&"discos_orbitales", &"rayo_de_sincronia", &"proyecciones", &"zona_de_control",
-	&"discos_orbitales", &"rayo_de_sincronia"]
+const GLITCH_RAGE: Array[StringName] = [&"barrido_glitch", &"caida_glitch", &"embestida_en_cadena", &"barrido_glitch",
+	&"lanzamiento_de_fragmentos", &"caida_glitch", &"corte_acelerado"]
+const CHIP_RAGE: Array[StringName] = [&"caida_chip", &"discos_orbitales", &"barrido_chip", &"rayo_de_sincronia",
+	&"caida_chip", &"proyecciones", &"discos_orbitales"]
 const PHASE_NAMES := { 2: "FASE 2 · SINCRONIZACIÓN", 3: "FASE 3 · PROTOCOLO DUAL" }
 
 @export var config: DualBossConfig
@@ -94,6 +101,8 @@ var _cooldown := 0.0
 var _running := false
 ## Cambia cuando se corta la secuencia en curso (aturdido, fase segura, reinicio).
 var _token := 0
+## Lado de la Danza espejo y los Discos cruzados (cambian cada vez).
+var _mirror := false
 
 
 func _ready() -> void:
@@ -175,6 +184,56 @@ func _alive(token: int) -> bool:
 
 func _pattern(pattern: StringName, token: int) -> void:
 	match pattern:
+		&"intercepcion_cruzada":
+			await _intercepcion_cruzada(token)
+		&"corte_y_respuesta":
+			await _corte_y_respuesta(token)
+		&"sincronizacion_aerea":
+			await _sincronizacion_aerea(token)
+		&"cambio_de_posicion":
+			await _cambio_de_posicion(token)
+		&"cadena_de_proyecciones":
+			await _cadena_de_proyecciones(token)
+		&"campo_dual":
+			await _campo_dual(token)
+		&"danza_espejo":
+			await _danza_espejo(token)
+		&"picada_alterna":
+			await _picada_alterna(token)
+		&"discos_cruzados":
+			await _discos_cruzados(token)
+		&"remolino_doble":
+			await _remolino_doble(token)
+		&"barrido_glitch":
+			await glitch.barrido(_far_wall_is_left())
+		&"barrido_chip":
+			await chip.barrido(_far_wall_is_left())
+		&"caida_glitch":
+			await glitch.caida()
+		&"caida_chip":
+			await chip.caida()
+		&"tijera":
+			await _tijera(token)
+		&"doble_caida":
+			await _doble_caida(token)
+		&"caida_y_barrido":
+			await _caida_y_barrido(token)
+		_:
+			if String(pattern).contains("+"):
+				# Los dos a la vez: Glitch empieza y Chip se suma un instante después.
+				var parts := String(pattern).split("+")
+				_individual(StringName(parts[0]))
+				await get_tree().create_timer(0.2, false, true).timeout
+				if _alive(token):
+					await _individual(StringName(parts[1]))
+				await _until_free(glitch, token)
+			else:
+				await _individual(pattern)
+
+
+## Un ataque individual (de Glitch o de Chip, según cuál sea).
+func _individual(attack: StringName) -> void:
+	match attack:
 		&"corte_acelerado":
 			await glitch.corte_acelerado()
 		&"salto_en_picada":
@@ -191,26 +250,6 @@ func _pattern(pattern: StringName, token: int) -> void:
 			await chip.proyecciones(config.rage_copies if survivor == chip else -1)
 		&"rayo_de_sincronia":
 			await chip.rayo_de_sincronia()
-		&"intercepcion_cruzada":
-			await _intercepcion_cruzada(token)
-		&"corte_y_respuesta":
-			await _corte_y_respuesta(token)
-		&"sincronizacion_aerea":
-			await _sincronizacion_aerea(token)
-		&"cambio_de_posicion":
-			await _cambio_de_posicion(token)
-		&"cadena_de_proyecciones":
-			await _cadena_de_proyecciones(token)
-		&"embestida_y_discos":
-			glitch.embestida_en_cadena()
-			await chip.discos_orbitales(2)
-			await _until_free(glitch, token)
-		&"zona_y_picada":
-			await chip.zona_de_control()
-			if _alive(token):
-				await glitch.salto_en_picada()
-		&"campo_dual":
-			await _campo_dual(token)
 
 
 ## Espera a que boss termine su ataque (o a que se corte la secuencia).
@@ -342,6 +381,153 @@ func _campo_dual(token: int) -> void:
 		elapsed += get_physics_process_delta_time()
 	glitch.end_attack(ge)
 	chip.end_attack(ce)
+
+
+## 7. Danza espejo (como los Cogwork Dancers): cada uno salta a una pared y cruzan la arena a la vez,
+## Glitch por el piso y Chip volando a la altura de la cabeza. Hay que saltar a Glitch y quedarse abajo
+## cuando pasa Chip. Cambian de lado cada vez.
+func _danza_espejo(token: int) -> void:
+	_mirror = not _mirror
+	var left := glitch.arena_left + 6.0
+	var right := glitch.arena_right - 6.0
+	var glitch_from := left if _mirror else right
+	var chip_from := right if _mirror else left
+	if not await _positions(glitch_from, chip_from, token):
+		return
+	var ge := glitch.begin_attack()
+	var ce := chip.begin_attack()
+	if ge < 0 or ce < 0:
+		glitch.end_attack(ge)
+		chip.end_attack(ce)
+		return
+	glitch.face = signf(chip_from - glitch_from)
+	chip.face = -glitch.face
+	chip.hold_at(Vector2(chip_from, SiblingBoss.FLOOR_Y - CHIP_DASH_HEIGHT))
+	glitch.telegraph(&"danza_espejo", 0.55, ge)
+	if not await chip.telegraph(&"danza_espejo", 0.55, ce):
+		glitch.end_attack(ge)
+		chip.end_attack(ce)
+		return
+	glitch.dash_across(chip_from, 0.0, ge)
+	await chip.dash_across(glitch_from, CHIP_DASH_HEIGHT, ce)
+	await _until_moving_stops(glitch, ge)
+	glitch._recover(ge)
+	await chip._recover(ce)
+
+
+## 8. Picadas alternas (como las Mantis Lords): caen sobre Kai por turnos, uno después del otro.
+func _picada_alterna(token: int) -> void:
+	var dives := 4 if fight_phase == 3 else 3
+	for k in dives:
+		var boss: SiblingBoss = glitch if k % 2 == 0 else chip
+		# El siguiente arranca mientras el anterior todavía cae: casi no hay respiro.
+		if k < dives - 1:
+			boss.salto_en_picada()
+			await get_tree().create_timer(0.75 / boss.tempo, false, true).timeout
+		else:
+			await boss.salto_en_picada()
+		if not _alive(token):
+			return
+	await _until_free(glitch, token)
+	await _until_free(chip, token)
+
+
+## 9. Discos cruzados: desde paredes opuestas, Chip lanza sus discos mientras Glitch embiste.
+func _discos_cruzados(token: int) -> void:
+	_mirror = not _mirror
+	var left := glitch.arena_left + 20.0
+	var right := glitch.arena_right - 20.0
+	if not await _positions(left if _mirror else right, right if _mirror else left, token):
+		return
+	chip.discos_orbitales(2)
+	await glitch.embestida_en_cadena()
+	await _until_free(chip, token)
+
+
+## 10. Remolino doble (Fase 3): suben al gran anillo del fondo (la Cámara de convergencia) y giran por
+## él, uno frente al otro, disparando por turnos (cuchillas de Glitch y discos de Chip).
+func _remolino_doble(token: int) -> void:
+	# Los pies van 16 px debajo del anillo: así el cuerpo pasa justo por el aro.
+	var center := chamber.ring_center + Vector2(0, 16) if chamber else Vector2((glitch.arena_left + glitch.arena_right) / 2.0, SiblingBoss.FLOOR_Y - 96.0)
+	var radius := chamber.ring_radius if chamber else 70.0
+	if not await _positions(center.x - 40.0, center.x + 40.0, token):
+		return
+	var ge := glitch.begin_attack()
+	var ce := chip.begin_attack()
+	if ge < 0 or ce < 0:
+		glitch.end_attack(ge)
+		chip.end_attack(ce)
+		return
+	# Suben al anillo mientras avisan.
+	glitch.hold_at(center + Vector2(-radius, 0))
+	chip.hold_at(center + Vector2(radius, 0))
+	glitch.telegraph(&"remolino_doble", 0.8, ge)
+	if not await chip.telegraph(&"remolino_doble", 0.8, ce):
+		glitch.release_hold()
+		chip.release_hold()
+		glitch.end_attack(ge)
+		chip.end_attack(ce)
+		return
+	var elapsed := 0.0
+	var next_shot := 0.4
+	var turn := 0
+	while elapsed < 3.4 and glitch.still(ge) and chip.still(ce):
+		var angle := PI + elapsed * 2.6
+		var offset := Vector2(cos(angle), sin(angle)) * radius
+		glitch.hold_at(center + offset)
+		chip.hold_at(center - offset)
+		if elapsed >= next_shot:
+			next_shot += 0.5 / glitch.tempo
+			var kai := _room.player.global_position + Vector2(0, -16)
+			if turn % 2 == 0:
+				glitch.face_player()
+				glitch.throw_fragments(kai, 2)
+			else:
+				chip.face_player()
+				chip.throw_discs(1)
+			turn += 1
+		await get_tree().physics_frame
+		elapsed += get_physics_process_delta_time()
+	glitch.release_hold()
+	chip.release_hold()
+	glitch._recover(ge)
+	await chip._recover(ce)
+
+
+## Espera a que boss deje de moverse (después de un dash), o a que se corte su ataque.
+func _until_moving_stops(boss: SiblingBoss, epoch: int) -> void:
+	while boss.still(epoch) and absf(boss.velocity.x) > 1.0:
+		await get_tree().physics_frame
+
+
+## --- Como las Mantis Lords y los Cogwork Dancers ---
+
+## La pared más lejos de Kai (de ahí sale el barrido: da tiempo para verlo venir).
+func _far_wall_is_left() -> bool:
+	return _room.player.global_position.x > (glitch.arena_left + glitch.arena_right) / 2.0
+
+
+## 11. Tijera: desde paredes opuestas, Glitch barre a la altura de Kai y Chip cruza por arriba (justo
+## sobre la cabeza de Kai parado) un instante después. Hay que saltar a uno y agacharse del otro.
+func _tijera(token: int) -> void:
+	_mirror = not _mirror
+	glitch.barrido(_mirror)
+	await chip.barrido(not _mirror, config.sweep_air_height, 0.4)
+	await _until_free(glitch, token)
+
+
+## 12. Doble caída: aparecen los dos arriba, a los costados de Kai, lo siguen y caen a la vez.
+func _doble_caida(token: int) -> void:
+	glitch.caida(-34.0)
+	await chip.caida(34.0)
+	await _until_free(glitch, token)
+
+
+## 13. Caída y barrido: Chip cae sobre Kai y, justo cuando aterriza, Glitch ya está cruzando por el piso.
+func _caida_y_barrido(token: int) -> void:
+	glitch.barrido(_far_wall_is_left(), 0.0, config.drop_telegraph * chip.telegraph_scale + 0.1)
+	await chip.caida()
+	await _until_free(glitch, token)
 
 
 ## --- Vínculo: proteger al hermano aturdido ---
