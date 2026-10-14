@@ -1,0 +1,353 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_8f6qu"]
+[ext_resource type="Script" path="res://world/zones/red_entrenamiento/training_network_background.gd" id="2_c5apf"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_sy8qt"]
+[ext_resource type="Script" path="res://world/hazards/spikes.gd" id="4_gvnr3"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="5_0t1lo"]
+[ext_resource type="Script" path="res://world/digital/arena_barrier.gd" id="6_nqkr4"]
+[ext_resource type="Script" path="res://world/digital/chase/educational_checkpoint.gd" id="7_la6ml"]
+[ext_resource type="Resource" path="res://data/challenges/cap1_checkpoint_1.tres" id="8_s48i6"]
+[ext_resource type="Resource" path="res://data/challenges/cap1_checkpoint_2.tres" id="9_4relw"]
+[ext_resource type="Resource" path="res://data/challenges/cap1_checkpoint_3.tres" id="10_pypt6"]
+[ext_resource type="Script" path="res://world/digital/chase/corruption_barrier.gd" id="11_ec0yk"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="12_3l0nv"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="13_6js36"]
+[ext_resource type="Texture2D" path="res://assets/art/light_soft.tres" id="14_jupwb"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="15_xf83c"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="16_iaqrh"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="17_dt0aw"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="18_wnugd"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="19_naxve"]
+[ext_resource type="Script" path="res://world/digital/chase/digital_chase_controller.gd" id="20_ay5lp"]
+[ext_resource type="Resource" path="res://data/chase/persecucion_cap1.tres" id="21_gri68"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ts2ss"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wuy1j"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vy3nh"]
+size = Vector2(12, 256)
+
+[node name="RedEntrenamiento" type="Node2D" unique_id=1326768740 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_8f6qu")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 4760, 360)
+player_tint = Color(0.7, 1, 1.15, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Background" type="Node2D" parent="." unique_id=1964221662]
+script = ExtResource("2_c5apf")
+area = Rect2(0, 0, 4760, 360)
+signs = {
+300.0: "TRAMO 1",
+1680.0: "TRAMO 2",
+3180.0: "TRAMO 3",
+4420.0: "ZONA SEGURA"
+}
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=1859733182]
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1123529029]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_ts2ss")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1244227673]
+position = Vector2(4776, 180)
+shape = SubResource("RectangleShape2D_wuy1j")
+
+[node name="Platforms" type="Node2D" parent="." unique_id=2124574886]
+
+[node name="Platform1" type="AnimatableBody2D" parent="Platforms" unique_id=1284519992]
+position = Vector2(0, 304)
+script = ExtResource("3_sy8qt")
+width = 260.0
+
+[node name="Platform2" type="AnimatableBody2D" parent="Platforms" unique_id=1182864280]
+position = Vector2(300, 304)
+script = ExtResource("3_sy8qt")
+width = 220.0
+
+[node name="Platform3" type="AnimatableBody2D" parent="Platforms" unique_id=447288919]
+position = Vector2(580, 272)
+script = ExtResource("3_sy8qt")
+width = 120.0
+
+[node name="Platform4" type="AnimatableBody2D" parent="Platforms" unique_id=314638103]
+position = Vector2(760, 240)
+script = ExtResource("3_sy8qt")
+width = 140.0
+
+[node name="Platform5" type="AnimatableBody2D" parent="Platforms" unique_id=2021209179]
+position = Vector2(960, 304)
+script = ExtResource("3_sy8qt")
+width = 180.0
+
+[node name="Platform6" type="AnimatableBody2D" parent="Platforms" unique_id=605527184]
+position = Vector2(1200, 272)
+script = ExtResource("3_sy8qt")
+width = 120.0
+
+[node name="Platform7" type="AnimatableBody2D" parent="Platforms" unique_id=501307054]
+position = Vector2(1380, 304)
+script = ExtResource("3_sy8qt")
+width = 260.0
+
+[node name="Platform8" type="AnimatableBody2D" parent="Platforms" unique_id=933840599]
+position = Vector2(1680, 304)
+script = ExtResource("3_sy8qt")
+width = 160.0
+
+[node name="Platform9" type="AnimatableBody2D" parent="Platforms" unique_id=547199783]
+position = Vector2(1840, 264)
+script = ExtResource("3_sy8qt")
+width = 80.0
+
+[node name="Platform10" type="AnimatableBody2D" parent="Platforms" unique_id=1892049249]
+position = Vector2(1980, 212)
+script = ExtResource("3_sy8qt")
+width = 70.0
+
+[node name="Platform11" type="AnimatableBody2D" parent="Platforms" unique_id=251805322]
+position = Vector2(1840, 304)
+script = ExtResource("3_sy8qt")
+width = 260.0
+
+[node name="Platform12" type="AnimatableBody2D" parent="Platforms" unique_id=39090295]
+position = Vector2(2100, 220)
+script = ExtResource("3_sy8qt")
+kind = 1
+width = 72.0
+move_offset = Vector2(110, 0)
+
+[node name="Platform13" type="AnimatableBody2D" parent="Platforms" unique_id=1479710829]
+position = Vector2(2160, 304)
+script = ExtResource("3_sy8qt")
+width = 160.0
+
+[node name="Platform14" type="AnimatableBody2D" parent="Platforms" unique_id=765168382]
+position = Vector2(2380, 260)
+script = ExtResource("3_sy8qt")
+width = 70.0
+
+[node name="Platform15" type="AnimatableBody2D" parent="Platforms" unique_id=1111008466]
+position = Vector2(2510, 228)
+script = ExtResource("3_sy8qt")
+width = 70.0
+
+[node name="Platform16" type="AnimatableBody2D" parent="Platforms" unique_id=1473055065]
+position = Vector2(2640, 260)
+script = ExtResource("3_sy8qt")
+width = 80.0
+
+[node name="Platform17" type="AnimatableBody2D" parent="Platforms" unique_id=819351549]
+position = Vector2(2780, 304)
+script = ExtResource("3_sy8qt")
+width = 360.0
+
+[node name="Platform18" type="AnimatableBody2D" parent="Platforms" unique_id=1294224644]
+position = Vector2(3180, 304)
+script = ExtResource("3_sy8qt")
+width = 100.0
+
+[node name="Platform19" type="AnimatableBody2D" parent="Platforms" unique_id=1845474833]
+position = Vector2(3340, 280)
+script = ExtResource("3_sy8qt")
+kind = 2
+width = 90.0
+
+[node name="Platform20" type="AnimatableBody2D" parent="Platforms" unique_id=1046397572]
+position = Vector2(3490, 256)
+script = ExtResource("3_sy8qt")
+kind = 2
+width = 90.0
+
+[node name="Platform21" type="AnimatableBody2D" parent="Platforms" unique_id=1784087113]
+position = Vector2(3640, 280)
+script = ExtResource("3_sy8qt")
+kind = 2
+width = 90.0
+
+[node name="Platform22" type="AnimatableBody2D" parent="Platforms" unique_id=114771507]
+position = Vector2(3790, 248)
+script = ExtResource("3_sy8qt")
+width = 80.0
+
+[node name="Platform23" type="AnimatableBody2D" parent="Platforms" unique_id=1799085844]
+position = Vector2(3900, 248)
+script = ExtResource("3_sy8qt")
+kind = 1
+width = 76.0
+move_offset = Vector2(110, 0)
+
+[node name="Platform24" type="AnimatableBody2D" parent="Platforms" unique_id=828921208]
+position = Vector2(4120, 272)
+script = ExtResource("3_sy8qt")
+kind = 2
+width = 90.0
+
+[node name="Platform25" type="AnimatableBody2D" parent="Platforms" unique_id=845359567]
+position = Vector2(4270, 288)
+script = ExtResource("3_sy8qt")
+kind = 2
+width = 80.0
+
+[node name="Platform26" type="AnimatableBody2D" parent="Platforms" unique_id=61516440]
+position = Vector2(4400, 304)
+script = ExtResource("3_sy8qt")
+width = 360.0
+
+[node name="Hazards" type="Node2D" parent="." unique_id=312138556]
+
+[node name="Corrupt1" type="Area2D" parent="Hazards" unique_id=570792717]
+position = Vector2(1920, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("4_gvnr3")
+width = 70.0
+spike_color = Color(1, 0.24, 0.65, 1)
+damage = 0.5
+is_hazard = true
+
+[node name="Entries" type="Node2D" parent="." unique_id=1340132116]
+
+[node name="Inicio" type="Marker2D" parent="Entries" unique_id=760479354]
+position = Vector2(80, 304)
+script = ExtResource("5_0t1lo")
+id = &"inicio"
+arrival_effect = "materialize"
+
+[node name="DesdeArena" type="Marker2D" parent="Entries" unique_id=1297321572]
+position = Vector2(4700, 304)
+script = ExtResource("5_0t1lo")
+id = &"desde_arena"
+facing = -1
+
+[node name="Checkpoint1" type="Marker2D" parent="Entries" unique_id=1474360988]
+position = Vector2(1500, 304)
+script = ExtResource("5_0t1lo")
+id = &"checkpoint_1"
+
+[node name="Checkpoint2" type="Marker2D" parent="Entries" unique_id=1342117164]
+position = Vector2(2900, 304)
+script = ExtResource("5_0t1lo")
+id = &"checkpoint_2"
+
+[node name="Checkpoint3" type="Marker2D" parent="Entries" unique_id=499579207]
+position = Vector2(4520, 304)
+script = ExtResource("5_0t1lo")
+id = &"checkpoint_3"
+
+[node name="Gates" type="Node2D" parent="." unique_id=1333556781]
+
+[node name="Gate1" type="StaticBody2D" parent="Gates" unique_id=347544068]
+position = Vector2(1630, 304)
+script = ExtResource("6_nqkr4")
+height = 200.0
+active = true
+
+[node name="Gate2" type="StaticBody2D" parent="Gates" unique_id=48596056]
+position = Vector2(3130, 304)
+script = ExtResource("6_nqkr4")
+height = 200.0
+active = true
+
+[node name="Gate3" type="StaticBody2D" parent="Gates" unique_id=415682885]
+position = Vector2(4690, 304)
+script = ExtResource("6_nqkr4")
+height = 200.0
+active = true
+
+[node name="Checkpoints" type="Node2D" parent="." unique_id=1879531635]
+
+[node name="Checkpoint1" type="Area2D" parent="Checkpoints" unique_id=1038016278 node_paths=PackedStringArray("gate")]
+position = Vector2(1450, 304)
+script = ExtResource("7_la6ml")
+challenge = ExtResource("8_s48i6")
+safe_from_x = 1380.0
+gate = NodePath("../../Gates/Gate1")
+entry_id = &"checkpoint_1"
+prompt_text = "E: responder"
+prompt_offset = Vector2(-34, -86)
+
+[node name="Checkpoint2" type="Area2D" parent="Checkpoints" unique_id=793824539 node_paths=PackedStringArray("gate")]
+position = Vector2(2850, 304)
+script = ExtResource("7_la6ml")
+number = 2
+challenge = ExtResource("9_4relw")
+safe_from_x = 2780.0
+gate = NodePath("../../Gates/Gate2")
+entry_id = &"checkpoint_2"
+prompt_text = "E: responder"
+prompt_offset = Vector2(-34, -86)
+
+[node name="Checkpoint3" type="Area2D" parent="Checkpoints" unique_id=1517295085 node_paths=PackedStringArray("gate")]
+position = Vector2(4470, 304)
+script = ExtResource("7_la6ml")
+number = 3
+challenge = ExtResource("10_pypt6")
+safe_from_x = 4400.0
+gate = NodePath("../../Gates/Gate3")
+entry_id = &"checkpoint_3"
+prompt_text = "E: responder"
+prompt_offset = Vector2(-34, -86)
+
+[node name="CorruptionBarrier" type="Area2D" parent="." unique_id=67946985]
+position = Vector2(50, 304)
+script = ExtResource("11_ec0yk")
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1651188675]
+position = Vector2(80, 304)
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1906118656 instance=ExtResource("12_3l0nv")]
+position = Vector2(80, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("13_6js36")
+
+[node name="SoulGlow" type="PointLight2D" parent="Player" unique_id=125802026]
+position = Vector2(0, -20)
+color = Color(0.4, 0.95, 1, 1)
+energy = 0.6
+texture = ExtResource("14_jupwb")
+texture_scale = 1.4
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=305966165 node_paths=PackedStringArray("target") instance=ExtResource("15_xf83c")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("16_iaqrh")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("17_dt0aw")]
+layer = 40
+script = ExtResource("18_wnugd")
+player = NodePath("../Player")
+
+[node name="Exits" type="Node2D" parent="." unique_id=1922104322]
+
+[node name="ToArena" type="Area2D" parent="Exits" unique_id=41485599]
+position = Vector2(4754, 176)
+script = ExtResource("19_naxve")
+door_id = &""
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToArena" unique_id=937105875]
+shape = SubResource("RectangleShape2D_vy3nh")
+
+[node name="Chase" type="Node" parent="." unique_id=179042863 node_paths=PackedStringArray("barrier", "checkpoints", "start_marker")]
+script = ExtResource("20_ay5lp")
+config = ExtResource("21_gri68")
+barrier = NodePath("../CorruptionBarrier")
+checkpoints = [NodePath("../Checkpoints/Checkpoint1"), NodePath("../Checkpoints/Checkpoint2"), NodePath("../Checkpoints/Checkpoint3")]
+tramo_starts = PackedFloat32Array(270, 1660, 3160)
+start_marker = NodePath("../SpawnPoint")

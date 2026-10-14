@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ChaseConfig" format=3]
+
+[ext_resource type="Script" path="res://systems/chase/chase_config.gd" id="1_cfg"]
+
+[resource]
+script = ExtResource("1_cfg")
+start_seconds = 240.0
+wrong_answer_penalty = 15.0
+min_seconds_after_penalty = 20.0
+retry_seconds = PackedFloat32Array(120, 100, 90)
+barrier_damage = 1.0
+barrier_speeds = PackedFloat32Array(55, 65, 75)
+barrier_start_gap = 220.0
+barrier_knockback = Vector2(260, -160)
+fall_damage = 1.5

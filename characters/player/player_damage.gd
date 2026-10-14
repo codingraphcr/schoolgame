@@ -29,6 +29,8 @@ var invulnerable_timer := 0.0
 var last_safe_position := Vector2.ZERO
 ## Verdadero mientras se reaparece tras un peligro o la muerte (no recibe daño).
 var is_respawning := false
+## Protegido por la historia (p. ej. mientras responde la pregunta de un checkpoint): no recibe daño.
+var protected := false
 
 var _safe_timer := 0.0
 var _clock := 0.0
@@ -57,18 +59,19 @@ func _physics_process(delta: float) -> void:
 
 
 func is_invulnerable() -> bool:
-	return invulnerable_timer > 0.0 or is_respawning
+	return invulnerable_timer > 0.0 or is_respawning or protected
 
 
-## Caída fuera de la sala: se trata como un peligro (1 máscara y vuelta al suelo seguro).
-func fall_out_of_bounds() -> void:
+## Caída fuera de la sala: se trata como un peligro (damage y vuelta al suelo seguro). Cada sala
+## dice cuánto quita (Room.fall_damage: 1 cristal en general, 1,5 en la persecución digital).
+func fall_out_of_bounds(damage := 1.0) -> void:
 	if is_respawning:
 		return
 	if is_invulnerable():
 		_hazard_respawn()
 		return
 	var hit := HitData.new()
-	hit.damage = 1.0
+	hit.damage = damage
 	hit.is_hazard = true
 	_on_hit_received(hit)
 
@@ -129,7 +132,7 @@ func _rewound_safe_position() -> Vector2:
 ## Guarda la posición como segura si el jugador está de pie con los dos lados del cuerpo
 ## sobre suelo firme (no al borde de un precipicio) y no está tocando un peligro.
 func _track_safe_ground(delta: float) -> void:
-	var on_solid_ground := player.is_on_floor() and safe_ground_left.is_colliding() and safe_ground_right.is_colliding()
+	var on_solid_ground := player.is_on_floor() and safe_ground_left.is_colliding() and safe_ground_right.is_colliding() 		and not _is_unsafe(safe_ground_left.get_collider()) and not _is_unsafe(safe_ground_right.get_collider())
 	if not on_solid_ground or is_respawning or invulnerable_timer > 0.0 or _touching_hazard():
 		_safe_timer = 0.0
 		return
@@ -140,6 +143,12 @@ func _track_safe_ground(delta: float) -> void:
 		# Basta con el último segundo de historial.
 		while _safe_history.size() > 1 and _clock - _safe_history[0][0] > 1.0:
 			_safe_history.pop_front()
+
+
+## Plataformas que se mueven o desaparecen (grupo "unsafe_ground"): nunca son suelo seguro, para no
+## reaparecer sobre algo que ya no está.
+func _is_unsafe(collider: Object) -> bool:
+	return collider is Node and (collider as Node).is_in_group(&"unsafe_ground")
 
 
 func _touching_hazard() -> bool:

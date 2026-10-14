@@ -620,6 +620,24 @@ Arte provisional en `technical_room_props.gd`: racks con luces, el servidor del 
 monitor (con la conexión de la Inmersión Digital, que aparece en el paso `seguirlos_adentro`) y el cartel «SOLO
 PERSONAL AUTORIZADO». Una `RoomExit` cerrada recuerda si Kai quedó parado en ella: si se abre mientras sigue ahí, pasa.
 
+## Persecución digital (Capítulo 1)
+
+La red de entrenamiento (`world/zones/red_entrenamiento/persecucion.tscn`, distrito `red_entrenamiento`, 4760 px):
+tres tramos fijos que terminan en una zona segura con su checkpoint y su puerta (`ArenaBarrier`). Se llega por la
+conexión del monitor del cuarto técnico. Valores en `data/chase/persecucion_cap1.tres` (`ChaseConfig`).
+
+| Pieza | Responsabilidad |
+|---|---|
+| `DataPlatform` | Bloque de datos de un solo sentido: fijo, que se mueve (con la física) o temporal (al pisarlo parpadea, desaparece y vuelve). Los que se mueven o desaparecen están en el grupo `unsafe_ground` |
+| `CorruptionBarrier` | Pared que avanza detrás de Kai: quita `barrier_damage` (golpe común, con la invulnerabilidad de siempre), no pasa de la zona segura, `disable()` la apaga para siempre |
+| `EducationalCheckpoint` | Pilar con la pregunta del tramo (`ChoiceChallenge` en `ChoiceWindow`, que pausa el juego); con E se vuelve a abrir |
+| `DigitalChaseController` | Une todo: arranca la barrera y el reloj al cruzar el inicio de cada tramo, los detiene en la zona segura, −15 s por respuesta incorrecta, marca `cap1_checkpoint_N` y guarda en la entrada `checkpoint_N`, reintentos con tiempo suficiente (tiempo agotado o muerte), y al terminar apaga la barrera y oculta el reloj |
+| `ChaseTimer` | El reloj en el HUD («⏱ 3:42»): rojo y latiendo en los últimos 30 s, «−15 s» al descontar |
+
+Caídas: `Room.fall_damage` (1,5 aquí) y `PlayerDamage.fall_out_of_bounds(damage)`: Kai vuelve a la última plataforma
+segura. `PlayerDamage.protected` lo protege mientras la historia lo pide. `Room.player_respawned` avisa al reaparecer
+después de morir.
+
 ## Misiones (`systems/quests/`)
 
 | Pieza | Responsabilidad |
@@ -755,6 +773,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_capitulo1_datos.gd` | Capítulo 1, etapa 1: misiones y su orden, diálogos con oradores conocidos y los textos de la especificación sin cambios, desafíos con una sola respuesta correcta y explicación, páginas del Grimorio, voces de Chip y Glitch, y ningún texto que revele el origen de Kai |
 | `test_inmersion.gd` | Capítulo 1, etapa 2: la conexión del monitor solo con la Visión Digital, la primera vez con diálogo y la transición «INMERSIÓN DIGITAL», la habilidad permanente (partida, validador, «Mi perfil», Grimorio) y la segunda vez sin repetir nada |
 | `test_cuarto_tecnico.gd` | Capítulo 1, etapa 3: el cuarto técnico en el mapa, el descanso nuevo de las escaleras con la física real, la puerta cerrada con llave hasta el permiso del profesor (y que se abra con Kai parado ahí), la conexión del monitor solo cuando la historia lo pide, la vuelta y continuar una partida guardada ahí |
+| `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo las habilidades del capítulo, la barrera (1 por contacto, invulnerabilidad, sin daño en cada cuadro), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
 | `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |
 | `test_generador.gd` | M4: con fichas de prueba, la parte fija intacta, misma semilla = mismo mapa, 40 semillas válidas y distintas, solo puertas compatibles, respaldo si la parte variable no valida y error si la fija está mal; con los datos reales, aula o depósito al este de la biblioteca, el mapa se rearma igual al cargar, dos aulas con la misma escena, la puerta libre cerrada y continuar en la misma aula |
 | `test_biblioteca.gd` | M3: escaleras y biblioteca en el mapa, cerradas hasta el Capítulo 1, Kai sube los descansos con la física real y sin doble salto, ida y vuelta entre Pasillo, escaleras y biblioteca, estanterías como plataforma y continuar una partida guardada en la biblioteca |

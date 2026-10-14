@@ -72,6 +72,7 @@ godot --headless --path . --script res://tests/test_grimorio_map.gd
 godot --headless --path . --script res://tests/test_capitulo1_datos.gd
 godot --headless --path . --script res://tests/test_inmersion.gd
 godot --headless --path . --script res://tests/test_cuarto_tecnico.gd
+godot --headless --path . --script res://tests/test_persecucion.gd
 godot --headless --path . --script res://tests/test_cuarto_viejo.gd
 ```
 

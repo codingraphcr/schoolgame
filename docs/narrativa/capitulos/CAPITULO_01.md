@@ -255,10 +255,10 @@ Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las 
 |---|---|---|
 | 1 | Guion y datos de misión | ✅ Hecha (guion para revisar con el equipo) |
 | 2 | Inmersión Digital (solo la transición) | ✅ Hecha: `ImmersionPortal`, habilidad guardada; se coloca en el cuarto técnico en la etapa 3 |
-| 3 | Sala inicial de persecución | En curso: ✅ el cuarto técnico (2° piso, a la izquierda de las escaleras; cerrado con llave hasta el permiso del profesor; la conexión en el monitor). Falta la sala de la persecución |
-| 4 | Barrera, salud y caídas | Pendiente |
-| 5 | Checkpoints y preguntas | Pendiente |
-| 6 | Temporizador | Pendiente |
+| 3 | Sala inicial de persecución | ✅ El cuarto técnico (2° piso, cerrado con llave hasta el permiso del profesor; la conexión en el monitor) y la red de entrenamiento (`persecucion.tscn`, 3 tramos fijos) |
+| 4 | Barrera, salud y caídas | ✅ `CorruptionBarrier` (1 por contacto, invulnerabilidad breve, se detiene en las zonas seguras, se apaga al final); caídas de 1,5 (`Room.fall_damage`) con vuelta a la última plataforma segura (nunca una que se mueve o desaparece) |
+| 5 | Checkpoints y preguntas | ✅ `EducationalCheckpoint` con `ChoiceWindow` (pausa el juego: Kai no recibe daño); incorrecta −15 s; correcta: puerta, marca `cap1_checkpoint_N` y guardado; no se repiten al cargar |
+| 6 | Temporizador | ✅ `ChaseTimer` (4:00, con la física); tiempo agotado o muerte: vuelta al último checkpoint con tiempo suficiente; desaparece después del tercer checkpoint |
 | 7 | Chip como enemigo | Pendiente |
 | 8 | Glitch como enemigo | Pendiente |
 | 9 | Coordinación de ataques | Pendiente |

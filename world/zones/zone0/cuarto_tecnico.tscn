@@ -149,6 +149,8 @@ shape = SubResource("RectangleShape2D_t4oqr")
 [node name="ImmersionPortal" type="Area2D" parent="." unique_id=147758404]
 position = Vector2(470, 252)
 script = ExtResource("13_w2cyt")
+target_scene = "res://world/zones/red_entrenamiento/persecucion.tscn"
+target_entry = &"inicio"
 screen_size = Vector2(44, 30)
 first_dialogue = ExtResource("14_s1jjo")
 lines = PackedStringArray("Conexión encontrada", "Entrando al sistema...")

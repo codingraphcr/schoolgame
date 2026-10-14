@@ -6,6 +6,9 @@ extends Node2D
 ## parte de los Ecos y reaparece en el punto de control con las máscaras llenas.
 ## El nodo raíz de cada sala usa filtro Nearest para que el pixel art se vea nítido.
 
+## Kai reapareció en el punto de control después de morir.
+signal player_respawned
+
 @export var tile_layer: TileMapLayer
 @export var player: Player
 @export var camera: GameCamera
@@ -18,6 +21,8 @@ extends Node2D
 @export var player_tint := Color.WHITE
 ## Distancia (px) bajo el borde inferior de la sala a partir de la cual el jugador reaparece.
 @export var fall_limit_margin := 64.0
+## Integridad que quita caer al vacío (Kai vuelve a la última plataforma segura).
+@export var fall_damage := 1.0
 ## Sonido de los pasos de Kai en esta sala (step_school en el colegio, step_digital en una computadora).
 @export var footstep: StringName = &"step_school"
 ## Música de la sala (vacío = sigue la que estaba). Ver Music.
@@ -77,7 +82,7 @@ func _process(delta: float) -> void:
 
 func _physics_process(_delta: float) -> void:
 	if player and player.global_position.y > bounds.end.y + fall_limit_margin:
-		player.damage.fall_out_of_bounds()
+		player.damage.fall_out_of_bounds(fall_damage)
 
 
 ## Q enciende o apaga la Visión Digital (solo si ya se descubrió; si no, no hace nada).
@@ -184,6 +189,7 @@ func _respawn_at_checkpoint() -> void:
 		player.teleport_to(target.global_position)
 	player.damage.revive()
 	_snap_camera()
+	player_respawned.emit()
 
 
 func _on_player_hurt(_hit: HitData) -> void:
