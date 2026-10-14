@@ -1,6 +1,6 @@
 # BIBLIA NARRATIVA DEL VIDEOJUEGO
 
-**Versión:** 1.1 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
+**Versión:** 1.3 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
 **Estado:** Base narrativa de referencia; algunas decisiones siguen abiertas.  
 **Nombre oficial del videojuego:** Nullveil: Beyond the Firewall.  
 **Nombre provisional del proyecto de origen:** Proyecto Génesis.  
@@ -137,6 +137,14 @@ Los demás no ven literalmente estos monstruos, aunque sí experimentan consecue
 
 **Regla:** La visión muestra pistas, no respuestas automáticas. El estudiante debe aplicar ciberseguridad real dentro de desafíos simulados.
 
+### VII bis. La Inmersión Digital
+
+Habilidad **permanente** que Kai desbloquea en el **capítulo 1**: le permite entrar a determinados **entornos digitales
+simulados** del universo del juego y explorarlos como escenarios 2D. **No es lo mismo que la Visión Digital:** la visión
+permite percibir anomalías en el mundo cotidiano; la inmersión permite explorar espacios virtuales internos. La primera
+vez, la conexión solo aparece con la Visión Digital activa, y Kai la atraviesa por su cuenta. En el capítulo 1 todavía
+no la domina. Nunca representa acceso real a sistemas informáticos externos.
+
 ## VIII. Nullblade
 
 Espada digital que aparece con el despertar. Representa la capacidad de enfrentar amenazas.
@@ -182,6 +190,14 @@ Cada página de comando muestra nombre, función, sintaxis, ejemplos y consejos,
 
 Deben tener objetivos y crecimiento propios, no limitarse a ayudar al protagonista.
 
+**Chip y Glitch:** dos criaturas digitales originales, pequeñas y traviesas, que se consideran **hermanos**. **Chip** es
+el estratega (planea, prepara trampas, controla el espacio; casi nunca termina sus planes) y **Glitch** el impulsivo
+(corre, salta, embiste; le encanta el ruido de las computadoras al fallar). Sus travesuras causan errores en los
+sistemas de entrenamiento del colegio sin buscar una catástrofe: no entienden las consecuencias. **No son subordinados
+confirmados del antagonista.** Solo Kai los ve, con la Visión Digital. Aparecen en el capítulo 1, donde Kai los vence
+(quedan neutralizados, nunca mueren) y empiezan a entender que detrás de cada computadora hay personas. Pueden volver
+más adelante.
+
 **Familia:** Presente en momentos cotidianos y emocionales, especialmente durante la crisis de identidad. Su amor y vínculo no se invalidan al conocerse el origen artificial.
 
 La escuela debe sentirse viva: clases, trabajos, exámenes, ferias técnicas, vacaciones, proyectos, cierre de curso y graduación. El tiempo avanza mediante saltos narrativos entre capítulos; no es necesario simular un calendario día por día.
@@ -196,10 +212,11 @@ El estudiante llega al colegio, aprende movimiento, diálogo e interacción. Un 
 
 ### DÉCIMO — El Despertar
 
-**Capítulo 1 — El origen digital**
+**Capítulo 1 — El origen digital** (especificación: `capitulos/CAPITULO_01.md`)
 
-- **Nivel 1 — El primer incidente:** Explora y comprende problemas básicos de sistemas; conoce herramientas iniciales y compañeros.
-- **Nivel 2 — Algo no está bien:** Investiga una anomalía; aprende identificación y protección de información.
+- **Nivel 1 — Una clase diferente:** Durante una clase de ciberseguridad, Kai descubre a **Chip y Glitch** alterando las computadoras de práctica; los hermanos notan que él puede verlos y escapan. Kai los persigue, investiga, usa terminales y el Grimorio y toma decisiones de seguridad (uso ético de la información, acceso autorizado, comportamientos anómalos).
+- **Nivel 2 — Travesuras en el sistema:** Chip y Glitch se esconden dentro de una computadora; Kai descubre la conexión con la Visión Digital y desbloquea la **Inmersión Digital**. Persecución digital con barrera de corrupción y checkpoints educativos, y combate contra los dos hermanos.
+- **Cierre:** Chip deja un Fragmento de Datos («ORIGEN: DESCONOCIDO · ESTADO: INCOMPLETO · OBSERVADOR: RECONOCIDO · PROTOCOLO: [DATOS CORRUPTOS]»). Cuando Kai se va, el profesor, solo frente a la computadora, ve aparecer el archivo **`GENESIS_ARCHIVE`**. No se explica qué es.
 - **Pista:** Las amenazas reaccionan de manera particular a su presencia.
 
 **Capítulo 2 — Los primeros códigos**
@@ -365,6 +382,7 @@ El libro se cierra. Comienzan los créditos.
 - Cómo se materializa el enfrentamiento final en gameplay.
 - Destino del antagonista después del desenlace.
 - Contenido concreto de los secretos y Fragmentos de Datos.
+- Dónde se mueve la entrada a la computadora del profesor que hoy está en el prólogo (la Contraseña débil y el nivel del SPAM): el equipo decidió sacarla del prólogo; el lugar está por definir.
 - Validación de temas y resultados educativos contra los programas completos del MEP.
 
 ## XVII. Principio rector
@@ -400,6 +418,19 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
 - **«EL DESPERTAR»** cierra el prólogo al salir del cuarto viejo; después empieza el **Capítulo 1 — El origen digital**.
   Desde ahí el mapa se va abriendo por capítulos.
 
-**FIN — BIBLIA NARRATIVA V1.2**
+**v1.3 — 13 de octubre de 2026** (aprobado por el equipo; capítulo 1):
+
+- **Capítulo 1:** los niveles se llaman **«Una clase diferente»** y **«Travesuras en el sistema»** (antes «El primer
+  incidente» y «Algo no está bien»). Especificación completa en `capitulos/CAPITULO_01.md`.
+- **Chip y Glitch** entran como personajes oficiales (sección XI): hermanos traviesos, no subordinados confirmados del
+  antagonista.
+- **Inmersión Digital** (sección VII bis): habilidad permanente del capítulo 1, distinta de la Visión Digital.
+- **`GENESIS_ARCHIVE`** es parte oficial de la historia: el profesor lo ve al final del capítulo 1. Su contenido y su
+  relación con «El Núcleo» siguen pendientes (sección XVI).
+- **La computadora del prólogo:** el equipo decidió que la entrada a la computadora del profesor no va en el prólogo,
+  sino en otro lugar por definir (sección XVI). Así, la primera vez que Kai entra a un entorno digital es la Inmersión
+  Digital del capítulo 1.
+
+**FIN — BIBLIA NARRATIVA V1.3**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.

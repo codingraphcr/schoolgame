@@ -1,8 +1,7 @@
 # Capítulo 1 — El origen digital
 
-**Estado:** especificación oficial del equipo (13 de octubre de 2026). Implementación autorizada por etapas
-(sección 19): **etapas 1 y 2 hechas** (guion en [`CAPITULO_01_GUION.md`](CAPITULO_01_GUION.md), datos y la transición de la Inmersión Digital). Las notas de coherencia de la sección 18 están **pendientes de aprobación**: hasta entonces
-no son canon.
+**Estado:** especificación oficial del equipo (13 de octubre de 2026), incorporada a la Biblia v1.3. Implementación autorizada por etapas
+(sección 19): **etapas 1 y 2 hechas** (guion en [`CAPITULO_01_GUION.md`](CAPITULO_01_GUION.md), datos y la transición de la Inmersión Digital). Las notas de coherencia de la sección 18 ya tienen las decisiones del equipo.
 **Grado:** Décimo. **Capítulo:** 1. **Niveles:** 1 · *Una clase diferente* — 2 · *Travesuras en el sistema*.
 **Referencia:** `docs/narrativa/BIBLIA_NARRATIVA.md` (v1.2). Este documento **no** reemplaza la Biblia.
 
@@ -232,7 +231,11 @@ recursos de datos (`data/`), separados de las escenas y de la lógica.
 - Las recompensas se guardan una sola vez.
 - El capítulo respeta la Biblia Narrativa.
 
-## 18. Notas de coherencia con la Biblia (pendientes de aprobación)
+## 18. Notas de coherencia con la Biblia
+
+**Decisiones del equipo (13 de octubre de 2026, Biblia v1.3):** la entrada a la computadora del profesor sale del
+prólogo y va a otro lugar por definir (nota 1); los títulos de los niveles quedan (nota 2); Chip, Glitch y la Inmersión
+Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las demás notas siguen como propuestas.
 
 | # | Tema | Qué dice hoy el juego / la Biblia | Propuesta |
 |---|---|---|---|

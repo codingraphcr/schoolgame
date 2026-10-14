@@ -75,6 +75,9 @@ El jugador activa la Visión Digital (Q): en el monitor aparece una conexión br
 > **KAI [pensativo]:** «La otra vez la computadora me jaló».
 > **KAI:** «Esta vez... voy yo».
 
+*Pendiente:* esta línea recuerda la entrada a la computadora del prólogo. El equipo decidió mover esa entrada a otro
+lugar (por definir): cuando se sepa dónde, se ajusta o se cambia la línea.
+
 Kai atraviesa el monitor (transición de `DigitalDive`). Título: **INMERSIÓN DIGITAL**. Se desbloquea para siempre y
 se abre su página del Grimorio. Kai todavía no la domina: le cuesta materializarse adentro.
 

@@ -22,8 +22,8 @@ se ubican los contenidos de la tabla del MEP. Sigue siendo provisional hasta val
 
 | Cap. | Nivel (título de la Biblia) | Contenidos del MEP que trabaja |
 |---|---|---|
-| **1** El origen digital | 1 · El primer incidente | Principios de ciberseguridad, ética y leyes de los datos, internet de todo |
-| | 2 · Algo no está bien | Protección e integridad de la información, tipos de ataques, control de acceso, primeros comandos de Linux |
+| **1** El origen digital | 1 · Una clase diferente | Principios de ciberseguridad, ética y leyes de los datos, internet de todo |
+| | 2 · Travesuras en el sistema | Protección e integridad de la información, tipos de ataques, control de acceso, primeros comandos de Linux |
 | **2** Los primeros códigos | 3 · El lenguaje de las máquinas | Condicionales, ciclos, funciones, clases y objetos |
 | | 4 · Código fuera de control | Control de flujo, estructuras de datos, errores y excepciones, desarrollo seguro (SGSI). Recompensa: Dominio Nulo I |
 | **3** Amenazas invisibles | 5 · Contagio digital | Malware y código malicioso; protección de equipos |
