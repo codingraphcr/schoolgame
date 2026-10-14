@@ -2,7 +2,7 @@
 
 **[`BIBLIA_NARRATIVA.md`](BIBLIA_NARRATIVA.md) es la fuente principal de referencia** para desarrollar la historia, las
 misiones, los diálogos, los personajes y el mundo del juego (versión 1.0 incorporada el 12 de octubre de 2026;
-versión actual 1.3, con su registro de cambios al final).
+versión actual 1.4, con su registro de cambios al final).
 
 Contiene la premisa, los acontecimientos anteriores al juego, el protagonista, el profesor, Aegis, el antagonista, la
 Visión Digital, Nullblade, el Grimorio, los Ecos, los personajes secundarios, la cronología de los tres años y de los
@@ -41,6 +41,7 @@ MVP (`../plan_mvp.md`).
 | Temas de los niveles | Se combinan: los títulos e historia de los 24 niveles de la Biblia, con los contenidos de la tabla del MEP ubicados en cada uno (`../curriculo_mep.md`) |
 | El cuarto viejo (H5, v1.2) | Laboratorio 2, cerrado, que estuvo a cargo del profesor; su terminal guarda la cuenta vieja (123456). El profesor no entra ni explica qué hay. Ahí, a oscuras y con la Visión Digital, Kai encuentra `Nullblade.exe` (con el dash y el doble salto) y el Grimorio, **sin explicar su origen** |
 | Fin del prólogo (v1.2) | «EL DESPERTAR» al salir del cuarto viejo; sigue el Capítulo 1 y el mapa se abre por capítulos |
+| Doble salto (v1.4) | Ya no viene con la Nullblade (solo el dash); se consigue más adelante, posiblemente en la soda del colegio |
 | Capítulo 1 (v1.3) | Niveles «Una clase diferente» y «Travesuras en el sistema»; **Chip y Glitch** y la **Inmersión Digital** son oficiales; **`GENESIS_ARCHIVE`** es parte oficial de la historia; la entrada a la computadora del profesor sale del prólogo (lugar por definir) |
 
 ## Diferencias que siguen abiertas

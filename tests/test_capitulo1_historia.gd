@@ -28,7 +28,6 @@ func _run() -> void:
 	state = root.get_node("GameState")
 	root.get_node("SaveManager").new_game(1)
 	state.unlock_vision()
-	state.unlock_double_jump()
 	state.quest_completed.connect(func(quest_id: StringName) -> void: titles.append(String(QuestDB.get_quest(quest_id).completion_title)))
 	_test_prologue_leads_to_chapter()
 	await _test_class()

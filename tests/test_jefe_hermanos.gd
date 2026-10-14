@@ -29,7 +29,6 @@ func _run() -> void:
 	state = root.get_node("GameState")
 	root.get_node("SaveManager").new_game(1)
 	state.set_flag(&"tutorial_terminado")
-	state.unlock_double_jump()
 	state.start_quest(QUEST)
 	for step in [&"revisar_servidor", &"seguirlos_adentro"]:
 		state.complete_step(QUEST, step)

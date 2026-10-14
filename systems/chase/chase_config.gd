@@ -18,8 +18,11 @@ extends Resource
 @export var barrier_damage := 1.0
 ## Velocidad de la barrera en cada tramo (píxeles por segundo).
 @export var barrier_speeds: PackedFloat32Array = [55.0, 65.0, 75.0]
-## A cuántos píxeles detrás del inicio del tramo empieza la barrera.
+## A cuántos píxeles detrás de Kai empieza la barrera al arrancar cada tramo.
 @export var barrier_start_gap := 220.0
+## En las zonas seguras (y después de cada checkpoint) la barrera se queda por lo menos a esta
+## distancia detrás de Kai: tiempo para reaccionar y moverse.
+@export var barrier_safe_gap := 260.0
 ## Empujón al tocarla (hacia adelante y arriba).
 @export var barrier_knockback := Vector2(260, -160)
 

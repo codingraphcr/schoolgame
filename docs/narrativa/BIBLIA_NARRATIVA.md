@@ -1,6 +1,6 @@
 # BIBLIA NARRATIVA DEL VIDEOJUEGO
 
-**Versión:** 1.3 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
+**Versión:** 1.4 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
 **Estado:** Base narrativa de referencia; algunas decisiones siguen abiertas.  
 **Nombre oficial del videojuego:** Nullveil: Beyond the Firewall.  
 **Nombre provisional del proyecto de origen:** Proyecto Génesis.  
@@ -382,6 +382,7 @@ El libro se cierra. Comienzan los créditos.
 - Cómo se materializa el enfrentamiento final en gameplay.
 - Destino del antagonista después del desenlace.
 - Contenido concreto de los secretos y Fragmentos de Datos.
+- Dónde y cómo se consigue el **doble salto** (propuesta del equipo: comprarlo con Ecos en la soda del colegio).
 - Dónde se mueve la entrada a la computadora del profesor que hoy está en el prólogo (la Contraseña débil y el nivel del SPAM): el equipo decidió sacarla del prólogo; el lugar está por definir.
 - Validación de temas y resultados educativos contra los programas completos del MEP.
 
@@ -431,6 +432,12 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
   sino en otro lugar por definir (sección XVI). Así, la primera vez que Kai entra a un entorno digital es la Inmersión
   Digital del capítulo 1.
 
-**FIN — BIBLIA NARRATIVA V1.3**
+**v1.4 — 14 de octubre de 2026** (aprobado por el equipo; después de probar el capítulo 1):
+
+- **Doble salto:** ya **no** viene con la Nullblade (corrige la v1.2). Con la Nullblade, Kai obtiene solo el **dash**.
+  El doble salto es una habilidad que se consigue más adelante; la propuesta es comprarlo con Ecos en las sodas (la
+  soda del colegio), por definir (sección XVI). El capítulo 1 se supera con salto y dash.
+
+**FIN — BIBLIA NARRATIVA V1.4**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.

@@ -1,8 +1,9 @@
 extends Node
 ## El cuarto viejo (H5, misión «El cuarto viejo»). Está a oscuras: con la Visión Digital Kai distingue
-## la Nullblade oficial y el Grimorio (HiddenRelic). La Nullblade trae el dash y el doble salto; el
-## Grimorio se puede abrir con G desde entonces. Con las dos, el piso cerca de la puerta se corrompe
-## (pinchos) y cae un armario: para salir hay que usar las habilidades nuevas.
+## la Nullblade oficial y el Grimorio (HiddenRelic). La Nullblade trae el dash (el doble salto se
+## consigue más adelante); el Grimorio se puede abrir con G desde entonces. Con las dos, el piso cerca
+## de la puerta se corrompe (pinchos) y cae un armario: para salir hay que saltar el armario y cruzar
+## el piso corrupto con salto + dash.
 ## Al volver a la sala, todo queda como se dejó (marcas de GameState y el paso de la misión).
 
 const QUEST := &"cuarto_viejo"
@@ -50,10 +51,9 @@ func _on_nullblade_taken(by: Player) -> void:
 	var state := _game_state()
 	state.set_nullblade_stage(1)
 	state.set_dash_level(1)
-	state.unlock_double_jump()
 	by.apply_progress(state)
 	await _say(nullblade_dialogue, false)
-	_toast("Nuevas habilidades: dash (%s) y doble salto (%s en el aire)" % [GameSettings.key_name(&"dash"), GameSettings.key_name(&"jump")], 5.0)
+	_toast("Nueva habilidad: dash (%s; también en el aire)" % GameSettings.key_name(&"dash"), 5.0)
 	by.controls_locked = false
 	_check_both()
 
