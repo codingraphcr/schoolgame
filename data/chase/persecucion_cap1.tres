@@ -4,13 +4,13 @@
 
 [resource]
 script = ExtResource("1_cfg")
-start_seconds = 240.0
-wrong_answer_penalty = 15.0
+start_seconds = 62.0
+wrong_answer_penalty = 20.0
 min_seconds_after_penalty = 20.0
-retry_seconds = PackedFloat32Array(150, 120, 100)
-barrier_damage = 1.0
-barrier_speeds = PackedFloat32Array(80, 90, 100)
+retry_seconds = PackedFloat32Array(22, 25, 22)
+barrier_damage = 1.5
+barrier_speeds = PackedFloat32Array(130, 107, 117)
 barrier_start_gap = 220.0
 barrier_safe_gap = 260.0
-barrier_knockback = Vector2(260, -160)
+barrier_knockback = Vector2(150, -140)
 fall_damage = 1.5

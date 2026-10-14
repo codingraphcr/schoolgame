@@ -4,33 +4,87 @@
 [ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
 [ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
 
-[sub_resource type="Resource" id="Option_1"]
+[sub_resource type="Resource" id="Q0_O0"]
+script = ExtResource("2_option")
+text = "Ponerle a la carpeta un nombre que no llame la atención"
+feedback = "Esconder no es proteger: cualquiera que la encuentre puede abrirla."
+
+[sub_resource type="Resource" id="Q0_O1"]
+script = ExtResource("2_option")
+text = "Compartir la contraseña solo con el grupo de confianza"
+feedback = "Una contraseña compartida deja de ser secreta y ya no se sabe quién entró."
+
+[sub_resource type="Resource" id="Q0_O2"]
+script = ExtResource("2_option")
+text = "Dejar los archivos en una carpeta pública, pero sin avisar dónde están"
+feedback = "Lo público lo puede ver cualquiera, aunque no se avise."
+
+[sub_resource type="Resource" id="Q0_O3"]
 script = ExtResource("2_option")
 text = "Utilizar controles de acceso adecuados"
-detail = "Cada quien entra solo a lo que le corresponde"
 correct = true
-feedback = "¡Correcto! La confidencialidad significa que solo las personas autorizadas acceden a la información. Los controles de acceso lo hacen posible."
-
-[sub_resource type="Resource" id="Option_2"]
-script = ExtResource("2_option")
-text = "Compartir la contraseña con el grupo"
-detail = "Para que todos puedan ayudar"
-feedback = "Compartir contraseñas hace imposible saber quién entró y permite que cualquiera vea todo. Cada persona necesita su propio acceso."
-
-[sub_resource type="Resource" id="Option_3"]
-script = ExtResource("2_option")
-text = "Dejar los archivos en una carpeta pública"
-detail = "Así nadie pierde tiempo pidiendo permiso"
-feedback = "Una carpeta pública es lo contrario de confidencial: cualquiera puede verla."
+feedback = "¡Correcto! Los controles de acceso hacen que solo las personas autorizadas puedan ver la información."
 
 [sub_resource type="Resource" id="Question_0"]
 script = ExtResource("1_question")
 prompt = "¿Qué ayuda a proteger la confidencialidad?"
-options = Array[ExtResource("2_option")]([SubResource("Option_1"), SubResource("Option_2"), SubResource("Option_3")])
+options = Array[ExtResource("2_option")]([SubResource("Q0_O0"), SubResource("Q0_O1"), SubResource("Q0_O2"), SubResource("Q0_O3")])
+
+[sub_resource type="Resource" id="Q1_O0"]
+script = ExtResource("2_option")
+text = "Todos con acceso a todo: así nadie se queda trabado"
+feedback = "Dar más acceso del necesario aumenta el riesgo de fugas y de errores."
+
+[sub_resource type="Resource" id="Q1_O1"]
+script = ExtResource("2_option")
+text = "A cada persona, solo la parte que necesita para su tarea"
+correct = true
+feedback = "¡Correcto! Es el principio de mínimo privilegio: cada uno accede solo a lo que necesita."
+
+[sub_resource type="Resource" id="Q1_O2"]
+script = ExtResource("2_option")
+text = "Una sola cuenta para el grupo, con una contraseña difícil"
+feedback = "Con una cuenta compartida no se sabe quién hizo cada cosa, por más difícil que sea la contraseña."
+
+[sub_resource type="Resource" id="Q1_O3"]
+script = ExtResource("2_option")
+text = "Acceso completo al líder del grupo, que reparte lo demás"
+feedback = "Concentrar todo en una persona no protege la información de los demás ni deja registro."
+
+[sub_resource type="Resource" id="Question_1"]
+script = ExtResource("1_question")
+prompt = "En un grupo de trabajo, cada persona necesita una parte distinta de un expediente. ¿Cómo se da el acceso?"
+options = Array[ExtResource("2_option")]([SubResource("Q1_O0"), SubResource("Q1_O1"), SubResource("Q1_O2"), SubResource("Q1_O3")])
+
+[sub_resource type="Resource" id="Q2_O0"]
+script = ExtResource("2_option")
+text = "Cerrar la sesión sin leerlas y avisarle al encargado"
+correct = true
+feedback = "¡Correcto! Se protege la información sin mirarla y se avisa para que no vuelva a pasar."
+
+[sub_resource type="Resource" id="Q2_O1"]
+script = ExtResource("2_option")
+text = "Leerlas para saber de quién son y avisarle a esa persona"
+feedback = "Para avisar no hace falta leer información privada: se cierra y se avisa al encargado."
+
+[sub_resource type="Resource" id="Q2_O2"]
+script = ExtResource("2_option")
+text = "Dejarlas como están: no es tu problema"
+feedback = "Cualquiera podría verlas o cambiarlas. Cerrar la sesión y avisar la protege."
+
+[sub_resource type="Resource" id="Q2_O3"]
+script = ExtResource("2_option")
+text = "Tomarles una foto para tener pruebas"
+feedback = "Una foto es una copia de información privada: la expone todavía más."
+
+[sub_resource type="Resource" id="Question_2"]
+script = ExtResource("1_question")
+prompt = "Ves en una pantalla de la biblioteca las notas de otro estudiante, abiertas. ¿Qué haces?"
+options = Array[ExtResource("2_option")]([SubResource("Q2_O0"), SubResource("Q2_O1"), SubResource("Q2_O2"), SubResource("Q2_O3")])
 
 [resource]
 script = ExtResource("3_challenge")
 id = &"cap1_checkpoint_3"
 title = "Checkpoint 3 · Confidencialidad"
+questions = Array[ExtResource("1_question")]([SubResource("Question_0"), SubResource("Question_1"), SubResource("Question_2")])
 ecos_reward = 0
-questions = Array[ExtResource("1_question")]([SubResource("Question_0")])

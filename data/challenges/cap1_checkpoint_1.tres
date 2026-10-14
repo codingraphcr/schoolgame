@@ -4,33 +4,87 @@
 [ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
 [ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
 
-[sub_resource type="Resource" id="Option_1"]
+[sub_resource type="Resource" id="Q0_O0"]
 script = ExtResource("2_option")
-text = "Revisarlos todos: ya tienes permiso para revisar"
-detail = "La revisión está autorizada"
-feedback = "La autorización tiene límites: permite revisar lo que se pidió, no todo lo que se encuentre."
+text = "Revisarlos rápido, por si el problema está escondido ahí"
+feedback = "La urgencia no amplía el permiso. Si crees que hay que revisarlos, primero se pide autorización."
 
-[sub_resource type="Resource" id="Option_2"]
+[sub_resource type="Resource" id="Q0_O1"]
 script = ExtResource("2_option")
 text = "Consultar únicamente la información para la que se tiene autorización"
-detail = "Lo demás no se abre"
 correct = true
 feedback = "¡Correcto! Una revisión autorizada no da permiso para mirar todo. Solo se consulta lo autorizado; lo demás se respeta."
 
-[sub_resource type="Resource" id="Option_3"]
+[sub_resource type="Resource" id="Q0_O2"]
 script = ExtResource("2_option")
-text = "Copiarlos para revisarlos con calma después"
-detail = "Así no se pierde nada"
-feedback = "Copiar información privada sin autorización la expone y rompe la confianza. Solo se usa lo autorizado."
+text = "Mirar solo los nombres de los archivos, sin abrirlos"
+feedback = "Los nombres también pueden revelar información privada. Si no está en lo autorizado, no se revisa."
+
+[sub_resource type="Resource" id="Q0_O3"]
+script = ExtResource("2_option")
+text = "Copiarlos a una memoria para revisarlos con calma después"
+feedback = "Copiar información privada sin autorización la expone y rompe la confianza."
 
 [sub_resource type="Resource" id="Question_0"]
 script = ExtResource("1_question")
 prompt = "¿Qué debe hacerse al encontrar archivos privados durante una revisión autorizada?"
-options = Array[ExtResource("2_option")]([SubResource("Option_1"), SubResource("Option_2"), SubResource("Option_3")])
+options = Array[ExtResource("2_option")]([SubResource("Q0_O0"), SubResource("Q0_O1"), SubResource("Q0_O2"), SubResource("Q0_O3")])
+
+[sub_resource type="Resource" id="Q1_O0"]
+script = ExtResource("2_option")
+text = "Avisar que terminaste para que cambie la contraseña o quite el acceso"
+correct = true
+feedback = "¡Correcto! Un permiso temporal termina con la tarea. Avisar permite revocarlo y deja todo como estaba."
+
+[sub_resource type="Resource" id="Q1_O1"]
+script = ExtResource("2_option")
+text = "Guardarla en el navegador por si te vuelve a pedir ayuda"
+feedback = "Guardarla deja un acceso abierto que nadie controla, aunque no pienses usarlo."
+
+[sub_resource type="Resource" id="Q1_O2"]
+script = ExtResource("2_option")
+text = "Aprovechar para revisar si la computadora tiene otros problemas"
+feedback = "Con buena intención o no, eso ya está fuera de lo autorizado: solo era instalar el programa."
+
+[sub_resource type="Resource" id="Q1_O3"]
+script = ExtResource("2_option")
+text = "Anotarla en un lugar seguro y no contársela a nadie"
+feedback = "El problema no es solo que otros la vean: tú ya no deberías tener ese acceso."
+
+[sub_resource type="Resource" id="Question_1"]
+script = ExtResource("1_question")
+prompt = "El encargado te prestó la cuenta de administrador solo para instalar un programa. Ya terminaste. ¿Qué haces?"
+options = Array[ExtResource("2_option")]([SubResource("Q1_O0"), SubResource("Q1_O1"), SubResource("Q1_O2"), SubResource("Q1_O3")])
+
+[sub_resource type="Resource" id="Q2_O0"]
+script = ExtResource("2_option")
+text = "Leer los documentos de la cola para ver cuál la trabó"
+feedback = "El contenido de los documentos es de quien los mandó: para arreglarla basta con ver su estado, no leerlos."
+
+[sub_resource type="Resource" id="Q2_O1"]
+script = ExtResource("2_option")
+text = "Revisar el estado de la cola de impresión y el registro de errores de la impresora"
+correct = true
+feedback = "¡Correcto! Eso es lo necesario para resolver lo que te pidieron, sin mirar información ajena."
+
+[sub_resource type="Resource" id="Q2_O2"]
+script = ExtResource("2_option")
+text = "Instalar un programa que anote quién imprime cada cosa"
+feedback = "Vigilar a las personas no es parte de arreglar la impresora y no está autorizado."
+
+[sub_resource type="Resource" id="Q2_O3"]
+script = ExtResource("2_option")
+text = "Entrar al correo del encargado para ver si alguien reportó la falla"
+feedback = "El correo de otra persona nunca entra en una revisión de la impresora."
+
+[sub_resource type="Resource" id="Question_2"]
+script = ExtResource("1_question")
+prompt = "Te piden revisar por qué la impresora de la biblioteca no imprime. ¿Cuál acción SÍ está dentro de lo autorizado?"
+options = Array[ExtResource("2_option")]([SubResource("Q2_O0"), SubResource("Q2_O1"), SubResource("Q2_O2"), SubResource("Q2_O3")])
 
 [resource]
 script = ExtResource("3_challenge")
 id = &"cap1_checkpoint_1"
 title = "Checkpoint 1 · Revisión autorizada"
+questions = Array[ExtResource("1_question")]([SubResource("Question_0"), SubResource("Question_1"), SubResource("Question_2")])
 ecos_reward = 0
-questions = Array[ExtResource("1_question")]([SubResource("Question_0")])

@@ -5,7 +5,7 @@ extends SceneTree
 ## queda delante de Kai y en las zonas seguras se queda a una distancia segura; las caídas quitan
 ## exactamente 1,5 y Kai reaparece sobre una plataforma segura (nunca sobre una que se mueve o
 ## desaparece); los nodos corruptos disparan con aviso y solo mientras corre un tramo; los checkpoints
-## detienen la barrera y el tiempo, bloquean el avance hasta responder bien, restan 15 s por respuesta
+## detienen la barrera y el tiempo, bloquean el avance hasta responder bien, restan 20 s por respuesta
 ## incorrecta y guardan; el tiempo agotado y la muerte permiten reintentar; al cargar no se repiten
 ## los checkpoints; al terminar, la barrera se apaga y el temporizador desaparece.
 ## Ejecutar: godot --headless --path . --script res://tests/test_persecucion.gd
@@ -53,10 +53,10 @@ func _run() -> void:
 
 func _test_start() -> void:
 	_check(state.get_current_step(&"travesuras_en_el_sistema") == &"persecucion", "al llegar a la red de entrenamiento, la misión pide la persecución")
-	_check(room.fall_damage == 1.5 and chase.time_left == 240.0 and not chase.running, "4:00 en el reloj, caídas de 1,5; nada corre hasta empezar el tramo")
+	_check(room.fall_damage == 1.5 and chase.time_left == chase.config.start_seconds and not chase.running, "1:02 en el reloj (poco margen), caídas de 1,5; nada corre hasta empezar el tramo")
 	_check(not player.can_double_jump, "Kai no tiene doble salto (se consigue más adelante)")
 	var timer := room.get_node("CombatHUD/ChaseTimer") as ChaseTimer
-	_check(timer.visible and timer.text.contains("4:00"), "se ve el temporizador «⏱ 4:00»")
+	_check(timer.visible and timer.text.contains("1:02"), "se ve el temporizador «⏱ 1:02»")
 	var width := room.room_size.size.x
 	_check(width > 6500.0, "la persecución es más larga (%d px)" % width)
 
@@ -75,6 +75,13 @@ func _test_route() -> void:
 		if node.has_meta(&"route"):
 			route.append(node)
 	route.sort_custom(func(a: DataPlatform, b: DataPlatform) -> bool: return int(a.get_meta(&"route")) < int(b.get_meta(&"route")))
+	# Se mide el recorrido (tiempo y posición en cada cuadro de física) para calibrar la barrera y el reloj.
+	var samples: Array[Vector2] = []
+	var clock := [0.0]
+	var sampler := func() -> void:
+		clock[0] += 1.0 / Engine.physics_ticks_per_second
+		samples.append(Vector2(clock[0], player.global_position.x))
+	physics_frame.connect(sampler)
 	var failed := 0
 	for i in range(1, route.size()):
 		var source := route[i - 1]
@@ -89,18 +96,28 @@ func _test_route() -> void:
 				if player.global_position.x >= source.global_position.x + source.width - 10.0:
 					break
 			Input.action_release("move_right")
+		elif _standing_on(source):
+			# Camina hasta el borde (como un jugador: el tiempo cuenta para medir la barrera).
+			await _walk_to(source.global_position.x + source.width - 9.0, 1.5)
 		else:
 			await _drop_on(Vector2(source.global_position.x + source.width - 10.0, source.global_position.y - 8.0))
 		if target.get_meta(&"moving"):
-			# Saltar cuando la plataforma está al principio de su recorrido (cerca).
+			# Saltar mientras la plataforma vuelve hacia Kai, poco antes del principio de su recorrido.
 			var origin_x := float(target.get_meta(&"origin_x"))
-			await _until(func() -> bool: return absf(target.global_position.x - origin_x) < 6.0)
+			var last := [target.global_position.x]
+			await _until(func() -> bool:
+				var x := target.global_position.x
+				var coming: bool = x < last[0]
+				last[0] = x
+				return coming and x - origin_x < 30.0)
 		var ok := await _hop_to(target, bool(target.get_meta(&"dash")))
 		if not ok:
 			failed += 1
-			print("     recorrido: no llegó a la plataforma %d (x=%.0f, y=%.0f) desde la %d" % [i, target.global_position.x, target.global_position.y, i - 1])
+			print("     recorrido: no llegó a la plataforma %d (x=%.0f, y=%.0f) desde la %d; Kai en %s" % [i, target.global_position.x, target.global_position.y, i - 1, player.global_position])
 		player.health.restore_full()
 	_check(failed == 0 and route.size() > 25, "se recorre todo el camino (%d saltos) con salto y dash, sin doble salto" % (route.size() - 1))
+	physics_frame.disconnect(sampler)
+	_check_difficulty(samples)
 	var temporary := room.get_node("Platforms").get_children().filter(func(n: Node) -> bool: return n is DataPlatform and n.kind == DataPlatform.Kind.TEMPORARY)
 	var moving := room.get_node("Platforms").get_children().filter(func(n: Node) -> bool: return n is DataPlatform and n.kind == DataPlatform.Kind.MOVING)
 	_check(temporary.size() >= 8 and moving.size() >= 2 and temporary.all(func(n: Node) -> bool: return n.is_in_group(&"unsafe_ground")),
@@ -112,11 +129,11 @@ func _test_barrier() -> void:
 	await _frames(4)
 	_check(chase.running and chase.barrier.advancing and chase.barrier.position.x <= player.global_position.x - chase.config.barrier_start_gap + 1.0,
 		"al cruzar el inicio del tramo 1, la barrera arranca detrás de Kai y el reloj corre")
-	_check(chase.barrier.speed >= 80.0, "la barrera es más rápida (%.0f px/s)" % chase.barrier.speed)
+	_check(chase.barrier.speed >= 105.0, "la barrera es rápida (%.0f px/s; Kai camina a 130)" % chase.barrier.speed)
 	var before: float = player.health.current
 	player.teleport_to(Vector2(chase.barrier.position.x - 10, FLOOR - 8))
 	await _frames(3)
-	_check(is_equal_approx(player.health.current, before - 1.0), "tocar la barrera quita 1 (%.1f → %.1f), sin derrota instantánea" % [before, player.health.current])
+	_check(is_equal_approx(player.health.current, before - 1.5), "tocar la barrera quita 1,5 (%.1f → %.1f), sin derrota instantánea" % [before, player.health.current])
 	_check(player.is_invulnerable(), "y da invulnerabilidad breve")
 	var after_hit: float = player.health.current
 	player.teleport_to(Vector2(chase.barrier.position.x - 10, FLOOR - 8))
@@ -184,15 +201,15 @@ func _test_checkpoint_1() -> void:
 	_check(window != null and paused, "al llegar se abre la pregunta y el juego queda en pausa (Kai no recibe daño)")
 	var time_before := chase.time_left
 	window.choose(_option(window, false))
-	_check(is_equal_approx(chase.time_left, time_before - 15.0) and window.mistakes[0] == 1, "una respuesta incorrecta resta 15 s y explica por qué")
+	_check(is_equal_approx(chase.time_left, maxf(time_before - 20.0, minf(time_before, chase.config.min_seconds_after_penalty))) and window.mistakes[0] == 1,
+		"una respuesta incorrecta resta 20 s (sin bajar de %.0f) y explica por qué" % chase.config.min_seconds_after_penalty)
 	window.close()
 	await _frames(3)
 	_check(checkpoint.gate.active and not checkpoint.done, "sin responder bien, la puerta no se abre")
 	await _action(&"interact")
 	window = await _window()
 	_check(window != null, "con E se vuelve a abrir la pregunta")
-	window.choose(_option(window, true))
-	window.next()
+	_answer_all(window)
 	await _frames(3)
 	_check(checkpoint.done and not checkpoint.gate.active and state.has_flag(&"cap1_checkpoint_1"), "al responder bien se abre la puerta y queda marcado")
 	var saves := root.get_node("SaveManager")
@@ -211,7 +228,7 @@ func _test_time_up() -> void:
 	var checkpoint_x := chase.checkpoints[0].global_position.x
 	await _until(func() -> bool: return absf(player.global_position.x - checkpoint_x) < 40.0 and not player.controls_locked)
 	await _frames(4)
-	_check(absf(player.global_position.x - checkpoint_x) < 40.0 and chase.time_left >= 120.0 and not chase.running,
+	_check(absf(player.global_position.x - checkpoint_x) < 40.0 and chase.time_left >= chase.config.retry_seconds[1] and not chase.running,
 		"al agotarse el tiempo, Kai vuelve al checkpoint 1 con tiempo suficiente (%.0f s)" % chase.time_left)
 
 
@@ -225,7 +242,7 @@ func _test_death() -> void:
 	await _until(func() -> bool: return not player.damage.is_respawning and not player.controls_locked)
 	await _frames(6)
 	var checkpoint_x := chase.checkpoints[0].global_position.x
-	_check(absf(player.global_position.x - checkpoint_x) < 40.0 and chase.time_left >= 120.0 and is_equal_approx(player.health.current, player.health.max_health),
+	_check(absf(player.global_position.x - checkpoint_x) < 40.0 and chase.time_left >= chase.config.retry_seconds[1] and is_equal_approx(player.health.current, player.health.max_health),
 		"si se queda sin vida, reaparece en el checkpoint 1 con la vida llena y tiempo suficiente")
 
 
@@ -238,8 +255,7 @@ func _test_reload_and_finish() -> void:
 		await _drop_on(Vector2(checkpoint.safe_from_x + 15.0, FLOOR - 8))
 		await _walk_to(checkpoint.global_position.x)
 		var window := await _window()
-		window.choose(_option(window, true))
-		window.next()
+		_answer_all(window)
 		await _frames(3)
 	var timer := room.get_node("CombatHUD/ChaseTimer") as ChaseTimer
 	_check(chase.tramo == 3 and chase.barrier.disabled and not timer.visible, "después del tercer checkpoint, la barrera se apaga y el temporizador desaparece")
@@ -285,6 +301,13 @@ func _window() -> ChoiceWindow:
 	return null
 
 
+## Responde bien todas las preguntas del checkpoint (son varias).
+func _answer_all(window: ChoiceWindow) -> void:
+	for i in window.challenge.questions.size():
+		window.choose(_option(window, true))
+		window.next()
+
+
 func _option(window: ChoiceWindow, correct: bool) -> int:
 	var options := window.challenge.questions[window.question_index].options
 	for i in options.size():
@@ -319,11 +342,46 @@ func _hop_to(target: DataPlatform, use_dash: bool) -> bool:
 	return absf(pos.y - target.global_position.y) <= 1.0 and pos.x >= target.global_position.x - 8.0 and pos.x <= target.global_position.x + target.width + 8.0
 
 
-func _walk_to(x: float) -> void:
+## Con el recorrido medido de un jugador muy bueno (este bot: sin errores, sin esquivar disparos): la barrera
+## de cada tramo es difícil pero posible (85 % a 97 % de la velocidad máxima que todavía no lo alcanza, si
+## arranca barrier_start_gap detrás) y el reloj alcanza con poco margen.
+func _check_difficulty(samples: Array[Vector2]) -> void:
+	var total := 0.0
+	for k in 3:
+		var from_x := chase.tramo_starts[k]
+		var to_x := chase.checkpoints[k].global_position.x - 110.0
+		var t0 := -1.0
+		var x0 := 0.0
+		var best := INF
+		var duration := 0.0
+		for sample in samples:
+			if t0 < 0.0 and sample.y >= from_x:
+				t0 = sample.x
+				x0 = sample.y
+			if t0 >= 0.0 and sample.y < to_x:
+				duration = sample.x - t0
+				if duration > 0.5:
+					best = minf(best, (sample.y - x0 + chase.config.barrier_start_gap) / duration)
+		total += duration
+		var speed := chase.config.barrier_speeds[k]
+		_check(speed <= best * 0.97 and speed >= best * 0.85,
+			"tramo %d: barrera a %.0f px/s; un recorrido perfecto aguanta hasta %.0f (difícil pero posible)" % [k + 1, speed, best])
+		_check(chase.config.retry_seconds[k] >= duration * 1.15 and chase.config.retry_seconds[k] <= duration * 1.8,
+			"tramo %d: %.1f s perfectos; al reintentar hay %.0f s (poco margen)" % [k + 1, duration, chase.config.retry_seconds[k]])
+	_check(chase.config.start_seconds >= total * 1.1 and chase.config.start_seconds <= total * 1.5,
+		"el reloj (%.0f s) alcanza para los tres tramos (%.1f s perfectos) con poco margen" % [chase.config.start_seconds, total])
+
+
+func _standing_on(platform: DataPlatform) -> bool:
+	var pos := player.global_position
+	return player.is_on_floor() and absf(pos.y - platform.global_position.y) <= 1.0 		and pos.x >= platform.global_position.x - 4.0 and pos.x <= platform.global_position.x + platform.width + 4.0
+
+
+func _walk_to(x: float, tolerance := 6.0) -> void:
 	Input.action_press("move_right" if x > player.global_position.x else "move_left")
 	for i in 300:
 		await physics_frame
-		if absf(player.global_position.x - x) < 6.0 or get_first_node_in_group(&"choice_window"):
+		if absf(player.global_position.x - x) < tolerance or get_first_node_in_group(&"choice_window"):
 			break
 	_release_all()
 	await _frames(2)

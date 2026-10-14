@@ -33,40 +33,40 @@ size = Vector2(32, 400)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_24qmw"]
 size = Vector2(12, 256)
 
-[node name="RedEntrenamiento" type="Node2D" unique_id=1770143396 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+[node name="RedEntrenamiento" type="Node2D" unique_id=643441961 node_paths=PackedStringArray("player", "camera", "spawn_point")]
 texture_filter = 1
 script = ExtResource("1_sy8qt")
 player = NodePath("Player")
 camera = NodePath("GameCamera")
 spawn_point = NodePath("SpawnPoint")
-room_size = Rect2(0, 0, 6752, 360)
+room_size = Rect2(0, 0, 6727, 360)
 player_tint = Color(0.7, 1, 1.15, 1)
 footstep = &"step_digital"
 music_track = &"computadora"
 
-[node name="Background" type="Node2D" parent="." unique_id=1963184891]
+[node name="Background" type="Node2D" parent="." unique_id=1178176583]
 script = ExtResource("2_gvnr3")
-area = Rect2(0, 0, 6752, 360)
+area = Rect2(0, 0, 6727, 360)
 signs = {
 300.0: "TRAMO 1",
 2440.0: "TRAMO 2",
-4672.0: "TRAMO 3",
-6412.0: "ZONA SEGURA"
+4647.0: "TRAMO 3",
+6387.0: "ZONA SEGURA"
 }
 
-[node name="Collisions" type="StaticBody2D" parent="." unique_id=174137418]
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=1623538132]
 
-[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1140132082]
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1265451946]
 position = Vector2(-16, 180)
 shape = SubResource("RectangleShape2D_qbdxk")
 
-[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=31279611]
-position = Vector2(6768, 180)
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=84565279]
+position = Vector2(6743, 180)
 shape = SubResource("RectangleShape2D_cs6ko")
 
-[node name="Platforms" type="Node2D" parent="." unique_id=1265306928]
+[node name="Platforms" type="Node2D" parent="." unique_id=583672056]
 
-[node name="Platform1" type="AnimatableBody2D" parent="Platforms" unique_id=1376477409]
+[node name="Platform1" type="AnimatableBody2D" parent="Platforms" unique_id=2058898563]
 position = Vector2(0, 304)
 script = ExtResource("3_0t1lo")
 width = 260.0
@@ -75,7 +75,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 0.0
 
-[node name="Platform2" type="AnimatableBody2D" parent="Platforms" unique_id=149117658]
+[node name="Platform2" type="AnimatableBody2D" parent="Platforms" unique_id=1447006160]
 position = Vector2(300, 304)
 script = ExtResource("3_0t1lo")
 width = 200.0
@@ -84,7 +84,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 300.0
 
-[node name="Platform3" type="AnimatableBody2D" parent="Platforms" unique_id=1302133940]
+[node name="Platform3" type="AnimatableBody2D" parent="Platforms" unique_id=412217754]
 position = Vector2(560, 272)
 script = ExtResource("3_0t1lo")
 width = 120.0
@@ -93,7 +93,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 560.0
 
-[node name="Platform4" type="AnimatableBody2D" parent="Platforms" unique_id=1671736187]
+[node name="Platform4" type="AnimatableBody2D" parent="Platforms" unique_id=134572344]
 position = Vector2(740, 240)
 script = ExtResource("3_0t1lo")
 width = 140.0
@@ -102,7 +102,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 740.0
 
-[node name="Platform5" type="AnimatableBody2D" parent="Platforms" unique_id=995073683]
+[node name="Platform5" type="AnimatableBody2D" parent="Platforms" unique_id=734940108]
 position = Vector2(950, 304)
 script = ExtResource("3_0t1lo")
 width = 160.0
@@ -111,7 +111,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 950.0
 
-[node name="Platform6" type="AnimatableBody2D" parent="Platforms" unique_id=651251808]
+[node name="Platform6" type="AnimatableBody2D" parent="Platforms" unique_id=1241767046]
 position = Vector2(1170, 272)
 script = ExtResource("3_0t1lo")
 width = 110.0
@@ -120,7 +120,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 1170.0
 
-[node name="Platform7" type="AnimatableBody2D" parent="Platforms" unique_id=1896599287]
+[node name="Platform7" type="AnimatableBody2D" parent="Platforms" unique_id=1950212050]
 position = Vector2(1340, 248)
 script = ExtResource("3_0t1lo")
 width = 110.0
@@ -129,7 +129,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 1340.0
 
-[node name="Platform8" type="AnimatableBody2D" parent="Platforms" unique_id=1495185313]
+[node name="Platform8" type="AnimatableBody2D" parent="Platforms" unique_id=255692270]
 position = Vector2(1520, 280)
 script = ExtResource("3_0t1lo")
 width = 120.0
@@ -138,7 +138,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 1520.0
 
-[node name="Platform9" type="AnimatableBody2D" parent="Platforms" unique_id=1066398908]
+[node name="Platform9" type="AnimatableBody2D" parent="Platforms" unique_id=252576700]
 position = Vector2(1700, 304)
 script = ExtResource("3_0t1lo")
 width = 180.0
@@ -147,7 +147,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 1700.0
 
-[node name="Platform10" type="AnimatableBody2D" parent="Platforms" unique_id=1403076578]
+[node name="Platform10" type="AnimatableBody2D" parent="Platforms" unique_id=1048136312]
 position = Vector2(1940, 272)
 script = ExtResource("3_0t1lo")
 width = 120.0
@@ -156,7 +156,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 1940.0
 
-[node name="Platform11" type="AnimatableBody2D" parent="Platforms" unique_id=810885242]
+[node name="Platform11" type="AnimatableBody2D" parent="Platforms" unique_id=1094112216]
 position = Vector2(2120, 304)
 script = ExtResource("3_0t1lo")
 width = 300.0
@@ -165,7 +165,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 2120.0
 
-[node name="Platform12" type="AnimatableBody2D" parent="Platforms" unique_id=923332176]
+[node name="Platform12" type="AnimatableBody2D" parent="Platforms" unique_id=1207667743]
 position = Vector2(2420, 304)
 script = ExtResource("3_0t1lo")
 width = 120.0
@@ -174,7 +174,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 2420.0
 
-[node name="Platform13" type="AnimatableBody2D" parent="Platforms" unique_id=1666100939]
+[node name="Platform13" type="AnimatableBody2D" parent="Platforms" unique_id=2070645999]
 position = Vector2(2600, 272)
 script = ExtResource("3_0t1lo")
 width = 80.0
@@ -183,7 +183,7 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 2600.0
 
-[node name="Platform14" type="AnimatableBody2D" parent="Platforms" unique_id=2047182743]
+[node name="Platform14" type="AnimatableBody2D" parent="Platforms" unique_id=1197728845]
 position = Vector2(2780, 272)
 script = ExtResource("3_0t1lo")
 width = 80.0
@@ -192,7 +192,7 @@ metadata/dash = true
 metadata/moving = false
 metadata/origin_x = 2780.0
 
-[node name="Platform15" type="AnimatableBody2D" parent="Platforms" unique_id=707780508]
+[node name="Platform15" type="AnimatableBody2D" parent="Platforms" unique_id=487286462]
 position = Vector2(2920, 240)
 script = ExtResource("3_0t1lo")
 width = 70.0
@@ -201,212 +201,222 @@ metadata/dash = false
 metadata/moving = false
 metadata/origin_x = 2920.0
 
-[node name="Platform16" type="AnimatableBody2D" parent="Platforms" unique_id=18439409]
-position = Vector2(3060, 240)
+[node name="Platform16" type="AnimatableBody2D" parent="Platforms" unique_id=356259211]
+position = Vector2(3035, 240)
 script = ExtResource("3_0t1lo")
 kind = 1
 width = 72.0
 move_offset = Vector2(100, 0)
+move_time = 1.0
 metadata/route = 15
-metadata/dash = false
+metadata/dash = true
 metadata/moving = true
-metadata/origin_x = 3060.0
+metadata/origin_x = 3035.0
 
-[node name="Platform17" type="AnimatableBody2D" parent="Platforms" unique_id=1438398549]
-position = Vector2(3302, 240)
+[node name="Platform17" type="AnimatableBody2D" parent="Platforms" unique_id=879738535]
+position = Vector2(3277, 240)
 script = ExtResource("3_0t1lo")
 width = 80.0
 metadata/route = 16
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 3302.0
+metadata/origin_x = 3277.0
 
-[node name="Platform18" type="AnimatableBody2D" parent="Platforms" unique_id=1634240418]
-position = Vector2(3472, 304)
+[node name="Platform18" type="AnimatableBody2D" parent="Platforms" unique_id=359936785]
+position = Vector2(3447, 304)
 script = ExtResource("3_0t1lo")
 width = 200.0
 metadata/route = 17
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 3472.0
+metadata/origin_x = 3447.0
 
-[node name="Platform19" type="AnimatableBody2D" parent="Platforms" unique_id=1114637306]
-position = Vector2(3732, 272)
+[node name="Platform19" type="AnimatableBody2D" parent="Platforms" unique_id=838076047]
+position = Vector2(3707, 272)
 script = ExtResource("3_0t1lo")
 width = 70.0
 metadata/route = 18
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 3732.0
+metadata/origin_x = 3707.0
 
-[node name="Platform20" type="AnimatableBody2D" parent="Platforms" unique_id=997528535]
-position = Vector2(3912, 272)
+[node name="Platform20" type="AnimatableBody2D" parent="Platforms" unique_id=1433040950]
+position = Vector2(3887, 272)
 script = ExtResource("3_0t1lo")
 width = 70.0
 metadata/route = 19
 metadata/dash = true
 metadata/moving = false
-metadata/origin_x = 3912.0
+metadata/origin_x = 3887.0
 
-[node name="Platform21" type="AnimatableBody2D" parent="Platforms" unique_id=248247283]
-position = Vector2(4042, 240)
+[node name="Platform21" type="AnimatableBody2D" parent="Platforms" unique_id=528099982]
+position = Vector2(4017, 240)
 script = ExtResource("3_0t1lo")
 width = 80.0
 metadata/route = 20
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 4042.0
+metadata/origin_x = 4017.0
 
-[node name="Platform22" type="AnimatableBody2D" parent="Platforms" unique_id=75359093]
-position = Vector2(4202, 272)
+[node name="Platform22" type="AnimatableBody2D" parent="Platforms" unique_id=253884067]
+position = Vector2(4177, 272)
 script = ExtResource("3_0t1lo")
 width = 90.0
 metadata/route = 21
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 4202.0
+metadata/origin_x = 4177.0
 
-[node name="Platform23" type="AnimatableBody2D" parent="Platforms" unique_id=1211292458]
-position = Vector2(4352, 304)
+[node name="Platform23" type="AnimatableBody2D" parent="Platforms" unique_id=250329799]
+position = Vector2(4327, 304)
 script = ExtResource("3_0t1lo")
 width = 300.0
 metadata/route = 22
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 4352.0
+metadata/origin_x = 4327.0
 
-[node name="Platform24" type="AnimatableBody2D" parent="Platforms" unique_id=962684185]
-position = Vector2(4652, 304)
+[node name="Platform24" type="AnimatableBody2D" parent="Platforms" unique_id=1181910311]
+position = Vector2(4627, 304)
 script = ExtResource("3_0t1lo")
 width = 120.0
 metadata/route = 23
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 4652.0
+metadata/origin_x = 4627.0
 
-[node name="Platform25" type="AnimatableBody2D" parent="Platforms" unique_id=1943219699]
-position = Vector2(4832, 280)
+[node name="Platform25" type="AnimatableBody2D" parent="Platforms" unique_id=1497125523]
+position = Vector2(4807, 280)
 script = ExtResource("3_0t1lo")
 kind = 2
 width = 90.0
+close_delay = 0.45
 metadata/route = 24
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 4832.0
+metadata/origin_x = 4807.0
 
-[node name="Platform26" type="AnimatableBody2D" parent="Platforms" unique_id=1296373429]
-position = Vector2(4982, 256)
+[node name="Platform26" type="AnimatableBody2D" parent="Platforms" unique_id=1204112494]
+position = Vector2(4957, 256)
 script = ExtResource("3_0t1lo")
 kind = 2
 width = 90.0
+close_delay = 0.45
 metadata/route = 25
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 4982.0
+metadata/origin_x = 4957.0
 
-[node name="Platform27" type="AnimatableBody2D" parent="Platforms" unique_id=1741268607]
-position = Vector2(5142, 256)
+[node name="Platform27" type="AnimatableBody2D" parent="Platforms" unique_id=483841904]
+position = Vector2(5117, 256)
 script = ExtResource("3_0t1lo")
 kind = 2
 width = 80.0
+close_delay = 0.45
 metadata/route = 26
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 5142.0
+metadata/origin_x = 5117.0
 
-[node name="Platform28" type="AnimatableBody2D" parent="Platforms" unique_id=1618528380]
-position = Vector2(5282, 280)
+[node name="Platform28" type="AnimatableBody2D" parent="Platforms" unique_id=780080763]
+position = Vector2(5257, 280)
 script = ExtResource("3_0t1lo")
 kind = 2
 width = 90.0
+close_delay = 0.45
 metadata/route = 27
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 5282.0
+metadata/origin_x = 5257.0
 
-[node name="Platform29" type="AnimatableBody2D" parent="Platforms" unique_id=1554114547]
-position = Vector2(5432, 248)
+[node name="Platform29" type="AnimatableBody2D" parent="Platforms" unique_id=591127205]
+position = Vector2(5407, 248)
 script = ExtResource("3_0t1lo")
 width = 80.0
 metadata/route = 28
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 5432.0
+metadata/origin_x = 5407.0
 
-[node name="Platform30" type="AnimatableBody2D" parent="Platforms" unique_id=2064655609]
-position = Vector2(5542, 248)
+[node name="Platform30" type="AnimatableBody2D" parent="Platforms" unique_id=1693180594]
+position = Vector2(5517, 248)
 script = ExtResource("3_0t1lo")
 kind = 1
 width = 76.0
 move_offset = Vector2(110, 0)
+move_time = 1.0
 metadata/route = 29
-metadata/dash = false
+metadata/dash = true
 metadata/moving = true
-metadata/origin_x = 5542.0
+metadata/origin_x = 5517.0
 
-[node name="Platform31" type="AnimatableBody2D" parent="Platforms" unique_id=347471521]
-position = Vector2(5762, 272)
+[node name="Platform31" type="AnimatableBody2D" parent="Platforms" unique_id=927688388]
+position = Vector2(5737, 272)
 script = ExtResource("3_0t1lo")
 kind = 2
 width = 90.0
+close_delay = 0.45
 metadata/route = 30
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 5762.0
+metadata/origin_x = 5737.0
 
-[node name="Platform32" type="AnimatableBody2D" parent="Platforms" unique_id=980532512]
-position = Vector2(5952, 272)
+[node name="Platform32" type="AnimatableBody2D" parent="Platforms" unique_id=1130420896]
+position = Vector2(5927, 272)
 script = ExtResource("3_0t1lo")
 kind = 2
 width = 80.0
+close_delay = 0.45
 metadata/route = 31
 metadata/dash = true
 metadata/moving = false
-metadata/origin_x = 5952.0
+metadata/origin_x = 5927.0
 
-[node name="Platform33" type="AnimatableBody2D" parent="Platforms" unique_id=1367536657]
-position = Vector2(6092, 248)
+[node name="Platform33" type="AnimatableBody2D" parent="Platforms" unique_id=494447206]
+position = Vector2(6067, 248)
 script = ExtResource("3_0t1lo")
 kind = 2
 width = 80.0
+close_delay = 0.45
 metadata/route = 32
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 6092.0
+metadata/origin_x = 6067.0
 
-[node name="Platform34" type="AnimatableBody2D" parent="Platforms" unique_id=938597805]
-position = Vector2(6242, 280)
+[node name="Platform34" type="AnimatableBody2D" parent="Platforms" unique_id=593632443]
+position = Vector2(6217, 280)
 script = ExtResource("3_0t1lo")
 kind = 2
 width = 90.0
+close_delay = 0.45
 metadata/route = 33
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 6242.0
+metadata/origin_x = 6217.0
 
-[node name="Platform35" type="AnimatableBody2D" parent="Platforms" unique_id=358097182]
-position = Vector2(6392, 304)
+[node name="Platform35" type="AnimatableBody2D" parent="Platforms" unique_id=84877891]
+position = Vector2(6367, 304)
 script = ExtResource("3_0t1lo")
 width = 360.0
 metadata/route = 34
 metadata/dash = false
 metadata/moving = false
-metadata/origin_x = 6392.0
+metadata/origin_x = 6367.0
 
-[node name="Platform36" type="AnimatableBody2D" parent="Platforms" unique_id=1664355137]
-position = Vector2(3512, 236)
+[node name="Platform36" type="AnimatableBody2D" parent="Platforms" unique_id=1820801485]
+position = Vector2(3487, 236)
 script = ExtResource("3_0t1lo")
 width = 60.0
 
-[node name="Platform37" type="AnimatableBody2D" parent="Platforms" unique_id=1758202657]
-position = Vector2(3602, 212)
+[node name="Platform37" type="AnimatableBody2D" parent="Platforms" unique_id=989008614]
+position = Vector2(3577, 212)
 script = ExtResource("3_0t1lo")
 width = 60.0
 
-[node name="Hazards" type="Node2D" parent="." unique_id=1655892582]
+[node name="Hazards" type="Node2D" parent="." unique_id=1327817406]
 
-[node name="Corrupt1" type="Area2D" parent="Hazards" unique_id=54702726]
-position = Vector2(3542, 304)
+[node name="Corrupt1" type="Area2D" parent="Hazards" unique_id=36588031]
+position = Vector2(3517, 304)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("4_nqkr4")
@@ -415,103 +425,163 @@ spike_color = Color(1, 0.24, 0.65, 1)
 damage = 0.5
 is_hazard = true
 
-[node name="Emitters" type="Node2D" parent="." unique_id=320135765]
+[node name="Emitters" type="Node2D" parent="." unique_id=1990052122]
 
-[node name="Lluvia2" type="Node2D" parent="Emitters" unique_id=2067289752 node_paths=PackedStringArray("chase")]
-position = Vector2(3572, 40)
+[node name="Lluvia2" type="Node2D" parent="Emitters" unique_id=1190148815 node_paths=PackedStringArray("chase")]
+position = Vector2(3547, 40)
 script = ExtResource("5_la6ml")
 pattern = 1
-interval = 1.4
-rain_width = 200.0
+interval = 1.0
+speed = 190.0
+rain_width = 220.0
 chase = NodePath("../../Chase")
 
-[node name="Disparo1a" type="Node2D" parent="Emitters" unique_id=1072480312 node_paths=PackedStringArray("chase")]
+[node name="Disparo1a" type="Node2D" parent="Emitters" unique_id=71469814 node_paths=PackedStringArray("chase")]
 position = Vector2(450, 286)
 script = ExtResource("5_la6ml")
-interval = 2.6
+interval = 1.9
+speed = 190.0
 chase = NodePath("../../Chase")
 
-[node name="Disparo1b" type="Node2D" parent="Emitters" unique_id=523881744 node_paths=PackedStringArray("chase")]
+[node name="Lluvia1" type="Node2D" parent="Emitters" unique_id=1612223818 node_paths=PackedStringArray("chase")]
+position = Vector2(1070, 40)
+script = ExtResource("5_la6ml")
+pattern = 1
+interval = 1.0
+offset = 0.2
+speed = 190.0
+rain_width = 360.0
+chase = NodePath("../../Chase")
+
+[node name="Disparo1c" type="Node2D" parent="Emitters" unique_id=1400928422 node_paths=PackedStringArray("chase")]
+position = Vector2(1620, 250)
+script = ExtResource("5_la6ml")
+interval = 1.8
+offset = 0.6
+speed = 190.0
+chase = NodePath("../../Chase")
+
+[node name="Disparo1b" type="Node2D" parent="Emitters" unique_id=1213906809 node_paths=PackedStringArray("chase")]
 position = Vector2(2080, 286)
 script = ExtResource("5_la6ml")
-interval = 2.4
+interval = 1.7
 offset = 1.0
+speed = 190.0
 chase = NodePath("../../Chase")
 
-[node name="Disparo2" type="Node2D" parent="Emitters" unique_id=238658172 node_paths=PackedStringArray("chase")]
-position = Vector2(4322, 255)
+[node name="Disparo2a" type="Node2D" parent="Emitters" unique_id=1214627920 node_paths=PackedStringArray("chase")]
+position = Vector2(3060, 222)
 script = ExtResource("5_la6ml")
-interval = 2.0
-offset = 0.5
+interval = 1.8
+offset = 0.3
+speed = 190.0
 chase = NodePath("../../Chase")
 
-[node name="Lluvia3" type="Node2D" parent="Emitters" unique_id=159190115 node_paths=PackedStringArray("chase")]
-position = Vector2(5072, 40)
+[node name="Lluvia2b" type="Node2D" parent="Emitters" unique_id=950600822 node_paths=PackedStringArray("chase")]
+position = Vector2(3890, 40)
 script = ExtResource("5_la6ml")
 pattern = 1
 interval = 1.1
+offset = 0.5
+speed = 190.0
+rain_width = 320.0
+chase = NodePath("../../Chase")
+
+[node name="Disparo2" type="Node2D" parent="Emitters" unique_id=115198815 node_paths=PackedStringArray("chase")]
+position = Vector2(4297, 255)
+script = ExtResource("5_la6ml")
+interval = 1.5
+offset = 0.5
+speed = 190.0
+chase = NodePath("../../Chase")
+
+[node name="Lluvia3" type="Node2D" parent="Emitters" unique_id=1380422483 node_paths=PackedStringArray("chase")]
+position = Vector2(5047, 40)
+script = ExtResource("5_la6ml")
+pattern = 1
+interval = 0.8
 offset = 0.3
+speed = 190.0
 rain_width = 540.0
 chase = NodePath("../../Chase")
 
-[node name="Disparo3" type="Node2D" parent="Emitters" unique_id=1417989500 node_paths=PackedStringArray("chase")]
-position = Vector2(6352, 236)
+[node name="Disparo3a" type="Node2D" parent="Emitters" unique_id=936021427 node_paths=PackedStringArray("chase")]
+position = Vector2(5647, 230)
 script = ExtResource("5_la6ml")
-interval = 1.8
+interval = 1.6
+offset = 0.2
+speed = 190.0
 chase = NodePath("../../Chase")
 
-[node name="Entries" type="Node2D" parent="." unique_id=1093027231]
+[node name="Lluvia3b" type="Node2D" parent="Emitters" unique_id=1170155275 node_paths=PackedStringArray("chase")]
+position = Vector2(6047, 40)
+script = ExtResource("5_la6ml")
+pattern = 1
+interval = 0.9
+offset = 0.4
+speed = 190.0
+rain_width = 320.0
+chase = NodePath("../../Chase")
 
-[node name="Inicio" type="Marker2D" parent="Entries" unique_id=334770557]
+[node name="Disparo3" type="Node2D" parent="Emitters" unique_id=998989271 node_paths=PackedStringArray("chase")]
+position = Vector2(6327, 236)
+script = ExtResource("5_la6ml")
+interval = 1.4
+speed = 190.0
+chase = NodePath("../../Chase")
+
+[node name="Entries" type="Node2D" parent="." unique_id=645228645]
+
+[node name="Inicio" type="Marker2D" parent="Entries" unique_id=1115440695]
 position = Vector2(80, 304)
 script = ExtResource("6_s48i6")
 id = &"inicio"
 arrival_effect = "materialize"
 
-[node name="DesdeArena" type="Marker2D" parent="Entries" unique_id=1451118696]
-position = Vector2(6692, 304)
+[node name="DesdeArena" type="Marker2D" parent="Entries" unique_id=2085657499]
+position = Vector2(6667, 304)
 script = ExtResource("6_s48i6")
 id = &"desde_arena"
 facing = -1
 
-[node name="Checkpoint1" type="Marker2D" parent="Entries" unique_id=23642677]
+[node name="Checkpoint1" type="Marker2D" parent="Entries" unique_id=12545721]
 position = Vector2(2280, 304)
 script = ExtResource("6_s48i6")
 id = &"checkpoint_1"
 
-[node name="Checkpoint2" type="Marker2D" parent="Entries" unique_id=152246091]
-position = Vector2(4512, 304)
+[node name="Checkpoint2" type="Marker2D" parent="Entries" unique_id=1345709635]
+position = Vector2(4487, 304)
 script = ExtResource("6_s48i6")
 id = &"checkpoint_2"
 
-[node name="Checkpoint3" type="Marker2D" parent="Entries" unique_id=1614874909]
-position = Vector2(6552, 304)
+[node name="Checkpoint3" type="Marker2D" parent="Entries" unique_id=1907514938]
+position = Vector2(6527, 304)
 script = ExtResource("6_s48i6")
 id = &"checkpoint_3"
 
-[node name="Gates" type="Node2D" parent="." unique_id=1458074077]
+[node name="Gates" type="Node2D" parent="." unique_id=1320002084]
 
-[node name="Gate1" type="StaticBody2D" parent="Gates" unique_id=1607176774]
+[node name="Gate1" type="StaticBody2D" parent="Gates" unique_id=1448763162]
 position = Vector2(2400, 304)
 script = ExtResource("7_4relw")
 height = 200.0
 active = true
 
-[node name="Gate2" type="StaticBody2D" parent="Gates" unique_id=192125780]
-position = Vector2(4632, 304)
+[node name="Gate2" type="StaticBody2D" parent="Gates" unique_id=458047684]
+position = Vector2(4607, 304)
 script = ExtResource("7_4relw")
 height = 200.0
 active = true
 
-[node name="Gate3" type="StaticBody2D" parent="Gates" unique_id=438838198]
-position = Vector2(6732, 304)
+[node name="Gate3" type="StaticBody2D" parent="Gates" unique_id=463771513]
+position = Vector2(6707, 304)
 script = ExtResource("7_4relw")
 height = 200.0
 active = true
 
-[node name="Checkpoints" type="Node2D" parent="." unique_id=267765963]
+[node name="Checkpoints" type="Node2D" parent="." unique_id=460455986]
 
-[node name="Checkpoint1" type="Area2D" parent="Checkpoints" unique_id=75104723 node_paths=PackedStringArray("gate")]
+[node name="Checkpoint1" type="Area2D" parent="Checkpoints" unique_id=877709496 node_paths=PackedStringArray("gate")]
 position = Vector2(2230, 304)
 script = ExtResource("8_pypt6")
 challenge = ExtResource("9_ec0yk")
@@ -521,49 +591,49 @@ entry_id = &"checkpoint_1"
 prompt_text = "E: responder"
 prompt_offset = Vector2(-34, -86)
 
-[node name="Checkpoint2" type="Area2D" parent="Checkpoints" unique_id=1866003471 node_paths=PackedStringArray("gate")]
-position = Vector2(4462, 304)
+[node name="Checkpoint2" type="Area2D" parent="Checkpoints" unique_id=569273446 node_paths=PackedStringArray("gate")]
+position = Vector2(4437, 304)
 script = ExtResource("8_pypt6")
 number = 2
 challenge = ExtResource("10_3l0nv")
-safe_from_x = 4352.0
+safe_from_x = 4327.0
 gate = NodePath("../../Gates/Gate2")
 entry_id = &"checkpoint_2"
 prompt_text = "E: responder"
 prompt_offset = Vector2(-34, -86)
 
-[node name="Checkpoint3" type="Area2D" parent="Checkpoints" unique_id=2109087279 node_paths=PackedStringArray("gate")]
-position = Vector2(6502, 304)
+[node name="Checkpoint3" type="Area2D" parent="Checkpoints" unique_id=1793761683 node_paths=PackedStringArray("gate")]
+position = Vector2(6477, 304)
 script = ExtResource("8_pypt6")
 number = 3
 challenge = ExtResource("11_6js36")
-safe_from_x = 6392.0
+safe_from_x = 6367.0
 gate = NodePath("../../Gates/Gate3")
 entry_id = &"checkpoint_3"
 prompt_text = "E: responder"
 prompt_offset = Vector2(-34, -86)
 
-[node name="CorruptionBarrier" type="Area2D" parent="." unique_id=1808965726]
+[node name="CorruptionBarrier" type="Area2D" parent="." unique_id=455653892]
 position = Vector2(50, 304)
 script = ExtResource("12_jupwb")
 
-[node name="SpawnPoint" type="Marker2D" parent="." unique_id=854839744]
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=784321095]
 position = Vector2(80, 304)
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=251313216 instance=ExtResource("13_xf83c")]
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1007164626 instance=ExtResource("13_xf83c")]
 position = Vector2(80, 304)
 collision_layer = 2
 floor_snap_length = 4.0
 script = ExtResource("14_iaqrh")
 
-[node name="SoulGlow" type="PointLight2D" parent="Player" unique_id=186705992]
+[node name="SoulGlow" type="PointLight2D" parent="Player" unique_id=446862159]
 position = Vector2(0, -20)
 color = Color(0.4, 0.95, 1, 1)
 energy = 0.6
 texture = ExtResource("15_dt0aw")
 texture_scale = 1.4
 
-[node name="GameCamera" type="Camera2D" parent="." unique_id=228123638 node_paths=PackedStringArray("target") instance=ExtResource("16_wnugd")]
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1764841932 node_paths=PackedStringArray("target") instance=ExtResource("16_wnugd")]
 zoom = Vector2(2, 2)
 process_callback = 0
 position_smoothing_enabled = true
@@ -579,23 +649,23 @@ layer = 40
 script = ExtResource("19_gri68")
 player = NodePath("../Player")
 
-[node name="Exits" type="Node2D" parent="." unique_id=1198099210]
+[node name="Exits" type="Node2D" parent="." unique_id=1650222367]
 
-[node name="ToArena" type="Area2D" parent="Exits" unique_id=710145601]
-position = Vector2(6746, 176)
+[node name="ToArena" type="Area2D" parent="Exits" unique_id=1861532224]
+position = Vector2(6721, 176)
 script = ExtResource("20_ts2ss")
 door_id = &"este"
 target_scene = "res://world/zones/red_entrenamiento/arena_hermanos.tscn"
 target_entry = &"desde_persecucion"
 
-[node name="Shape" type="CollisionShape2D" parent="Exits/ToArena" unique_id=312964298]
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToArena" unique_id=148005664]
 shape = SubResource("RectangleShape2D_24qmw")
 
-[node name="Chase" type="Node" parent="." unique_id=674296243 node_paths=PackedStringArray("barrier", "checkpoints", "start_marker")]
+[node name="Chase" type="Node" parent="." unique_id=609508947 node_paths=PackedStringArray("barrier", "checkpoints", "start_marker")]
 script = ExtResource("21_wuy1j")
 config = ExtResource("22_vy3nh")
 barrier = NodePath("../CorruptionBarrier")
 checkpoints = [NodePath("../Checkpoints/Checkpoint1"), NodePath("../Checkpoints/Checkpoint2"), NodePath("../Checkpoints/Checkpoint3")]
-tramo_starts = PackedFloat32Array(270, 2440, 4672)
+tramo_starts = PackedFloat32Array(270, 2440, 4647)
 start_marker = NodePath("../SpawnPoint")
 start_dialogue = ExtResource("23_hye3n")
