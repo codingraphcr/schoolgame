@@ -223,8 +223,9 @@ OBSERVADOR: RECONOCIDO
 PROTOCOLO: [DATOS CORRUPTOS]
 ```
 
-Después Kai habla con el profesor. Cuando Kai se va, el profesor mira la computadora y aparece el archivo
-**`GENESIS_ARCHIVE`**. Corte. **FIN DEL CAPÍTULO 1.**
+Después Kai habla con el profesor. Cuando Kai se va, en una escena aparte («Mientras tanto...»), el profesor mira
+la computadora y aparece el archivo **`GENESIS_ARCHIVE`**. Corte. **FIN DEL CAPÍTULO 1.** Kai aparece en la entrada
+del colegio: él no vio el archivo.
 
 **No revelar todavía que Kai es un organismo artificial** (Biblia XV, reglas 1 y 11).
 

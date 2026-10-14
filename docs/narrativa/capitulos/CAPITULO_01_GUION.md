@@ -144,8 +144,11 @@ Chip y Glitch se van (neutralizados, no derrotados para siempre). Kai sale de la
 > **KAI [sonriente]:** «Digamos que... aprendieron la lección».
 > **PROF. ALVARADO [sonriente]:** «Buen trabajo, Kai. Andá a descansar».
 
-Kai se va. El profesor se queda solo frente al monitor. **Sin diálogo:** en la pantalla aparece el archivo
-**`GENESIS_ARCHIVE`**. El profesor se queda mirándolo. Corte a negro.
+Kai se va. **Escena aparte** (opción A, decisión del equipo del 14 de octubre de 2026: Kai no la ve ni sabe nada
+de ella, como dice la Biblia): fundido a negro y el cartel «Mientras tanto, en el cuarto técnico...». El profesor,
+solo frente al monitor: en la pantalla se abre el archivo **`GENESIS_ARCHIVE`** y la cámara se acerca despacio.
+**Sin explicación:** el profesor se queda mirándolo en silencio («...»). «FIN DEL CAPÍTULO 1» sobre esa imagen y,
+después, Kai aparece en la **entrada del colegio** (no vuelve al cuarto).
 
 **FIN DEL CAPÍTULO 1.** Marcas: `nivel_2_completado`, `capitulo_1_completado`.
 

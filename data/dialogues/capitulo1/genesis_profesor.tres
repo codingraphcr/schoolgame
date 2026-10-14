@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 2.7 (opción A): el profesor, solo, frente al monitor. No se explica qué es el archivo (Biblia).
+(En el monitor del servidor se abre una ventana que nadie pidió.)
+Prof. Alvarado [sorprendido]: ...
+(El profesor se queda mirando la pantalla, en silencio.)"
