@@ -13,6 +13,8 @@ const SIGN := Color("1f6f5a")
 
 ## Descansos de la escalera (rectángulos de las plataformas, arriba = donde pisa Kai).
 @export var landings: Array[Rect2] = []
+## Descansos sueltos, sin tramo de escalera hacia el siguiente (p. ej. el del cuarto técnico).
+@export var ledges: Array[Rect2] = []
 ## Ventanas (una por piso).
 @export var windows: Array[Rect2] = []
 ## Carteles: posición (centro) → texto.
@@ -36,7 +38,7 @@ func _paint(c: VectorCanvas, _t: float) -> void:
 	# Tramos: de cada descanso al siguiente, una franja de escalones en diagonal.
 	for i in landings.size() - 1:
 		_paint_flight(c, landings[i], landings[i + 1])
-	for landing in landings:
+	for landing in landings + ledges:
 		c.gradient_box(landing, 1.0, CONCRETE, CONCRETE_DARK)
 		c.draw_line(landing.position + Vector2(0, -14), Vector2(landing.end.x, landing.position.y - 14), RAIL, 1.0)
 		for k in int(landing.size.x / 24.0) + 1:

@@ -133,6 +133,8 @@ func _test_fallback() -> void:
 func _test_real_school() -> void:
 	var kinds := {}
 	var problems: PackedStringArray = []
+	# Las salas fijas salen de los datos (cambian al sumar salas al Colegio).
+	var fixed_count := (load("res://data/world/districts/colegio.tres") as DistrictLayout).rooms.size()
 	for seed_value in range(1, 31):
 		world.new_world(seed_value)
 		var school: RoomGraph = world.graph(&"colegio")
@@ -147,7 +149,7 @@ func _test_real_school() -> void:
 			var next: Dictionary = school.target_of(room_id, &"este") if school.template_of(room_id).door(&"este") else {}
 			room_id = next.get("room", &"")
 		kinds[" → ".join(names)] = true
-		if school.rooms.size() - 7 > 2:
+		if school.rooms.size() - fixed_count > 2:
 			problems.append("semilla %d: demasiadas salas opcionales" % seed_value)
 	_check(problems.is_empty(), "el Colegio siempre cuelga una sala opcional de la biblioteca, hasta 2 %s" % [problems])
 	_check(kinds.size() >= 2, "según la semilla cambia lo que hay al este de la biblioteca: %s" % ", ".join(kinds.keys()))

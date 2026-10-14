@@ -255,7 +255,7 @@ Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las 
 |---|---|---|
 | 1 | Guion y datos de misión | ✅ Hecha (guion para revisar con el equipo) |
 | 2 | Inmersión Digital (solo la transición) | ✅ Hecha: `ImmersionPortal`, habilidad guardada; se coloca en el cuarto técnico en la etapa 3 |
-| 3 | Sala inicial de persecución | Pendiente |
+| 3 | Sala inicial de persecución | En curso: ✅ el cuarto técnico (2° piso, a la izquierda de las escaleras; cerrado con llave hasta el permiso del profesor; la conexión en el monitor). Falta la sala de la persecución |
 | 4 | Barrera, salud y caídas | Pendiente |
 | 5 | Checkpoints y preguntas | Pendiente |
 | 6 | Temporizador | Pendiente |

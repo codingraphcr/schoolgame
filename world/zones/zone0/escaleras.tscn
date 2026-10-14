@@ -41,7 +41,13 @@ size = Vector2(96, 8)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5lloy"]
 size = Vector2(310, 8)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8yfyb"]
+size = Vector2(160, 8)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_odpsf"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_84a4f"]
 size = Vector2(12, 256)
 
 [node name="Escaleras" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
@@ -67,8 +73,10 @@ tile_set = ExtResource("2_84a4f")
 [node name="Props" type="Node2D" parent="." unique_id=1385924473]
 script = ExtResource("3_ti6pk")
 landings = Array[Rect2]([Rect2(200, 246, 96, 10), Rect2(340, 188, 96, 10), Rect2(200, 130, 96, 10), Rect2(60, 72, 96, 10), Rect2(200, 14, 96, 10), Rect2(330, -48, 310, 16)])
+ledges = Array[Rect2]([Rect2(0, -48, 160, 16)])
 windows = Array[Rect2]([Rect2(30, 170, 48, 64), Rect2(540, -250, 64, 80)])
 signs = {
+Vector2(80, -120): "◀ CUARTO TÉCNICO",
 Vector2(90, 150): "1° PISO",
 Vector2(540, -120): "2° PISO · BIBLIOTECA ▶"
 }
@@ -127,6 +135,11 @@ one_way_collision = true
 [node name="Landing6" type="CollisionShape2D" parent="Collisions" unique_id=1731396110]
 position = Vector2(485, -44)
 shape = SubResource("RectangleShape2D_5lloy")
+one_way_collision = true
+
+[node name="LedgeCuartoTecnico" type="CollisionShape2D" parent="Collisions" unique_id=1364034078]
+position = Vector2(80, -44)
+shape = SubResource("RectangleShape2D_8yfyb")
 one_way_collision = true
 
 [node name="Lights" type="Node2D" parent="." unique_id=1134096236]
@@ -194,6 +207,11 @@ script = ExtResource("12_qpjia")
 id = &"desde_biblioteca"
 facing = -1
 
+[node name="FromCuartoTecnico" type="Marker2D" parent="Entries" unique_id=1159679154]
+position = Vector2(40, -48)
+script = ExtResource("12_qpjia")
+id = &"desde_cuarto_tecnico"
+
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 
 [node name="ToBiblioteca" type="Area2D" parent="Exits" unique_id=1554206632]
@@ -205,3 +223,15 @@ target_entry = &"desde_escaleras"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToBiblioteca" unique_id=1946857122]
 shape = SubResource("RectangleShape2D_odpsf")
+
+[node name="ToCuartoTecnico" type="Area2D" parent="Exits" unique_id=1184906983]
+position = Vector2(6, -176)
+script = ExtResource("13_dp20c")
+door_id = &"oeste"
+target_scene = "res://world/zones/zone0/cuarto_tecnico.tscn"
+target_entry = &"desde_escaleras"
+requires_quest = &"travesuras_en_el_sistema"
+locked_message = "El cuarto técnico está cerrado con llave. Sin permiso no se entra."
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToCuartoTecnico" unique_id=1933438458]
+shape = SubResource("RectangleShape2D_84a4f")

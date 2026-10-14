@@ -17,6 +17,13 @@ id = &"este"
 kind = 1
 entry_id = &"desde_biblioteca"
 
+[sub_resource type="Resource" id="Resource_fatgv"]
+script = ExtResource("1_fatgv")
+id = &"oeste"
+side = 0
+kind = 1
+entry_id = &"desde_cuarto_tecnico"
+
 [resource]
 script = ExtResource("2_jwng2")
 id = &"escaleras"
@@ -24,7 +31,7 @@ display_name = "Escaleras"
 scene_path = "res://world/zones/zone0/escaleras.tscn"
 room_type = &"stairs"
 size_cells = Vector2i(1, 2)
-doors = Array[ExtResource("1_fatgv")]([SubResource("Resource_rqark"), SubResource("Resource_0x8hu")])
+doors = Array[ExtResource("1_fatgv")]([SubResource("Resource_rqark"), SubResource("Resource_0x8hu"), SubResource("Resource_fatgv")])
 fixed = true
 minimum_player_abilities = PackedStringArray()
 chapter_requirement = 1

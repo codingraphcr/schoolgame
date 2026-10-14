@@ -610,7 +610,15 @@ con `World.lock_reason`). La primera vez reproduce `first_dialogue`, desbloquea 
 (`GameState.immersion_unlocked`, `unlock_immersion()`; se guarda en `player`, la valida `SaveValidator` y la muestra
 «Mi perfil») y la transición dice «INMERSIÓN DIGITAL». La transición es la `LoadingScreen` de siempre: se cierra sola
 cuando Kai se materializa en la entrada de destino (`arrival_effect = "materialize"`). No es la Visión Digital: la
-visión deja ver; la inmersión deja entrar.
+visión deja ver; la inmersión deja entrar. Con `requires_quest` / `requires_step` la conexión solo aparece cuando la
+historia lo pide.
+
+**El cuarto técnico** (`cuarto_tecnico.tscn`, ficha `cuarto_tecnico`: tipo `technical_room`, Capítulo 1) está en el
+2° piso, a la izquierda de las escaleras (celda (0, −2)); se llega saltando a un descanso nuevo arriba a la izquierda.
+Su puerta está **cerrada con llave** hasta que el profesor da permiso (`requires_quest = travesuras_en_el_sistema`).
+Arte provisional en `technical_room_props.gd`: racks con luces, el servidor del sistema de entrenamiento en rojo, su
+monitor (con la conexión de la Inmersión Digital, que aparece en el paso `seguirlos_adentro`) y el cartel «SOLO
+PERSONAL AUTORIZADO». Una `RoomExit` cerrada recuerda si Kai quedó parado en ella: si se abre mientras sigue ahí, pasa.
 
 ## Misiones (`systems/quests/`)
 
@@ -746,6 +754,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas (y las escaleras) coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
 | `test_capitulo1_datos.gd` | Capítulo 1, etapa 1: misiones y su orden, diálogos con oradores conocidos y los textos de la especificación sin cambios, desafíos con una sola respuesta correcta y explicación, páginas del Grimorio, voces de Chip y Glitch, y ningún texto que revele el origen de Kai |
 | `test_inmersion.gd` | Capítulo 1, etapa 2: la conexión del monitor solo con la Visión Digital, la primera vez con diálogo y la transición «INMERSIÓN DIGITAL», la habilidad permanente (partida, validador, «Mi perfil», Grimorio) y la segunda vez sin repetir nada |
+| `test_cuarto_tecnico.gd` | Capítulo 1, etapa 3: el cuarto técnico en el mapa, el descanso nuevo de las escaleras con la física real, la puerta cerrada con llave hasta el permiso del profesor (y que se abra con Kai parado ahí), la conexión del monitor solo cuando la historia lo pide, la vuelta y continuar una partida guardada ahí |
 | `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |
 | `test_generador.gd` | M4: con fichas de prueba, la parte fija intacta, misma semilla = mismo mapa, 40 semillas válidas y distintas, solo puertas compatibles, respaldo si la parte variable no valida y error si la fija está mal; con los datos reales, aula o depósito al este de la biblioteca, el mapa se rearma igual al cargar, dos aulas con la misma escena, la puerta libre cerrada y continuar en la misma aula |
 | `test_biblioteca.gd` | M3: escaleras y biblioteca en el mapa, cerradas hasta el Capítulo 1, Kai sube los descansos con la física real y sin doble salto, ida y vuelta entre Pasillo, escaleras y biblioteca, estanterías como plataforma y continuar una partida guardada en la biblioteca |

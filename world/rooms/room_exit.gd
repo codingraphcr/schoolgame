@@ -20,12 +20,22 @@ extends Area2D
 @export var closed_message := "La puerta está cerrada."
 
 var _used := false
+## Kai está parado en la salida pero estaba cerrada: si se abre mientras sigue ahí, pasa.
+var _waiting: Player
 
 
 func _ready() -> void:
 	collision_layer = 0
 	collision_mask = 2  # Capa del jugador
 	body_entered.connect(_on_body_entered)
+	body_exited.connect(func(body: Node) -> void: if body == _waiting: _waiting = null)
+
+
+func _physics_process(_delta: float) -> void:
+	if _waiting and not _used and is_open() and not String(resolve()["scene"]).is_empty():
+		var player := _waiting
+		_waiting = null
+		_used = travel(self, player, door_id, target_scene, target_entry)
 
 
 ## A dónde lleva: { "scene", "entry", "room" } (room vacío si no viene del mapa).
@@ -73,6 +83,7 @@ func _on_body_entered(body: Node) -> void:
 	if _used or not body is Player:
 		return
 	if not is_open():
+		_waiting = body as Player
 		if not locked_message.is_empty():
 			get_tree().call_group(&"toast", &"show_message", locked_message, 2.5)
 		return

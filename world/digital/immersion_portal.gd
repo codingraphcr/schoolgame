@@ -32,6 +32,9 @@ const FIRST_LINES: PackedStringArray = ["Nueva habilidad: Inmersión Digital", "
 @export var lines: PackedStringArray = ["Conexión encontrada", "Entrando al sistema..."]
 ## Segundos de la pantalla de transición.
 @export var transition_seconds := 2.4
+## La conexión solo aparece cuando la historia llega a ese paso (vacío = siempre que haya Visión).
+@export var requires_quest: StringName = &""
+@export var requires_step: StringName = &""
 
 var _canvas: VectorCanvas
 var _using := false
@@ -71,8 +74,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	enabled = not _using and _vision().is_active()
+	enabled = not _using and _vision().is_active() and is_available()
 	super(delta)
+
+
+## Si la historia ya permite usar esta conexión.
+func is_available() -> bool:
+	return requires_quest == &"" or get_node("/root/GameState").has_reached_step(requires_quest, requires_step)
 
 
 ## Si Kai ya tiene la Inmersión Digital.
@@ -138,7 +146,7 @@ func _digital_layer() -> Node:
 
 ## La conexión: la pantalla brilla con marcos que se encogen hacia adentro y datos que entran en ella.
 func _paint(c: VectorCanvas, t: float) -> void:
-	if not Engine.is_editor_hint() and _using:
+	if not Engine.is_editor_hint() and (_using or not is_available()):
 		return
 	var pulse := 0.5 + 0.5 * sin(t * 3.0)
 	var screen := Rect2(-screen_size / 2.0, screen_size)
