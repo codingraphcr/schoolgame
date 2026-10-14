@@ -153,7 +153,8 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 	else:
 		_apply_gravity(delta)
-		_handle_jump()
+		if not _try_drop_through():
+			_handle_jump()
 		_apply_jump_cut()
 		_apply_horizontal_movement(delta)
 		move_and_slide()
@@ -337,6 +338,31 @@ func _apply_horizontal_movement(delta: float) -> void:
 func _set_facing(direction: int) -> void:
 	facing = direction
 	_visual.scale.x = facing
+
+
+# --- Bajar de una plataforma ---------------------------------------------------
+
+## S en el suelo, parado sobre una plataforma de un solo sentido (pop-ups, plataformas de datos,
+## estanterías, descansos): Kai baja a través de ella. Sobre el suelo firme no hace nada.
+func _try_drop_through() -> bool:
+	if not is_on_floor() or not _action_just_pressed("move_down") or not _on_one_way_floor():
+		return false
+	position.y += 4.0
+	velocity.y = maxf(velocity.y, 60.0)
+	jump_buffer_timer = 0.0
+	return true
+
+
+## Si lo que pisa ahora es una plataforma de un solo sentido.
+func _on_one_way_floor() -> bool:
+	for i in get_slide_collision_count():
+		var collision := get_slide_collision(i)
+		if collision.get_normal().y > -0.7:
+			continue
+		var shape := collision.get_collider_shape()
+		if (shape is CollisionShape2D and (shape as CollisionShape2D).one_way_collision) 				or (shape is CollisionPolygon2D and (shape as CollisionPolygon2D).one_way_collision):
+			return true
+	return false
 
 
 # --- Saltos -------------------------------------------------------------------

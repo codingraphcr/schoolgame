@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_cvder")
 script_text = "# H5: con la Nullblade y el Grimorio, el cuarto se corrompe y bloquea la salida.
-(Un crujido. El piso cerca de la puerta se llena de datos corruptos.)
+(Un crujido. El piso cerca de la puerta se llena de datos corruptos y un armario viejo cae.)
 Kai [preocupado]: ¡La salida!
 Kai [pensativo]: Tendré que usar lo que acabo de aprender."

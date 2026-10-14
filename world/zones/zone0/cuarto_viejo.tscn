@@ -32,6 +32,9 @@ size = Vector2(32, 360)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_odpsf"]
 size = Vector2(12, 256)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_clcm4"]
+size = Vector2(64, 52)
+
 [node name="CuartoViejo" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
 script = ExtResource("1_g0r0l")
@@ -136,14 +139,48 @@ target_entry = &"desde_cuarto_viejo"
 shape = SubResource("RectangleShape2D_odpsf")
 
 [node name="CorruptFloor" type="Area2D" parent="." unique_id=785444267]
-position = Vector2(166, 304)
+position = Vector2(150, 304)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("13_ax5mw")
-width = 120.0
+width = 100.0
 spike_color = Color(0.9, 0.25, 0.65, 1)
 damage = 0.5
 is_hazard = true
+
+[node name="FallenCabinet" type="StaticBody2D" parent="." unique_id=1740934651]
+position = Vector2(346, 278)
+
+[node name="Shape" type="CollisionShape2D" parent="FallenCabinet" unique_id=1726077302]
+shape = SubResource("RectangleShape2D_clcm4")
+
+[node name="Body" type="ColorRect" parent="FallenCabinet" unique_id=226156310]
+offset_left = -32.0
+offset_top = -26.0
+offset_right = 32.0
+offset_bottom = 26.0
+color = Color(0.28, 0.32, 0.4, 1)
+
+[node name="Drawer1" type="ColorRect" parent="FallenCabinet" unique_id=274830967]
+offset_left = -28.0
+offset_top = -20.0
+offset_right = -10.0
+offset_bottom = 20.0
+color = Color(0.2, 0.23, 0.3, 1)
+
+[node name="Drawer2" type="ColorRect" parent="FallenCabinet" unique_id=345595437]
+offset_left = -8.0
+offset_top = -20.0
+offset_right = 10.0
+offset_bottom = 20.0
+color = Color(0.2, 0.23, 0.3, 1)
+
+[node name="Drawer3" type="ColorRect" parent="FallenCabinet" unique_id=1918690077]
+offset_left = 12.0
+offset_top = -20.0
+offset_right = 30.0
+offset_bottom = 20.0
+color = Color(0.2, 0.23, 0.3, 1)
 
 [node name="Grimorio" type="Area2D" parent="." unique_id=888828525]
 position = Vector2(470, 304)
@@ -160,12 +197,13 @@ label = "la espada"
 taken_flag = &"nullblade_tomada"
 prompt_offset = Vector2(-40, -70)
 
-[node name="OldRoom" type="Node" parent="." unique_id=1502400512 node_paths=PackedStringArray("player", "nullblade", "grimorio", "spikes")]
+[node name="OldRoom" type="Node" parent="." unique_id=1502400512 node_paths=PackedStringArray("player", "nullblade", "grimorio", "spikes", "cabinet")]
 script = ExtResource("15_oqplg")
 player = NodePath("../Player")
 nullblade = NodePath("../Nullblade")
 grimorio = NodePath("../Grimorio")
 spikes = NodePath("../CorruptFloor")
+cabinet = NodePath("../FallenCabinet")
 arrival_dialogue = ExtResource("16_mply5")
 nullblade_dialogue = ExtResource("17_3fk7r")
 grimorio_dialogue = ExtResource("18_lnpq7")

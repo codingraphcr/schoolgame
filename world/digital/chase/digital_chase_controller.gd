@@ -75,6 +75,9 @@ func _ready() -> void:
 	time_left = config.start_seconds if tramo == 0 else retry_time(tramo)
 	snapshot = time_left
 	_room.player_respawned.connect(_on_player_respawned)
+	# Si Kai cae al vacío y vuelve atrás, la barrera también retrocede (nunca queda encima de él).
+	_room.player.damage.hazard_respawned.connect(func() -> void:
+		barrier.position.x = minf(barrier.position.x, _room.player.global_position.x - config.barrier_start_gap))
 	# Llegar a la red de entrenamiento cumple «sigue a Chip y Glitch adentro».
 	if state.get_current_step(QUEST) == &"seguirlos_adentro":
 		state.complete_step(QUEST, &"seguirlos_adentro")
@@ -93,15 +96,19 @@ func _physics_process(delta: float) -> void:
 	if not running and player.global_position.x >= tramo_starts[tramo]:
 		running = true
 		paused = false
+		# Nunca arranca encima de Kai: siempre por lo menos barrier_start_gap detrás.
+		barrier.position.x = minf(barrier.position.x, player.global_position.x - config.barrier_start_gap)
 		barrier.start()
 		tramo_started.emit(tramo)
 	if not running:
+		_keep_behind(player, config.barrier_safe_gap, delta)
 		return
 	if player.global_position.x >= checkpoints[tramo].safe_from_x:
-		# Zona segura: se detienen la barrera y el tiempo.
+		# Zona segura: se detienen la barrera y el tiempo, y la barrera se aleja de Kai.
 		if not paused:
 			paused = true
 			barrier.halt()
+		_keep_behind(player, config.barrier_safe_gap, delta)
 		return
 	if paused:
 		# Volvió al tramo antes de responder: todo sigue.
@@ -113,6 +120,13 @@ func _physics_process(delta: float) -> void:
 	_timer.show_seconds(time_left)
 	if time_left <= 0.0:
 		_on_time_up()
+
+
+## La barrera se queda por lo menos gap detrás de Kai (retrocede si estaba más cerca).
+func _keep_behind(player: Player, gap: float, delta: float) -> void:
+	var limit := player.global_position.x - gap
+	if barrier.position.x > limit:
+		barrier.position.x = maxf(limit, barrier.position.x - 900.0 * delta)
 
 
 ## Marca de un checkpoint hecho (i = 0, 1, 2).
@@ -130,7 +144,9 @@ func _prepare_tramo() -> void:
 	running = false
 	paused = false
 	var start_x := tramo_starts[tramo]
-	barrier.place(start_x - config.barrier_start_gap, config.barrier_speeds[mini(tramo, config.barrier_speeds.size() - 1)], checkpoints[tramo].safe_from_x)
+	# Detrás de Kai (o del inicio del tramo, lo que esté antes): nunca delante de él.
+	var behind := minf(start_x, _room.player.global_position.x) - config.barrier_safe_gap
+	barrier.place(behind, config.barrier_speeds[mini(tramo, config.barrier_speeds.size() - 1)], checkpoints[tramo].safe_from_x)
 	_timer.visible = true
 	_timer.show_seconds(time_left)
 

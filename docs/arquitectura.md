@@ -594,10 +594,10 @@ explorar: siempre se encuadra con todas las salas del distrito.
    `DigitalWorld.physical_ambient`; Kai lleva un brillo tenue). Con la Visión Digital se ven y se toman dos
    `HiddenRelic` (`world/vision/hidden_relic.gd`, dibujadas en la capa digital): el **Grimorio** (marca
    `GameState.GRIMORIO_FLAG`: desde ahí **G lo abre**; antes no hace nada) y la **Nullblade oficial**
-   (`NullbladeReveal` con su tarjeta, `nullblade_stage` 1 y el **dash**; el doble salto llega más adelante en la historia). Lo maneja
+   (`NullbladeReveal` con su tarjeta, `nullblade_stage` 1 y el **dash**; el doble salto se consigue más adelante, Biblia v1.4). Lo maneja
    `world/zones/zone0/old_room.gd`; arte provisional en `old_room_props.gd`.
-5. `salir_cuarto`: con las dos, el piso cerca de la puerta se corrompe (`Spikes`, 120 px; un salto simple no alcanza):
-   se cruza con salto + dash cerca de lo más alto del salto (o rebotando en los pinchos). Al volver al pasillo viejo, un `QuestTrigger` cierra la misión: título
+5. `salir_cuarto`: con las dos, el piso cerca de la puerta se corrompe (`Spikes`, 100 px) y cae un armario (52 px):
+   se salta el armario y el piso corrupto se cruza con salto + dash. Al volver al pasillo viejo, un `QuestTrigger` cierra la misión: título
    **«EL DESPERTAR»** (antes salía al terminar `prologo`) y después **«CAPÍTULO 1 · EL ORIGEN DIGITAL»**
    (`Quest.followup_title`), y la marca **`tutorial_terminado`** (`Quest.completion_flag`): desde ahí morir cuesta Ecos.
 
@@ -622,14 +622,15 @@ PERSONAL AUTORIZADO». Una `RoomExit` cerrada recuerda si Kai quedó parado en e
 
 ## Persecución digital (Capítulo 1)
 
-La red de entrenamiento (`world/zones/red_entrenamiento/persecucion.tscn`, distrito `red_entrenamiento`, 4760 px):
-tres tramos fijos que terminan en una zona segura con su checkpoint y su puerta (`ArenaBarrier`). Se llega por la
+La red de entrenamiento (`world/zones/red_entrenamiento/persecucion.tscn`, distrito `red_entrenamiento`, 6752 px):
+tres tramos fijos y largos (con huecos de salto + dash, plataformas que se mueven o desaparecen, pinchos y nodos que disparan) que terminan en una zona segura con su checkpoint y su puerta (`ArenaBarrier`). Se llega por la
 conexión del monitor del cuarto técnico. Valores en `data/chase/persecucion_cap1.tres` (`ChaseConfig`).
 
 | Pieza | Responsabilidad |
 |---|---|
 | `DataPlatform` | Bloque de datos de un solo sentido: fijo, que se mueve (con la física) o temporal (al pisarlo parpadea, desaparece y vuelve). Los que se mueven o desaparecen están en el grupo `unsafe_ground` |
-| `CorruptionBarrier` | Pared que avanza detrás de Kai: quita `barrier_damage` (golpe común, con la invulnerabilidad de siempre), no pasa de la zona segura, `disable()` la apaga para siempre |
+| `CorruptionBarrier` | Pared que avanza detrás de Kai (`barrier_speeds`: 80, 90 y 100 px/s): quita `barrier_damage` (golpe común, con la invulnerabilidad de siempre), no pasa de la zona segura, `disable()` la apaga para siempre. Al arrancar un tramo empieza `barrier_start_gap` detrás de **Kai**; en las zonas seguras, después de un checkpoint y al reaparecer de una caída retrocede hasta quedar por lo menos `barrier_safe_gap` (260 px) detrás de él: nunca queda encima ni delante |
+| `CorruptEmitter` | Nodo corrupto que dispara datos (`DataShot`, siempre con aviso): `SHOOT` en línea recta o `RAIN` (lluvia desde arriba en lugares que rotan). Solo dispara con el tramo corriendo y Kai a menos de `active_range` |
 | `EducationalCheckpoint` | Pilar con la pregunta del tramo (`ChoiceChallenge` en `ChoiceWindow`, que pausa el juego); con E se vuelve a abrir |
 | `DigitalChaseController` | Une todo: arranca la barrera y el reloj al cruzar el inicio de cada tramo, los detiene en la zona segura, −15 s por respuesta incorrecta, marca `cap1_checkpoint_N` y guarda en la entrada `checkpoint_N`, reintentos con tiempo suficiente (tiempo agotado o muerte), y al terminar apaga la barrera y oculta el reloj |
 | `ChaseTimer` | El reloj en el HUD («⏱ 3:42»): rojo y latiendo en los últimos 30 s, «−15 s» al descontar |
@@ -800,12 +801,12 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_boss.gd` | El jefe: ventanita al principio (sin golpes), se arma, camina hacia Kai, avisa y embiste, choca y queda agachado (más bajo), el pogo crítico, proyectiles, fase 2 con la mitad de la vida, «ACCESO DENEGADO» y desaparece; fragmentos de vida (recoger, HUD, 4 forman una vida) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
-| `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (sin doble salto: el piso corrupto no se cruza con un salto simple y sí con salto + dash) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
+| `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (armario bajo y piso corrupto que se cruza con salto + dash, sin doble salto) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
 | `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas (y las escaleras) coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
 | `test_capitulo1_datos.gd` | Capítulo 1, etapa 1: misiones y su orden, diálogos con oradores conocidos y los textos de la especificación sin cambios, desafíos con una sola respuesta correcta y explicación, páginas del Grimorio, voces de Chip y Glitch, y ningún texto que revele el origen de Kai |
 | `test_inmersion.gd` | Capítulo 1, etapa 2: la conexión del monitor solo con la Visión Digital, la primera vez con diálogo y la transición «INMERSIÓN DIGITAL», la habilidad permanente (partida, validador, «Mi perfil», Grimorio) y la segunda vez sin repetir nada |
 | `test_cuarto_tecnico.gd` | Capítulo 1, etapa 3: el cuarto técnico en el mapa, el descanso nuevo de las escaleras con la física real, la puerta cerrada con llave hasta el permiso del profesor (y que se abra con Kai parado ahí), la conexión del monitor solo cuando la historia lo pide, la vuelta y continuar una partida guardada ahí |
-| `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo las habilidades del capítulo, la barrera (1 por contacto, invulnerabilidad, sin daño en cada cuadro), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
+| `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo salto + dash (sin doble salto), la barrera (empieza detrás de Kai, 1 por contacto, invulnerabilidad, sin daño en cada cuadro, después de cada checkpoint queda a 260 px detrás y nunca delante), los nodos que disparan (con aviso y dañan), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
 | `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11 (Glitch y Chip, diseño de Ariel): checkpoint y sin temporizador, una sola barra y vida compartida, los 8 ataques individuales y los 6 en conjunto con su aviso, el vínculo (el otro protege al aturdido), las tres fases (anillo y segunda melodía en la 2, fase segura con terminal al 35 %, Protocolo Dual / Furia fraternal), hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |
 | `test_capitulo1_historia.gd` | Capítulo 1, la historia de punta a punta: el prólogo lleva al capítulo, la clase, los hermanos con la Visión, el registro y su desafío, la persecución corta, la biblioteca, el permiso («NIVEL 1 COMPLETADO»), el servidor y el final con `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
 | `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |

@@ -10,7 +10,7 @@
 ## 1. Punto de partida
 
 Ocurre después del prólogo («EL DESPERTAR»). Kai ya tiene **Visión Digital**, **`Nullblade.exe`** (con el **dash**;
-el **doble salto** llega más adelante) y el **Grimorio** básico (Grimorio Despertado). Todavía **no** tiene Aegis (capítulo 3)
+el doble salto se consigue más adelante, Biblia v1.4) y el **Grimorio** básico (Grimorio Despertado). Todavía **no** tiene Aegis (capítulo 3)
 ni Dominio Nulo (capítulo 2).
 
 ## 2. Objetivos educativos

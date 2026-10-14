@@ -1,9 +1,9 @@
 extends Node
 ## El cuarto viejo (H5, misión «El cuarto viejo»). Está a oscuras: con la Visión Digital Kai distingue
-## la Nullblade oficial y el Grimorio (HiddenRelic). La Nullblade trae el dash (el doble salto llega
-## más adelante en la historia, para no facilitar tanto la exploración); el Grimorio se puede abrir
-## con G desde entonces. Con las dos, el piso cerca de la puerta se corrompe (pinchos): para salir
-## hay que cruzarlo con salto + dash (o rebotando en los pinchos con la Nullblade).
+## la Nullblade oficial y el Grimorio (HiddenRelic). La Nullblade trae el dash (el doble salto se
+## consigue más adelante); el Grimorio se puede abrir con G desde entonces. Con las dos, el piso cerca
+## de la puerta se corrompe (pinchos) y cae un armario: para salir hay que saltar el armario y cruzar
+## el piso corrupto con salto + dash.
 ## Al volver a la sala, todo queda como se dejó (marcas de GameState y el paso de la misión).
 
 const QUEST := &"cuarto_viejo"
@@ -12,8 +12,9 @@ const ARRIVED_FLAG := &"cuarto_viejo_visto"
 @export var player: Player
 @export var nullblade: HiddenRelic
 @export var grimorio: HiddenRelic
-## El piso corrupto: aparece con el derrumbe.
+## El piso corrupto y el armario caído: aparecen con el derrumbe.
 @export var spikes: Spikes
+@export var cabinet: StaticBody2D
 @export var arrival_dialogue: Dialogue
 @export var nullblade_dialogue: Dialogue
 @export var grimorio_dialogue: Dialogue
@@ -52,7 +53,7 @@ func _on_nullblade_taken(by: Player) -> void:
 	state.set_dash_level(1)
 	by.apply_progress(state)
 	await _say(nullblade_dialogue, false)
-	_toast("Nueva habilidad: dash (%s)" % GameSettings.key_name(&"dash"), 5.0)
+	_toast("Nueva habilidad: dash (%s; también en el aire)" % GameSettings.key_name(&"dash"), 5.0)
 	by.controls_locked = false
 	_check_both()
 
@@ -68,7 +69,7 @@ func _on_grimorio_taken(by: Player) -> void:
 	_check_both()
 
 
-## Con la Nullblade y el Grimorio, el piso cerca de la puerta se corrompe.
+## Con la Nullblade y el Grimorio, el cuarto se corrompe y bloquea el camino a la puerta.
 func _check_both() -> void:
 	if not (nullblade.is_taken() and grimorio.is_taken()) or _game_state().get_current_step(QUEST) != &"explorar_cuarto":
 		return
@@ -88,6 +89,10 @@ func _set_blocked(on: bool) -> void:
 	spikes.visible = on
 	spikes.set_deferred("monitorable", on)
 	spikes.set_deferred("monitoring", on)
+	cabinet.visible = on
+	for child in cabinet.get_children():
+		if child is CollisionShape2D:
+			(child as CollisionShape2D).set_deferred("disabled", not on)
 
 
 func _say(dialogue: Dialogue, lock := true) -> void:
