@@ -109,6 +109,9 @@ var jump_gravity: float:
 		return 2.0 * jump_height / (time_to_apex * time_to_apex)
 
 # Verdadero desde que salta hasta que empieza a caer o suelta el botón (para el salto variable).
+## Multiplicador de la velocidad al desplazarse (1 = normal). Lo bajan las zonas que ralentizan,
+## como la Zona de control de Chip.
+var speed_scale := 1.0
 var _is_jump_rising := false
 var _wall_coyote_timer := 0.0
 var _wall_normal_x := 0.0
@@ -359,7 +362,7 @@ func _handle_jump() -> void:
 
 ## Velocidad horizontal al desplazarse: caminando, o corriendo si ya lo desbloqueó (can_run).
 func move_speed() -> float:
-	return max_speed if can_run else walk_speed
+	return (max_speed if can_run else walk_speed) * speed_scale
 
 
 ## Rebote del ataque hacia abajo (pogo, como en Hollow Knight): impulso hacia arriba de altura fija

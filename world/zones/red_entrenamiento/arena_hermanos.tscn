@@ -24,6 +24,7 @@
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/escudo_roto.tres" id="22_yt2mg"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/cierre_hermanos.tres" id="23_ekht6"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/fragmento_leido.tres" id="24_54mbs"]
+[ext_resource type="Script" path="res://world/zones/red_entrenamiento/convergence_chamber.gd" id="25_cham"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w7b2f"]
 size = Vector2(704, 80)
@@ -52,6 +53,9 @@ music_track = &"computadora"
 [node name="Background" type="Node2D" parent="." unique_id=1237003599]
 script = ExtResource("2_u4dfn")
 area = Rect2(0, 0, 640, 360)
+
+[node name="Chamber" type="Node2D" parent="Background"]
+script = ExtResource("25_cham")
 
 [node name="Collisions" type="StaticBody2D" parent="." unique_id=1152048481]
 
@@ -107,14 +111,11 @@ height = 220.0
 [node name="Bosses" type="Node2D" parent="." unique_id=414103145]
 
 [node name="Chip" type="CharacterBody2D" parent="Bosses" unique_id=1940427105]
-position = Vector2(470, 236)
+position = Vector2(470, 304)
 script = ExtResource("6_8llud")
 config = ExtResource("7_ycnc8")
 display_name = "Chip"
 threat_type = &"malware"
-body_size = Vector2(20, 20)
-gravity = 0.0
-death_colors = Array[Color]([Color(0.3529412, 0.84705883, 1, 1), Color(0.65882355, 0.93333334, 1, 1), Color(0.12156863, 0.43529412, 0.6039216, 1)])
 
 [node name="Glitch" type="CharacterBody2D" parent="Bosses" unique_id=828011798]
 position = Vector2(520, 304)
@@ -122,8 +123,6 @@ script = ExtResource("8_b31rf")
 config = ExtResource("7_ycnc8")
 display_name = "Glitch"
 threat_type = &"malware"
-body_size = Vector2(22, 18)
-death_colors = Array[Color]([Color(1, 0.5411765, 0.22745098, 1), Color(1, 0.7529412, 0.5411765, 1), Color(0.627451, 0.2509804, 0.101960786, 1)])
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=141866913 instance=ExtResource("9_0fwq5")]
 position = Vector2(48, 304)
@@ -171,14 +170,14 @@ needs_vision = false
 prompt_text = "E: salir"
 prompt_offset = Vector2(-30, -40)
 
-[node name="Fight" type="Node" parent="." unique_id=1477440023 node_paths=PackedStringArray("chip", "glitch", "gate", "exit_portal", "platforms")]
+[node name="Fight" type="Node" parent="." unique_id=1477440023 node_paths=PackedStringArray("chip", "glitch", "gate", "exit_portal", "chamber")]
 script = ExtResource("17_laq7o")
 config = ExtResource("7_ycnc8")
 chip = NodePath("../Bosses/Chip")
 glitch = NodePath("../Bosses/Glitch")
 gate = NodePath("../Gate")
 exit_portal = NodePath("../Exits/ExitPortal")
-platforms = [NodePath("../Platforms/Platform1"), NodePath("../Platforms/Platform2"), NodePath("../Platforms/Platform3")]
+chamber = NodePath("../Background/Chamber")
 shield_terminal = ExtResource("18_q4qw0")
 shield_challenge = ExtResource("19_74ql6")
 intro_dialogue = ExtResource("20_3xks1")

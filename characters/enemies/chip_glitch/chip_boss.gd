@@ -1,196 +1,141 @@
 class_name ChipBoss
 extends SiblingBoss
-## Chip, el estratega (jefe doble del Capítulo 1, con Glitch). Flota a media altura y controla el
-## espacio desde lejos: disparos digitales apuntados, trampas temporales en el suelo, barreras
-## pequeñas, apaga plataformas de la arena y, al bajar a la mitad de su vida, se protege con un escudo
-## de datos (ligado a una configuración insegura: el controlador abre la fase segura y la terminal).
-##
-## Furia fraternal (si Glitch cae primero): pierde la calma calculadora. Dispara en abanico, sus
-## trampas se arman más rápido y de a dos, y defiende su espacio con pulsos de datos si Kai se acerca.
-## Arte provisional por código: un cubito cian con un ojo grande y una antena.
+## Chip, el estratega (jefe doble del Capítulo 1, con Glitch). Ataques precisos y control del espacio;
+## anticipa y convierte el caos de Glitch en un plan. Sus ataques (hoja de Ariel):
+##   1. Discos orbitales: lanza discos que se curvan hacia Kai y vuelven.
+##   2. Zona de control: un campo que ralentiza a Kai.
+##   3. Proyecciones: copias temporales que lanzan un disco cada una (un golpe las deshace).
+##   4. Rayo de sincronía: ataque en línea de largo alcance (línea de aviso y después el rayo).
+## Al entrar a la Fase 3 levanta un escudo ligado a una configuración insegura: el controlador abre la
+## fase segura y la terminal. Protegiendo a Glitch: se para delante con un escudo de discos que hace
+## rebotar los golpes de Kai.
 
 signal shield_requested
 
-const CYAN := Color("5ad8ff")
-
+## Escudo del desafío de la terminal (fase segura).
 var shielded := false
-var shield_used := false
-## Plataformas de la arena que puede apagar.
-var platforms: Array[DataPlatform] = []
-
-var _shot_cd := 1.2
-var _trap_cd := 3.0
-var _platform_cd := 5.0
-var _pulse_cd := 0.0
-var _side := 1
 
 
 func _init() -> void:
 	display_name = "Chip"
-	body_size = Vector2(20, 20)
 	contact_damage = 1.0
 	threat_type = &"malware"
-	gravity = 0.0
-	death_colors = [CYAN, Color("a8eeff"), Color("1f6f9a")]
+	death_colors = [SiblingArt.CHIP, SiblingArt.CHIP_LIGHT, Color("173a6a")]
 
 
-func _ready() -> void:
-	max_health = _config_health()
-	super()
+func _kind() -> StringName:
+	return &"chip"
 
 
-func _config_health() -> float:
-	return config.chip_health if config else max_health
-
-
-func _ai(delta: float) -> void:
-	var scale_cd := config.rage_chip_cooldown_scale if enraged else 1.0
-	_shot_cd -= delta / scale_cd
-	_trap_cd -= delta / scale_cd
-	_platform_cd -= delta
-	_pulse_cd -= delta
-	_hover(delta)
-	if busy:
-		return
+## Entre ataques: guarda distancia de Kai (unos 140 px), del lado contrario a Glitch si puede.
+func _idle_move(delta: float) -> void:
 	var kai := player_position()
-	if enraged and _pulse_cd <= 0.0 and kai.distance_to(global_position) < 80.0:
-		_pulse()
-	elif _shot_cd <= 0.0:
-		_shoot()
-	elif _trap_cd <= 0.0:
-		_traps()
-	elif _platform_cd <= 0.0 and not platforms.is_empty():
-		_alter_platform()
+	face = 1.0 if kai.x >= global_position.x else -1.0
+	var side := -face
+	var target := clampf(kai.x + side * 140.0, arena_left, arena_right)
+	if (target <= arena_left or target >= arena_right) and absf(kai.x - global_position.x) < 90.0:
+		target = clampf(kai.x - side * 140.0, arena_left, arena_right)
+	var want := clampf((target - global_position.x) * 2.0, -90.0, 90.0) * tempo
+	velocity.x = move_toward(velocity.x, want, 500.0 * delta)
 
 
-## Flota a su altura y se mantiene a distancia de Kai, del lado donde está.
-func _hover(_delta: float) -> void:
-	var kai := player_position()
-	if absf(kai.x - global_position.x) < 60.0:
-		_side = 1 if global_position.x > kai.x else -1
-	var target_x := clampf(kai.x + _side * 140.0, arena_left, arena_right)
-	if target_x == arena_left or target_x == arena_right:
-		_side = -_side if absf(kai.x - target_x) < 80.0 else _side
-	var speed := config.chip_move_speed * (1.3 if enraged else 1.0)
-	velocity.x = clampf((target_x - global_position.x) * 2.0, -speed, speed) if not busy else velocity.x * 0.9
-	velocity.y = (config.chip_hover_y - global_position.y + sin(_clock * 2.0) * 6.0) * 4.0
-
-
-func _frozen_move(_delta: float) -> void:
-	# En la fase segura vuelve a su esquina (arriba a la derecha) y espera.
-	velocity.x = clampf((arena_right - global_position.x) * 2.0, -80.0, 80.0)
-	velocity.y = (config.chip_hover_y - 40.0 - global_position.y) * 4.0
-
-
-func _idle_gravity() -> float:
-	return 900.0 if is_dead else 0.0
-
-
-## Disparo digital apuntado a Kai (en furia, abanico de varios).
-func _shoot() -> void:
-	busy = true
-	var epoch := _epoch
-	var telegraph_time := config.chip_shot_telegraph * (0.6 if enraged else 1.0)
-	if not await telegraph(&"disparo", telegraph_time, epoch):
-		busy = false
+## 1. Discos orbitales: lanza count discos (en abanico) que se curvan hacia Kai y vuelven.
+func discos_orbitales(count := 1) -> void:
+	var epoch := begin_attack()
+	if epoch < 0:
 		return
-	fire_at(player_position() + Vector2(0, -20), config.rage_chip_spread if enraged else 1, 1.0)
-	_shot_cd = config.chip_shot_cooldown
-	busy = false
+	velocity.x = 0.0
+	face_player()
+	if not await telegraph(&"discos_orbitales", config.chip_disc_telegraph, epoch):
+		end_attack(epoch)
+		return
+	throw_discs(count)
+	await _recover(epoch)
 
 
-## Dispara count rombos hacia target (en abanico si son varios). size_scale agranda el disparo.
-func fire_at(target: Vector2, count := 1, size_scale := 1.0) -> void:
-	var origin := global_position + Vector2(0, -10)
+## Lanza los discos hacia Kai (también lo usan los ataques en conjunto).
+func throw_discs(count: int, aim := Vector2.INF) -> void:
+	var origin := global_position + Vector2(face * 12.0, -26)
+	var target := player_position() + Vector2(0, -16) if aim == Vector2.INF else aim
 	var base := (target - origin).normalized()
 	for k in count:
-		var angle := (k - (count - 1) / 2.0) * 0.28
-		BossAttacks.shot(get_parent(), origin, base.rotated(angle) * config.chip_shot_speed, 10.0 * size_scale, 0.12)
-	Sfx.play(&"popup_open", 1.4, -6.0)
+		var angle := (k - (count - 1) / 2.0) * 0.35
+		BossAttacks.disc(get_parent(), origin, base.rotated(angle) * config.chip_disc_speed * tempo, config.chip_disc_range, self)
+	Sfx.play(&"popup_open", 1.3, -6.0)
+	_squash = Vector2(0.9, 1.1)
 
 
-## Trampas en el suelo donde está Kai (en furia, dos y más rápidas).
-func _traps() -> void:
-	busy = true
-	var epoch := _epoch
-	if not await telegraph(&"trampa", config.chip_trap_telegraph, epoch):
-		busy = false
+## 2. Zona de control: un campo que ralentiza a Kai donde está parado.
+func zona_de_control(x := INF) -> void:
+	var epoch := begin_attack()
+	if epoch < 0:
 		return
+	velocity.x = 0.0
+	face_player()
+	if not await telegraph(&"zona_de_control", 0.3, epoch):
+		end_attack(epoch)
+		return
+	BossAttacks.zone(get_parent(), Vector2(player_position().x if x == INF else x, FLOOR_Y), config, telegraph_scale)
+	await _recover(epoch)
+
+
+## 3. Proyecciones: copias temporales a los costados de Kai; cada una lanza un disco.
+func proyecciones(count := -1) -> void:
+	var epoch := begin_attack()
+	if epoch < 0:
+		return
+	velocity.x = 0.0
+	face_player()
+	if not await telegraph(&"proyecciones", config.chip_disc_telegraph, epoch):
+		end_attack(epoch)
+		return
+	spawn_copies(config.chip_copies if count < 0 else count)
+	await _recover(epoch)
+
+
+func spawn_copies(count: int) -> Array[ChipCopy]:
 	var kai_x := player_position().x
-	place_traps([kai_x - 50.0, kai_x + 50.0] if enraged else [kai_x])
-	_trap_cd = config.chip_trap_cooldown
-	busy = false
+	var copies: Array[ChipCopy] = []
+	for k in count:
+		var side := -1.0 if k % 2 == 0 else 1.0
+		var x := clampf(kai_x + side * (110.0 + 30.0 * int(k / 2)), arena_left, arena_right)
+		copies.append(BossAttacks.copy(get_parent(), Vector2(x, FLOOR_Y), config, 0.6 + k * 0.35 / tempo))
+	Sfx.play(&"reveal_flash", 1.5, -10.0)
+	return copies
 
 
-func place_traps(xs: Array) -> void:
-	var arm := config.chip_trap_arm * (0.6 if enraged else 1.0)
-	for x in xs:
-		BossAttacks.trap(get_parent(), Vector2(clampf(x, arena_left, arena_right), floor_y()), arm, config.chip_trap_duration)
-
-
-## Barrera pequeña que cierra el paso en x.
-func place_wall(x: float) -> ChipWall:
-	return BossAttacks.wall(get_parent(), Vector2(clampf(x, arena_left - 20.0, arena_right + 20.0), floor_y()), config.chip_wall_duration)
-
-
-## Apaga la plataforma de la arena más cercana a Kai (parpadea antes de apagarse).
-func _alter_platform() -> void:
-	busy = true
-	var epoch := _epoch
-	var kai := player_position()
-	var nearest: DataPlatform = null
-	for platform in platforms:
-		if nearest == null or platform.global_position.distance_to(kai) < nearest.global_position.distance_to(kai):
-			nearest = platform
-	if not await telegraph(&"plataforma", 0.4, epoch):
-		busy = false
+## 4. Rayo de sincronía: apunta (línea de aviso) y dispara un rayo horizontal largo hacia Kai.
+func rayo_de_sincronia() -> void:
+	var epoch := begin_attack()
+	if epoch < 0:
 		return
-	nearest.force_close(config.chip_platform_off)
-	_platform_cd = config.chip_platform_cooldown
-	busy = false
-
-
-## Defensa agresiva (furia): un pulso de datos que sale en todas direcciones si Kai se acerca.
-func _pulse() -> void:
-	busy = true
-	var epoch := _epoch
-	if not await telegraph(&"pulso", 0.35, epoch):
-		busy = false
+	velocity.x = 0.0
+	face_player()
+	if not await telegraph(&"rayo_de_sincronia", 0.2, epoch):
+		end_attack(epoch)
 		return
-	for k in 8:
-		BossAttacks.shot(get_parent(), global_position + Vector2(0, -10), Vector2.RIGHT.rotated(k * TAU / 8.0) * 120.0, 8.0, 0.0)
-	_pulse_cd = 2.5
-	busy = false
+	var beam := fire_beam()
+	if not await wait(beam.warning + beam.duration, epoch):
+		end_attack(epoch)
+		return
+	await _recover(epoch)
 
 
-## Orden del controlador (Distracción): un disparo grande con un aviso largo.
-func command_big_shot() -> void:
-	busy = true
-	var epoch := _epoch
-	if await telegraph(&"disparo_grande", config.chip_shot_telegraph * 1.6, epoch):
-		fire_at(player_position() + Vector2(0, -20), 1, 1.8)
-	_shot_cd = config.chip_shot_cooldown
-	busy = false
+## El rayo, a la altura del pecho, hacia donde mira (también lo usa Corte y respuesta).
+func fire_beam() -> SyncBeam:
+	var origin := global_position + Vector2(face * 12.0, -26)
+	return BossAttacks.beam(get_parent(), origin, Vector2(face, 0), config, telegraph_scale)
 
 
-## Orden del controlador (Camino cerrado / Trampa sincronizada).
-func command_wall(x: float) -> void:
-	busy = true
-	var epoch := _epoch
-	if await telegraph(&"barrera", 0.4, epoch):
-		place_wall(x)
-	busy = false
+func _recover(epoch: int) -> void:
+	velocity.x = 0.0
+	await wait(config.chip_recover / tempo, epoch)
+	end_attack(epoch)
 
 
-func command_traps(xs: Array) -> void:
-	busy = true
-	var epoch := _epoch
-	if await telegraph(&"trampa", config.chip_trap_telegraph, epoch):
-		place_traps(xs)
-	_trap_cd = config.chip_trap_cooldown
-	busy = false
+## --- Escudos ---
 
-
+## Escudo del desafío (fase segura): no recibe daño hasta resolver la terminal.
 func shield_on() -> void:
 	shielded = true
 	hurtbox.immune = true
@@ -198,37 +143,25 @@ func shield_on() -> void:
 
 func shield_off() -> void:
 	shielded = false
-	hurtbox.immune = false
+	hurtbox.immune = guarding != null
 
 
-func _on_damaged(_hit: HitData) -> void:
-	if not shield_used and not is_dead and health.current <= health.max_health * config.chip_shield_at:
-		shield_used = true
-		shield_on()
-		shield_requested.emit()
+func _on_guard_started() -> void:
+	hurtbox.immune = true
+
+
+func _on_guard_ended() -> void:
+	hurtbox.immune = shielded
+
+
+func _shield_visible() -> bool:
+	return shielded or guarding != null
 
 
 func _on_restored() -> void:
 	shielded = false
-	shield_used = false
-	_shot_cd = 1.2
-	_trap_cd = 3.0
-	_platform_cd = 5.0
 
 
-func _on_rage() -> void:
-	_shot_cd = 0.4
-	_trap_cd = 1.0
-	modulate = Color(1.2, 0.9, 1.0)
-
-
-## Altura del piso de la arena (las trampas y barreras se apoyan ahí).
-func floor_y() -> float:
-	return 304.0
-
-
-func _draw() -> void:
-	var look := (player_position() - global_position).normalized()
-	SiblingArt.draw_chip(self, _clock, look, enraged, shielded, is_dead)
-	if not is_dead:
-		draw_telegraph(Vector2(0, -10), Color(1, 0.5, 0.6) if enraged else CYAN)
+func _frozen_move(_delta: float) -> void:
+	# En la fase segura se va a la derecha de la arena y espera con su escudo.
+	velocity.x = clampf((arena_right - 40.0 - global_position.x) * 3.0, -150.0, 150.0)

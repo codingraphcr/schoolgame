@@ -594,10 +594,10 @@ explorar: siempre se encuadra con todas las salas del distrito.
    `DigitalWorld.physical_ambient`; Kai lleva un brillo tenue). Con la Visión Digital se ven y se toman dos
    `HiddenRelic` (`world/vision/hidden_relic.gd`, dibujadas en la capa digital): el **Grimorio** (marca
    `GameState.GRIMORIO_FLAG`: desde ahí **G lo abre**; antes no hace nada) y la **Nullblade oficial**
-   (`NullbladeReveal` con su tarjeta, `nullblade_stage` 1, **dash** y **doble salto**). Lo maneja
+   (`NullbladeReveal` con su tarjeta, `nullblade_stage` 1 y el **dash**; el doble salto llega más adelante en la historia). Lo maneja
    `world/zones/zone0/old_room.gd`; arte provisional en `old_room_props.gd`.
-5. `salir_cuarto`: con las dos, el piso cerca de la puerta se corrompe (`Spikes`, 136 px) y cae un armario (96 px):
-   se sale con el doble salto y el dash. Al volver al pasillo viejo, un `QuestTrigger` cierra la misión: título
+5. `salir_cuarto`: con las dos, el piso cerca de la puerta se corrompe (`Spikes`, 120 px; un salto simple no alcanza):
+   se cruza con salto + dash cerca de lo más alto del salto (o rebotando en los pinchos). Al volver al pasillo viejo, un `QuestTrigger` cierra la misión: título
    **«EL DESPERTAR»** (antes salía al terminar `prologo`) y después **«CAPÍTULO 1 · EL ORIGEN DIGITAL»**
    (`Quest.followup_title`), y la marca **`tutorial_terminado`** (`Quest.completion_flag`): desde ahí morir cuesta Ecos.
 
@@ -638,17 +638,21 @@ Caídas: `Room.fall_damage` (1,5 aquí) y `PlayerDamage.fall_out_of_bounds(damag
 segura. `PlayerDamage.protected` lo protege mientras la historia lo pide. `Room.player_respawned` avisa al reaparecer
 después de morir.
 
-## Jefe doble: Chip y Glitch (Capítulo 1)
+## Jefe doble: Glitch y Chip (Capítulo 1)
 
-La arena (`world/zones/red_entrenamiento/arena_hermanos.tscn`, después del tercer tramo). Valores en
-`data/bosses/chip_glitch.tres` (`DualBossConfig`). Arte provisional por código.
+La arena (`world/zones/red_entrenamiento/arena_hermanos.tscn`, después del tercer tramo), con el fondo
+**Cámara de convergencia** (`ConvergenceChamber`: columnas y un gran anillo que se enciende en la Fase 2). Valores en
+`data/bosses/chip_glitch.tres` (`DualBossConfig`). Diseño de Ariel: `docs/arte/referencias/glitch_chip_concepto.webp`;
+sus vistas de frente y el disco salen con `tools/art/extraer_personajes_concepto.gd -- hermanos` →
+`assets/art/characters/hermanos/hd/` (de lado la armadura blanca se confundía con el fondo claro). El movimiento
+(inclinarse, estirarse, temblar, rastros) y los efectos de los ataques los dibuja el juego.
 
 | Pieza | Responsabilidad |
 |---|---|
-| `SiblingBoss` | Base de los dos: barra propia, máquina de estados propia (`_ai`), `telegraph()` antes de cada ataque, `frozen` (fase segura), `enter_rage()` una vez, `restore()`. **Nunca mueren:** al llegar a cero quedan neutralizados (mareados) y no se borran |
-| `ChipBoss` | Flota; disparos (`DataShot`), trampas (`DataTrap`), barreras (`ChipWall`), apaga plataformas (`DataPlatform.force_close`) y pide el escudo a la mitad de su vida. Furia: abanico, trampas dobles y rápidas, pulsos si Kai se acerca |
-| `GlitchBoss` | Corre con amagues; embestida, salto ofensivo y combo de tres, con un momento vulnerable después. Furia: más rápido, embestidas encadenadas, salto + combo |
-| `DualBossController` | Checkpoint al llegar, introducción, dos `BossBar` (fila 0 y 1), ataques combinados cada `combo_cooldown` (Camino cerrado, Distracción, Trampa sincronizada), fase segura del escudo (los dos quietos, ataques borrados, `PlayerDamage.protected`, terminal `escudo_chip` y desafío `cap1_escudo_chip`), furia del que queda, reinicio si Kai pierde, y el cierre (diálogo, `FragmentReading`, recompensa única `capitulo1:hermanos`, salida al cuarto técnico) |
+| `SiblingBoss` | Base de los dos: vida compartida (`share_health`), `telegraph()` (un «!» de su color) antes de cada ataque, aturdido con `stagger_hits` golpes seguidos (`incapacitated` / `recovered`), proteger al hermano (`guard_for`), `blink_to` / `jump` / `walk_to`, `frozen` (fase segura), `tempo` y `telegraph_scale` (Fase 3), `restore()`. **Nunca mueren:** con la vida en cero quedan neutralizados (mareados) y no se borran |
+| `GlitchBoss` | Corte acelerado, Salto en picada (marca el piso), Embestida en cadena y Lanzamiento de fragmentos (`DataShot` rosa, alargado); queda vulnerable después de atacar; protegiendo a Chip, contraataca si Kai se acerca |
+| `ChipBoss` | Discos orbitales (`DiscShot`: se curvan hacia Kai y vuelven), Zona de control (`ControlZone`: `Player.speed_scale`), Proyecciones (`ChipCopy`: copias que lanzan un disco; un golpe las deshace) y Rayo de sincronía (`SyncBeam`); escudo de la fase segura y escudo de discos protegiendo a Glitch (los golpes rebotan: `HurtboxComponent.hit_blocked`) |
+| `DualBossController` | Checkpoint al llegar, introducción, una `BossBar` «GLITCH & CHIP» (rosa → azul, marcas al 70 % y 35 %), secuencias fijas por fase (`PHASE1` / `PHASE2` / `PHASE3`) con los 6 ataques en conjunto (Intercepción cruzada, Corte y respuesta, Sincronización aérea, Cambio de posición, Cadena de proyecciones, Campo Dual: `DualField`), el vínculo (si uno queda aturdido, el otro deja su ataque y lo protege), Fase 2 (anillo y `Music.set_layer`: la segunda melodía), fase segura del escudo al 35 % (los dos quietos, ataques borrados, `PlayerDamage.protected`, terminal `escudo_chip` y desafío `cap1_escudo_chip`), Fase 3 (Protocolo Dual / Furia fraternal), reinicio si Kai pierde y el cierre (diálogo, `FragmentReading`, recompensa única `capitulo1:hermanos`, salida al cuarto técnico) |
 
 ## Capítulo 1 en las salas (nivel 1 y final)
 
@@ -661,7 +665,7 @@ La arena (`world/zones/red_entrenamiento/arena_hermanos.tscn`, después del terc
 | Profesor (`NpcConversation`) | Laboratorio | Recordatorios durante la clase y el permiso para el cuarto técnico («NIVEL 1 COMPLETADO») |
 | `TechRoomStory` | Cuarto técnico | El servidor en rojo y los hermanos que se meten en la computadora; al final, la charla con el profesor, Kai se va y aparece `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
 
-`SiblingActor` es Chip o Glitch como personaje de escena (sin pelear); `SiblingArt` es su dibujo (lo comparten con el
+`SiblingActor` es Chip o Glitch como personaje de escena (sin pelear); `SiblingArt` es su dibujo con los sprites de Ariel (lo comparten con el
 jefe). `StoryPresence` muestra u oculta a un personaje según la misión (el profesor del pasillo no está durante el
 capítulo). `StoryHelper` reproduce un diálogo con Kai quieto o repite un desafío hasta completarlo. `TerminalStation`
 puede usarse en un paso sin completarlo (`completes_step = false`) y avisa con `solved`.
@@ -796,13 +800,13 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_boss.gd` | El jefe: ventanita al principio (sin golpes), se arma, camina hacia Kai, avisa y embiste, choca y queda agachado (más bajo), el pogo crítico, proyectiles, fase 2 con la mitad de la vida, «ACCESO DENEGADO» y desaparece; fragmentos de vida (recoger, HUD, 4 forman una vida) |
 | `test_nullblade.gd` | Energía por golpe de la Nullblade (aire, enemigo, escudo, derrota, dos enemigos, cargado, máximo), pulso de la barra y su página en el ARSENAL |
 | `test_room_graph.gd` | M1: fichas de sala válidas (las reales apuntan a entradas que existen), salas sin chocar, puertas que solo conectan enfrentadas y compatibles, caminos según habilidades, atajos de un solo sentido, pasos secretos con la Visión y guardar / cargar el grafo |
-| `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (el armario pide el doble salto) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
+| `test_cuarto_viejo.gd` | H5 completo: la misión, la puerta cerrada del Laboratorio, la invitación, el pasillo viejo y su nota, la terminal con la contraseña, el cuarto a oscuras con el Grimorio y la Nullblade, el derrumbe (sin doble salto: el piso corrupto no se cruza con un salto simple y sí con salto + dash) y el cierre: «EL DESPERTAR», Capítulo 1 y fin del tutorial |
 | `test_world.gd` | M2: distritos fijos, a dónde lleva cada puerta, las salidas de las escenas (y las escaleras) coinciden con el mapa y `World` sabe la sala actual al cambiar de sala |
 | `test_capitulo1_datos.gd` | Capítulo 1, etapa 1: misiones y su orden, diálogos con oradores conocidos y los textos de la especificación sin cambios, desafíos con una sola respuesta correcta y explicación, páginas del Grimorio, voces de Chip y Glitch, y ningún texto que revele el origen de Kai |
 | `test_inmersion.gd` | Capítulo 1, etapa 2: la conexión del monitor solo con la Visión Digital, la primera vez con diálogo y la transición «INMERSIÓN DIGITAL», la habilidad permanente (partida, validador, «Mi perfil», Grimorio) y la segunda vez sin repetir nada |
 | `test_cuarto_tecnico.gd` | Capítulo 1, etapa 3: el cuarto técnico en el mapa, el descanso nuevo de las escaleras con la física real, la puerta cerrada con llave hasta el permiso del profesor (y que se abra con Kai parado ahí), la conexión del monitor solo cuando la historia lo pide, la vuelta y continuar una partida guardada ahí |
 | `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo las habilidades del capítulo, la barrera (1 por contacto, invulnerabilidad, sin daño en cada cuadro), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
-| `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11: checkpoint y sin temporizador, vida y barras independientes, ataques con aviso, los tres combos, fase segura con terminal, furia según quién sobrevive, los dos órdenes de derrota, hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |
+| `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11 (Glitch y Chip, diseño de Ariel): checkpoint y sin temporizador, una sola barra y vida compartida, los 8 ataques individuales y los 6 en conjunto con su aviso, el vínculo (el otro protege al aturdido), las tres fases (anillo y segunda melodía en la 2, fase segura con terminal al 35 %, Protocolo Dual / Furia fraternal), hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |
 | `test_capitulo1_historia.gd` | Capítulo 1, la historia de punta a punta: el prólogo lleva al capítulo, la clase, los hermanos con la Visión, el registro y su desafío, la persecución corta, la biblioteca, el permiso («NIVEL 1 COMPLETADO»), el servidor y el final con `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
 | `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |
 | `test_generador.gd` | M4: con fichas de prueba, la parte fija intacta, misma semilla = mismo mapa, 40 semillas válidas y distintas, solo puertas compatibles, respaldo si la parte variable no valida y error si la fija está mal; con los datos reales, aula o depósito al este de la biblioteca, el mapa se rearma igual al cargar, dos aulas con la misma escena, la puerta libre cerrada y continuar en la misma aula |

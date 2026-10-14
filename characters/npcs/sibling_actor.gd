@@ -3,7 +3,8 @@ class_name SiblingActor
 extends Node2D
 ## Chip o Glitch como personaje de una escena (Capítulo 1, nivel 1): no pelean ni hacen daño; corren,
 ## saltan entre monitores, se ríen y se esconden. Solo Kai los ve: aparecen con la Visión Digital
-## (only_with_vision) o cuando la historia los muestra. Mismo dibujo que el jefe (SiblingArt).
+## (only_with_vision) o cuando la historia los muestra. Mismo dibujo que el jefe (SiblingArt: los
+## sprites de la hoja de Ariel).
 ## Uso: await actor.run_to(Vector2(x, y))  ·  actor.vanish()  ·  actor.appear()
 
 enum Kind { CHIP, GLITCH }
@@ -60,9 +61,6 @@ func is_shown() -> bool:
 
 
 func _draw() -> void:
-	if kind == Kind.CHIP:
-		# Chip flota un poco.
-		draw_set_transform(Vector2(0, -6 + sin(_clock * 3.0) * 2.0))
-		SiblingArt.draw_chip(self, _clock, Vector2(face, 0))
-	else:
-		SiblingArt.draw_glitch(self, _clock, face)
+	# Un pequeño rebote al estar quietos (los dos corren y saltan con los pies en el suelo).
+	var bob := Vector2(0, -absf(sin(_clock * 3.0)) * 1.0)
+	SiblingArt.draw_twin(self, &"chip" if kind == Kind.CHIP else &"glitch", _clock, face, { "offset": bob })
