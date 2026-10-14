@@ -165,14 +165,6 @@ func _on_restored() -> void:
 	pass
 
 
-## Estrellitas de mareo (neutralizado).
-func draw_dizzy(center: Vector2) -> void:
-	for k in 3:
-		var angle := _clock * 3.0 + k * TAU / 3.0
-		var at := center + Vector2(cos(angle) * 10.0, sin(angle) * 3.0)
-		draw_circle(at, 1.6, Color(1, 0.95, 0.5))
-
-
 ## Anillo de aviso (se cierra mientras dura el telegrafiado).
 func draw_telegraph(center: Vector2, color: Color) -> void:
 	if not is_telegraphing():

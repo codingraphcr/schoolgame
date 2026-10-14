@@ -227,6 +227,14 @@ func _open() -> void:
 	room = current_scene as Room
 	player = room.player
 	chase = room.get_node("Chase") as DigitalChaseController
+	# La primera vez, Chip y Glitch se dan cuenta de que Kai los siguió (diálogo de inicio).
+	var box := room.get_node("CombatHUD/DialogueBox") as DialogueBox
+	await _frames(4)
+	for i in 60:
+		if not box.is_playing():
+			break
+		await _action(&"interact")
+		await _frames(3)
 
 
 func _window() -> ChoiceWindow:

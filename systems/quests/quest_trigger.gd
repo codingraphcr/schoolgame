@@ -9,6 +9,9 @@ extends Area2D
 @export var dialogue: Dialogue
 ## Completa el paso al cargar la sala (p. ej. "entrar a la computadora").
 @export var on_ready := false
+## false: solo muestra el diálogo (no completa el paso), una sola vez (once_flag).
+@export var completes_step := true
+@export var once_flag: StringName = &""
 
 var _busy := false
 
@@ -31,14 +34,19 @@ func _fire(player: Player) -> void:
 	var game_state := get_node("/root/GameState")
 	if _busy or game_state.get_current_step(quest_id) != step_id:
 		return
+	if once_flag != &"" and game_state.has_flag(once_flag):
+		return
 	_busy = true
+	if once_flag != &"":
+		game_state.set_flag(once_flag)
 	var box := DialogueBox.find(self)
 	if dialogue and box and player:
 		player.controls_locked = true
 		player.velocity.x = 0.0
 		await box.play(dialogue)
 		player.controls_locked = false
-	game_state.complete_step(quest_id, step_id)
+	if completes_step:
+		game_state.complete_step(quest_id, step_id)
 	_busy = false
 
 

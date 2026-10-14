@@ -7,11 +7,17 @@
 [ext_resource type="Script" path="res://world/effects/flicker.gd" id="5_la7i7"]
 [ext_resource type="Texture2D" path="res://assets/art/light_soft.tres" id="6_yoq1r"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="7_1mofi"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="7_ssjtp"]
+[ext_resource type="Script" path="res://characters/npcs/sibling_actor.gd" id="8_37m8p"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="8_ssjtp"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="9_37m8p"]
+[ext_resource type="Script" path="res://world/zones/zone0/catalog_scene.gd" id="9_vap0n"]
+[ext_resource type="Resource" path="res://data/challenges/cap1_archivo_privado.tres" id="10_0807d"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="10_vap0n"]
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="11_0807d"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/biblioteca_catalogo.tres" id="11_cqv8g"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="12_cqv8g"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/biblioteca_resuelta.tres" id="12_okeg1"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="13_okeg1"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="14_7qgb7"]
 
@@ -192,6 +198,34 @@ texture_scale = 1.875
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=739778107]
 position = Vector2(56, 304)
+
+[node name="Capitulo1" type="Node2D" parent="." unique_id=1599130255]
+
+[node name="Llegada" type="Area2D" parent="Capitulo1" unique_id=1138585551]
+script = ExtResource("7_ssjtp")
+quest_id = &"una_clase_diferente"
+step_id = &"seguir_criaturas"
+on_ready = true
+
+[node name="Chip" type="Node2D" parent="Capitulo1" unique_id=585225049]
+position = Vector2(850, 262)
+script = ExtResource("8_37m8p")
+
+[node name="Glitch" type="Node2D" parent="Capitulo1" unique_id=1832577929]
+position = Vector2(900, 304)
+script = ExtResource("8_37m8p")
+kind = 1
+
+[node name="Catalogo" type="Area2D" parent="Capitulo1" unique_id=567093747 node_paths=PackedStringArray("chip", "glitch")]
+position = Vector2(872, 248)
+script = ExtResource("9_vap0n")
+chip = NodePath("../Chip")
+glitch = NodePath("../Glitch")
+challenge = ExtResource("10_0807d")
+catalog_dialogue = ExtResource("11_cqv8g")
+resolved_dialogue = ExtResource("12_okeg1")
+prompt_text = "E: revisar el catálogo"
+prompt_offset = Vector2(-44, -40)
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("7_1mofi")]
 position = Vector2(56, 304)

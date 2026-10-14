@@ -21,6 +21,8 @@ const DOOR := Color("4a5470")
 @export var monitor_center := Vector2(470, 252)
 ## Si el servidor de entrenamiento está fallando (luces rojas y la pantalla con error).
 @export var alert := true
+## Final del Capítulo 1: el monitor muestra el archivo GENESIS_ARCHIVE.
+@export var genesis := false
 @export var door_x := 624.0
 @export var floor_y := 304.0
 
@@ -90,7 +92,12 @@ func _paint_monitor(c: VectorCanvas, t: float) -> void:
 	c.draw_rect(Rect2(monitor_center.x - 3, screen.end.y, 6, floor_y - screen.end.y - 26), METAL)
 	c.gradient_box(Rect2(monitor_center.x - 30, floor_y - 26, 60, 26), 1.0, Color("4a3a2c"), Color("2e241c"))
 	c.draw_rect(screen.grow(3), Color("252b38"))
-	if alert:
+	if genesis:
+		c.draw_rect(screen, Color("05070d"))
+		c.draw_rect(Rect2(screen.position + Vector2(4, 6), Vector2(6, 7)), Color(0.85, 0.9, 1))
+		var blink := 0.6 + 0.4 * sin(t * 4.0)
+		c.crisp_text(Vector2(screen.position.x - 20, screen.position.y + 16), "GENESIS_ARCHIVE", 6, Color(0.85, 0.95, 1, blink), HORIZONTAL_ALIGNMENT_CENTER, screen.size.x + 40)
+	elif alert:
 		var flicker := 0.7 + 0.3 * sin(t * 9.0)
 		c.draw_rect(screen, Color(0.35 * flicker, 0.04, 0.08))
 		c.crisp_text(Vector2(screen.position.x, screen.position.y + 13), "ERROR", 7, Color(1, 0.6, 0.6), HORIZONTAL_ALIGNMENT_CENTER, screen.size.x)

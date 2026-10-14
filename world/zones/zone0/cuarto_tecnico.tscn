@@ -4,16 +4,33 @@
 [ext_resource type="TileSet" path="res://world/tilesets/colegio_tileset.tres" id="2_i5o4s"]
 [ext_resource type="Script" path="res://world/zones/zone0/technical_room_props.gd" id="3_itrit"]
 [ext_resource type="Texture2D" path="res://assets/art/light_soft.tres" id="4_d1y4n"]
+[ext_resource type="Script" path="res://characters/npcs/sibling_actor.gd" id="5_nsv5m"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="5_s4aes"]
+[ext_resource type="PackedScene" path="res://characters/npcs/profesor/profesor.tscn" id="6_3dpnw"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="6_d66ug"]
+[ext_resource type="Script" path="res://characters/npcs/npc.gd" id="7_kvepe"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="7_wqu8t"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_saludo.tres" id="8_megoe"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="8_tea5m"]
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="9_p2tim"]
+[ext_resource type="Script" path="res://characters/npcs/npc_conversation.gd" id="9_yy3ur"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="10_0qtfj"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_pedido.tres" id="10_lysv2"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_recordatorio.tres" id="11_co8p1"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="11_q57ws"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_contrasena.tres" id="12_evwmd"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="12_xchtp"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_contrasena_recordatorio.tres" id="13_jji53"]
 [ext_resource type="Script" path="res://world/digital/immersion_portal.gd" id="13_w2cyt"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/inmersion_conexion.tres" id="14_s1jjo"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_invitacion.tres" id="14_yxo22"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_invitacion_recordatorio.tres" id="15_7iorj"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_clase_recordatorio.tres" id="16_s6t3f"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_permiso.tres" id="17_deh2d"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_final.tres" id="18_qbbt1"]
+[ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="19_5xygr"]
+[ext_resource type="Script" path="res://world/zones/zone0/tech_room_story.gd" id="30_igjiy"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/servidor_rojo.tres" id="31_6wxf3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lmghx"]
 size = Vector2(704, 80)
@@ -23,6 +40,112 @@ size = Vector2(32, 360)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3qnyv"]
 size = Vector2(32, 360)
+
+[sub_resource type="Resource" id="Resource_n71tl"]
+script = ExtResource("9_yy3ur")
+quest_id = &"prologo"
+step_id = &"hablar_profesor"
+dialogue = ExtResource("10_lysv2")
+completes_step = true
+
+[sub_resource type="Resource" id="Resource_caeod"]
+script = ExtResource("9_yy3ur")
+quest_id = &"prologo"
+step_id = &"revisar_computadora"
+dialogue = ExtResource("11_co8p1")
+
+[sub_resource type="Resource" id="Resource_pgyjs"]
+script = ExtResource("9_yy3ur")
+quest_id = &"prologo"
+step_id = &"volver_profesor"
+dialogue = ExtResource("12_evwmd")
+completes_step = true
+
+[sub_resource type="Resource" id="Resource_reb7v"]
+script = ExtResource("9_yy3ur")
+quest_id = &"contrasena_profesor"
+step_id = &"entrar_pc"
+dialogue = ExtResource("13_jji53")
+
+[sub_resource type="Resource" id="Resource_bchj4"]
+script = ExtResource("9_yy3ur")
+quest_id = &"contrasena_profesor"
+step_id = &"cruzar_spam"
+dialogue = ExtResource("13_jji53")
+
+[sub_resource type="Resource" id="Resource_trmnl"]
+script = ExtResource("9_yy3ur")
+quest_id = &"contrasena_profesor"
+step_id = &"revisar_configuracion"
+dialogue = ExtResource("13_jji53")
+
+[sub_resource type="Resource" id="Resource_lltp1"]
+script = ExtResource("9_yy3ur")
+quest_id = &"contrasena_profesor"
+step_id = &"cambiar_contrasena"
+dialogue = ExtResource("13_jji53")
+
+[sub_resource type="Resource" id="Resource_elegir"]
+script = ExtResource("9_yy3ur")
+quest_id = &"contrasena_profesor"
+step_id = &"elegir_seguridad"
+dialogue = ExtResource("13_jji53")
+
+[sub_resource type="Resource" id="Resource_invit"]
+script = ExtResource("9_yy3ur")
+quest_id = &"cuarto_viejo"
+step_id = &"hablar_profesor"
+dialogue = ExtResource("14_yxo22")
+completes_step = true
+
+[sub_resource type="Resource" id="Resource_invrec1"]
+script = ExtResource("9_yy3ur")
+quest_id = &"cuarto_viejo"
+step_id = &"ir_pasillo_viejo"
+dialogue = ExtResource("15_7iorj")
+
+[sub_resource type="Resource" id="Resource_invrec2"]
+script = ExtResource("9_yy3ur")
+quest_id = &"cuarto_viejo"
+step_id = &"abrir_puerta"
+dialogue = ExtResource("15_7iorj")
+
+[sub_resource type="Resource" id="Resource_yi4qo"]
+script = ExtResource("9_yy3ur")
+quest_id = &"una_clase_diferente"
+step_id = &"ver_fallas"
+dialogue = ExtResource("16_s6t3f")
+
+[sub_resource type="Resource" id="Resource_0b5hx"]
+script = ExtResource("9_yy3ur")
+quest_id = &"una_clase_diferente"
+step_id = &"revisar_registro"
+dialogue = ExtResource("16_s6t3f")
+
+[sub_resource type="Resource" id="Resource_73d67"]
+script = ExtResource("9_yy3ur")
+quest_id = &"una_clase_diferente"
+step_id = &"seguir_criaturas"
+dialogue = ExtResource("16_s6t3f")
+
+[sub_resource type="Resource" id="Resource_3qquy"]
+script = ExtResource("9_yy3ur")
+quest_id = &"una_clase_diferente"
+step_id = &"biblioteca"
+dialogue = ExtResource("16_s6t3f")
+
+[sub_resource type="Resource" id="Resource_rsnk6"]
+script = ExtResource("9_yy3ur")
+quest_id = &"una_clase_diferente"
+step_id = &"pedir_permiso"
+dialogue = ExtResource("17_deh2d")
+completes_step = true
+
+[sub_resource type="Resource" id="Resource_mtlg1"]
+script = ExtResource("9_yy3ur")
+quest_id = &"travesuras_en_el_sistema"
+step_id = &"hablar_profesor"
+dialogue = ExtResource("18_qbbt1")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t4oqr"]
 size = Vector2(12, 256)
@@ -91,6 +214,31 @@ texture_scale = 1.6
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=739778107]
 position = Vector2(596, 304)
+
+[node name="Capitulo1" type="Node2D" parent="." unique_id=1306924324]
+
+[node name="Chip" type="Node2D" parent="Capitulo1" unique_id=849578481]
+position = Vector2(450, 300)
+script = ExtResource("5_nsv5m")
+
+[node name="Glitch" type="Node2D" parent="Capitulo1" unique_id=341891746]
+position = Vector2(490, 304)
+script = ExtResource("5_nsv5m")
+kind = 1
+
+[node name="Profesor" type="Node2D" parent="Capitulo1" unique_id=1425553402 instance=ExtResource("6_3dpnw")]
+position = Vector2(410, 304)
+script = ExtResource("7_kvepe")
+display_name = "Prof. Alvarado"
+dialogue = ExtResource("8_megoe")
+repeat_dialogue = ExtResource("8_megoe")
+conversations = Array[ExtResource("9_yy3ur")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_trmnl"), SubResource("Resource_lltp1"), SubResource("Resource_elegir"), SubResource("Resource_invit"), SubResource("Resource_invrec1"), SubResource("Resource_invrec2"), SubResource("Resource_yi4qo"), SubResource("Resource_0b5hx"), SubResource("Resource_73d67"), SubResource("Resource_3qquy"), SubResource("Resource_rsnk6"), SubResource("Resource_mtlg1")])
+idle_extra_animation = &"notas"
+
+[node name="StoryPresence" type="Node" parent="Capitulo1/Profesor" unique_id=1234430745]
+script = ExtResource("19_5xygr")
+show_quest = &"travesuras_en_el_sistema"
+show_step = &"hablar_profesor"
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("5_s4aes")]
 position = Vector2(596, 304)
@@ -164,3 +312,11 @@ requires_quest = &"travesuras_en_el_sistema"
 requires_step = &"seguirlos_adentro"
 prompt_text = "E: entrar"
 prompt_offset = Vector2(-30, -40)
+
+[node name="TechRoomStory" type="Node" parent="." unique_id=378454265 node_paths=PackedStringArray("chip", "glitch", "props", "profesor")]
+script = ExtResource("30_igjiy")
+chip = NodePath("../Capitulo1/Chip")
+glitch = NodePath("../Capitulo1/Glitch")
+props = NodePath("../Props")
+server_dialogue = ExtResource("31_6wxf3")
+profesor = NodePath("../Capitulo1/Profesor")

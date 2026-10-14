@@ -22,9 +22,13 @@
 [ext_resource type="PackedScene" path="res://characters/npcs/profesor/profesor.tscn" id="19_sxeu1"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="20_4m53y"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="21_vxfgq"]
+[ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="22_0d8j8"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="22_1evtd"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="23_tihj3"]
+[ext_resource type="Script" path="res://characters/npcs/sibling_actor.gd" id="23_x1ni5"]
+[ext_resource type="Script" path="res://world/zones/zone0/sibling_run.gd" id="24_7g1i6"]
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="24_e65ed"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/persecucion_escaleras.tres" id="25_2lsgh"]
 [ext_resource type="Script" path="res://world/vision/data_fragment.gd" id="25_k1yll"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="26_0ow0d"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="27_ligia"]
@@ -397,23 +401,22 @@ infected_from_x = -1.0
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=739778107]
 position = Vector2(56, 304)
 
-[node name="Gente" type="Node2D" parent="."]
+[node name="Gente" type="Node2D" parent="." unique_id=705966820]
 
-[node name="ChicaCasillero" type="Node2D" parent="Gente"]
+[node name="ChicaCasillero" type="Node2D" parent="Gente" unique_id=17208241]
 position = Vector2(392, 304)
 script = ExtResource("29_bgnpc")
 character = "f3"
 mode = 4
 
-[node name="ChicoCharla" type="Node2D" parent="Gente"]
+[node name="ChicoCharla" type="Node2D" parent="Gente" unique_id=1353103927]
 position = Vector2(268, 304)
 script = ExtResource("29_bgnpc")
-character = "m1"
 mode = 2
 partner = NodePath("../ChicoAudifonos")
 chat_offset = 2.0
 
-[node name="ChicoAudifonos" type="Node2D" parent="Gente"]
+[node name="ChicoAudifonos" type="Node2D" parent="Gente" unique_id=1853804214]
 position = Vector2(292, 304)
 script = ExtResource("29_bgnpc")
 character = "x2"
@@ -422,7 +425,7 @@ partner = NodePath("../ChicoCharla")
 talks_first = false
 chat_offset = 2.0
 
-[node name="Profesora" type="Node2D" parent="Gente"]
+[node name="Profesora" type="Node2D" parent="Gente" unique_id=1710978465]
 position = Vector2(575, 304)
 script = ExtResource("29_bgnpc")
 character = "pf"
@@ -435,6 +438,29 @@ walk_right = 45.0
 
 [node name="Profesor" parent="Npcs" unique_id=1425553402 instance=ExtResource("19_sxeu1")]
 position = Vector2(196, 304)
+
+[node name="StoryPresence" type="Node" parent="Npcs/Profesor" unique_id=81309520]
+script = ExtResource("22_0d8j8")
+hide_quest = &"una_clase_diferente"
+return_quest = &"travesuras_en_el_sistema"
+
+[node name="Capitulo1" type="Node2D" parent="." unique_id=1125921101]
+
+[node name="Chip" type="Node2D" parent="Capitulo1" unique_id=1675794837]
+position = Vector2(640, 290)
+script = ExtResource("23_x1ni5")
+
+[node name="Glitch" type="Node2D" parent="Capitulo1" unique_id=1005412164]
+position = Vector2(610, 304)
+script = ExtResource("23_x1ni5")
+kind = 1
+
+[node name="SiblingRun" type="Node" parent="Capitulo1" unique_id=380353480 node_paths=PackedStringArray("actors")]
+script = ExtResource("24_7g1i6")
+actors = [NodePath("../Chip"), NodePath("../Glitch")]
+path = Array[Vector2]([Vector2(640, 296), Vector2(480, 296), Vector2(340, 296), Vector2(330, 250)])
+start_dialogue = ExtResource("25_2lsgh")
+played_flag = &"cap1_dialogo_escaleras"
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("20_4m53y")]
 position = Vector2(56, 304)

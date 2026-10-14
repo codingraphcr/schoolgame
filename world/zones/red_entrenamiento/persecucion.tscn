@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/light_soft.tres" id="14_jupwb"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="15_xf83c"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="17_dt0aw"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/persecucion_inicio.tres" id="19_l7f50"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="19_naxve"]
 [ext_resource type="Script" path="res://world/digital/chase/digital_chase_controller.gd" id="20_ay5lp"]
 [ext_resource type="Resource" path="res://data/chase/persecucion_cap1.tres" id="21_gri68"]
@@ -337,3 +338,4 @@ barrier = NodePath("../CorruptionBarrier")
 checkpoints = [NodePath("../Checkpoints/Checkpoint1"), NodePath("../Checkpoints/Checkpoint2"), NodePath("../Checkpoints/Checkpoint3")]
 tramo_starts = PackedFloat32Array(270, 1660, 3160)
 start_marker = NodePath("../SpawnPoint")
+start_dialogue = ExtResource("19_l7f50")

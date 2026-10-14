@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="TerminalChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/terminal/terminal_challenge.gd" id="1_term"]
+
+[resource]
+script = ExtResource("1_term")
+id = &"cap1_registro_entrenamiento"
+title = "Puesto 7 · Sistema de entrenamiento"
+objective = "Revisa el registro de eventos del sistema de entrenamiento."
+user = "kai"
+host = "puesto-7"
+welcome = "Sistema de entrenamiento del laboratorio.
+Escribe help para ver los comandos."
+files = Dictionary[String, String]({
+"LEEME.txt": "El registro de eventos está en la carpeta registro/.
+Anota quién entra, cuándo y qué cambia.
+",
+"registro/eventos.log": "07:05  inicio de sesión     usuario: m.solano (estudiante)
+07:12  archivo abierto      practica_redes.txt
+07:30  inicio de sesión     usuario: alvarado (profesor)
+07:31  carpeta abierta      clase_etica/
+03:12  inicio de sesión     usuario: chip_y_glitch   (usuario no registrado)
+03:12  340 archivos cambiados en 1 minuto   usuario: chip_y_glitch
+03:13  sonido de error reproducido 87 veces   usuario: chip_y_glitch
+"
+})
+goal_file = "registro/eventos.log"
+allowed_commands = PackedStringArray("help", "ls", "cd", "cat")
+hints = PackedStringArray("Lee LEEME.txt: dice dónde está el registro.", "Entra a la carpeta con cd registro y lee el archivo con cat.")
+success_text = "El registro muestra algo raro: hay que decidir qué entrada es la señal más clara."
+ecos_reward = -1

@@ -1,7 +1,7 @@
 # Capítulo 1 — El origen digital
 
 **Estado:** especificación oficial del equipo (13 de octubre de 2026), incorporada a la Biblia v1.3. Implementación autorizada por etapas
-(sección 19): **etapas 1 y 2 hechas** (guion en [`CAPITULO_01_GUION.md`](CAPITULO_01_GUION.md), datos y la transición de la Inmersión Digital). Las notas de coherencia de la sección 18 ya tienen las decisiones del equipo.
+(sección 19): **el capítulo se puede jugar de punta a punta** (guion en [`CAPITULO_01_GUION.md`](CAPITULO_01_GUION.md)). Arte provisional por código hasta que Ariel lo dibuje. Las notas de coherencia de la sección 18 ya tienen las decisiones del equipo.
 **Grado:** Décimo. **Capítulo:** 1. **Niveles:** 1 · *Una clase diferente* — 2 · *Travesuras en el sistema*.
 **Referencia:** `docs/narrativa/BIBLIA_NARRATIVA.md` (v1.2). Este documento **no** reemplaza la Biblia.
 
@@ -263,6 +263,6 @@ Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las 
 | 8 | Glitch como enemigo | ✅ `GlitchBoss`: corre con amagues; embestidas, saltos ofensivos y combos de tres; queda vulnerable después de atacar |
 | 9 | Coordinación de ataques | ✅ `DualBossController`: Camino cerrado, Distracción y Trampa sincronizada; fase segura del escudo con terminal (mínimo privilegio) |
 | 10 | Furia fraternal | ✅ Una sola vez y distinta según quién sobrevive: Chip en abanico, trampas dobles y pulsos de defensa; Glitch más rápido, embestidas encadenadas y salto + combo |
-| 11 | Arena y transiciones | En curso: ✅ la arena (checkpoint al llegar, sin temporizador, puerta, reinicio si Kai pierde, salida al cuarto técnico). Falta el nivel 1 y encadenar las misiones |
-| 12 | Cinemáticas y recompensas | Pendiente |
-| 13 | Pruebas y optimización | Pendiente |
+| 11 | Arena y transiciones | ✅ La arena (checkpoint al llegar, sin temporizador, reinicio si Kai pierde, salida al cuarto técnico); el nivel 1 en el laboratorio, el pasillo, las escaleras y la biblioteca; el prólogo lleva al capítulo |
+| 12 | Cinemáticas y recompensas | ✅ Introducción y cierre de los hermanos, lectura del Fragmento de Datos, el profesor y `GENESIS_ARCHIVE`, «FIN DEL CAPÍTULO 1»; Ecos una sola vez, páginas del Grimorio, Inmersión Digital |
+| 13 | Pruebas y optimización | ✅ Pruebas de cada etapa y de la historia completa; tiempos con la física (estables con la PC cargada). Falta probarlo a mano y ajustar valores (vida, tiempos, daño) |

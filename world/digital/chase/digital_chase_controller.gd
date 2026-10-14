@@ -29,6 +29,8 @@ const QUEST := &"travesuras_en_el_sistema"
 @export var tramo_starts: PackedFloat32Array = []
 ## Dónde reaparece Kai si muere antes del primer checkpoint.
 @export var start_marker: Node2D
+## Lo que pasa al llegar por primera vez (Chip y Glitch se dan cuenta de que Kai los siguió).
+@export var start_dialogue: Dialogue
 
 ## Tramo actual (0, 1, 2; 3 = terminó).
 var tramo := 0
@@ -76,6 +78,8 @@ func _ready() -> void:
 	# Llegar a la red de entrenamiento cumple «sigue a Chip y Glitch adentro».
 	if state.get_current_step(QUEST) == &"seguirlos_adentro":
 		state.complete_step(QUEST, &"seguirlos_adentro")
+		if start_dialogue:
+			StoryHelper.say.call_deferred(self, start_dialogue)
 	if tramo >= checkpoints.size():
 		_finish()
 	else:

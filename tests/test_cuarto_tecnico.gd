@@ -75,7 +75,11 @@ func _test_inside() -> void:
 	vision.activate(true)
 	await _frames(3)
 	_check(portal != null and not portal.enabled, "con la Visión, la conexión todavía no aparece (Chip y Glitch no se metieron)")
-	state.complete_step(QUEST, &"revisar_servidor")
+	# Escena del servidor: se ríen desde el monitor y se meten en la computadora.
+	var box := current_scene.get_node("CombatHUD/DialogueBox") as DialogueBox
+	await _until(func() -> bool: return box.is_playing())
+	await _advance(box)
+	await _until(func() -> bool: return state.get_current_step(QUEST) == &"seguirlos_adentro")
 	await _frames(3)
 	_check(portal.enabled and portal.first_dialogue != null, "cuando se meten en la computadora, la conexión aparece en el monitor")
 	vision.deactivate()
@@ -154,6 +158,22 @@ func _drop_on(position: Vector2) -> void:
 		if player.is_on_floor():
 			break
 	await _frames(3)
+
+
+func _advance(box: DialogueBox) -> void:
+	for i in 60:
+		if not box.is_playing():
+			return
+		var press := InputEventAction.new()
+		press.action = &"interact"
+		press.pressed = true
+		Input.parse_input_event(press)
+		await process_frame
+		var release := InputEventAction.new()
+		release.action = &"interact"
+		release.pressed = false
+		Input.parse_input_event(release)
+		await _frames(3)
 
 
 func _press(action: String) -> void:

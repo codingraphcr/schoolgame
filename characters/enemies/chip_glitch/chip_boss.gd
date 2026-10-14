@@ -12,7 +12,6 @@ extends SiblingBoss
 signal shield_requested
 
 const CYAN := Color("5ad8ff")
-const DARK := Color("0d2238")
 
 var shielded := false
 var shield_used := false
@@ -229,26 +228,7 @@ func floor_y() -> float:
 
 
 func _draw() -> void:
-	var center := Vector2(0, -10)
-	if is_dead:
-		draw_rect(Rect2(-10, -14, 20, 14), DARK)
-		draw_rect(Rect2(-10, -14, 20, 14), Color(CYAN, 0.6), false, 1.0)
-		draw_dizzy(Vector2(0, -20))
-		return
-	if shielded:
-		draw_circle(center, 20.0, Color(CYAN, 0.18 + 0.08 * sin(_clock * 6.0)))
-		draw_arc(center, 20.0, 0.0, TAU, 24, Color(CYAN, 0.9), 1.5)
-	var body := Rect2(-10, -20, 20, 20)
-	draw_rect(body, DARK)
-	draw_rect(body, Color(CYAN, 0.9), false, 1.5)
-	# Ojo grande (el estratega).
-	var look := (player_position() - global_position).normalized() * 2.0
-	draw_circle(center + Vector2(0, -1), 5.5, Color(0.9, 1, 1))
-	draw_circle(center + Vector2(0, -1) + look, 2.4, Color(1, 0.4, 0.5) if enraged else Color(0.05, 0.1, 0.2))
-	# Antena.
-	draw_line(Vector2(4, -20), Vector2(7, -28), CYAN, 1.0)
-	draw_circle(Vector2(7, -29), 1.6, Color(1, 0.4, 0.5) if enraged else CYAN)
-	# Patitas que cuelgan (flota).
-	for x in [-6.0, 6.0]:
-		draw_line(Vector2(x, 0), Vector2(x + sin(_clock * 8.0 + x) * 1.5, 4), Color(CYAN, 0.7), 1.0)
-	draw_telegraph(center, Color(1, 0.5, 0.6) if enraged else CYAN)
+	var look := (player_position() - global_position).normalized()
+	SiblingArt.draw_chip(self, _clock, look, enraged, shielded, is_dead)
+	if not is_dead:
+		draw_telegraph(Vector2(0, -10), Color(1, 0.5, 0.6) if enraged else CYAN)

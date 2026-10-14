@@ -5,9 +5,13 @@
 [ext_resource type="Script" path="res://world/zones/zone0/stairs_props.gd" id="3_ti6pk"]
 [ext_resource type="Script" path="res://world/rooms/stairway.gd" id="4_jq5jg"]
 [ext_resource type="Texture2D" path="res://assets/art/light_soft.tres" id="5_448w1"]
+[ext_resource type="Script" path="res://characters/npcs/sibling_actor.gd" id="6_448w1"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="6_824if"]
+[ext_resource type="Script" path="res://world/zones/zone0/sibling_run.gd" id="7_824if"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="7_tv5y0"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="8_n5v21"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="8_tv5y0"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/cuarto_tecnico_cerrado.tres" id="9_n5v21"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="9_t3xtd"]
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="10_um5f8"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="11_07nrb"]
@@ -43,6 +47,9 @@ size = Vector2(310, 8)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8yfyb"]
 size = Vector2(160, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t3xtd"]
+size = Vector2(100, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_odpsf"]
 size = Vector2(12, 256)
@@ -160,6 +167,35 @@ texture_scale = 3.0
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=739778107]
 position = Vector2(72, 304)
+
+[node name="Capitulo1" type="Node2D" parent="." unique_id=1730054203]
+
+[node name="Chip" type="Node2D" parent="Capitulo1" unique_id=1762862973]
+position = Vector2(150, 296)
+script = ExtResource("6_448w1")
+
+[node name="Glitch" type="Node2D" parent="Capitulo1" unique_id=1980836666]
+position = Vector2(124, 304)
+script = ExtResource("6_448w1")
+kind = 1
+
+[node name="SiblingRun" type="Node" parent="Capitulo1" unique_id=1914678599 node_paths=PackedStringArray("actors")]
+script = ExtResource("7_824if")
+actors = [NodePath("../Chip"), NodePath("../Glitch")]
+path = Array[Vector2]([Vector2(150, 296), Vector2(250, 240), Vector2(390, 182), Vector2(250, 124), Vector2(110, 66), Vector2(250, 8), Vector2(420, -54), Vector2(660, -54)])
+trigger_distance = 170.0
+
+[node name="PuertaCerrada" type="Area2D" parent="Capitulo1" unique_id=632002508]
+position = Vector2(60, -80)
+script = ExtResource("8_tv5y0")
+quest_id = &"una_clase_diferente"
+step_id = &"pedir_permiso"
+dialogue = ExtResource("9_n5v21")
+completes_step = false
+once_flag = &"cap1_puerta_tecnica_vista"
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Capitulo1/PuertaCerrada" unique_id=132840542]
+shape = SubResource("RectangleShape2D_t3xtd")
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("6_824if")]
 position = Vector2(72, 304)

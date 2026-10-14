@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 1, nivel 1: si Kai le habla al profesor durante la clase.
+Prof. Alvarado [pensativo]: El sistema de entrenamiento sigue fallando...
+Prof. Alvarado: Revisá con calma, Kai. Y solo lo que te toca revisar."

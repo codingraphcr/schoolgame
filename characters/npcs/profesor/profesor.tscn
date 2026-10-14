@@ -11,6 +11,9 @@
 [ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_contrasena_recordatorio.tres" id="7_356nm"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_invitacion.tres" id="8_invit"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_invitacion_recordatorio.tres" id="9_invrec"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_clase_recordatorio.tres" id="10_caeod"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_permiso.tres" id="11_pgyjs"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_final.tres" id="12_reb7v"]
 
 [sub_resource type="Resource" id="Resource_n71tl"]
 script = ExtResource("3_lltp1")
@@ -81,6 +84,43 @@ quest_id = &"cuarto_viejo"
 step_id = &"abrir_puerta"
 dialogue = ExtResource("9_invrec")
 
+[sub_resource type="Resource" id="Resource_yi4qo"]
+script = ExtResource("3_lltp1")
+quest_id = &"una_clase_diferente"
+step_id = &"ver_fallas"
+dialogue = ExtResource("10_caeod")
+
+[sub_resource type="Resource" id="Resource_0b5hx"]
+script = ExtResource("3_lltp1")
+quest_id = &"una_clase_diferente"
+step_id = &"revisar_registro"
+dialogue = ExtResource("10_caeod")
+
+[sub_resource type="Resource" id="Resource_73d67"]
+script = ExtResource("3_lltp1")
+quest_id = &"una_clase_diferente"
+step_id = &"seguir_criaturas"
+dialogue = ExtResource("10_caeod")
+
+[sub_resource type="Resource" id="Resource_3qquy"]
+script = ExtResource("3_lltp1")
+quest_id = &"una_clase_diferente"
+step_id = &"biblioteca"
+dialogue = ExtResource("10_caeod")
+
+[sub_resource type="Resource" id="Resource_rsnk6"]
+script = ExtResource("3_lltp1")
+quest_id = &"una_clase_diferente"
+step_id = &"pedir_permiso"
+dialogue = ExtResource("11_pgyjs")
+completes_step = true
+
+[sub_resource type="Resource" id="Resource_mtlg1"]
+script = ExtResource("3_lltp1")
+quest_id = &"travesuras_en_el_sistema"
+step_id = &"hablar_profesor"
+dialogue = ExtResource("12_reb7v")
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nk24l"]
 size = Vector2(48, 56)
 
@@ -89,7 +129,7 @@ script = ExtResource("1_xcafg")
 display_name = "Prof. Alvarado"
 dialogue = ExtResource("2_bchj4")
 repeat_dialogue = ExtResource("2_bchj4")
-conversations = Array[ExtResource("3_lltp1")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_trmnl"), SubResource("Resource_lltp1"), SubResource("Resource_elegir"), SubResource("Resource_invit"), SubResource("Resource_invrec1"), SubResource("Resource_invrec2")])
+conversations = Array[ExtResource("3_lltp1")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_trmnl"), SubResource("Resource_lltp1"), SubResource("Resource_elegir"), SubResource("Resource_invit"), SubResource("Resource_invrec1"), SubResource("Resource_invrec2"), SubResource("Resource_yi4qo"), SubResource("Resource_0b5hx"), SubResource("Resource_73d67"), SubResource("Resource_3qquy"), SubResource("Resource_rsnk6"), SubResource("Resource_mtlg1")])
 idle_extra_animation = &"notas"
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1346383065]

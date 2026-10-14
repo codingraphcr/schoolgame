@@ -10,7 +10,6 @@ extends SiblingBoss
 ## Arte provisional por código: una criatura naranja con púas que tiembla como una imagen con fallas.
 
 const ORANGE := Color("ff8a3a")
-const DARK := Color("2a1408")
 
 var _attack_cd := 1.4
 var _feint_cd := 1.4
@@ -166,26 +165,6 @@ func _on_rage() -> void:
 
 
 func _draw() -> void:
-	var jitter := Vector2(sin(_clock * 40.0) * 1.5, 0) if (int(_clock * 7.0) % 5 == 0 or enraged) else Vector2.ZERO
-	if is_dead:
-		draw_rect(Rect2(-11, -10, 22, 10), DARK)
-		draw_rect(Rect2(-11, -10, 22, 10), Color(ORANGE, 0.6), false, 1.0)
-		draw_dizzy(Vector2(0, -16))
-		return
-	var crouch := 4.0 if is_telegraphing() else 0.0
-	var body := Rect2(-11, -18 + crouch, 22, 18 - crouch)
-	body.position += jitter
-	draw_rect(body, DARK)
-	draw_rect(body, Color(ORANGE, 0.95), false, 1.5)
-	# Púas.
-	for k in 4:
-		var x := body.position.x + 3.0 + k * 5.5
-		draw_colored_polygon(PackedVector2Array([Vector2(x, body.position.y), Vector2(x + 2.5, body.position.y - 6), Vector2(x + 5, body.position.y)]), ORANGE)
-	# Ojos (miran hacia donde corre).
-	var face := 1.0 if velocity.x >= 0.0 else -1.0
-	for eye in [-3.0, 4.0]:
-		draw_rect(Rect2(body.get_center() + Vector2(eye + face * 2.0, -4), Vector2(3, 4)), Color(1, 1, 0.9))
-	# Franja de falla (glitch).
-	if jitter != Vector2.ZERO:
-		draw_rect(Rect2(body.position.x - 4, body.get_center().y, body.size.x + 8, 2), Color(ORANGE, 0.5))
-	draw_telegraph(body.get_center(), Color(1, 0.4, 0.3) if enraged else ORANGE)
+	var body := SiblingArt.draw_glitch(self, _clock, 1.0 if velocity.x >= 0.0 else -1.0, is_telegraphing(), enraged, is_dead)
+	if not is_dead:
+		draw_telegraph(body.get_center(), Color(1, 0.4, 0.3) if enraged else ORANGE)

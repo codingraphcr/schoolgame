@@ -160,5 +160,4 @@ Kai se va. El profesor se queda solo frente al monitor. **Sin diálogo:** en la 
 | `data/dialogues/capitulo1/*.tres` | Los diálogos de cada escena |
 | `data/challenges/cap1_*.tres` | Los dos desafíos del nivel 1, los tres checkpoints y el escudo de Chip |
 
-Las misiones no se encadenan con «El cuarto viejo» hasta que el nivel se pueda jugar (etapa 11), para no dejar una
-partida con un objetivo imposible.
+«El cuarto viejo» (fin del prólogo) lleva a «Una clase diferente», y esta a «Travesuras en el sistema».

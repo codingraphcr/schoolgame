@@ -17,6 +17,8 @@ const DIM := Color(0.4, 0.5, 0.7)
 @export var step_id: StringName = &""
 ## Diálogo al cerrar la terminal con el desafío resuelto (p. ej. Kai cuenta lo que encontró).
 @export var success_dialogue: Dialogue
+## Si al resolverla se completa step_id (false: la escena sigue con otra cosa y lo completa después).
+@export var completes_step := true
 
 var _canvas: VectorCanvas
 var _shape: CollisionShape2D
@@ -67,7 +69,7 @@ func _on_interacted(player: Player) -> void:
 		var box := DialogueBox.find(self)
 		if success_dialogue and box:
 			await box.play(success_dialogue)
-		if quest_id != &"":
+		if quest_id != &"" and completes_step:
 			get_node("/root/GameState").complete_step(quest_id, step_id)
 	player.controls_locked = false
 	busy = false
