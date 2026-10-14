@@ -4,10 +4,12 @@
 
 [resource]
 script = ExtResource("1_dlg")
-script_text = "# Escena 1.1: empieza la clase de «Uso ético de la información».
-Prof. Alvarado: Buenos días. Hoy toca «Uso ético de la información».
+script_text = "# Escena 1.1: Kai llega a la Sala 3 y empieza la clase de «Uso ético de la información».
+Prof. Alvarado [sonriente]: Justo a tiempo, Kai. Pasá, que ya empezamos.
+Prof. Alvarado: Hoy toca «Uso ético de la información».
 Prof. Alvarado: Imaginen que les piden revisar una computadora del colegio. ¿Qué pueden mirar?
 Prof. Alvarado [pensativo]: Solo lo que el encargado autorizó. Ni un archivo más.
-Prof. Alvarado: Abran el sistema de entrenamiento en sus puestos, por favor.
-(Las computadoras de práctica empiezan a pitar una por una.)
-Prof. Alvarado [preocupado]: ¿Otra vez? Esta semana el sistema anda rarísimo."
+Prof. Alvarado: Para practicar, cada uno va a revisar el registro de eventos del sistema de entrenamiento.
+Prof. Alvarado: El registro anota todo: quién entra, cuándo y qué cambia. Kai, el tuyo es el puesto del medio.
+(Las computadoras de práctica empiezan a pitar una por una. Las pantallas parpadean.)
+Prof. Alvarado [preocupado]: ¿Otra vez? Esta semana el sistema anda rarísimo... Revisen el registro: ahí tiene que salir qué pasa."

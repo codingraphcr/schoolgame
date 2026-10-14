@@ -6,17 +6,17 @@
 [sub_resource type="Resource" id="Resource_0"]
 script = ExtResource("2_step")
 id = &"ir_a_clase"
-objective = "Ve a la clase del profesor en el laboratorio."
+objective = "Ve a tu clase: la Sala 3, en el pasillo principal."
 
 [sub_resource type="Resource" id="Resource_1"]
 script = ExtResource("2_step")
 id = &"ver_fallas"
-objective = "Algo hace fallar las computadoras de práctica. Usa la Visión Digital."
+objective = "¿Quién está alterando las computadoras de práctica?"
 
 [sub_resource type="Resource" id="Resource_2"]
 script = ExtResource("2_step")
 id = &"revisar_registro"
-objective = "Revisa el registro de eventos en la terminal de tu puesto."
+objective = "Revisa el registro de eventos en la computadora de tu puesto."
 
 [sub_resource type="Resource" id="Resource_3"]
 script = ExtResource("2_step")
@@ -31,13 +31,13 @@ objective = "Arregla lo que hicieron en la computadora de la biblioteca."
 [sub_resource type="Resource" id="Resource_5"]
 script = ExtResource("2_step")
 id = &"pedir_permiso"
-objective = "Pídele permiso al profesor para entrar al cuarto técnico."
+objective = "Pídele permiso al profesor (en la Sala 3) para entrar al cuarto técnico."
 
 [resource]
 script = ExtResource("1_quest")
 id = &"una_clase_diferente"
 title = "Una clase diferente"
-steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3"), SubResource("Resource_4"), SubResource("Resource_5")])
+steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_2"), SubResource("Resource_1"), SubResource("Resource_3"), SubResource("Resource_4"), SubResource("Resource_5")])
 completion_title = "NIVEL 1 COMPLETADO"
 completion_subtitle = "UNA CLASE DIFERENTE"
 completion_flag = &"nivel_1_completado"

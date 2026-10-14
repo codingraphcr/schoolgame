@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_dlg")
-script_text = "# Escena 1.2: después del desafío del registro.
+script_text = "# Escena 1.2: después del desafío del registro, Kai decide mirar con la Visión Digital.
 Kai [pensativo]: Un usuario que no existe, cambiando archivos cientos de veces por minuto...
-Kai: No es una falla normal. Es alguien jugando con el sistema.
-(Por la puerta del laboratorio se asoma una cola naranja.)
-Kai: ¡Ahí van!"
+Kai: No es una falla normal. Es alguien jugando con el sistema. ¿Pero quién?
+(Las pantallas de toda la sala vuelven a parpadear al mismo tiempo.)
+Kai [serio]: Si el registro no me dice quién... tal vez pueda verlo."

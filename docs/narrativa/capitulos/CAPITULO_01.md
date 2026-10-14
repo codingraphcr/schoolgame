@@ -263,6 +263,6 @@ Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las 
 | 8 | Glitch como enemigo | ✅ `GlitchBoss`: corre con amagues; embestidas, saltos ofensivos y combos de tres; queda vulnerable después de atacar |
 | 9 | Coordinación de ataques | ✅ `DualBossController`: Camino cerrado, Distracción y Trampa sincronizada; fase segura del escudo con terminal (mínimo privilegio) |
 | 10 | Furia fraternal | ✅ Una sola vez y distinta según quién sobrevive: Chip en abanico, trampas dobles y pulsos de defensa; Glitch más rápido, embestidas encadenadas y salto + combo |
-| 11 | Arena y transiciones | ✅ La arena (checkpoint al llegar, sin temporizador, reinicio si Kai pierde, salida al cuarto técnico); el nivel 1 en el laboratorio, el pasillo, las escaleras y la biblioteca; el prólogo lleva al capítulo |
+| 11 | Arena y transiciones | ✅ La arena (checkpoint al llegar, sin temporizador, reinicio si Kai pierde, salida al cuarto técnico); el nivel 1 en la Sala 3 (el aula de Kai, junto al pasillo), el pasillo, las escaleras y la biblioteca; el prólogo lleva al capítulo |
 | 12 | Cinemáticas y recompensas | ✅ Introducción y cierre de los hermanos, lectura del Fragmento de Datos, el profesor y `GENESIS_ARCHIVE`, «FIN DEL CAPÍTULO 1»; Ecos una sola vez, páginas del Grimorio, Inmersión Digital |
 | 13 | Pruebas y optimización | ✅ Pruebas de cada etapa y de la historia completa; tiempos con la física (estables con la PC cargada). Falta probarlo a mano y ajustar valores (vida, tiempos, daño) |

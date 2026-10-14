@@ -2,6 +2,7 @@
 class_name Stairway
 extends Interactable
 ## Escalera entre pisos: como una salida (RoomExit), pero se usa con E («E: subir» / «E: bajar»).
+## También sirve de puerta de un aula (show_art = false: el arte es otro nodo; action_text «entrar»).
 ## Si tiene door_id y la sala está en el mapa, World dice a dónde lleva; si no, target_scene y
 ## target_entry. Si la sala de destino es de un capítulo que todavía no empezó, avisa y no se usa.
 ## Arte provisional por código (el hueco de la escalera con sus escalones y un cartel); se ve
@@ -22,12 +23,23 @@ const SIGN := Color("1f6f5a")
 @export var going_up := true:
 	set(value):
 		going_up = value
-		prompt_text = "E: subir" if value else "E: bajar"
+		_refresh_prompt_text()
 		queue_redraw()
 ## Cartel sobre la escalera (vacío = sin cartel).
 @export var sign_text := "ESCALERAS":
 	set(value):
 		sign_text = value
+		queue_redraw()
+
+## Lo que dice el aviso en vez de «subir»/«bajar» (p. ej. «entrar»). Vacío = escalera.
+@export var action_text := "":
+	set(value):
+		action_text = value
+		_refresh_prompt_text()
+## false: no dibuja la escalera ni el cartel (la puerta ya está dibujada por otro nodo).
+@export var show_art := true:
+	set(value):
+		show_art = value
 		queue_redraw()
 
 var _used := false
@@ -62,7 +74,16 @@ func _on_interacted(player: Player) -> void:
 	_used = RoomExit.travel(self, player, door_id, target_scene, target_entry)
 
 
+func _refresh_prompt_text() -> void:
+	if not action_text.is_empty():
+		prompt_text = "E: " + action_text
+	else:
+		prompt_text = "E: subir" if going_up else "E: bajar"
+
+
 func _draw() -> void:
+	if not show_art:
+		return
 	var hole := Rect2(-WIDTH / 2.0, -HEIGHT, WIDTH, HEIGHT)
 	draw_rect(hole.grow(3), FRAME)
 	draw_rect(hole, HOLE)

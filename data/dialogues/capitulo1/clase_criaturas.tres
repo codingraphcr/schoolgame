@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_dlg")
-script_text = "# Escena 1.1: con la Visión Digital, Kai ve a Chip y Glitch en los monitores.
+script_text = "# Escena 1.2 (cinemática en la Sala 3): con la Visión Digital, Kai ve a Chip y Glitch en los monitores.
 Glitch: ¡Jijiji! ¡Mirá cómo pita esta!
 Chip: Concentrate. El plan dice: tres computadoras más y nos vamos.
 Glitch [sorprendido]: Chip... ese de ahí nos está mirando.

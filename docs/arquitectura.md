@@ -527,7 +527,9 @@ código (`old_hallway_props.gd`: cajas, sillas, telarañas, la puerta «LAB 2» 
 
 - **`Stairway`** (`world/rooms/stairway.gd`): una escalera entre pisos. Es como una salida (`door_id`, respaldo
   `target_scene` / `target_entry`), pero se usa con **E** («E: subir» / «E: bajar») y se dibuja sola (el hueco con los
-  escalones y un cartel). `RoomExit.destination_of()` y `RoomExit.travel()` son comunes a las dos.
+  escalones y un cartel). `RoomExit.destination_of()` y `RoomExit.travel()` son comunes a las dos. También sirve de
+  **puerta de un aula** en la pared del fondo: `action_text` («entrar», «salir») cambia el aviso y `show_art = false`
+  no dibuja nada (el arte es otro nodo, p. ej. `door.png`). Así se entra a la **Sala 3** desde el Pasillo.
 - **Escaleras** (`escaleras.tscn`, ficha `escaleras`: tipo `stairs`, 1 × 2 celdas, 640 px de ancho): se entra desde la
   escalera del **Pasillo** (puerta `escalera`, clase escalera, hacia arriba). Kai sube saltando de descanso en descanso
   (plataformas de un solo sentido, 58–62 px de alto: alcanza el salto simple) y arriba sale a la biblioteca. Arte:
@@ -655,11 +657,11 @@ La arena (`world/zones/red_entrenamiento/arena_hermanos.tscn`, después del terc
 
 | Pieza | Dónde | Qué hace |
 |---|---|---|
-| `ClassScene` | Laboratorio | La clase (profesor y compañeros con `StoryPresence`), Chip y Glitch en los monitores (solo con la Visión), el registro en la terminal del puesto 7 (`registro_entrenamiento`) y el desafío «Comportamiento anómalo» |
-| `SiblingRun` | Pasillo y escaleras | Persecución corta: los hermanos avanzan cuando Kai se acerca y desaparecen al final del camino |
+| `ClassScene` | Sala 3 (`sala_3.tscn`, ficha `sala_3`: aula fija debajo del Pasillo en el mapa, puerta `sala_3` ↔ `pasillo` de clase puerta, se abre en el Capítulo 1) | La clase (profesor y compañeros de espaldas con `StoryPresence`; computadoras de práctica que fallan: `ClassroomProps.computers` / `glitching`), el registro en la terminal del puesto de Kai (`registro_entrenamiento`) y el desafío «Comportamiento anómalo»; después, una **cinemática** (sin control): Kai mira con la Visión Digital, la cámara va a los monitores, Chip y Glitch se dan cuenta y escapan por la puerta; la cámara vuelve a Kai y empieza la persecución. Pasos: `ir_a_clase` → `revisar_registro` → `ver_fallas` (la cinemática; si se carga la partida en ese paso, se repite) → `seguir_criaturas` |
+| `SiblingRun` | Pasillo y escaleras | Persecución corta: los hermanos avanzan cuando Kai se acerca y desaparecen al final del camino. En el Pasillo arranca frente a la puerta de la Sala 3 (al este) y va hasta las escaleras |
 | `CatalogScene` | Biblioteca | El archivo privado en el catálogo y el desafío «Un archivo que no es tuyo» |
 | `QuestTrigger` (`completes_step = false`, `once_flag`) | Escaleras | Kai piensa en la puerta cerrada del cuarto técnico (una vez) |
-| Profesor (`NpcConversation`) | Laboratorio | Recordatorios durante la clase y el permiso para el cuarto técnico («NIVEL 1 COMPLETADO») |
+| Profesor (`NpcConversation`) | Sala 3 | Recordatorios durante la clase y el permiso para el cuarto técnico («NIVEL 1 COMPLETADO») |
 | `TechRoomStory` | Cuarto técnico | El servidor en rojo y los hermanos que se meten en la computadora; al final, la charla con el profesor, Kai se va y aparece `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
 
 `SiblingActor` es Chip o Glitch como personaje de escena (sin pelear); `SiblingArt` es su dibujo (lo comparten con el
@@ -804,7 +806,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_cuarto_tecnico.gd` | Capítulo 1, etapa 3: el cuarto técnico en el mapa, el descanso nuevo de las escaleras con la física real, la puerta cerrada con llave hasta el permiso del profesor (y que se abra con Kai parado ahí), la conexión del monitor solo cuando la historia lo pide, la vuelta y continuar una partida guardada ahí |
 | `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo salto + dash (sin doble salto), la barrera (empieza detrás de Kai, 1 por contacto, invulnerabilidad, sin daño en cada cuadro, después de cada checkpoint queda a 260 px detrás y nunca delante), los nodos que disparan (con aviso y dañan), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
 | `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11: checkpoint y sin temporizador, vida y barras independientes, ataques con aviso, los tres combos, fase segura con terminal, furia según quién sobrevive, los dos órdenes de derrota, hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |
-| `test_capitulo1_historia.gd` | Capítulo 1, la historia de punta a punta: el prólogo lleva al capítulo, la clase, los hermanos con la Visión, el registro y su desafío, la persecución corta, la biblioteca, el permiso («NIVEL 1 COMPLETADO»), el servidor y el final con `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
+| `test_capitulo1_historia.gd` | Capítulo 1, la historia de punta a punta: el prólogo lleva al capítulo, la Sala 3 (cerrada en el prólogo; se entra y se sale por su puerta con E), la clase, el registro y su desafío, la cinemática de los hermanos (Visión, cámara, escape), la persecución corta, la biblioteca, el permiso («NIVEL 1 COMPLETADO»), el servidor y el final con `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
 | `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |
 | `test_generador.gd` | M4: con fichas de prueba, la parte fija intacta, misma semilla = mismo mapa, 40 semillas válidas y distintas, solo puertas compatibles, respaldo si la parte variable no valida y error si la fija está mal; con los datos reales, aula o depósito al este de la biblioteca, el mapa se rearma igual al cargar, dos aulas con la misma escena, la puerta libre cerrada y continuar en la misma aula |
 | `test_biblioteca.gd` | M3: escaleras y biblioteca en el mapa, cerradas hasta el Capítulo 1, Kai sube los descansos con la física real y sin doble salto, ida y vuelta entre Pasillo, escaleras y biblioteca, estanterías como plataforma y continuar una partida guardada en la biblioteca |
