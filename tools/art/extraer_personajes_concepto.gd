@@ -31,6 +31,8 @@ const OUTLINE := Color("0a0d1c")
 ##          (para quitar algo que sobra).
 ##          recolor + recolor_color (opcional): polígono donde lo café/rosado de la figura se pinta de ese color.
 ##          clip (opcional): contorno (en la hoja) fuera del cual se borra todo (efectos pegados).
+##          erase (opcional): polígonos (en la hoja) donde se borra solo lo del color del fondo (huecos
+##          encerrados, como entre las piernas).
 ##          refill (opcional, con clip): vuelve a borrar el fondo que quedó encerrado y ahora toca lo recortado.
 ##          anchor_x (opcional): columna del centro del cuerpo si el
 ##          cálculo automático (centro de la cabeza) no sirve. only_body: conserva solo la figura
@@ -301,6 +303,35 @@ const CHARACTERS := {
 			"v21_quieto": { "poses": ["v21_quieto"], "fps": 1.0, "loop": true },
 		},
 	},
+	# Glitch y Chip, los gemelos (hoja de Ariel "glitch_chip_concepto"): sus vistas de frente
+	# (fondo claro; de lado la armadura blanca se confunde con el fondo) y el disco de Chip. Del tamaño
+	# de Kai (92 px). El movimiento y los ataques (cortes,
+	# rayos, zonas) los dibuja el juego.
+	"hermanos": {
+		"source": "res://docs/arte/referencias/glitch_chip_concepto.webp",
+		"out": "res://assets/art/characters/hermanos/hd/",
+		"prefix": "hermanos_hd",
+		"background": Color("e5e1f3"),
+		"tolerance": 0.07,
+		"reference": "glitch_frente",
+		"height": 92,
+		"poses": {
+			"glitch_frente": { "rect": Rect2i(711, 28, 99, 222), "only_body": true, "erase": [
+				[Vector2(760, 163), Vector2(772, 163), Vector2(779, 222), Vector2(781, 246), Vector2(753, 246), Vector2(755, 222)],
+				[Vector2(734, 130), Vector2(742, 130), Vector2(745, 165), Vector2(745, 218), Vector2(719, 212), Vector2(733, 165)],
+				# A la izquierda de la espada el fondo es más oscuro (la sombra del borde del panel).
+				[Vector2(710, 90), Vector2(735, 90), Vector2(735, 118), Vector2(715, 212), Vector2(710, 212)]] },
+			"chip_frente": { "rect": Rect2i(1200, 24, 104, 224), "only_body": true, "erase": [
+				[Vector2(1251, 163), Vector2(1264, 163), Vector2(1272, 220), Vector2(1276, 246), Vector2(1242, 246), Vector2(1243, 220)],
+				[Vector2(1227, 150), Vector2(1234, 150), Vector2(1236, 215), Vector2(1208, 207), Vector2(1222, 170)]] },
+			"disco": { "rect": Rect2i(1349, 204, 90, 100), "only_body": true },
+		},
+		"animations": {
+			"glitch": { "poses": ["glitch_frente"], "fps": 1.0, "loop": true },
+			"chip": { "poses": ["chip_frente"], "fps": 1.0, "loop": true },
+			"disco": { "poses": ["disco"], "fps": 1.0, "loop": true },
+		},
+	},
 	# Pogo con la Nullblade (hoja de Ariel "Animación de pogo"): la fila de arriba, de a una fase.
 	# "salto" solo fija la escala (mismo alto que la pose de salto del juego: 88 px). feet_y: fila de
 	# los pies (la espada que apunta hacia abajo no empuja a Kai hacia arriba). El impacto (4) tiene
@@ -433,6 +464,25 @@ func _recolor(region: Image, pose: Dictionary) -> void:
 			region.set_pixel(x, y, color.lightened(clampf((c.v - 0.3) * 0.5, 0.0, 0.15)))
 
 
+## Borra el fondo que quedó encerrado dentro de los polígonos "erase" (en la hoja): entre las piernas o
+## entre un arma y el cuerpo. Solo lo del color del fondo; el resto de la figura no se toca.
+func _erase(region: Image, pose: Dictionary) -> void:
+	var background: Color = _config.background
+	var tolerance: float = float(pose.get("tolerance", _config.tolerance)) * 1.6
+	var origin := Vector2(pose.rect.position)
+	for points: Array in pose.get("erase", []):
+		var polygon := PackedVector2Array()
+		for point: Vector2 in points:
+			polygon.append(point - origin)
+		for y in region.get_height():
+			for x in region.get_width():
+				var c := region.get_pixel(x, y)
+				if c.a == 0.0 or not Geometry2D.is_point_in_polygon(Vector2(x, y), polygon):
+					continue
+				if Vector3(c.r - background.r, c.g - background.g, c.b - background.b).length() <= tolerance:
+					region.set_pixel(x, y, Color(0, 0, 0, 0))
+
+
 ## Borra todo lo que queda fuera del contorno "clip" de la pose (aura y efectos pegados a la figura).
 func _clip(region: Image, pose: Dictionary) -> void:
 	var polygon := _local_polygon(pose, "clip")
@@ -453,6 +503,7 @@ func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 	_cover(region, pose)
 	_recolor(region, pose)
 	_clip(region, pose)
+	_erase(region, pose)
 	if pose.get("refill", false):
 		# El fondo que quedó encerrado (entre una pierna y el trapeador) ahora toca lo recortado: se borra.
 		_remove_background(region, pose.get("tolerance", _config.tolerance))

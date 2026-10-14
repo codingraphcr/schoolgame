@@ -415,7 +415,8 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
   explica qué hay adentro (ni afirma ni niega saberlo).
 - **`Nullblade.exe` y el Grimorio** se encuentran en ese cuarto, a oscuras: Kai los distingue con la Visión Digital.
   **El origen de los dos sigue pendiente** (sección XVI): el juego no dice quién los dejó ahí.
-- **Habilidades:** con la Nullblade, Kai obtiene el **dash** y el **doble salto** (decisión de diseño del equipo).
+- **Habilidades:** con la Nullblade, Kai obtiene el **dash** (decisión de diseño del equipo). El **doble salto** llega
+  más adelante en la historia (cuándo, por definir), para no facilitar tanto la exploración.
 - **«EL DESPERTAR»** cierra el prólogo al salir del cuarto viejo; después empieza el **Capítulo 1 — El origen digital**.
   Desde ahí el mapa se va abriendo por capítulos.
 

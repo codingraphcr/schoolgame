@@ -16,7 +16,7 @@ ciberseguridad: terminales con comandos reales, decisiones y combate. Estructura
 
 | Tema | Decisión |
 |---|---|
-| Prólogo | Visión involuntaria → PC del profesor (SPAM, terminal, «Contraseña débil», 2 elecciones) → invitación a unas instalaciones → desafío Visión Digital + terminal → cuarto viejo con la Nullblade oficial (dash y doble salto). **«EL DESPERTAR»** al final |
+| Prólogo | Visión involuntaria → PC del profesor (SPAM, terminal, «Contraseña débil», 2 elecciones) → invitación a unas instalaciones → desafío Visión Digital + terminal → cuarto viejo con la Nullblade oficial (dash). **«EL DESPERTAR»** al final |
 | Contraseña propia | En H4d el jugador **crea** la contraseña del profesor (reglas explicadas, código de respaldo; se guarda solo la huella). Tendrá que recordarla en el **capítulo 4** y en **misiones extra** |
 | Tienda de prueba | **La soda del colegio** (sistema ECOS, tarea E5) |
 | Orden | Contraseña propia ✅ → ECOS (E1 ✅ · E2 ✅ · E3 ✅ · E4 ✅) → mapa semi-procedural (M1 ✅ · M2 ✅ · M3 ✅ (escaleras y biblioteca, mapa por capítulos) · M4 ✅ (generador A–C y F: aula o depósito según la semilla) · M5 ✅ (mapa del Grimorio con el mapa real) · M6–M8) · H5 ✅ (invitación, pasillo viejo, terminal con contraseña, cuarto viejo, Nullblade, Grimorio y «EL DESPERTAR») → E5 → H5 |

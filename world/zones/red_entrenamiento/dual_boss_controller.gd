@@ -1,36 +1,49 @@
 class_name DualBossController
 extends Node
-## El combate contra Chip y Glitch (Capítulo 1) y su cierre. Sin límite de tiempo.
+## El combate contra Glitch y Chip (Capítulo 1) y su cierre. Sin límite de tiempo. Diseño de Ariel
+## (docs/arte/referencias/glitch_chip_concepto.webp): una sola barra de vida para los dos (funcionan
+## como una unidad) y tres fases con secuencias fijas («más rápidos, pero no aleatorios»):
 ##
-## 1. Al llegar: se registra el checkpoint (se guarda en la entrada de la arena), se cierra la puerta
-##    y se reproduce la introducción (texto de la especificación). Empieza el combate.
-## 2. Cada hermano pelea con su propia máquina de estados; además, cada combo_cooldown, si los dos
-##    están libres, este controlador ordena un ataque combinado (BossSynergy):
-##    · Camino cerrado: Chip cierra el paso del lado de Kai lejos de Glitch, y Glitch embiste.
-##    · Distracción: Glitch presiona con su combo mientras Chip prepara un disparo grande.
-##    · Trampa sincronizada: Chip pone trampas a los costados de Kai y Glitch salta encima.
-## 3. Escudo de Chip (a la mitad de su vida, una vez): **fase segura**. Los dos se van a su esquina,
-##    se borran los ataques, Kai no recibe daño y aparece una terminal: hay que leer escudo.cfg y
-##    elegir la corrección (mínimo privilegio). Después, el escudo se apaga y sigue la pelea.
-## 4. Furia fraternal: cuando uno queda neutralizado, el otro entra en furia (una sola vez).
-## 5. Si Kai pierde, reaparece en la entrada y la pelea vuelve a empezar (sin la introducción).
-## 6. Cuando los dos quedan neutralizados: cierre (diálogo, Fragmento de Datos, lectura del Grimorio,
-##    recompensas una sola vez) y aparece la conexión para volver al cuarto técnico.
+## - Fase 1 · Reconocimiento (100-70 %): alternan ataques individuales y algunos en conjunto sencillos.
+##   El jugador aprende sus señales.
+## - Fase 2 · Sincronización (70-35 %): encadenan ataques y cambian de posición. Se activa el anillo del
+##   fondo (Cámara de convergencia) y entra una segunda melodía en la música.
+## - Fase segura (al 35 %): Chip levanta un escudo ligado a una configuración insegura; la pelea se
+##   pausa y Kai lo desactiva en una terminal (mínimo privilegio).
+## - Fase 3 · Protocolo Dual / Furia fraternal (35-0 %): más rápidos, secuencias combinadas y su ataque
+##   definitivo, el Campo Dual.
+##
+## Ataques en conjunto: Intercepción cruzada, Corte y respuesta, Sincronización aérea, Cambio de
+## posición, Cadena de proyecciones y Campo Dual.
+## Vínculo: cuando uno queda aturdido (varios golpes seguidos), el otro abandona su ataque para
+## protegerlo hasta que se recupera.
+## Si Kai pierde, reaparece en la entrada y la pelea vuelve a empezar (sin la introducción). Con la vida
+## en cero quedan neutralizados (no mueren): cierre (diálogo, Fragmento de Datos, lectura del Grimorio,
+## recompensas una sola vez) y aparece la conexión para volver al cuarto técnico.
 
 signal fight_started
-signal combo_started(kind: StringName)
+signal phase_changed(number: int)
+signal pattern_started(pattern: StringName)
 signal safe_phase_changed(active: bool)
-signal rage_started(survivor: StringName)
+## protector: &"glitch" o &"chip" (el que protege al otro).
+signal guard_started(protector: StringName)
 signal victory
 
 enum Phase { WAITING, INTRO, FIGHT, SAFE, CLOSING, DONE }
 
 const QUEST := &"travesuras_en_el_sistema"
-const COMBOS: Array[StringName] = [&"camino_cerrado", &"distraccion", &"trampa_sincronizada"]
 const DONE_FLAG := &"cap1_hermanos_vencidos"
 const READING_FLAG := &"cap1_fragmento_leido"
 const REWARD_ID := &"capitulo1:hermanos"
 const FRAGMENT_LINES: PackedStringArray = ["ORIGEN: DESCONOCIDO", "ESTADO: INCOMPLETO", "OBSERVADOR: RECONOCIDO", "PROTOCOLO: [DATOS CORRUPTOS]"]
+## Secuencias de cada fase (se repiten en orden).
+const PHASE1: Array[StringName] = [&"corte_acelerado", &"discos_orbitales", &"salto_en_picada", &"zona_de_control",
+	&"intercepcion_cruzada", &"lanzamiento_de_fragmentos", &"rayo_de_sincronia", &"corte_y_respuesta"]
+const PHASE2: Array[StringName] = [&"cambio_de_posicion", &"embestida_y_discos", &"sincronizacion_aerea", &"proyecciones",
+	&"cadena_de_proyecciones", &"corte_y_respuesta", &"zona_y_picada"]
+const PHASE3: Array[StringName] = [&"cambio_de_posicion", &"intercepcion_cruzada", &"cadena_de_proyecciones",
+	&"sincronizacion_aerea", &"campo_dual"]
+const PHASE_NAMES := { 2: "FASE 2 · SINCRONIZACIÓN", 3: "¡FURIA FRATERNAL! · PROTOCOLO DUAL" }
 
 @export var config: DualBossConfig
 @export var chip: ChipBoss
@@ -39,7 +52,8 @@ const FRAGMENT_LINES: PackedStringArray = ["ORIGEN: DESCONOCIDO", "ESTADO: INCOM
 @export var gate: ArenaBarrier
 ## Conexión para volver al cuarto técnico (aparece al final).
 @export var exit_portal: ImmersionPortal
-@export var platforms: Array[DataPlatform] = []
+## El fondo de la arena (su anillo se activa en la Fase 2).
+@export var chamber: ConvergenceChamber
 ## Dónde aparece la terminal del escudo.
 @export var terminal_position := Vector2(120, 304)
 @export var shield_terminal: TerminalChallenge
@@ -55,26 +69,37 @@ const FRAGMENT_LINES: PackedStringArray = ["ORIGEN: DESCONOCIDO", "ESTADO: INCOM
 @export var skip_cinematics := false
 
 var phase := Phase.WAITING
-var combos_done: Array[StringName] = []
-## Quién quedó en pie al empezar la furia (&"chip" o &"glitch"; vacío si todavía no).
-var rage_survivor: StringName = &""
+## Fase de la pelea: 1 Reconocimiento, 2 Sincronización, 3 Protocolo Dual.
+var fight_phase := 1
+## La vida de los dos (una sola barra).
+var health: HealthComponent
+var patterns_done: Array[StringName] = []
 var terminal: TerminalStation
 
 var _room: Room
-var _combo_cd := 0.0
-var _combo_index := 0
-var _bars: Array[BossBar] = []
+var _bar: BossBar
 var _banner: Label
+var _index := 0
+var _cooldown := 0.0
+var _running := false
+## Cambia cuando se corta la secuencia en curso (aturdido, fase segura, reinicio).
+var _token := 0
 
 
 func _ready() -> void:
 	_room = get_parent() as Room
+	health = HealthComponent.new()
+	health.name = "SharedHealth"
+	health.max_health = config.shared_health
+	add_child(health)
+	health.health_changed.connect(_on_health_changed)
+	health.died.connect(_on_health_depleted)
 	for boss: SiblingBoss in [chip, glitch]:
-		boss.apply_config(config)
+		boss.config = config
 		boss.ai_enabled = false
-		boss.neutralized.connect(_on_neutralized)
-	chip.platforms = platforms
-	chip.shield_requested.connect(_on_shield_requested)
+		boss.share_health(health)
+		boss.incapacitated.connect(_on_incapacitated)
+		boss.recovered.connect(_on_recovered)
 	exit_portal.visible = false
 	exit_portal.process_mode = Node.PROCESS_MODE_DISABLED
 	_room.player_respawned.connect(_on_player_respawned)
@@ -86,37 +111,273 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if phase != Phase.FIGHT or chip.is_dead or glitch.is_dead:
+	if phase != Phase.FIGHT or _running or _protecting():
 		return
-	_combo_cd -= delta
-	if _combo_cd <= 0.0 and not chip.busy and not glitch.busy:
-		start_combo(COMBOS[_combo_index % COMBOS.size()])
-		_combo_index += 1
+	_cooldown -= delta
+	if _cooldown <= 0.0:
+		var sequence := _sequence()
+		start_pattern(sequence[_index % sequence.size()])
+		_index += 1
 
 
-## Ataque combinado (lo usa el ciclo de la pelea y las pruebas).
-func start_combo(kind: StringName) -> void:
-	_combo_cd = config.combo_cooldown
-	combos_done.append(kind)
-	combo_started.emit(kind)
-	var kai := _room.player.global_position
-	match kind:
-		&"camino_cerrado":
-			var away := 1.0 if kai.x >= glitch.global_position.x else -1.0
-			chip.command_wall(kai.x + away * 60.0)
-			_delayed(func() -> void: glitch.charge(), 0.45)
-		&"distraccion":
-			glitch.combo()
-			chip.command_big_shot()
-		&"trampa_sincronizada":
-			chip.command_traps([kai.x - 70.0, kai.x + 70.0])
-			_delayed(func() -> void: glitch.leap(), config.chip_trap_telegraph + config.chip_trap_arm)
+func _sequence() -> Array[StringName]:
+	match fight_phase:
+		2:
+			return PHASE2
+		3:
+			return PHASE3
+	return PHASE1
 
 
-func _delayed(callback: Callable, seconds: float) -> void:
-	await get_tree().create_timer(seconds, false, true).timeout
-	if phase == Phase.FIGHT and not glitch.is_dead:
-		callback.call()
+func _pause() -> float:
+	match fight_phase:
+		2:
+			return config.pause_phase2
+		3:
+			return config.pause_phase3
+	return config.pause_phase1
+
+
+## Si uno está aturdido (y el otro lo protege): mientras tanto no empiezan ataques nuevos.
+func _protecting() -> bool:
+	return chip.stunned or glitch.stunned
+
+
+## Ejecuta un ataque (individual o en conjunto). Lo usa el ciclo de la pelea y las pruebas.
+func start_pattern(pattern: StringName) -> void:
+	_running = true
+	_token += 1
+	var token := _token
+	patterns_done.append(pattern)
+	pattern_started.emit(pattern)
+	await _pattern(pattern, token)
+	if token == _token:
+		_running = false
+		_cooldown = _pause()
+
+
+func _alive(token: int) -> bool:
+	return token == _token and phase == Phase.FIGHT
+
+
+func _pattern(pattern: StringName, token: int) -> void:
+	match pattern:
+		&"corte_acelerado":
+			await glitch.corte_acelerado()
+		&"salto_en_picada":
+			await glitch.salto_en_picada()
+		&"embestida_en_cadena":
+			await glitch.embestida_en_cadena()
+		&"lanzamiento_de_fragmentos":
+			await glitch.lanzamiento_de_fragmentos()
+		&"discos_orbitales":
+			await chip.discos_orbitales(1 if fight_phase == 1 else 2)
+		&"zona_de_control":
+			await chip.zona_de_control()
+		&"proyecciones":
+			await chip.proyecciones()
+		&"rayo_de_sincronia":
+			await chip.rayo_de_sincronia()
+		&"intercepcion_cruzada":
+			await _intercepcion_cruzada(token)
+		&"corte_y_respuesta":
+			await _corte_y_respuesta(token)
+		&"sincronizacion_aerea":
+			await _sincronizacion_aerea(token)
+		&"cambio_de_posicion":
+			await _cambio_de_posicion(token)
+		&"cadena_de_proyecciones":
+			await _cadena_de_proyecciones(token)
+		&"embestida_y_discos":
+			glitch.embestida_en_cadena()
+			await chip.discos_orbitales(2)
+			await _until_free(glitch, token)
+		&"zona_y_picada":
+			await chip.zona_de_control()
+			if _alive(token):
+				await glitch.salto_en_picada()
+		&"campo_dual":
+			await _campo_dual(token)
+
+
+## Espera a que boss termine su ataque (o a que se corte la secuencia).
+func _until_free(boss: SiblingBoss, token: int) -> void:
+	while boss.busy and _alive(token):
+		await get_tree().physics_frame
+
+
+## Los dos aparecen en sus lugares con un parpadeo (para los ataques en conjunto).
+func _positions(glitch_x: float, chip_x: float, token: int) -> bool:
+	var ge := glitch.begin_attack()
+	var ce := chip.begin_attack()
+	if ge < 0 or ce < 0:
+		glitch.end_attack(ge)
+		chip.end_attack(ce)
+		return false
+	glitch.blink_to(glitch_x, ge)
+	await chip.blink_to(chip_x, ce)
+	await get_tree().create_timer(0.05, false, true).timeout
+	glitch.end_attack(ge)
+	chip.end_attack(ce)
+	return _alive(token)
+
+
+## 1. Intercepción cruzada: atacan desde lados opuestos a la vez (Glitch corta, Chip lanza un disco).
+func _intercepcion_cruzada(token: int) -> void:
+	var kai_x := _room.player.global_position.x
+	var glitch_left := kai_x > (glitch.arena_left + glitch.arena_right) / 2.0
+	var left := glitch.arena_left + 10.0
+	var right := glitch.arena_right - 10.0
+	if not await _positions(left if glitch_left else right, right if glitch_left else left, token):
+		return
+	glitch.corte_acelerado(1.0 if glitch_left else -1.0)
+	await chip.discos_orbitales(1)
+	await _until_free(glitch, token)
+
+
+## 2. Corte y respuesta: Glitch inicia con su corte, Chip completa con el rayo donde quedó Kai.
+func _corte_y_respuesta(token: int) -> void:
+	await glitch.corte_acelerado()
+	if _alive(token):
+		await chip.rayo_de_sincronia()
+
+
+## 3. Sincronización aérea: los dos saltan y atacan en el aire (picada y discos hacia abajo).
+func _sincronizacion_aerea(token: int) -> void:
+	glitch.salto_en_picada()
+	var epoch := chip.begin_attack()
+	if epoch < 0:
+		return
+	chip.face_player()
+	if await chip.telegraph(&"sincronizacion_aerea", config.chip_disc_telegraph, epoch):
+		chip.velocity = Vector2(0, -sqrt(2.0 * 900.0 * 70.0))
+		await get_tree().create_timer(0.3, false, true).timeout
+		if chip.still(epoch):
+			chip.throw_discs(2)
+		while chip.still(epoch) and not chip.is_on_floor():
+			await get_tree().physics_frame
+	chip.end_attack(epoch)
+	await _until_free(glitch, token)
+
+
+## 4. Cambio de posición: preparan su ataque, se intercambian de lugar en plena secuencia y lo
+## lanzan desde el otro lado.
+func _cambio_de_posicion(token: int) -> void:
+	var ge := glitch.begin_attack()
+	var ce := chip.begin_attack()
+	if ge < 0 or ce < 0:
+		glitch.end_attack(ge)
+		chip.end_attack(ce)
+		return
+	glitch.face_player()
+	chip.face_player()
+	glitch.telegraph(&"cambio_de_posicion", 0.45, ge)
+	if not await chip.telegraph(&"cambio_de_posicion", 0.45, ce):
+		glitch.end_attack(ge)
+		chip.end_attack(ce)
+		return
+	var glitch_x := glitch.global_position.x
+	var chip_x := chip.global_position.x
+	glitch.blink_to(chip_x, ge)
+	await chip.blink_to(glitch_x, ce)
+	glitch.end_attack(ge)
+	chip.end_attack(ce)
+	if not _alive(token):
+		return
+	glitch.corte_acelerado()
+	await chip.discos_orbitales(1 if fight_phase == 1 else 2)
+	await _until_free(glitch, token)
+
+
+## 5. Cadena de proyecciones: Chip crea copias mientras Glitch presiona con su embestida.
+func _cadena_de_proyecciones(token: int) -> void:
+	chip.proyecciones(3 if fight_phase == 3 else 2)
+	await glitch.embestida_en_cadena()
+	await _until_free(chip, token)
+
+
+## 6. Campo Dual (ataque definitivo): el piso se vuelve peligroso salvo un hueco seguro (lejos de
+## Kai, para obligarlo a moverse; las plataformas también son seguras) y Glitch lanza fragmentos.
+func _campo_dual(token: int) -> void:
+	var center := (glitch.arena_left + glitch.arena_right) / 2.0
+	if not await _positions(center - 50.0, center + 50.0, token):
+		return
+	var ge := glitch.begin_attack()
+	var ce := chip.begin_attack()
+	if ge < 0 or ce < 0:
+		glitch.end_attack(ge)
+		chip.end_attack(ce)
+		return
+	glitch.telegraph(&"campo_dual", 0.5, ge)
+	if not await chip.telegraph(&"campo_dual", 0.5, ce):
+		glitch.end_attack(ge)
+		chip.end_attack(ce)
+		return
+	var kai_x := _room.player.global_position.x
+	var gap_x := glitch.arena_right - 50.0 if kai_x < center else glitch.arena_left + 50.0
+	var field := BossAttacks.field(get_parent(), SiblingBoss.FLOOR_Y, glitch.arena_left - 40.0, glitch.arena_right + 40.0, gap_x, config, glitch.telegraph_scale)
+	Sfx.play(&"boss_charge", 0.8)
+	var throws := 0
+	var elapsed := 0.0
+	var total := field.warning + field.duration
+	while elapsed < total and glitch.still(ge) and chip.still(ce):
+		if throws < 2 and elapsed >= field.warning + throws * 1.1:
+			throws += 1
+			glitch.face_player()
+			glitch.throw_fragments(_room.player.global_position + Vector2(0, -16), 3)
+		await get_tree().physics_frame
+		elapsed += get_physics_process_delta_time()
+	glitch.end_attack(ge)
+	chip.end_attack(ce)
+
+
+## --- Vínculo: proteger al hermano aturdido ---
+
+func _on_incapacitated(boss: SiblingBoss) -> void:
+	if phase != Phase.FIGHT:
+		return
+	var other: SiblingBoss = glitch if boss == chip else chip
+	_token += 1
+	_running = false
+	if other.is_dead or other.stunned:
+		return
+	other.guard_for(boss)
+	guard_started.emit(&"glitch" if other == glitch else &"chip")
+
+
+func _on_recovered(boss: SiblingBoss) -> void:
+	for other: SiblingBoss in [chip, glitch]:
+		if other.guarding == boss:
+			other.stop_guarding()
+	_cooldown = _pause()
+
+
+## --- Fases ---
+
+func _on_health_changed(current: float, maximum: float) -> void:
+	if phase != Phase.FIGHT:
+		return
+	var ratio := current / maximum
+	if fight_phase == 1 and ratio <= config.phase2_at:
+		_enter_phase(2)
+	if fight_phase == 2 and ratio <= config.phase3_at and current > 0.0:
+		_start_safe_phase()
+
+
+func _enter_phase(number: int) -> void:
+	fight_phase = number
+	_index = 0
+	if number >= 2 and chamber:
+		chamber.active = true
+	if number >= 2:
+		Music.set_layer(true)
+	if number == 3:
+		for boss: SiblingBoss in [chip, glitch]:
+			boss.enter_rage()
+			boss.tempo = config.phase3_speed_scale
+			boss.telegraph_scale = config.phase3_telegraph_scale
+	get_tree().call_group(&"toast", &"show_message", PHASE_NAMES.get(number, ""), 2.2)
+	phase_changed.emit(number)
 
 
 func _start() -> void:
@@ -136,34 +397,44 @@ func _start() -> void:
 
 func _begin_fight() -> void:
 	phase = Phase.FIGHT
-	_combo_cd = config.combo_cooldown
+	fight_phase = 1
+	_index = 0
+	_running = false
+	_cooldown = 0.6
+	if chamber:
+		chamber.active = false
+	Music.play(&"hermanos")
+	Music.set_layer(false)
 	for boss: SiblingBoss in [chip, glitch]:
 		boss.ai_enabled = true
-	var hud := _room.get_node("CombatHUD")
-	for bar in _bars:
-		if is_instance_valid(bar):
-			bar.queue_free()
-	_bars.clear()
-	var chip_bar := BossBar.show_for(hud, chip, "CHIP", 0, Color("5ad8ff"))
-	chip_bar.phase_mark = config.chip_shield_at
-	var glitch_bar := BossBar.show_for(hud, glitch, "GLITCH", 1, Color("ff8a3a"))
-	glitch_bar.phase_mark = -1.0
-	_bars = [chip_bar, glitch_bar]
+	if is_instance_valid(_bar):
+		_bar.queue_free()
+	_bar = BossBar.show_for(_room.get_node("CombatHUD"), glitch, "GLITCH & CHIP", 0, SiblingArt.GLITCH)
+	_bar.color_to = SiblingArt.CHIP
+	_bar.phase_mark = config.phase2_at
+	_bar.phase_marks = [config.phase3_at]
 	fight_started.emit()
 
 
-## --- Fase segura: el escudo de Chip ---
+## --- Fase segura: el escudo de Chip (al 35 %) ---
 
-func _on_shield_requested() -> void:
+func _start_safe_phase() -> void:
 	if phase != Phase.FIGHT:
 		return
 	phase = Phase.SAFE
+	_token += 1
+	_running = false
 	for boss: SiblingBoss in [chip, glitch]:
-		if not boss.is_dead:
-			boss.frozen = true
+		if boss.guarding:
+			boss.stop_guarding()
+		boss.stunned = false
+		boss.frozen = true
+		boss.hurtbox.immune = true
+	chip.shield_on()
 	for attack in get_tree().get_nodes_in_group(&"boss_attack"):
 		attack.queue_free()
 	_room.player.damage.protected = true
+	_room.player.speed_scale = 1.0
 	_show_banner("FASE SEGURA · Corrige la configuración del escudo de Chip")
 	safe_phase_changed.emit(true)
 	await _play(shield_dialogue)
@@ -185,7 +456,7 @@ func _on_terminal_solved() -> void:
 	end_safe_phase()
 
 
-## Termina la fase segura: el escudo se apaga y sigue la pelea.
+## Termina la fase segura: el escudo se apaga y empieza el Protocolo Dual (Furia fraternal).
 func end_safe_phase() -> void:
 	if phase != Phase.SAFE:
 		return
@@ -196,23 +467,19 @@ func end_safe_phase() -> void:
 	await _play(shield_broken_dialogue)
 	_room.player.damage.protected = false
 	phase = Phase.FIGHT
-	_combo_cd = config.combo_cooldown
 	for boss: SiblingBoss in [chip, glitch]:
 		boss.frozen = false
+		boss.hurtbox.immune = false
 	safe_phase_changed.emit(false)
+	_cooldown = 0.8
+	_enter_phase(3)
 
 
-## --- Furia fraternal y final ---
+## --- Final ---
 
-func _on_neutralized(boss: SiblingBoss) -> void:
-	var other: SiblingBoss = glitch if boss == chip else chip
-	if not other.is_dead:
-		if rage_survivor == &"":
-			rage_survivor = &"glitch" if other == glitch else &"chip"
-			other.enter_rage()
-			get_tree().call_group(&"toast", &"show_message", "¡FURIA FRATERNAL!", 2.0)
-			rage_started.emit(rage_survivor)
-		return
+func _on_health_depleted() -> void:
+	for boss: SiblingBoss in [chip, glitch]:
+		boss.neutralize()
 	_victory()
 
 
@@ -220,12 +487,12 @@ func _victory() -> void:
 	if phase in [Phase.CLOSING, Phase.DONE]:
 		return
 	phase = Phase.CLOSING
+	_token += 1
 	for attack in get_tree().get_nodes_in_group(&"boss_attack"):
 		attack.queue_free()
-	for bar in _bars:
-		if is_instance_valid(bar):
-			bar.dismiss()
-	_bars.clear()
+	_room.player.speed_scale = 1.0
+	if is_instance_valid(_bar):
+		_bar.dismiss()
 	_room.player.damage.protected = true
 	var state := get_node("/root/GameState")
 	state.set_flag(DONE_FLAG)
@@ -236,6 +503,7 @@ func _victory() -> void:
 	# Recompensa única (aunque se repita la pelea o se cargue la partida).
 	var economy := get_node("/root/Economy")
 	economy.claim_reward(REWARD_ID, economy.reward_for(EconomyConfig.Source.BOSS))
+	Music.set_layer(false)
 	victory.emit()
 	await _play(closing_dialogue)
 	# Chip deja caer un Fragmento de Datos y el Grimorio lo lee.
@@ -274,16 +542,18 @@ func _on_player_respawned() -> void:
 	if phase not in [Phase.FIGHT, Phase.SAFE]:
 		return
 	# Kai perdió: la pelea vuelve a empezar (sin la introducción).
+	_token += 1
 	for attack in get_tree().get_nodes_in_group(&"boss_attack"):
 		attack.queue_free()
 	if is_instance_valid(terminal):
 		terminal.queue_free()
 	_hide_banner()
 	_room.player.damage.protected = false
-	rage_survivor = &""
-	combos_done.clear()
+	_room.player.speed_scale = 1.0
+	patterns_done.clear()
 	for boss: SiblingBoss in [chip, glitch]:
 		boss.restore()
+	health.restore_full()
 	_begin_fight()
 
 

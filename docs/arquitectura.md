@@ -641,30 +641,34 @@ Caídas: `Room.fall_damage` (1,5 aquí) y `PlayerDamage.fall_out_of_bounds(damag
 segura. `PlayerDamage.protected` lo protege mientras la historia lo pide. `Room.player_respawned` avisa al reaparecer
 después de morir.
 
-## Jefe doble: Chip y Glitch (Capítulo 1)
+## Jefe doble: Glitch y Chip (Capítulo 1)
 
-La arena (`world/zones/red_entrenamiento/arena_hermanos.tscn`, después del tercer tramo). Valores en
-`data/bosses/chip_glitch.tres` (`DualBossConfig`). Arte provisional por código.
+La arena (`world/zones/red_entrenamiento/arena_hermanos.tscn`, después del tercer tramo), con el fondo
+**Cámara de convergencia** (`ConvergenceChamber`: columnas y un gran anillo que se enciende en la Fase 2). Valores en
+`data/bosses/chip_glitch.tres` (`DualBossConfig`). Diseño de Ariel: `docs/arte/referencias/glitch_chip_concepto.webp`;
+sus vistas de frente y el disco salen con `tools/art/extraer_personajes_concepto.gd -- hermanos` →
+`assets/art/characters/hermanos/hd/` (de lado la armadura blanca se confundía con el fondo claro). El movimiento
+(inclinarse, estirarse, temblar, rastros) y los efectos de los ataques los dibuja el juego.
 
 | Pieza | Responsabilidad |
 |---|---|
-| `SiblingBoss` | Base de los dos: barra propia, máquina de estados propia (`_ai`), `telegraph()` antes de cada ataque, `frozen` (fase segura), `enter_rage()` una vez, `restore()`. **Nunca mueren:** al llegar a cero quedan neutralizados (mareados) y no se borran |
-| `ChipBoss` | Flota; disparos (`DataShot`), trampas (`DataTrap`), barreras (`ChipWall`), apaga plataformas (`DataPlatform.force_close`) y pide el escudo a la mitad de su vida. Furia: abanico, trampas dobles y rápidas, pulsos si Kai se acerca |
-| `GlitchBoss` | Corre con amagues; embestida, salto ofensivo y combo de tres, con un momento vulnerable después. Furia: más rápido, embestidas encadenadas, salto + combo |
-| `DualBossController` | Checkpoint al llegar, introducción, dos `BossBar` (fila 0 y 1), ataques combinados cada `combo_cooldown` (Camino cerrado, Distracción, Trampa sincronizada), fase segura del escudo (los dos quietos, ataques borrados, `PlayerDamage.protected`, terminal `escudo_chip` y desafío `cap1_escudo_chip`), furia del que queda, reinicio si Kai pierde, y el cierre (diálogo, `FragmentReading`, recompensa única `capitulo1:hermanos`, salida al cuarto técnico) |
+| `SiblingBoss` | Base de los dos: vida compartida (`share_health`), `telegraph()` (un «!» de su color) antes de cada ataque, aturdido con `stagger_hits` golpes seguidos (`incapacitated` / `recovered`), proteger al hermano (`guard_for`), `blink_to` / `jump` / `walk_to`, `frozen` (fase segura), `tempo` y `telegraph_scale` (Fase 3), `restore()`. **Nunca mueren:** con la vida en cero quedan neutralizados (mareados) y no se borran |
+| `GlitchBoss` | Corte acelerado, Salto en picada (marca el piso), Embestida en cadena y Lanzamiento de fragmentos (`DataShot` rosa, alargado); queda vulnerable después de atacar; protegiendo a Chip, contraataca si Kai se acerca |
+| `ChipBoss` | Discos orbitales (`DiscShot`: se curvan hacia Kai y vuelven), Zona de control (`ControlZone`: `Player.speed_scale`), Proyecciones (`ChipCopy`: copias que lanzan un disco; un golpe las deshace) y Rayo de sincronía (`SyncBeam`); escudo de la fase segura y escudo de discos protegiendo a Glitch (los golpes rebotan: `HurtboxComponent.hit_blocked`) |
+| `DualBossController` | Checkpoint al llegar, introducción, una `BossBar` «GLITCH & CHIP» (rosa → azul, marcas al 70 % y 35 %), secuencias fijas por fase (`PHASE1` / `PHASE2` / `PHASE3`) con los 6 ataques en conjunto (Intercepción cruzada, Corte y respuesta, Sincronización aérea, Cambio de posición, Cadena de proyecciones, Campo Dual: `DualField`), el vínculo (si uno queda aturdido, el otro deja su ataque y lo protege), Fase 2 (anillo y `Music.set_layer`: la segunda melodía), fase segura del escudo al 35 % (los dos quietos, ataques borrados, `PlayerDamage.protected`, terminal `escudo_chip` y desafío `cap1_escudo_chip`), Fase 3 (Protocolo Dual / Furia fraternal), reinicio si Kai pierde y el cierre (diálogo, `FragmentReading`, recompensa única `capitulo1:hermanos`, salida al cuarto técnico) |
 
 ## Capítulo 1 en las salas (nivel 1 y final)
 
 | Pieza | Dónde | Qué hace |
 |---|---|---|
-| `ClassScene` | Sala 3 (`sala_3.tscn`, ficha `sala_3`: aula fija debajo del Pasillo en el mapa, puerta `sala_3` ↔ `pasillo` de clase puerta, se abre en el Capítulo 1) | La clase (profesor y compañeros de espaldas con `StoryPresence`; computadoras de práctica que fallan: `ClassroomProps.computers` / `glitching`), el registro en la terminal del puesto de Kai (`registro_entrenamiento`) y el desafío «Comportamiento anómalo»; después, una **cinemática** (sin control): Kai mira con la Visión Digital, la cámara va a los monitores, Chip y Glitch se dan cuenta y escapan por la puerta; la cámara vuelve a Kai y empieza la persecución. Pasos: `ir_a_clase` → `revisar_registro` → `ver_fallas` (la cinemática; si se carga la partida en ese paso, se repite) → `seguir_criaturas` |
+| `ClassScene` | Sala 3 (`sala_3.tscn`, ficha `sala_3`: aula fija debajo del Pasillo en el mapa; la conexión `sala_3` ↔ `pasillo` es de clase paso, porque las de clase puerta solo van a los lados; se abre en el Capítulo 1) | La clase (profesor y compañeros de espaldas con `StoryPresence`; computadoras de práctica que fallan: `ClassroomProps.computers` / `glitching`), el registro en la terminal del puesto de Kai (`registro_entrenamiento`) y el desafío «Comportamiento anómalo»; después, una **cinemática** (sin control): Kai mira con la Visión Digital, la cámara va a los monitores, Chip y Glitch se dan cuenta y escapan por la puerta; la cámara vuelve a Kai y empieza la persecución. Pasos: `ir_a_clase` → `revisar_registro` → `ver_fallas` (la cinemática; si se carga la partida en ese paso, se repite) → `seguir_criaturas` |
 | `SiblingRun` | Pasillo y escaleras | Persecución corta: los hermanos avanzan cuando Kai se acerca y desaparecen al final del camino. En el Pasillo arranca frente a la puerta de la Sala 3 (al este) y va hasta las escaleras |
 | `CatalogScene` | Biblioteca | El archivo privado en el catálogo y el desafío «Un archivo que no es tuyo» |
 | `QuestTrigger` (`completes_step = false`, `once_flag`) | Escaleras | Kai piensa en la puerta cerrada del cuarto técnico (una vez) |
 | Profesor (`NpcConversation`) | Sala 3 | Recordatorios durante la clase y el permiso para el cuarto técnico («NIVEL 1 COMPLETADO») |
 | `TechRoomStory` | Cuarto técnico | El servidor en rojo y los hermanos que se meten en la computadora; al final, la charla con el profesor, Kai se va y aparece `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
 
-`SiblingActor` es Chip o Glitch como personaje de escena (sin pelear); `SiblingArt` es su dibujo (lo comparten con el
+`SiblingActor` es Chip o Glitch como personaje de escena (sin pelear); `SiblingArt` es su dibujo con los sprites de Ariel (lo comparten con el
 jefe). `StoryPresence` muestra u oculta a un personaje según la misión (el profesor del pasillo no está durante el
 capítulo). `StoryHelper` reproduce un diálogo con Kai quieto o repite un desafío hasta completarlo. `TerminalStation`
 puede usarse en un paso sin completarlo (`completes_step = false`) y avisa con `solved`.
@@ -805,7 +809,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_inmersion.gd` | Capítulo 1, etapa 2: la conexión del monitor solo con la Visión Digital, la primera vez con diálogo y la transición «INMERSIÓN DIGITAL», la habilidad permanente (partida, validador, «Mi perfil», Grimorio) y la segunda vez sin repetir nada |
 | `test_cuarto_tecnico.gd` | Capítulo 1, etapa 3: el cuarto técnico en el mapa, el descanso nuevo de las escaleras con la física real, la puerta cerrada con llave hasta el permiso del profesor (y que se abra con Kai parado ahí), la conexión del monitor solo cuando la historia lo pide, la vuelta y continuar una partida guardada ahí |
 | `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo salto + dash (sin doble salto), la barrera (empieza detrás de Kai, 1 por contacto, invulnerabilidad, sin daño en cada cuadro, después de cada checkpoint queda a 260 px detrás y nunca delante), los nodos que disparan (con aviso y dañan), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
-| `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11: checkpoint y sin temporizador, vida y barras independientes, ataques con aviso, los tres combos, fase segura con terminal, furia según quién sobrevive, los dos órdenes de derrota, hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |
+| `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11 (Glitch y Chip, diseño de Ariel): checkpoint y sin temporizador, una sola barra y vida compartida, los 8 ataques individuales y los 6 en conjunto con su aviso, el vínculo (el otro protege al aturdido), las tres fases (anillo y segunda melodía en la 2, fase segura con terminal al 35 %, Protocolo Dual / Furia fraternal), hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |
 | `test_capitulo1_historia.gd` | Capítulo 1, la historia de punta a punta: el prólogo lleva al capítulo, la Sala 3 (cerrada en el prólogo; se entra y se sale por su puerta con E), la clase, el registro y su desafío, la cinemática de los hermanos (Visión, cámara, escape), la persecución corta, la biblioteca, el permiso («NIVEL 1 COMPLETADO»), el servidor y el final con `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
 | `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |
 | `test_generador.gd` | M4: con fichas de prueba, la parte fija intacta, misma semilla = mismo mapa, 40 semillas válidas y distintas, solo puertas compatibles, respaldo si la parte variable no valida y error si la fija está mal; con los datos reales, aula o depósito al este de la biblioteca, el mapa se rearma igual al cargar, dos aulas con la misma escena, la puerta libre cerrada y continuar en la misma aula |

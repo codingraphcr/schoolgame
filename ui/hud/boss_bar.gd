@@ -5,7 +5,8 @@ extends Control
 ## empieza la fase 2; lo que se pierde queda un instante en blanco antes de bajar. En la fase 2 la
 ## barra tiembla un poco, como sus ventanas inestables.
 ## Uso: var bar := BossBar.show_for(hud, jefe, "CONTRASEÑA DÉBIL")  ·  bar.dismiss()
-## Con dos jefes a la vez (Chip y Glitch), slot 1 va debajo de la primera. phase_mark < 0 = sin marca.
+## Con dos jefes a la vez, slot 1 va debajo de la primera. phase_mark < 0 = sin marca; phase_marks:
+## marcas de más fases. Con color_to, la barra pasa de color a color_to (Glitch y Chip comparten una).
 
 const MAGENTA := Color("ff3ea5")
 const PINK := Color("ff9ccf")
@@ -22,6 +23,10 @@ var phase_mark := 0.5
 var slot := 0
 ## Color de la barra (magenta por defecto).
 var color := MAGENTA
+## Marcas de otras fases (fracciones de vida).
+var phase_marks: Array[float] = []
+## Si tiene alfa, la barra va de color (izquierda) a color_to (derecha).
+var color_to := Color(0, 0, 0, 0)
 
 var _shown := 1.0
 var _trail := 1.0
@@ -98,8 +103,20 @@ func _draw() -> void:
 	draw_rect(bar.grow(2), EDGE, false, 1.0)
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x * _trail, bar.size.y)), Color(1, 0.85, 0.95, 0.85))
 	var fill := color.lerp(Color("ff2a55"), 0.35 if unstable else 0.0)
-	draw_rect(Rect2(bar.position, Vector2(bar.size.x * _shown, bar.size.y)), fill)
+	if color_to.a > 0.0:
+		# Dos colores (Glitch rosa y Chip azul): la barra se dibuja en franjas que van de uno al otro.
+		var steps := 24
+		var filled := bar.size.x * _shown
+		for k in steps:
+			var x0 := bar.size.x * k / steps
+			if x0 >= filled:
+				break
+			var w := minf(bar.size.x / steps + 1.0, filled - x0)
+			draw_rect(Rect2(bar.position + Vector2(x0, 0), Vector2(w, bar.size.y)), fill.lerp(color_to, float(k) / (steps - 1)))
+	else:
+		draw_rect(Rect2(bar.position, Vector2(bar.size.x * _shown, bar.size.y)), fill)
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x * _shown, 2)), Color(PINK, 0.8))
-	if phase_mark >= 0.0:
-		var mark := bar.position.x + bar.size.x * phase_mark
-		draw_line(Vector2(mark, bar.position.y - 3), Vector2(mark, bar.end.y + 3), PINK, 1.5)
+	for at: float in [phase_mark] + phase_marks:
+		if at >= 0.0:
+			var mark := bar.position.x + bar.size.x * at
+			draw_line(Vector2(mark, bar.position.y - 3), Vector2(mark, bar.end.y + 3), PINK, 1.5)

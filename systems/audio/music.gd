@@ -4,8 +4,11 @@ extends Node
 ## Busca assets/audio/music/<pista>.ogg (o .mp3 / .wav) y la reproduce en bucle por el bus "Music"
 ## (volumen de Música en Opciones), con un fundido entre pistas. Si el archivo no existe, la
 ## música se apaga (todavía no hay pistas: basta con dejar los archivos con estos nombres).
-## Pistas que usa el juego: menu, colegio, computadora, pelea. Mientras no haya archivo, "computadora"
-## (la parte del ojo de la entidad) tiene una música provisional generada por código.
+## Pistas que usa el juego: menu, colegio, computadora, pelea, hermanos. Mientras no haya archivo,
+## "computadora" (la parte del ojo de la entidad) y "hermanos" (la pelea contra Glitch y Chip) tienen
+## una música provisional generada por código.
+## Capa extra: si existe <pista>_capa2, suena junto con la pista, en silencio hasta Music.set_layer(true)
+## (en la pelea contra los gemelos, la segunda melodía entra en la Fase 2).
 
 const FOLDER := "res://assets/audio/music/"
 const FADE := 0.8
@@ -16,8 +19,11 @@ static var _instance: Music
 static var _generated: Dictionary[StringName, AudioStream] = {}
 ## Cuánto está bajada la música (Music.duck), en dB.
 static var _duck_db := 0.0
+## Si la capa extra (<pista>_capa2) se oye.
+static var layer_on := false
 
 var _player: AudioStreamPlayer
+var _layer: AudioStreamPlayer
 var _tween: Tween
 
 
@@ -43,6 +49,16 @@ static func duck(volume_db: float, seconds := 0.5) -> void:
 	if not is_instance_valid(_instance) or not _instance._player.playing:
 		return
 	_instance.create_tween().tween_property(_instance._player, "volume_db", volume_db, seconds)
+	if layer_on and _instance._layer.playing:
+		_instance.create_tween().tween_property(_instance._layer, "volume_db", volume_db, seconds)
+
+
+## Enciende o apaga la capa extra de la pista actual (con un fundido).
+static func set_layer(on: bool, seconds := 1.5) -> void:
+	layer_on = on
+	if not is_instance_valid(_instance) or not _instance._layer.playing:
+		return
+	_instance.create_tween().tween_property(_instance._layer, "volume_db", _duck_db if on else -60.0, seconds)
 
 
 static func stream_for(track: StringName) -> AudioStream:
@@ -50,9 +66,15 @@ static func stream_for(track: StringName) -> AudioStream:
 		var path := FOLDER + String(track) + ext
 		if ResourceLoader.exists(path):
 			return load(path)
-	if track == &"computadora":
+	if track in [&"computadora", &"hermanos", &"hermanos_capa2"]:
 		if not _generated.has(track):
-			_generated[track] = _entity_ambient()
+			match track:
+				&"computadora":
+					_generated[track] = _entity_ambient()
+				&"hermanos":
+					_generated[track] = _twins_track(false)
+				&"hermanos_capa2":
+					_generated[track] = _twins_track(true)
 		return _generated[track]
 	return null
 
@@ -62,6 +84,9 @@ func _init() -> void:
 	_player = AudioStreamPlayer.new()
 	_player.bus = GameSettings.MUSIC_BUS
 	add_child(_player)
+	_layer = AudioStreamPlayer.new()
+	_layer.bus = GameSettings.MUSIC_BUS
+	add_child(_layer)
 
 
 func _switch(track: StringName) -> void:
@@ -71,15 +96,23 @@ func _switch(track: StringName) -> void:
 	_tween = create_tween()
 	if _player.playing:
 		_tween.tween_property(_player, "volume_db", -40.0, FADE * 0.5)
+	var layer_stream := Music.stream_for(StringName(String(track) + "_capa2"))
 	_tween.tween_callback(func() -> void:
 		_player.stop()
+		_layer.stop()
 		if stream == null:
 			return
-		if stream is AudioStreamOggVorbis or stream is AudioStreamMP3:
-			stream.loop = true
+		for s: AudioStream in [stream, layer_stream]:
+			if s is AudioStreamOggVorbis or s is AudioStreamMP3:
+				s.loop = true
 		_player.stream = stream
 		_player.volume_db = -40.0
-		_player.play())
+		_player.play()
+		# La capa empieza junto con la pista (así quedan sincronizadas) y en silencio si está apagada.
+		if layer_stream:
+			_layer.stream = layer_stream
+			_layer.volume_db = _duck_db if Music.layer_on else -60.0
+			_layer.play())
 	if stream:
 		_tween.tween_property(_player, "volume_db", _duck_db, FADE)
 
@@ -133,6 +166,68 @@ static func _entity_ambient() -> AudioStreamWAV:
 		lp += 0.35 * (sample - lp)
 		var edge := minf(t / 0.02, 1.0) * minf((LENGTH - t) / 0.02, 1.0)
 		data.encode_s16(i * 2, clampi(int(lp * edge * 0.75 * 32767.0), -32768, 32767))
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = RATE
+	stream.data = data
+	stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	stream.loop_begin = 0
+	stream.loop_end = count
+	return stream
+
+
+## Música provisional de la pelea contra Glitch y Chip: 8 s en bucle (4 compases a 120 bpm, La menor:
+## Am · F · C · G). Base (layer false): bajo en corcheas, bombo y platillo. Capa (layer true): la
+## segunda melodía que entra en la Fase 2, un arpegio brillante (Glitch) que le responde a una nota
+## larga (Chip). Las dos duran lo mismo para sonar juntas.
+static func _twins_track(layer: bool) -> AudioStreamWAV:
+	const RATE := 11025
+	const LENGTH := 8.0
+	const BAR := 2.0
+	var roots: Array[float] = [55.0, 43.65, 65.41, 49.0]
+	var chords := [[220.0, 261.63, 329.63], [174.61, 220.0, 261.63], [261.63, 329.63, 392.0], [196.0, 246.94, 293.66]]
+	var count := int(RATE * LENGTH)
+	var data := PackedByteArray()
+	data.resize(count * 2)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 2525
+	var lp := 0.0
+	for i in count:
+		var t := float(i) / RATE
+		var bar := int(t / BAR) % 4
+		var in_bar := fmod(t, BAR)
+		var sample := 0.0
+		if not layer:
+			# Bajo en corcheas (diente de sierra suave) con la raíz del acorde.
+			var eighth := fmod(in_bar, 0.25)
+			var root: float = roots[bar] * (2.0 if int(in_bar / 0.25) % 4 == 3 else 1.0)
+			var saw := fmod(root * t, 1.0) * 2.0 - 1.0
+			sample += 0.22 * saw * exp(-eighth * 6.0)
+			# Bombo en cada tiempo y platillo en los contratiempos.
+			var beat := fmod(t, 0.5)
+			sample += 0.5 * sin(TAU * (45.0 + 80.0 * exp(-beat * 30.0)) * beat) * exp(-beat * 14.0)
+			var off := fmod(t + 0.25, 0.5)
+			if off < 0.04:
+				sample += rng.randf_range(-0.08, 0.08) * (1.0 - off / 0.04)
+		else:
+			# Glitch: arpegio en semicorcheas, brillante (onda cuadrada) y con un tartamudeo cada tanto.
+			var step := int(in_bar / 0.125)
+			var notes: Array = chords[bar]
+			var note: float = notes[[0, 1, 2, 1, 2, 0, 2, 1][step % 8]] * 2.0
+			var since := fmod(in_bar, 0.125)
+			if step % 16 == 11:
+				since = fmod(since, 0.0625)
+			var square := 1.0 if fmod(note * t, 1.0) < 0.5 else -1.0
+			sample += 0.06 * square * exp(-since * 18.0)
+			# Chip: le responde con una nota larga (triángulo) en la segunda mitad de cada compás.
+			if in_bar >= 1.0:
+				var long := in_bar - 1.0
+				var answer: float = notes[2] * 1.0
+				var phase := fmod(answer * t, 1.0)
+				sample += 0.09 * (1.0 - 4.0 * absf(phase - 0.5)) * minf(long / 0.05, 1.0) * exp(-long * 1.4)
+		lp += 0.5 * (sample - lp)
+		var edge := minf(t / 0.01, 1.0) * minf((LENGTH - t) / 0.01, 1.0)
+		data.encode_s16(i * 2, clampi(int(lp * edge * 0.8 * 32767.0), -32768, 32767))
 	var stream := AudioStreamWAV.new()
 	stream.format = AudioStreamWAV.FORMAT_16_BITS
 	stream.mix_rate = RATE
