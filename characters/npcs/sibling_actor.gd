@@ -21,6 +21,7 @@ enum Kind { CHIP, GLITCH }
 var face := 1.0
 var _clock := 0.0
 var _hidden := false
+var _tween: Tween
 ## Mientras corre (run_to) usa su animación de correr.
 var _running := false
 
@@ -43,17 +44,20 @@ func _process(delta: float) -> void:
 	modulate.a = move_toward(modulate.a, 1.0 if shown else 0.0, delta * 4.0)
 
 
-## Corre hasta target (con un saltito si cambia de altura). Termina al llegar.
+## Corre hasta target (con un saltito si cambia de altura). Termina al llegar. Una carrera nueva
+## corta la anterior (la anterior ya no termina).
 func run_to(target: Vector2, run_speed := -1.0) -> void:
+	if _tween and _tween.is_valid():
+		_tween.kill()
 	var velocity := run_speed if run_speed > 0.0 else speed
 	face = 1.0 if target.x >= position.x else -1.0
 	var start := position
 	var duration := maxf(start.distance_to(target) / velocity, 0.05)
 	_running = true
-	var tween := create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	tween.tween_method(func(t: float) -> void:
+	_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	_tween.tween_method(func(t: float) -> void:
 		position = start.lerp(target, t) + Vector2(0, -sin(t * PI) * minf(24.0, absf(target.y - start.y) + 8.0)), 0.0, 1.0, duration)
-	await tween.finished
+	await _tween.finished
 	_running = false
 
 

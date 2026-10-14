@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_door"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_tmpl"]
+
+[sub_resource type="Resource" id="Resource_pasillo"]
+script = ExtResource("1_door")
+id = &"pasillo"
+side = 2
+kind = 0
+entry_id = &"desde_pasillo"
+
+[resource]
+script = ExtResource("2_tmpl")
+id = &"sala_3"
+display_name = "Sala 3"
+scene_path = "res://world/zones/zone0/sala_3.tscn"
+room_type = &"classroom"
+doors = Array[ExtResource("1_door")]([SubResource("Resource_pasillo")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 1
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray("Uso ético de la información", "Registro de eventos", "Comportamiento anómalo")
+mission_ids = PackedStringArray("una_clase_diferente")
+has_terminal = true

@@ -9,7 +9,7 @@ title = "Puesto 7 · Sistema de entrenamiento"
 objective = "Revisa el registro de eventos del sistema de entrenamiento."
 user = "kai"
 host = "puesto-7"
-welcome = "Sistema de entrenamiento del laboratorio.
+welcome = "Sistema de entrenamiento del colegio · Sala 3.
 Escribe help para ver los comandos."
 files = Dictionary[String, String]({
 "LEEME.txt": "El registro de eventos está en la carpeta registro/.

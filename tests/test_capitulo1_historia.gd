@@ -1,7 +1,7 @@
 extends SceneTree
 ## Prueba automática: Capítulo 1, etapas 11 y 12 (la historia completa, de punta a punta). El prólogo
-## lleva al capítulo; la clase con el profesor y los compañeros; Chip y Glitch solo con la Visión; el
-## registro de eventos y su desafío; la persecución corta; la biblioteca y el archivo privado; la
+## lleva al capítulo; la clase en la Sala 3 con el profesor y los compañeros; el registro de eventos y su
+## desafío; la cinemática de Chip y Glitch (con la Visión); la persecución corta; la biblioteca y el archivo privado; la
 ## puerta cerrada y el permiso del profesor («NIVEL 1 COMPLETADO»); el servidor y la conexión; y el
 ## final con el profesor y GENESIS_ARCHIVE («FIN DEL CAPÍTULO 1»). La persecución y la pelea tienen
 ## sus propias pruebas (test_persecucion, test_jefe_hermanos): aquí se dan por hechas.
@@ -42,36 +42,44 @@ func _run() -> void:
 
 
 func _test_prologue_leads_to_chapter() -> void:
+	_check(root.get_node("World").lock_reason(&"sala_3") != "", "en el prólogo la Sala 3 está cerrada")
 	state.start_quest(Q0)
 	for step in [&"hablar_profesor", &"ir_pasillo_viejo", &"abrir_puerta", &"explorar_cuarto", &"salir_cuarto"]:
 		state.complete_step(Q0, step)
 	_check(state.has_flag(&"tutorial_terminado") and state.get_current_step(Q1) == &"ir_a_clase",
 		"al terminar «EL DESPERTAR» empieza el Capítulo 1: «Una clase diferente»")
 	_check(ProgressTracker.chapter(state) == 1, "la partida está en el Capítulo 1")
+	_check(root.get_node("World").lock_reason(&"sala_3") == "", "la Sala 3 se abre en el Capítulo 1")
 
 
 func _test_class() -> void:
-	await _open(Z + "laboratorio.tscn")
+	# La clase es en la Sala 3: su puerta está en el pasillo y lleva al aula.
+	await _open(Z + "pasillo.tscn")
+	var door := room.get_node("ASala3") as Stairway
+	_check(door.resolve().get("scene", "") == Z + "sala_3.tscn" and door.prompt_text == "E: entrar",
+		"la puerta «SALA 3» del pasillo lleva al aula («E: entrar»)")
+	_check(not (load(Z + "laboratorio.tscn") as PackedScene).instantiate().has_node("Capitulo1"),
+		"la clase ya no es en el laboratorio")
+	room.player.teleport_to(door.global_position + Vector2(0, -8))
+	await _frames(6)
+	await _action(&"interact")
+	await _until(func() -> bool: return current_scene is Room and current_scene.scene_file_path == Z + "sala_3.tscn" and current_scene.is_node_ready())
+	await _frames(4)
+	room = current_scene as Room
+	_check(room.scene_file_path == Z + "sala_3.tscn" and absf(room.player.global_position.x - 40.0) < 30.0,
+		"con E, Kai entra a la Sala 3 por la puerta")
 	var box := _box()
 	await _until(func() -> bool: return box.is_playing())
-	_check(box.is_playing(), "en el laboratorio empieza la clase del profesor")
+	_check(box.is_playing(), "en la Sala 3 empieza la clase del profesor")
 	_check((room.get_node("Capitulo1/Profesor") as Node2D).visible and (room.get_node("Capitulo1/Clase") as Node2D).visible,
-		"el profesor y los compañeros están en la clase")
+		"el profesor y los compañeros están en el aula")
 	await _advance(box)
-	_check(state.get_current_step(Q1) == &"ver_fallas", "después, las computadoras fallan: hay que usar la Visión")
+	var props := room.get_node("Props")
+	_check(state.get_current_step(Q1) == &"revisar_registro" and props.glitching,
+		"las computadoras de práctica fallan y hay que revisar el registro en el puesto de Kai")
 	var chip := room.get_node("Capitulo1/Chip") as SiblingActor
 	await _frames(30)
-	_check(not chip.is_shown(), "sin la Visión Digital, Chip y Glitch no se ven")
-	root.get_node("DigitalVision").activate(true)
-	await _until(func() -> bool: return box.is_playing())
-	await _frames(20)
-	_check(chip.is_shown() and box.is_playing(), "con la Visión, Kai los ve saltando entre los monitores (y se dan cuenta)")
-	await _advance(box)
-	await _until(func() -> bool: return state.get_current_step(Q1) == &"revisar_registro")
-	await _until(func() -> bool: return box.is_playing())
-	await _advance(box)
-	root.get_node("DigitalVision").deactivate()
-	_check(state.get_current_step(Q1) == &"revisar_registro", "escapan y el profesor pide revisar el registro de eventos")
+	_check(not chip.is_shown(), "todavía no se ve a nadie")
 
 
 func _test_registro() -> void:
@@ -91,9 +99,25 @@ func _test_registro() -> void:
 	var box := _box()
 	await _until(func() -> bool: return box.is_playing())
 	await _advance(box)
-	await _until(func() -> bool: return state.get_current_step(Q1) == &"seguir_criaturas")
 	_check(state.has_flag(&"cap1_registro_revisado") and (load("res://data/grimorio/registro_eventos.tres") as GrimorioEntry).is_unlocked(state),
 		"queda el registro revisado y su página del Grimorio")
+	# La cinemática: Kai mira con la Visión, la cámara va a los monitores y ve a Chip y Glitch.
+	var chip := room.get_node("Capitulo1/Chip") as SiblingActor
+	var vision := root.get_node("DigitalVision")
+	await _until(func() -> bool: return box.is_playing())
+	_check(state.get_current_step(Q1) == &"ver_fallas" and vision.is_active() and room.player.controls_locked,
+		"cinemática: Kai mira con la Visión Digital (sin control mientras dura)")
+	_check(room.camera.target == null and chip.is_shown(), "la cámara va a los monitores: Chip y Glitch están ahí (y se dan cuenta)")
+	await _advance(box)
+	await _until(func() -> bool: return box.is_playing())
+	_check(not chip.is_shown() and not room.get_node("Props").glitching, "escapan por la puerta y las computadoras vuelven a la normalidad")
+	_check(room.camera.target == room.player, "la cámara vuelve a Kai")
+	await _advance(box)
+	await _until(func() -> bool: return state.get_current_step(Q1) == &"seguir_criaturas")
+	_check(state.get_current_step(Q1) == &"seguir_criaturas" and not room.player.controls_locked and not vision.is_active(),
+		"Kai sale tras ellos: empieza la persecución")
+	await _frames(10)
+	_check((room.get_node("Capitulo1/Clase") as Node2D).visible, "los compañeros siguen en la clase")
 
 
 func _test_short_chase() -> void:
@@ -103,8 +127,9 @@ func _test_short_chase() -> void:
 	var glitch := run.actors[1]
 	await _frames(10)
 	_check(glitch.is_shown(), "en el pasillo, Chip y Glitch esperan a Kai")
+	_check(run.path[0].x - run.path[-1].x >= 130.0, "salen de la Sala 3 y corren por el pasillo hasta las escaleras")
 	var box := _box()
-	room.player.teleport_to(Vector2(560, 296))
+	room.player.teleport_to((room.get_node("Entries/FromSala3") as Node2D).position)
 	await _until(func() -> bool: return box.is_playing())
 	_check(box.is_playing(), "al acercarse, gritan y corren hacia las escaleras")
 	await _advance(box)
@@ -147,8 +172,10 @@ func _test_permission() -> void:
 	await _open(Z + "escaleras.tscn")
 	var door := room.get_node("Exits/ToCuartoTecnico") as RoomExit
 	_check(not door.is_open(), "la puerta del cuarto técnico está cerrada con llave")
-	await _open(Z + "laboratorio.tscn")
+	await _open(Z + "sala_3.tscn")
 	var profesor := room.get_node("Capitulo1/Profesor") as Npc
+	_check(profesor.visible and not (room.get_node("Capitulo1/Clase") as Node2D).visible,
+		"después de la clase, el profesor sigue en la Sala 3 (los compañeros ya no)")
 	room.player.teleport_to(profesor.global_position + Vector2(20, 0))
 	await _frames(6)
 	await _action(&"interact")
@@ -158,6 +185,15 @@ func _test_permission() -> void:
 	await _until(func() -> bool: return state.is_quest_completed(Q1))
 	_check(state.is_quest_completed(Q1) and state.has_flag(&"nivel_1_completado") and titles.has("NIVEL 1 COMPLETADO"),
 		"Kai le pide permiso al profesor: «NIVEL 1 COMPLETADO»")
+	var exit := room.get_node("Exits/APasillo") as Stairway
+	room.player.teleport_to(exit.global_position + Vector2(0, -8))
+	await _frames(6)
+	await _action(&"interact")
+	await _until(func() -> bool: return current_scene is Room and current_scene.scene_file_path == Z + "pasillo.tscn" and current_scene.is_node_ready())
+	await _frames(4)
+	room = current_scene as Room
+	_check(room.scene_file_path == Z + "pasillo.tscn" and absf(room.player.global_position.x - 560.0) < 30.0,
+		"con E, Kai sale de la Sala 3 al pasillo, frente a su puerta")
 	await _open(Z + "escaleras.tscn")
 	door = room.get_node("Exits/ToCuartoTecnico") as RoomExit
 	_check(state.get_current_step(Q2) == &"revisar_servidor" and door.is_open(), "empieza «Travesuras en el sistema» y la puerta se abre")

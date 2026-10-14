@@ -232,12 +232,12 @@ texture = ExtResource("8_x1ni5")
 centered = false
 
 [node name="ClassroomDoor" type="Sprite2D" parent="Corridor" unique_id=444861294]
-position = Vector2(232, 256)
+position = Vector2(546, 256)
 texture = ExtResource("9_7g1i6")
 centered = false
 
 [node name="SignSala" type="Sprite2D" parent="Corridor" unique_id=1501679015]
-position = Vector2(234, 238)
+position = Vector2(548, 238)
 texture = ExtResource("10_2lsgh")
 centered = false
 script = ExtResource("11_gqfwg")
@@ -335,7 +335,7 @@ texture = ExtResource("14_fcr8f")
 texture_scale = 1.09375
 
 [node name="SignSalaLight" type="PointLight2D" parent="Lights" unique_id=1862729517]
-position = Vector2(246, 268)
+position = Vector2(560, 268)
 color = Color(0.25, 0.85, 1, 1)
 energy = 0.6
 texture = ExtResource("14_fcr8f")
@@ -388,6 +388,17 @@ door_id = &"escalera"
 target_scene = "res://world/zones/zone0/escaleras.tscn"
 target_entry = &"desde_pasillo"
 prompt_text = "E: subir"
+prompt_offset = Vector2(-20, -90)
+
+[node name="ASala3" type="Area2D" parent="." unique_id=681646747]
+position = Vector2(560, 304)
+script = ExtResource("16_kdcgm")
+door_id = &"sala_3"
+target_scene = "res://world/zones/zone0/sala_3.tscn"
+target_entry = &"desde_pasillo"
+action_text = "entrar"
+show_art = false
+prompt_text = "E: entrar"
 prompt_offset = Vector2(-20, -90)
 
 [node name="Packets" type="Node2D" parent="." unique_id=1150446176]
@@ -447,18 +458,18 @@ return_quest = &"travesuras_en_el_sistema"
 [node name="Capitulo1" type="Node2D" parent="." unique_id=1125921101]
 
 [node name="Chip" type="Node2D" parent="Capitulo1" unique_id=1675794837]
-position = Vector2(640, 290)
+position = Vector2(470, 290)
 script = ExtResource("23_x1ni5")
 
 [node name="Glitch" type="Node2D" parent="Capitulo1" unique_id=1005412164]
-position = Vector2(610, 304)
+position = Vector2(444, 304)
 script = ExtResource("23_x1ni5")
 kind = 1
 
 [node name="SiblingRun" type="Node" parent="Capitulo1" unique_id=380353480 node_paths=PackedStringArray("actors")]
 script = ExtResource("24_7g1i6")
 actors = [NodePath("../Chip"), NodePath("../Glitch")]
-path = Array[Vector2]([Vector2(640, 296), Vector2(480, 296), Vector2(340, 296), Vector2(330, 250)])
+path = Array[Vector2]([Vector2(470, 296), Vector2(400, 296), Vector2(340, 296), Vector2(330, 250)])
 start_dialogue = ExtResource("25_2lsgh")
 played_flag = &"cap1_dialogo_escaleras"
 
@@ -484,7 +495,7 @@ player = NodePath("../../Player")
 area = Rect2(0, 48, 688, 256)
 racks = Array[Vector2]([])
 show_threat = false
-outlines = Array[Rect2]([Rect2(24, 264, 80, 40), Rect2(376, 264, 64, 40), Rect2(120, 232, 36, 24), Rect2(172, 196, 40, 28), Rect2(284, 196, 40, 28), Rect2(232, 256, 28, 48)])
+outlines = Array[Rect2]([Rect2(24, 264, 80, 40), Rect2(376, 264, 64, 40), Rect2(120, 232, 36, 24), Rect2(172, 196, 40, 28), Rect2(284, 196, 40, 28), Rect2(546, 256, 28, 48)])
 
 [node name="DataBridge" type="StaticBody2D" parent="." unique_id=707098296]
 collision_layer = 64
@@ -525,6 +536,12 @@ facing = -1
 position = Vector2(330, 304)
 script = ExtResource("27_ligia")
 id = &"desde_escaleras"
+
+[node name="FromSala3" type="Marker2D" parent="Entries" unique_id=464414380]
+position = Vector2(560, 304)
+script = ExtResource("27_ligia")
+id = &"desde_sala_3"
+facing = -1
 
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 

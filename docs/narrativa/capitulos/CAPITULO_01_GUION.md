@@ -13,32 +13,34 @@ no se cambió.
 
 ## Nivel 1 — Una clase diferente
 
-### Escena 1.1 · La clase (Laboratorio)
+### Escena 1.1 · La clase (Sala 3)
 
-Primera clase después del prólogo. El Prof. Alvarado da **«Uso ético de la información»** frente a los compañeros:
-en una revisión autorizada solo se mira lo que el encargado permite. Las computadoras de práctica empiezan a fallar
-una por una (pitidos, pantallas que parpadean). Nadie ve nada raro, pero el jugador puede activar la Visión
-Digital: Kai ve a **Chip y Glitch** saltando entre los monitores.
+Primera clase después del prólogo, en el **aula de Kai: la Sala 3**, junto al pasillo principal (cambio pedido por el
+equipo después de probar el juego: la clase tiene que verse como una clase). El Prof. Alvarado está frente a la
+pizarra y los compañeros, en sus pupitres. Da **«Uso ético de la información»**: en una revisión autorizada solo se
+mira lo que el encargado permite. Para practicar, cada uno va a revisar el **registro de eventos** del sistema de
+entrenamiento. Las computadoras de práctica empiezan a fallar una por una (pitidos, pantallas que parpadean).
 
-- Glitch nota que Kai los mira. Chip no se lo cree... hasta que Kai los saluda. Escapan.
-- *Diferencia con el prólogo:* allá la criatura amenazaba («Tú no deberías poder vernos»). Acá los hermanos son
-  traviesos y se asustan; Chip dice que **eso no estaba en el plan** (pista de la Biblia: «las amenazas reaccionan
-  de manera particular a su presencia»).
+### Escena 1.2 · Investigar el registro y la cinemática (Sala 3)
 
-### Escena 1.2 · Investigar el registro (Laboratorio)
-
-El profesor pide revisar el **registro de eventos** del sistema de entrenamiento. Kai lo abre en la terminal de su
-puesto (comandos ya conocidos: `ls`, `cat`; lo nuevo es **leer un registro**). Hay entradas raras: inicios de sesión
-a las 3:12 a. m., un usuario «chip_y_glitch» que no existe y archivos de práctica modificados cientos de veces en un
-minuto.
+Kai abre el registro en la computadora de su puesto (comandos ya conocidos: `ls`, `cat`; lo nuevo es **leer un
+registro**). Hay entradas raras: inicios de sesión a las 3:12 a. m., un usuario «chip_y_glitch» que no existe y
+archivos de práctica modificados cientos de veces en un minuto.
 
 - **Desafío «Comportamiento anómalo»** (`cap1_registro_anomalo`): ¿cuál de esas entradas es la señal más clara de que
   algo anda mal? Enseña a reconocer comportamientos anómalos.
 - Se abre la página del Grimorio **«Registro de eventos»**.
+- **Cinemática corta:** «Si el registro no me dice quién... tal vez pueda verlo». Kai mira con la Visión Digital (la
+  elige él: ya sabe usarla) y la cámara va a los monitores: **Chip y Glitch** saltan entre las computadoras. Glitch
+  nota que Kai los mira; Chip no se lo cree... hasta que Kai los saluda. Escapan por la puerta, las computadoras
+  vuelven a la normalidad y Kai sale detrás («¡Ya vuelvo, profe!»).
+- *Diferencia con el prólogo:* allá la criatura amenazaba («Tú no deberías poder vernos»). Acá los hermanos son
+  traviesos y se asustan; Chip dice que **eso no estaba en el plan** (pista de la Biblia: «las amenazas reaccionan
+  de manera particular a su presencia»).
 
 ### Escena 1.3 · Primera persecución corta (Pasillo → Escaleras)
 
-Chip y Glitch salen del laboratorio. Kai los sigue por el Pasillo y suben por las escaleras (desde el Capítulo 1 ya
+Chip y Glitch salen de la Sala 3. Kai los sigue por el Pasillo y suben por las escaleras (desde el Capítulo 1 ya
 se pueden usar). Persecución corta: los hermanos van delante y esperan cuando Kai se queda atrás. Sin daño ni
 temporizador: es la presentación de la mecánica.
 

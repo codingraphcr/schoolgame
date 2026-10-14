@@ -2,7 +2,8 @@
 extends Node2D
 ## Arte provisional de un aula del colegio (sala opcional del generador, M4), dibujado por código
 ## hasta que Ariel la dibuje: la pizarra, el escritorio del profesor, filas de pupitres, el reloj, una
-## ventana y las puertas de los costados. Se ve también en el editor.
+## ventana y las puertas de los costados. Se ve también en el editor. Con computers, cada pupitre tiene
+## una computadora de práctica (la Sala 3 del Capítulo 1); glitching las hace fallar (parpadean).
 
 const WOOD := Color("6a4a32")
 const WOOD_DARK := Color("3e2a1c")
@@ -19,6 +20,19 @@ const DOOR := Color("5a4030")
 ## Puertas dibujadas (x del centro).
 @export var doors: Array[float] = [16.0, 624.0]
 @export var floor_y := 304.0
+## Una computadora de práctica en cada pupitre.
+@export var computers := false:
+	set(value):
+		computers = value
+		if _canvas:
+			_canvas.queue_redraw()
+## Las computadoras fallan: las pantallas parpadean (lo pide la historia).
+var glitching := false:
+	set(value):
+		glitching = value
+		if _canvas:
+			_canvas.animated = value
+			_canvas.queue_redraw()
 
 var _canvas: VectorCanvas
 
@@ -29,7 +43,7 @@ func _ready() -> void:
 	add_child(_canvas)
 
 
-func _paint(c: VectorCanvas, _t: float) -> void:
+func _paint(c: VectorCanvas, t: float) -> void:
 	c.draw_rect(window.grow(4), METAL)
 	c.gradient_rect(window, Color("5a8ac8"), Color("3a6aa8"))
 	c.draw_line(Vector2(window.get_center().x, window.position.y), Vector2(window.get_center().x, window.end.y), METAL, 2.0)
@@ -54,8 +68,26 @@ func _paint(c: VectorCanvas, _t: float) -> void:
 		c.draw_line(Vector2(x + 12, floor_y - 16), Vector2(x + 12, floor_y), METAL, 2.0)
 		c.draw_rect(Rect2(x + 18, floor_y - 12, 10, 3), METAL)
 		c.draw_rect(Rect2(x + 26, floor_y - 24, 2, 24), METAL)
+		if computers:
+			_paint_computer(c, x, t)
 	for x in doors:
 		_paint_door(c, x)
+
+
+## Monitor sobre el pupitre (centro x). Si fallan, la pantalla parpadea entre magenta y estática.
+func _paint_computer(c: VectorCanvas, x: float, t: float) -> void:
+	var top := floor_y - 20
+	c.draw_rect(Rect2(x - 2, top - 4, 4, 4), METAL)
+	var monitor := Rect2(x - 11, top - 18, 22, 14)
+	c.draw_rect(monitor.grow(1), Color("20242e"))
+	var screen := Color("3a7ab8")
+	if glitching:
+		var flash := sin(t * 23.0 + x * 0.37) > 0.2
+		screen = Color("ff3ea5") if flash else Color("2a1030")
+	c.draw_rect(monitor.grow(-1), screen)
+	if not glitching:
+		for k in 3:
+			c.draw_rect(Rect2(monitor.position.x + 3, monitor.position.y + 3 + k * 3, 10 - k * 3, 1), Color(0.85, 0.95, 1.0, 0.6))
 
 
 func _paint_door(c: VectorCanvas, x: float) -> void:

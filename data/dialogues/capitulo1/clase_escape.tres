@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Escena 1.2: Chip y Glitch escapan por la puerta de la Sala 3; Kai sale detrás de ellos.
+Kai [sorprendido]: ¡Ey! ¡Esperen!
+Prof. Alvarado [sorprendido]: ¿Kai? ¿A quién le hablás?
+(Las computadoras dejan de pitar. Los compañeros se miran entre ellos.)
+Kai: Eh... ¡Ya vuelvo, profe! ¡Es... una emergencia!"
