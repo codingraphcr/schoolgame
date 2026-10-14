@@ -28,6 +28,11 @@ const THICKNESS := 12.0
 	set(value):
 		width = value
 		_rebuild()
+## false: no se dibuja (el fondo de la sala ya la tiene dibujada, como en la arena de Glitch y Chip).
+@export var drawn := true:
+	set(value):
+		drawn = value
+		queue_redraw()
 @export_group("Movimiento")
 @export var move_offset := Vector2(120, 0)
 @export var move_time := 2.0
@@ -129,6 +134,8 @@ func _rebuild() -> void:
 
 
 func _draw() -> void:
+	if not drawn:
+		return
 	if _closed:
 		draw_rect(Rect2(0, 0, width, 2), Color(AMBER, 0.25))
 		return

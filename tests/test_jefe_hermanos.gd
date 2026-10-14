@@ -1,11 +1,11 @@
 extends SceneTree
 ## Prueba automática: Capítulo 1, etapas 7 a 11 (Glitch y Chip, diseño de Ariel). La arena registra el
 ## checkpoint y no tiene temporizador; los dos comparten una sola barra de vida; sus 8 ataques
-## individuales y los 6 en conjunto avisan antes; cuando uno queda aturdido el otro deja su ataque y
-## lo protege; las tres fases (el anillo y la segunda melodía en la Fase 2, la fase segura con la
-## terminal al 35 % y el Protocolo Dual / Furia fraternal); con la vida en cero quedan neutralizados
-## (no se borran); la recompensa se cobra una sola vez; si Kai pierde, la pelea vuelve a empezar; con
-## la pelea ganada, la arena queda abierta.
+## individuales y los 10 en conjunto (también a la vez) avisan antes, con las poses de su sprite;
+## cuando uno queda aturdido el otro deja su ataque y lo protege; las tres fases (el anillo y la
+## segunda melodía en la Fase 2, la fase segura con la terminal al 35 % y el Protocolo Dual / Furia
+## fraternal); con la vida en cero quedan neutralizados (no se borran); la recompensa se cobra una sola
+## vez; si Kai pierde, la pelea vuelve a empezar; con la pelea ganada, la arena queda abierta.
 ## Ejecutar: godot --headless --path . --script res://tests/test_jefe_hermanos.gd
 
 const ARENA := "res://world/zones/red_entrenamiento/arena_hermanos.tscn"
@@ -30,6 +30,7 @@ func _run() -> void:
 	state = root.get_node("GameState")
 	root.get_node("SaveManager").new_game(1)
 	state.set_flag(&"tutorial_terminado")
+	state.set_dash_level(1)  # La Nullblade (prólogo) trae el dash.
 	state.start_quest(QUEST)
 	for step in [&"revisar_servidor", &"seguirlos_adentro"]:
 		state.complete_step(QUEST, step)
@@ -37,6 +38,7 @@ func _run() -> void:
 	_test_start()
 	fight.set_physics_process(false)  # Los ataques los lanza la prueba, uno por uno.
 	room.player.damage.protected = true
+	await _test_platforms()
 	await _test_individual()
 	await _test_joint()
 	await _test_protect()
@@ -65,8 +67,53 @@ func _test_start() -> void:
 	_hit(glitch, 1.0)
 	_check(is_equal_approx(fight.health.current, before - 2.0) and bar.ratio() < 1.0, "pegarle a cualquiera de los dos baja la misma barra")
 	fight.health.restore_full()
-	_check(SiblingArt.texture(&"glitch") != null and SiblingArt.texture(&"chip") != null and SiblingArt.texture(&"disco") != null,
+	_check(SiblingArt.texture(&"glitch", &"corte") != null and SiblingArt.texture(&"chip", &"lanzar") != null and SiblingArt.texture(&"disco") != null,
 		"Glitch, Chip y el disco usan los sprites de la hoja de Ariel")
+
+
+## Las plataformas se alcanzan sin doble salto, con la física real: del piso a la de la izquierda con un
+## salto, y de ahí a la del centro con salto + dash.
+func _test_platforms() -> void:
+	var side := await _jump_from(Vector2(40, SiblingBoss.FLOOR_Y), 1)
+	_check(absf(side.y - 232.0) < 2.0, "del piso se sube de un salto a la plataforma del costado (y=%.0f)" % side.y)
+	var center := await _jump_from(Vector2(184, 232), 1, 0.3)
+	_check(absf(center.y - 172.0) < 2.0, "de la del costado se sube a la del centro con salto + dash (y=%.0f)" % center.y)
+	room.player.teleport_to(Vector2(120, SiblingBoss.FLOOR_Y))
+	await _frames(3)
+
+
+## Salta desde at hacia dir (manteniendo el salto; con dash a los dash_at segundos si es >= 0) y devuelve
+## dónde cayó.
+func _jump_from(at: Vector2, dir: int, dash_at := -1.0) -> Vector2:
+	var player := room.player
+	player.teleport_to(at)
+	player.velocity = Vector2.ZERO
+	await _frames(6)
+	var action := "move_right" if dir > 0 else "move_left"
+	Input.action_press(action)
+	Input.action_press("jump")
+	var left_ground := false
+	var elapsed := 0.0
+	for i in 150:
+		await physics_frame
+		elapsed += 1.0 / Engine.physics_ticks_per_second
+		if dash_at >= 0.0 and elapsed >= dash_at:
+			dash_at = -1.0
+			var press := InputEventAction.new()
+			press.action = &"dash"
+			press.pressed = true
+			Input.parse_input_event(press)
+			var release := InputEventAction.new()
+			release.action = &"dash"
+			Input.parse_input_event(release)
+		if not player.is_on_floor():
+			left_ground = true
+		elif left_ground:
+			break
+	Input.action_release("jump")
+	Input.action_release(action)
+	await _frames(2)
+	return player.global_position
 
 
 ## Los 8 ataques individuales: cada uno avisa antes y hace lo suyo.
@@ -189,6 +236,94 @@ func _test_joint() -> void:
 	_check(fields.call() == 1 and not (field[0] as DualField).is_safe(120.0) and (field[0] as DualField).is_safe((field[0] as DualField).gap_x),
 		"Campo Dual: todo el piso menos un hueco seguro, lejos de Kai")
 	await _until(func() -> bool: return not glitch.busy and not chip.busy and not fight._running)
+	# 7. Danza espejo: desde paredes opuestas, Glitch por el piso y Chip volando, a la vez.
+	await _ready_for_next()
+	var crossing := [false]
+	var chip_high := [false]
+	await _run_pattern(&"danza_espejo", 4.0, func() -> void:
+		if absf(glitch.velocity.x) > 200.0 and absf(chip.velocity.x) > 200.0 and signf(glitch.velocity.x) != signf(chip.velocity.x):
+			crossing[0] = true
+			chip_high[0] = chip_high[0] or (chip.global_position.y < SiblingBoss.FLOOR_Y - 50.0 and glitch.global_position.y > SiblingBoss.FLOOR_Y - 4.0))
+	_check(crossing[0] and chip_high[0], "Danza espejo: cruzan la arena a la vez, Glitch por el piso y Chip volando")
+	# 8. Picadas alternas: los dos caen sobre Kai por turnos.
+	await _ready_for_next()
+	await _run_pattern(&"picada_alterna", 5.0)
+	_check(_count(glitch, &"salto_en_picada") >= 2 and _count(chip, &"salto_en_picada") >= 1, "Picadas alternas: los dos caen por turnos")
+	# 9. Discos cruzados: Chip lanza discos mientras Glitch embiste.
+	await _ready_for_next()
+	await _run_pattern(&"discos_cruzados", 4.0)
+	_check(_kinds(chip).has(&"discos_orbitales") and _kinds(glitch).has(&"embestida_en_cadena"), "Discos cruzados: discos de Chip y embestidas de Glitch")
+	# 10. Remolino doble: giran en el aire y disparan.
+	await _ready_for_next()
+	var both_air := [false]
+	var shots := _counter(func(n: Node) -> bool: return n is DataShot or n is DiscShot)
+	await _run_pattern(&"remolino_doble", 4.5, func() -> void:
+		if glitch.global_position.y < SiblingBoss.FLOOR_Y - 50.0 and chip.global_position.y < SiblingBoss.FLOOR_Y - 50.0:
+			both_air[0] = true)
+	_check(both_air[0] and shots.call() >= 4, "Remolino doble: giran en el aire y disparan (%d disparos)" % shots.call())
+	await _until(func() -> bool: return not glitch.busy and not chip.busy and not fight._running)
+	# Como las Mantis Lords: el barrido sigue a Kai hasta su plataforma y la caída cae sobre él.
+	await _ready_for_next()
+	room.player.teleport_to(Vector2(510, 232))
+	await _frames(3)
+	var line := [INF]
+	await _run_pattern(&"barrido_glitch", 2.2, func() -> void:
+		if glitch.sweep_line != INF:
+			line[0] = glitch.sweep_line)
+	_check(absf(line[0] - 232.0) < 3.0, "Barrido: aparece en la pared y cruza a la altura de Kai (en la plataforma, y=%.0f)" % line[0])
+	await _ready_for_next()
+	room.player.teleport_to(Vector2(400, SiblingBoss.FLOOR_Y))
+	var landed := [INF]
+	start_and_watch(&"caida_chip")
+	await _until(func() -> bool: return chip.is_telegraphing())
+	room.player.teleport_to(Vector2(330, SiblingBoss.FLOOR_Y))
+	await _until(func() -> bool: return chip._dive_mark == Vector2.INF and not chip.is_telegraphing() and chip.is_on_floor())
+	landed[0] = chip.global_position.x
+	_check(absf(landed[0] - 330.0) < 6.0, "Caída: sigue a Kai mientras avisa y cae sobre él (x=%.0f)" % landed[0])
+	await _until(func() -> bool: return not chip.busy and not fight._running)
+	# Tijera: barren a la vez desde paredes opuestas, uno por el piso y el otro por arriba.
+	await _ready_for_next()
+	var lines := {}
+	await _run_pattern(&"tijera", 3.5, func() -> void:
+		if glitch.sweep_line != INF:
+			lines["glitch"] = [glitch.sweep_line, signf(glitch.velocity.x)]
+		if chip.sweep_line != INF:
+			lines["chip"] = [chip.sweep_line, signf(chip.velocity.x)])
+	_check(lines.has("glitch") and lines.has("chip") and lines.glitch[1] != lines.chip[1] and lines.glitch[0] > lines.chip[0] + 30.0,
+		"Tijera: cruzan desde paredes opuestas, Glitch por abajo y Chip por arriba")
+	await _until(func() -> bool: return not glitch.busy and not chip.busy and not fight._running)
+	# Doble caída: los dos caen a la vez a los lados de Kai.
+	await _ready_for_next()
+	var both_marks := [false]
+	await _run_pattern(&"doble_caida", 3.0, func() -> void:
+		if glitch._dive_mark != Vector2.INF and chip._dive_mark != Vector2.INF:
+			both_marks[0] = glitch._dive_mark.x < 120.0 and chip._dive_mark.x > 120.0)
+	_check(both_marks[0], "Doble caída: aparecen los dos sobre Kai, uno a cada lado, y caen a la vez")
+	await _until(func() -> bool: return not glitch.busy and not chip.busy and not fight._running)
+	# Caída y barrido: Chip cae y Glitch ya está cruzando.
+	await _ready_for_next()
+	var overlap := [false]
+	await _run_pattern(&"caida_y_barrido", 3.5, func() -> void:
+		if glitch.sweep_line != INF and chip.is_on_floor() and _count(chip, &"caida") > 0:
+			overlap[0] = true)
+	_check(overlap[0], "Caída y barrido: cuando Chip aterriza, Glitch ya cruza por el piso")
+	await _until(func() -> bool: return not glitch.busy and not chip.busy and not fight._running)
+	# Los dos a la vez («a+b»).
+	await _ready_for_next()
+	await _run_pattern(&"corte_acelerado+discos_orbitales", 2.0)
+	_check(_kinds(glitch).has(&"corte_acelerado") and _kinds(chip).has(&"discos_orbitales") and absf(_first_time(chip, &"discos_orbitales") - _first_time(glitch, &"corte_acelerado")) < 0.5,
+		"los dos atacan a la vez (Glitch corta mientras Chip lanza discos)")
+	await _until(func() -> bool: return not glitch.busy and not chip.busy and not fight._running)
+	# Las poses del sprite de Ariel.
+	await _ready_for_next()
+	var poses := {}
+	await _run_pattern(&"corte_acelerado", 1.6, func() -> void: poses[glitch.current_pose()] = true)
+	_check(poses.has(&"guardia") and poses.has(&"corte"), "Glitch cambia de pose: guardia al prepararse y corte al cortar")
+	await _ready_for_next()
+	poses.clear()
+	await _run_pattern(&"discos_orbitales", 1.2, func() -> void: poses[chip.current_pose()] = true)
+	_check(poses.has(&"alerta") and poses.has(&"lanzar"), "Chip cambia de pose: alerta y lanzar el disco")
+	await _until(func() -> bool: return not glitch.busy and not chip.busy and not fight._running)
 
 
 ## El vínculo: si uno queda aturdido, el otro deja su ataque y lo protege.
@@ -203,8 +338,11 @@ func _test_protect() -> void:
 	await _frames(2)
 	_check(chip.guarding == glitch and not chip.busy, "Chip abandona su ataque para proteger a Glitch")
 	_check(chip.hurtbox.immune, "Chip lo cubre con su escudo de discos (los golpes rebotan)")
-	await _play(0.6)
-	_check(absf(chip.global_position.x - chip.guard_x()) < 12.0, "Chip se para entre Kai y Glitch")
+	for i in 150:
+		if absf(chip.global_position.x - chip.guard_x()) < 12.0:
+			break
+		await physics_frame
+	_check(absf(chip.global_position.x - chip.guard_x()) < 12.0, "Chip corre a pararse entre Kai y Glitch")
 	await _until(func() -> bool: return not glitch.stunned)
 	await _frames(2)
 	_check(not glitch.stunned and chip.guarding == null and not chip.hurtbox.immune, "Glitch se recupera y Chip deja de protegerlo")
@@ -326,6 +464,11 @@ func _ready_for_next() -> void:
 func _run_pattern(pattern: StringName, seconds: float, each := Callable()) -> void:
 	fight.start_pattern(pattern)
 	await _play(seconds, each)
+
+
+## Lanza un ataque sin esperar a que termine.
+func start_and_watch(pattern: StringName) -> void:
+	fight.start_pattern(pattern)
 
 
 ## Ataques en la arena de un tipo.

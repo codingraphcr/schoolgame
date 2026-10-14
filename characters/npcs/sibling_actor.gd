@@ -21,6 +21,15 @@ enum Kind { CHIP, GLITCH }
 var face := 1.0
 var _clock := 0.0
 var _hidden := false
+## Mientras corre (run_to) usa su animación de correr.
+var _running := false
+
+
+func _ready() -> void:
+	# En el juego empiezan invisibles: aparecen solo cuando la escena los muestra (si no, al entrar a
+	# la sala se veían un instante antes de esconderse).
+	if not Engine.is_editor_hint():
+		modulate.a = 0.0
 
 
 func _process(delta: float) -> void:
@@ -40,10 +49,12 @@ func run_to(target: Vector2, run_speed := -1.0) -> void:
 	face = 1.0 if target.x >= position.x else -1.0
 	var start := position
 	var duration := maxf(start.distance_to(target) / velocity, 0.05)
+	_running = true
 	var tween := create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	tween.tween_method(func(t: float) -> void:
 		position = start.lerp(target, t) + Vector2(0, -sin(t * PI) * minf(24.0, absf(target.y - start.y) + 8.0)), 0.0, 1.0, duration)
 	await tween.finished
+	_running = false
 
 
 func vanish() -> void:
@@ -61,6 +72,4 @@ func is_shown() -> bool:
 
 
 func _draw() -> void:
-	# Un pequeño rebote al estar quietos (los dos corren y saltan con los pies en el suelo).
-	var bob := Vector2(0, -absf(sin(_clock * 3.0)) * 1.0)
-	SiblingArt.draw_twin(self, &"chip" if kind == Kind.CHIP else &"glitch", _clock, face, { "offset": bob })
+	SiblingArt.draw_twin(self, &"chip" if kind == Kind.CHIP else &"glitch", _clock, face, { "pose": &"correr" if _running else &"quieto" })

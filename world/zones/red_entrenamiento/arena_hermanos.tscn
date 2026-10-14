@@ -1,7 +1,6 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://world/rooms/room.gd" id="1_6gx3y"]
-[ext_resource type="Script" path="res://world/zones/red_entrenamiento/training_network_background.gd" id="2_u4dfn"]
 [ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_4w6g2"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="4_uowup"]
 [ext_resource type="Script" path="res://world/digital/arena_barrier.gd" id="5_vvev1"]
@@ -51,10 +50,6 @@ footstep = &"step_digital"
 music_track = &"computadora"
 
 [node name="Background" type="Node2D" parent="." unique_id=1237003599]
-script = ExtResource("2_u4dfn")
-area = Rect2(0, 0, 640, 360)
-
-[node name="Chamber" type="Node2D" parent="Background"]
 script = ExtResource("25_cham")
 
 [node name="Collisions" type="StaticBody2D" parent="." unique_id=1152048481]
@@ -77,6 +72,7 @@ shape = SubResource("RectangleShape2D_o61cd")
 position = Vector2(0, 304)
 script = ExtResource("3_4w6g2")
 width = 640.0
+drawn = false
 
 [node name="Platform1" type="AnimatableBody2D" parent="Platforms" unique_id=957411974]
 position = Vector2(70, 232)
@@ -177,7 +173,7 @@ chip = NodePath("../Bosses/Chip")
 glitch = NodePath("../Bosses/Glitch")
 gate = NodePath("../Gate")
 exit_portal = NodePath("../Exits/ExitPortal")
-chamber = NodePath("../Background/Chamber")
+chamber = NodePath("../Background")
 shield_terminal = ExtResource("18_q4qw0")
 shield_challenge = ExtResource("19_74ql6")
 intro_dialogue = ExtResource("20_3xks1")

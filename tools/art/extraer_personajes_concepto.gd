@@ -303,10 +303,9 @@ const CHARACTERS := {
 			"v21_quieto": { "poses": ["v21_quieto"], "fps": 1.0, "loop": true },
 		},
 	},
-	# Glitch y Chip, los gemelos (hoja de Ariel "glitch_chip_concepto"): sus vistas de frente
-	# (fondo claro; de lado la armadura blanca se confunde con el fondo) y el disco de Chip. Del tamaño
-	# de Kai (92 px). El movimiento y los ataques (cortes,
-	# rayos, zonas) los dibuja el juego.
+	# Glitch y Chip, los gemelos (hoja de Ariel "glitch_chip_concepto", fondo claro): solo el disco de Chip (sus
+	# ataques). La vista de frente de Glitch fija la escala (92 px, como Kai); los sprites del juego salen de
+	# "hermanos_juego".
 	"hermanos": {
 		"source": "res://docs/arte/referencias/glitch_chip_concepto.webp",
 		"out": "res://assets/art/characters/hermanos/hd/",
@@ -327,11 +326,72 @@ const CHARACTERS := {
 			"disco": { "rect": Rect2i(1349, 204, 90, 100), "only_body": true },
 		},
 		"animations": {
-			"glitch": { "poses": ["glitch_frente"], "fps": 1.0, "loop": true },
-			"chip": { "poses": ["chip_frente"], "fps": 1.0, "loop": true },
 			"disco": { "poses": ["disco"], "fps": 1.0, "loop": true },
 		},
 	},
+	# Glitch y Chip en el juego (diseño nuevo de Ariel: glitch_chip_v2.webp, fondo oscuro), de la fila «Sprites
+	# base»: quieto, caminar, correr, saltar, caer y aturdido de cada uno, más una pose de ataque de Chip (lanzar
+	# el disco). Las demás poses de ataque usan estas mismas (los efectos los dibuja el juego). Se cortan a la
+	# altura de los pies (debajo hay sombras y rayitas de movimiento).
+	"hermanos_juego": {
+		"source": "res://docs/arte/referencias/glitch_chip_v2.webp",
+		"out": "res://assets/art/characters/hermanos/hd/",
+		"prefix": "hermanos_px",
+		"background": Color("090f1e"),
+		"tolerance": 0.05,
+		"reference": "g_quieto",
+		"height": 64,
+		"poses": {
+			"g_quieto": { "rect": Rect2i(38, 620, 45, 71), "only_body": true },
+			"g_caminar1": { "rect": Rect2i(103, 620, 45, 71), "only_body": true },
+			"g_caminar2": { "rect": Rect2i(163, 620, 48, 71), "only_body": true },
+			"g_caminar3": { "rect": Rect2i(222, 620, 48, 71), "only_body": true },
+			"g_correr1": { "rect": Rect2i(311, 620, 45, 71), "only_body": true },
+			"g_correr2": { "rect": Rect2i(377, 620, 51, 71), "only_body": true },
+			"g_saltar": { "rect": Rect2i(462, 620, 46, 71), "only_body": true },
+			"g_caer": { "rect": Rect2i(536, 620, 41, 71), "only_body": true },
+			"g_aturdido1": { "rect": Rect2i(625, 620, 46, 71), "only_body": true },
+			"g_aturdido2": { "rect": Rect2i(669, 620, 70, 71), "only_body": true },
+			"c_quieto": { "rect": Rect2i(39, 740, 46, 70), "only_body": true },
+			"c_caminar1": { "rect": Rect2i(102, 740, 47, 70), "only_body": true },
+			"c_caminar2": { "rect": Rect2i(163, 740, 47, 70), "only_body": true },
+			"c_caminar3": { "rect": Rect2i(221, 740, 48, 70), "only_body": true },
+			"c_correr1": { "rect": Rect2i(316, 740, 40, 70), "only_body": true },
+			"c_correr2": { "rect": Rect2i(376, 740, 53, 70), "only_body": true },
+			"c_saltar": { "rect": Rect2i(461, 740, 47, 70), "only_body": true },
+			"c_caer": { "rect": Rect2i(537, 740, 40, 70), "only_body": true },
+			"c_aturdido1": { "rect": Rect2i(623, 740, 52, 70), "only_body": true },
+			"c_aturdido2": { "rect": Rect2i(671, 740, 68, 70), "only_body": true },
+			"c_lanzar": { "rect": Rect2i(783, 740, 39, 70), "only_body": true },
+		},
+		"animations": {
+			"glitch_quieto": { "poses": ["g_quieto"], "fps": 1.0, "loop": true },
+			"glitch_caminar": { "poses": ["g_caminar1", "g_caminar2", "g_caminar3", "g_caminar2"], "fps": 7.0, "loop": true },
+			"glitch_correr": { "poses": ["g_correr1", "g_correr2"], "fps": 8.0, "loop": true },
+			"glitch_saltar": { "poses": ["g_saltar"], "fps": 1.0, "loop": true },
+			"glitch_aire": { "poses": ["g_saltar"], "fps": 1.0, "loop": true },
+			"glitch_caer": { "poses": ["g_caer"], "fps": 1.0, "loop": true },
+			"glitch_aturdido": { "poses": ["g_aturdido1", "g_aturdido2"], "fps": 3.0, "loop": true },
+			"chip_quieto": { "poses": ["c_quieto"], "fps": 1.0, "loop": true },
+			"chip_caminar": { "poses": ["c_caminar1", "c_caminar2", "c_caminar3", "c_caminar2"], "fps": 7.0, "loop": true },
+			"chip_correr": { "poses": ["c_correr1", "c_correr2"], "fps": 8.0, "loop": true },
+			"chip_saltar": { "poses": ["c_saltar"], "fps": 1.0, "loop": true },
+			"chip_aire": { "poses": ["c_saltar"], "fps": 1.0, "loop": true },
+			"chip_caer": { "poses": ["c_caer"], "fps": 1.0, "loop": true },
+			"chip_aturdido": { "poses": ["c_aturdido1", "c_aturdido2"], "fps": 3.0, "loop": true },
+			# Ataques: Glitch prepara (quieto), corta y embiste (correr) y lanza (caminar); Chip lanza el disco.
+			"glitch_guardia": { "poses": ["g_quieto"], "fps": 1.0, "loop": true },
+			"glitch_corte": { "poses": ["g_correr1"], "fps": 1.0, "loop": true },
+			"glitch_estocada": { "poses": ["g_correr2"], "fps": 1.0, "loop": true },
+			"glitch_lanzar": { "poses": ["g_caminar1"], "fps": 1.0, "loop": true },
+			"chip_alerta": { "poses": ["c_quieto"], "fps": 1.0, "loop": true },
+			"chip_lanzar": { "poses": ["c_lanzar"], "fps": 1.0, "loop": true },
+			"chip_zona": { "poses": ["c_lanzar"], "fps": 1.0, "loop": true },
+			"chip_rayo": { "poses": ["c_lanzar"], "fps": 1.0, "loop": true },
+			"chip_embestida": { "poses": ["c_correr2"], "fps": 1.0, "loop": true },
+		},
+	},
+	# Poses de ataque de Glitch y Chip de la primera hoja de Ariel («Sprites in-game» de glitch_chip_concepto):
 	# Pogo con la Nullblade (hoja de Ariel "Animación de pogo"): la fila de arriba, de a una fase.
 	# "salto" solo fija la escala (mismo alto que la pose de salto del juego: 88 px). feet_y: fila de
 	# los pies (la espada que apunta hacia abajo no empuja a Kai hacia arriba). El impacto (4) tiene

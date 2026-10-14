@@ -168,6 +168,20 @@ una forma razonable de esquivarlos.
 5. **Cadena de proyecciones:** Chip crea copias mientras Glitch presiona.
 6. **Campo Dual:** combinan sus habilidades para crear una zona peligrosa (el ataque definitivo).
 
+Como en Hollow Knight (las Mantis Lords y los Cogwork Dancers), también se coordinan como una coreografía:
+
+7. **Danza espejo:** cada uno salta a una pared y cruzan la arena a la vez, Glitch por el piso y Chip volando.
+8. **Picadas alternas:** caen sobre Kai por turnos, uno tras otro.
+9. **Discos cruzados:** desde paredes opuestas, Chip lanza discos mientras Glitch embiste.
+10. **Remolino doble** (Fase 3): suben al gran anillo del fondo y giran por el aro, uno frente al otro, disparando.
+
+Y sus movimientos clásicos, como las Mantis Lords: el **Barrido** (aparecen en una pared y cruzan a la altura de Kai) y la
+**Caída** (aparecen arriba de Kai y caen sobre él); los dos siguen a Kai durante el aviso. En la Fase 1 los hacen de a uno;
+desde la Fase 2, sincronizados: **Tijera** (desde paredes opuestas, uno por el piso y el otro por arriba), **Doble caída**
+(uno a cada lado de Kai) y **Caída y barrido** (cuando uno aterriza, el otro ya está cruzando).
+
+Desde la Fase 1 también atacan los dos a la vez (por ejemplo, Glitch corta mientras Chip lanza discos).
+
 **El vínculo:** cuando uno queda momentáneamente incapacitado (varios golpes seguidos), el otro **abandona su ataque
 para protegerlo** hasta que se recupera: Chip lo cubre con un escudo de discos que hace rebotar los golpes; Glitch se
 para delante con la espada y contraataca. Así el jugador percibe un vínculo genuino entre ellos, no solo una mecánica.
@@ -240,7 +254,7 @@ recursos de datos (`data/`), separados de las escenas y de la lógica.
 - El tiempo agotado permite reintentar.
 - El temporizador desaparece al entrar a la arena; el jefe no usa temporizador.
 - Glitch y Chip comparten una sola barra de vida.
-- Sus 8 ataques individuales y los 6 en conjunto funcionan y avisan antes.
+- Sus 8 ataques individuales y los 10 en conjunto funcionan y avisan antes.
 - Cuando uno queda aturdido, el otro deja su ataque y lo protege.
 - Las tres fases cambian al 70 % y al 35 % (con la fase segura del escudo antes de la Fase 3).
 - Los enemigos sobreviven narrativamente.
@@ -277,7 +291,7 @@ Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las 
 | 6 | Temporizador | ✅ `ChaseTimer` (4:00, con la física); tiempo agotado o muerte: vuelta al último checkpoint con tiempo suficiente; desaparece después del tercer checkpoint |
 | 7 | Chip como enemigo | ✅ `ChipBoss` (rediseño de Ariel): Discos orbitales, Zona de control, Proyecciones y Rayo de sincronía; escudo de la fase segura y escudo para proteger a Glitch |
 | 8 | Glitch como enemigo | ✅ `GlitchBoss` (rediseño de Ariel): Corte acelerado, Salto en picada, Embestida en cadena y Lanzamiento de fragmentos; queda vulnerable después de atacar; contraataca protegiendo a Chip |
-| 9 | Coordinación de ataques | ✅ `DualBossController`: vida compartida, secuencias fijas por fase y los 6 ataques en conjunto; el vínculo (proteger al aturdido); fase segura del escudo con terminal (mínimo privilegio) al 35 % |
+| 9 | Coordinación de ataques | ✅ `DualBossController`: vida compartida, secuencias fijas por fase y los 10 ataques en conjunto (también a la vez); el vínculo (proteger al aturdido); fase segura del escudo con terminal (mínimo privilegio) al 35 % |
 | 10 | Furia fraternal | ✅ Es la Fase 3 (Protocolo Dual): los dos juntos, más rápidos y con avisos más cortos, y el Campo Dual |
 | 11 | Arena y transiciones | ✅ La arena (checkpoint al llegar, sin temporizador, reinicio si Kai pierde, salida al cuarto técnico); el nivel 1 en el laboratorio, el pasillo, las escaleras y la biblioteca; el prólogo lleva al capítulo |
 | 12 | Cinemáticas y recompensas | ✅ Introducción y cierre de los hermanos, lectura del Fragmento de Datos, el profesor y `GENESIS_ARCHIVE`, «FIN DEL CAPÍTULO 1»; Ecos una sola vez, páginas del Grimorio, Inmersión Digital |

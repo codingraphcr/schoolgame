@@ -1,0 +1,327 @@
+{
+	"animations": {
+		"chip_aire": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_aire.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"chip_alerta": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_alerta.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"chip_aturdido": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_aturdido.png",
+			"fps": 3.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"chip_caer": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_caer.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"chip_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_caminar.png",
+			"fps": 7.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"chip_correr": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_correr.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"chip_embestida": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_embestida.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"chip_lanzar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_lanzar.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"chip_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"chip_rayo": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_rayo.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"chip_saltar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_saltar.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"chip_zona": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_chip_zona.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_aire": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_aire.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_aturdido": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_aturdido.png",
+			"fps": 3.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"glitch_caer": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_caer.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_caminar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_caminar.png",
+			"fps": 7.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": true
+		},
+		"glitch_correr": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_correr.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"glitch_corte": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_corte.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_estocada": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_estocada.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_guardia": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_guardia.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_lanzar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_lanzar.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_quieto.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_saltar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_px_glitch_saltar.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		}
+	},
+	"scale": 0.5
+}

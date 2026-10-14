@@ -58,7 +58,7 @@ func _physics_process(delta: float) -> void:
 		if _travel >= reach:
 			_returning = true
 	elif is_instance_valid(thrower):
-		var home := thrower.global_position + Vector2(0, -24)
+		var home := thrower.global_position + Vector2(0, -18)
 		velocity = (home - global_position).normalized() * speed * 1.1
 		if global_position.distance_to(home) < 12.0:
 			queue_free()

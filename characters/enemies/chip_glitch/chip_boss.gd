@@ -6,9 +6,11 @@ extends SiblingBoss
 ##   2. Zona de control: un campo que ralentiza a Kai.
 ##   3. Proyecciones: copias temporales que lanzan un disco cada una (un golpe las deshace).
 ##   4. Rayo de sincronía: ataque en línea de largo alcance (línea de aviso y después el rayo).
-## Al entrar a la Fase 3 levanta un escudo ligado a una configuración insegura: el controlador abre la
-## fase segura y la terminal. Protegiendo a Glitch: se para delante con un escudo de discos que hace
-## rebotar los golpes de Kai.
+## Poses de su sprite (además de caminar, correr, saltar y aturdido): alerta al prepararse, lanzar (el
+## disco), zona, rayo y embestida (el dash con la hoja, en la picada y la Danza espejo). Al entrar a la
+## Fase 3 levanta un escudo ligado a una configuración insegura: el controlador abre la fase segura y la
+## terminal.
+## Protegiendo a Glitch: se para delante con un escudo de discos que hace rebotar los golpes de Kai.
 
 signal shield_requested
 
@@ -25,6 +27,18 @@ func _init() -> void:
 
 func _kind() -> StringName:
 	return &"chip"
+
+
+func _ready_pose() -> StringName:
+	return &"alerta"
+
+
+func _dive_pose() -> StringName:
+	return &"embestida"
+
+
+func _dash_pose() -> StringName:
+	return &"embestida"
 
 
 ## Entre ataques: guarda distancia de Kai (unos 140 px), del lado contrario a Glitch si puede.
@@ -55,13 +69,14 @@ func discos_orbitales(count := 1) -> void:
 
 ## Lanza los discos hacia Kai (también lo usan los ataques en conjunto).
 func throw_discs(count: int, aim := Vector2.INF) -> void:
-	var origin := global_position + Vector2(face * 12.0, -26)
+	var origin := global_position + Vector2(face * 9.0, -18)
 	var target := player_position() + Vector2(0, -16) if aim == Vector2.INF else aim
 	var base := (target - origin).normalized()
 	for k in count:
 		var angle := (k - (count - 1) / 2.0) * 0.35
 		BossAttacks.disc(get_parent(), origin, base.rotated(angle) * config.chip_disc_speed * tempo, config.chip_disc_range, self)
 	Sfx.play(&"popup_open", 1.3, -6.0)
+	set_pose(&"lanzar", 0.35)
 	_squash = Vector2(0.9, 1.1)
 
 
@@ -75,6 +90,7 @@ func zona_de_control(x := INF) -> void:
 	if not await telegraph(&"zona_de_control", 0.3, epoch):
 		end_attack(epoch)
 		return
+	set_pose(&"zona", 0.4)
 	BossAttacks.zone(get_parent(), Vector2(player_position().x if x == INF else x, FLOOR_Y), config, telegraph_scale)
 	await _recover(epoch)
 
@@ -114,6 +130,7 @@ func rayo_de_sincronia() -> void:
 	if not await telegraph(&"rayo_de_sincronia", 0.2, epoch):
 		end_attack(epoch)
 		return
+	set_pose(&"rayo")
 	var beam := fire_beam()
 	if not await wait(beam.warning + beam.duration, epoch):
 		end_attack(epoch)
@@ -123,7 +140,7 @@ func rayo_de_sincronia() -> void:
 
 ## El rayo, a la altura del pecho, hacia donde mira (también lo usa Corte y respuesta).
 func fire_beam() -> SyncBeam:
-	var origin := global_position + Vector2(face * 12.0, -26)
+	var origin := global_position + Vector2(face * 9.0, -18)
 	return BossAttacks.beam(get_parent(), origin, Vector2(face, 0), config, telegraph_scale)
 
 
@@ -148,6 +165,7 @@ func shield_off() -> void:
 
 func _on_guard_started() -> void:
 	hurtbox.immune = true
+	set_pose(&"alerta")
 
 
 func _on_guard_ended() -> void:
