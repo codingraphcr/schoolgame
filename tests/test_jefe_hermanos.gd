@@ -1,11 +1,11 @@
 extends SceneTree
 ## Prueba automática: Capítulo 1, etapas 7 a 11 (Glitch y Chip, diseño de Ariel). La arena registra el
-## checkpoint y no tiene temporizador; los dos comparten una sola barra de vida; sus 8 ataques
-## individuales y los 6 en conjunto avisan antes; cuando uno queda aturdido el otro deja su ataque y
-## lo protege; las tres fases (el anillo y la segunda melodía en la Fase 2, la fase segura con la
-## terminal al 35 % y el Protocolo Dual / Furia fraternal); con la vida en cero quedan neutralizados
-## (no se borran); la recompensa se cobra una sola vez; si Kai pierde, la pelea vuelve a empezar; con
-## la pelea ganada, la arena queda abierta.
+## checkpoint y no tiene temporizador; cada uno tiene su barra de vida; sus 8 ataques individuales y
+## los 6 en conjunto avisan antes; cuando uno queda aturdido el otro deja su ataque y lo protege; las
+## tres fases según la vida de los dos (el anillo y la segunda melodía en la Fase 2, la fase segura con
+## la terminal al 35 % y el Protocolo Dual); si uno queda neutralizado, el otro entra en Furia fraternal
+## (y viceversa); con los dos neutralizados (no se borran) se gana; la recompensa se cobra una sola vez;
+## si Kai pierde, la pelea vuelve a empezar; con la pelea ganada, la arena queda abierta.
 ## Ejecutar: godot --headless --path . --script res://tests/test_jefe_hermanos.gd
 
 const ARENA := "res://world/zones/red_entrenamiento/arena_hermanos.tscn"
@@ -18,6 +18,8 @@ var fight: DualBossController
 var chip: ChipBoss
 var glitch: GlitchBoss
 var events: Array = []
+## Quién entró en Furia fraternal (&"glitch" o &"chip").
+var rages: Array[StringName] = []
 
 
 func _initialize() -> void:
@@ -55,16 +57,18 @@ func _test_start() -> void:
 		"al llegar a la arena se registra el checkpoint y la misión pide detener a los hermanos")
 	_check(room.get_node_or_null("CombatHUD/ChaseTimer") == null, "el combate no tiene temporizador")
 	_check(fight.phase == DualBossController.Phase.FIGHT and fight.gate.active and fight.fight_phase == 1, "empieza la pelea (Fase 1) con la puerta cerrada")
-	_check(chip.health == glitch.health and chip.health == fight.health and fight.health.max_health == fight.config.shared_health,
-		"Glitch y Chip comparten la vida (%.0f)" % fight.health.max_health)
+	_check(chip.health != glitch.health and glitch.health.max_health == fight.config.glitch_health and chip.health.max_health == fight.config.chip_health,
+		"Glitch y Chip tienen cada uno su vida (%.0f y %.0f)" % [glitch.health.max_health, chip.health.max_health])
 	var bar := room.get_node("CombatHUD/BossBar") as BossBar
-	_check(bar.title == "GLITCH & CHIP" and room.get_node_or_null("CombatHUD/BossBar2") == null, "una sola barra: «GLITCH & CHIP»")
-	_check(is_equal_approx(bar.phase_mark, fight.config.phase2_at) and bar.phase_marks == [fight.config.phase3_at], "la barra marca las fases (70 % y 35 %)")
-	var before := fight.health.current
-	_hit(chip, 1.0)
+	var bar_chip := room.get_node_or_null("CombatHUD/BossBar2") as BossBar
+	_check(bar.title == "GLITCH" and bar_chip != null and bar_chip.title == "CHIP" and bar.boss == glitch and bar_chip.boss == chip,
+		"dos barras: «GLITCH» arriba y «CHIP» debajo")
+	var glitch_before := glitch.health.current
+	var chip_before := chip.health.current
 	_hit(glitch, 1.0)
-	_check(is_equal_approx(fight.health.current, before - 2.0) and bar.ratio() < 1.0, "pegarle a cualquiera de los dos baja la misma barra")
-	fight.health.restore_full()
+	_check(is_equal_approx(glitch.health.current, glitch_before - 1.0) and chip.health.current == chip_before and bar.ratio() < 1.0 and bar_chip.ratio() == 1.0,
+		"pegarle a Glitch baja solo su barra")
+	_restore()
 	_check(SiblingArt.texture(&"glitch") != null and SiblingArt.texture(&"chip") != null and SiblingArt.texture(&"disco") != null,
 		"Glitch, Chip y el disco usan los sprites de la hoja de Ariel")
 
@@ -218,7 +222,7 @@ func _test_protect() -> void:
 	await _until(func() -> bool: return not chip.stunned)
 	await _frames(2)
 	_check(glitch.guarding == null, "y lo suelta cuando Chip se recupera")
-	fight.health.restore_full()
+	_restore()
 
 
 ## Las tres fases.
@@ -229,12 +233,12 @@ func _test_phases() -> void:
 	var started := fight.patterns_done.slice(first)
 	_check(started.size() >= 2 and started[0] in DualBossController.PHASE1 and started[1] in DualBossController.PHASE1,
 		"Fase 1 · Reconocimiento: sigue su secuencia (%s)" % [started])
-	fight.health.take_damage(fight.health.current - fight.health.max_health * 0.69)
+	_set_total(0.69)
 	await _frames(2)
 	_check(fight.fight_phase == 2 and fight.chamber.active and Music.layer_on, "al 70 %: Fase 2 · Sincronización (se activa el anillo y la segunda melodía)")
 	await _until(func() -> bool: return fight.patterns_done[-1] in DualBossController.PHASE2)
 	_check(fight.patterns_done[-1] in DualBossController.PHASE2, "en la Fase 2 usan su secuencia (%s)" % fight.patterns_done[-1])
-	fight.health.take_damage(fight.health.current - fight.health.max_health * 0.34)
+	_set_total(0.34)
 	await _frames(4)
 	_check(fight.phase == DualBossController.Phase.SAFE and chip.shielded and chip.frozen and glitch.frozen and room.player.damage.protected,
 		"al 35 %: Chip levanta su escudo y empieza la fase segura")
@@ -251,8 +255,8 @@ func _test_phases() -> void:
 	window.next()
 	await _until(func() -> bool: return fight.phase == DualBossController.Phase.FIGHT)
 	_check(not chip.shielded and not chip.frozen and fight.fight_phase == 3, "con el mínimo privilegio, el escudo se apaga y empieza la Fase 3")
-	_check(chip.enraged and glitch.enraged and glitch.tempo > 1.0 and glitch.telegraph_scale < 1.0,
-		"Fase 3 · Protocolo Dual (Furia fraternal): los dos juntos, más rápidos y con avisos más cortos")
+	_check(not chip.enraged and not glitch.enraged and glitch.tempo > 1.0 and glitch.telegraph_scale < 1.0,
+		"Fase 3 · Protocolo Dual: los dos juntos, más rápidos y con avisos más cortos")
 	room.player.damage.protected = true
 	await _until(func() -> bool: return fight.patterns_done[-1] in DualBossController.PHASE3)
 	_check(fight.patterns_done[-1] in DualBossController.PHASE3, "en la Fase 3 usan su secuencia, con el Campo Dual")
@@ -260,9 +264,20 @@ func _test_phases() -> void:
 
 func _test_victory() -> void:
 	var ecos_before: int = root.get_node("Economy").ecos
-	fight.health.take_damage(fight.health.current)
+	# Glitch cae primero: Chip entra en Furia fraternal.
+	var chip_before := chip.health.current
+	glitch.health.take_damage(glitch.health.current)
 	await _frames(3)
-	_check(glitch.is_dead and chip.is_dead and is_instance_valid(glitch) and glitch.visible, "con la vida en cero los dos quedan neutralizados (no se borran)")
+	_check(glitch.is_dead and not chip.is_dead and fight.phase == DualBossController.Phase.FIGHT and fight.survivor == chip,
+		"con su vida en cero, Glitch queda neutralizado y Chip sigue")
+	_check(chip.enraged and chip.tempo >= fight.config.rage_speed_scale and chip.telegraph_scale <= fight.config.rage_telegraph_scale
+		and chip.health.current > chip_before and rages.has(&"chip"),
+		"¡Furia fraternal! Chip se vuelve más fuerte: más rápido, avisos más cortos y recupera vida (%.1f → %.1f)" % [chip_before, chip.health.current])
+	await _until(func() -> bool: return not fight.patterns_done.is_empty() and fight.patterns_done[-1] in DualBossController.CHIP_RAGE and fight._running)
+	_check(fight.patterns_done[-1] in DualBossController.CHIP_RAGE, "y sigue solo con sus ataques (%s)" % fight.patterns_done[-1])
+	chip.health.take_damage(chip.health.current)
+	await _frames(3)
+	_check(glitch.is_dead and chip.is_dead and is_instance_valid(glitch) and glitch.visible, "con los dos neutralizados (no se borran) se gana")
 	await _until(func() -> bool: return fight.phase == DualBossController.Phase.DONE)
 	_check(fight.phase == DualBossController.Phase.DONE and state.has_flag(&"cap1_hermanos_vencidos") and state.has_flag(&"cap1_fragmento_leido"),
 		"se gana el combate: cierre y lectura del Fragmento de Datos")
@@ -272,7 +287,8 @@ func _test_victory() -> void:
 	state.clear_flag(&"cap1_hermanos_vencidos")
 	ecos_before = root.get_node("Economy").ecos
 	await _open()
-	fight.health.take_damage(fight.health.current)
+	glitch.health.take_damage(glitch.health.current)
+	chip.health.take_damage(chip.health.current)
 	await _until(func() -> bool: return fight.phase == DualBossController.Phase.DONE)
 	_check(root.get_node("Economy").ecos == ecos_before, "la recompensa no se cobra dos veces")
 
@@ -280,7 +296,11 @@ func _test_victory() -> void:
 func _test_player_loses() -> void:
 	state.clear_flag(&"cap1_hermanos_vencidos")
 	await _open()
-	fight.health.take_damage(fight.health.max_health * 0.4)
+	# Y viceversa: si Chip cae primero, Glitch se enfurece.
+	chip.health.take_damage(chip.health.current)
+	await _frames(3)
+	_check(chip.is_dead and fight.survivor == glitch and glitch.enraged and glitch.tempo >= fight.config.rage_speed_scale,
+		"si Chip cae primero, Glitch entra en Furia fraternal")
 	await _frames(3)
 	var player := room.player
 	player.damage.protected = false
@@ -290,9 +310,9 @@ func _test_player_loses() -> void:
 	player.damage._on_hit_received(hit)
 	await _until(func() -> bool: return not player.damage.is_respawning and not player.controls_locked)
 	await _frames(6)
-	_check(fight.phase == DualBossController.Phase.FIGHT and fight.fight_phase == 1 and fight.health.current == fight.health.max_health
-		and not chip.is_dead and not glitch.enraged and not fight.chamber.active and not Music.layer_on,
-		"si Kai pierde, reaparece y la pelea vuelve a empezar desde la Fase 1 [fase %d, vida %.0f]" % [fight.fight_phase, fight.health.current])
+	_check(fight.phase == DualBossController.Phase.FIGHT and fight.fight_phase == 1 and is_equal_approx(fight.total_ratio(), 1.0)
+		and not chip.is_dead and not glitch.enraged and fight.survivor == null and not fight.chamber.active and not Music.layer_on,
+		"si Kai pierde, reaparece y la pelea vuelve a empezar desde la Fase 1 [fase %d, vida %.0f %%]" % [fight.fight_phase, fight.total_ratio() * 100.0])
 	_check(room.get_node_or_null("CombatHUD/ChaseTimer") == null, "y sigue sin límite de tiempo")
 
 
@@ -359,6 +379,7 @@ func _open() -> void:
 	await _frames(6)
 	room = scene as Room
 	fight = scene.get_node("Fight") as DualBossController
+	fight.rage_started.connect(func(who: StringName) -> void: rages.append(who))
 	chip = fight.chip
 	glitch = fight.glitch
 	room.player.health.max_health = 999.0
@@ -425,6 +446,17 @@ func _frames(count: int) -> void:
 	for i in count:
 		await process_frame
 		await physics_frame
+
+
+## Deja la vida de los dos en esa fracción de su máximo (cada uno en la misma proporción).
+func _set_total(ratio: float) -> void:
+	for boss: SiblingBoss in [glitch, chip]:
+		boss.health.take_damage(boss.health.current - boss.health.max_health * ratio)
+
+
+func _restore() -> void:
+	for boss: SiblingBoss in [glitch, chip]:
+		boss.health.restore_full()
 
 
 func _check(condition: bool, message: String) -> void:

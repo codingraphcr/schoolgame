@@ -4,7 +4,8 @@ extends EnemyBase
 ## Los ataques los ordena el DualBossController (secuencias fijas por fase: «más rápidos, pero no
 ## aleatorios»); entre ataque y ataque cada hermano se mueve por su cuenta (_idle_move).
 ##
-## - Vida compartida: share_health() hace que los dos usen la misma barra (funcionan como una unidad).
+## - Vida propia: cada hermano tiene su barra. Si uno queda neutralizado, el otro entra en Furia fraternal
+##   (lo maneja el controlador: enter_rage(), tempo y telegraph_scale).
 ## - Aturdido: stagger_hits golpes seguidos lo dejan mareado stun_time segundos (incapacitated). El
 ##   controlador hace que el otro deje su ataque y lo proteja (guard_for).
 ## - Nunca mueren: con la vida en cero quedan **neutralizados** (mareados en el piso) y no se borran.
@@ -66,13 +67,6 @@ func _ready() -> void:
 	super()
 	home = global_position
 	hurtbox.hit_blocked.connect(_on_hit_blocked)
-
-
-## Los dos hermanos usan la misma vida (una sola barra).
-func share_health(shared: HealthComponent) -> void:
-	if health.died.is_connected(_die):
-		health.died.disconnect(_die)
-	health = shared
 
 
 func _physics_process(delta: float) -> void:
@@ -301,7 +295,7 @@ func neutralize() -> void:
 	neutralized.emit(self)
 
 
-## La vida compartida llegó a cero: lo resuelve el controlador (neutraliza a los dos).
+## Su vida llegó a cero: queda neutralizado (no se borra). El controlador decide qué pasa con el otro.
 func _die() -> void:
 	neutralize()
 
