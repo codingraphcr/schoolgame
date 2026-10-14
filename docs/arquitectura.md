@@ -96,7 +96,7 @@ tinte de las siluetas).
 | `jump` | Espacio | A |
 | `attack` (Nullblade) | J | X |
 | `aegis_fire` | K | Y |
-| `dash` | Shift | RB |
+| `dash` | C | RB |
 | `vision` (Visión Digital) | Q | LB |
 | `interact` | E | B |
 | `ultimate` (Dominio Nulo) | R | RT |

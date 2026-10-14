@@ -1,5 +1,6 @@
 extends SceneTree
-## Prueba automática: curación con L (energía, tiempos, cancelación, en el suelo y en el aire).
+## Prueba automática: curación con L (energía, tiempos, cancelación, en el suelo y en el aire, y el saltito al
+## terminar en el aire).
 ## Ejecutar: godot --headless --path . --script res://tests/test_heal.gd
 
 const ROOM := "res://world/zones/zone0/entrada.tscn"
@@ -92,6 +93,22 @@ func _run() -> void:
 	Input.action_release("heal")
 	await _wait(1.5)
 	_check(player.is_on_floor(), "al terminar, Kai vuelve a caer")
+
+	# Al terminar de curarse en el aire: un saltito (en vez de caer directo).
+	player.set_energy(2.0)
+	player.teleport_to(player.global_position + Vector2(0, -60))
+	await _frames(2)
+	Input.action_press("heal")
+	await _wait(1.25)
+	_check(heal.active and heal.heals_done == 1, "en el aire se cura una vez")
+	var before := player.global_position.y
+	Input.action_release("heal")
+	await _frames(2)
+	_check(not heal.active and player.velocity.y < 0.0, "al terminar, Kai da un saltito")
+	await _wait(0.15)
+	_check(player.global_position.y < before - 8.0, "y sube un poco (%.0f px)" % (before - player.global_position.y))
+	await _wait(1.5)
+	_check(player.is_on_floor(), "después cae normalmente")
 
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
