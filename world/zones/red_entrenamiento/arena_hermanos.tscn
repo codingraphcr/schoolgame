@@ -1,0 +1,188 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_6gx3y"]
+[ext_resource type="Script" path="res://world/zones/red_entrenamiento/training_network_background.gd" id="2_u4dfn"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_4w6g2"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="4_uowup"]
+[ext_resource type="Script" path="res://world/digital/arena_barrier.gd" id="5_vvev1"]
+[ext_resource type="Script" path="res://characters/enemies/chip_glitch/chip_boss.gd" id="6_8llud"]
+[ext_resource type="Resource" path="res://data/bosses/chip_glitch.tres" id="7_ycnc8"]
+[ext_resource type="Script" path="res://characters/enemies/chip_glitch/glitch_boss.gd" id="8_b31rf"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="9_0fwq5"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="10_0s2ri"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="11_72p5q"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="12_q8p38"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="13_al5as"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="14_5omli"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="15_a3nn8"]
+[ext_resource type="Script" path="res://world/digital/immersion_portal.gd" id="16_dhu2j"]
+[ext_resource type="Script" path="res://world/zones/red_entrenamiento/dual_boss_controller.gd" id="17_laq7o"]
+[ext_resource type="Resource" path="res://data/terminals/escudo_chip.tres" id="18_q4qw0"]
+[ext_resource type="Resource" path="res://data/challenges/cap1_escudo_chip.tres" id="19_74ql6"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/arena_entrada.tres" id="20_3xks1"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/escudo_chip.tres" id="21_edano"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/escudo_roto.tres" id="22_yt2mg"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/cierre_hermanos.tres" id="23_ekht6"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/fragmento_leido.tres" id="24_54mbs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w7b2f"]
+size = Vector2(704, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e86r0"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o61cd"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nv2b7"]
+size = Vector2(12, 256)
+
+[node name="ArenaHermanos" type="Node2D" unique_id=1362711060 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_6gx3y")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 640, 360)
+player_tint = Color(0.7, 1, 1.15, 1)
+fall_damage = 1.5
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Background" type="Node2D" parent="." unique_id=1237003599]
+script = ExtResource("2_u4dfn")
+area = Rect2(0, 0, 640, 360)
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=1152048481]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=2076719178]
+position = Vector2(320, 344)
+shape = SubResource("RectangleShape2D_w7b2f")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=2091967346]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_e86r0")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1964664225]
+position = Vector2(656, 180)
+shape = SubResource("RectangleShape2D_o61cd")
+
+[node name="Platforms" type="Node2D" parent="." unique_id=100950495]
+
+[node name="FloorVisual" type="AnimatableBody2D" parent="Platforms" unique_id=1242479662]
+position = Vector2(0, 304)
+script = ExtResource("3_4w6g2")
+width = 640.0
+
+[node name="Platform1" type="AnimatableBody2D" parent="Platforms" unique_id=957411974]
+position = Vector2(70, 232)
+script = ExtResource("3_4w6g2")
+width = 120.0
+
+[node name="Platform2" type="AnimatableBody2D" parent="Platforms" unique_id=1924650293]
+position = Vector2(450, 232)
+script = ExtResource("3_4w6g2")
+width = 120.0
+
+[node name="Platform3" type="AnimatableBody2D" parent="Platforms" unique_id=836618518]
+position = Vector2(270, 172)
+script = ExtResource("3_4w6g2")
+width = 100.0
+
+[node name="Entries" type="Node2D" parent="." unique_id=1207402608]
+
+[node name="DesdePersecucion" type="Marker2D" parent="Entries" unique_id=718845250]
+position = Vector2(48, 304)
+script = ExtResource("4_uowup")
+id = &"desde_persecucion"
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=73482302]
+position = Vector2(48, 304)
+
+[node name="Gate" type="StaticBody2D" parent="." unique_id=1803373274]
+position = Vector2(20, 304)
+script = ExtResource("5_vvev1")
+height = 220.0
+
+[node name="Bosses" type="Node2D" parent="." unique_id=414103145]
+
+[node name="Chip" type="CharacterBody2D" parent="Bosses" unique_id=1940427105]
+position = Vector2(470, 236)
+script = ExtResource("6_8llud")
+config = ExtResource("7_ycnc8")
+display_name = "Chip"
+threat_type = &"malware"
+body_size = Vector2(20, 20)
+gravity = 0.0
+death_colors = Array[Color]([Color(0.3529412, 0.84705883, 1, 1), Color(0.65882355, 0.93333334, 1, 1), Color(0.12156863, 0.43529412, 0.6039216, 1)])
+
+[node name="Glitch" type="CharacterBody2D" parent="Bosses" unique_id=828011798]
+position = Vector2(520, 304)
+script = ExtResource("8_b31rf")
+config = ExtResource("7_ycnc8")
+display_name = "Glitch"
+threat_type = &"malware"
+body_size = Vector2(22, 18)
+death_colors = Array[Color]([Color(1, 0.5411765, 0.22745098, 1), Color(1, 0.7529412, 0.5411765, 1), Color(0.627451, 0.2509804, 0.101960786, 1)])
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=141866913 instance=ExtResource("9_0fwq5")]
+position = Vector2(48, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("10_0s2ri")
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1007401083 node_paths=PackedStringArray("target") instance=ExtResource("11_72p5q")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("12_q8p38")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("13_al5as")]
+layer = 40
+script = ExtResource("14_5omli")
+player = NodePath("../Player")
+
+[node name="Exits" type="Node2D" parent="." unique_id=2114002816]
+
+[node name="ToPersecucion" type="Area2D" parent="Exits" unique_id=71533192]
+position = Vector2(6, 176)
+script = ExtResource("15_a3nn8")
+door_id = &"oeste"
+target_scene = "res://world/zones/red_entrenamiento/persecucion.tscn"
+target_entry = &"desde_arena"
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToPersecucion" unique_id=1710342895]
+shape = SubResource("RectangleShape2D_nv2b7")
+
+[node name="ExitPortal" type="Area2D" parent="Exits" unique_id=1360179578]
+position = Vector2(560, 250)
+script = ExtResource("16_dhu2j")
+target_scene = "res://world/zones/zone0/cuarto_tecnico.tscn"
+target_entry = &"desde_red"
+screen_size = Vector2(44, 30)
+title = "DESCONECTANDO..."
+lines = PackedStringArray("Saliendo de la red de entrenamiento", "Volviendo al cuarto técnico...")
+needs_vision = false
+prompt_text = "E: salir"
+prompt_offset = Vector2(-30, -40)
+
+[node name="Fight" type="Node" parent="." unique_id=1477440023 node_paths=PackedStringArray("chip", "glitch", "gate", "exit_portal", "platforms")]
+script = ExtResource("17_laq7o")
+config = ExtResource("7_ycnc8")
+chip = NodePath("../Bosses/Chip")
+glitch = NodePath("../Bosses/Glitch")
+gate = NodePath("../Gate")
+exit_portal = NodePath("../Exits/ExitPortal")
+platforms = [NodePath("../Platforms/Platform1"), NodePath("../Platforms/Platform2"), NodePath("../Platforms/Platform3")]
+shield_terminal = ExtResource("18_q4qw0")
+shield_challenge = ExtResource("19_74ql6")
+intro_dialogue = ExtResource("20_3xks1")
+shield_dialogue = ExtResource("21_edano")
+shield_broken_dialogue = ExtResource("22_yt2mg")
+closing_dialogue = ExtResource("23_ekht6")
+after_reading_dialogue = ExtResource("24_54mbs")

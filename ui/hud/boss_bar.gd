@@ -5,6 +5,7 @@ extends Control
 ## empieza la fase 2; lo que se pierde queda un instante en blanco antes de bajar. En la fase 2 la
 ## barra tiembla un poco, como sus ventanas inestables.
 ## Uso: var bar := BossBar.show_for(hud, jefe, "CONTRASEÑA DÉBIL")  ·  bar.dismiss()
+## Con dos jefes a la vez (Chip y Glitch), slot 1 va debajo de la primera. phase_mark < 0 = sin marca.
 
 const MAGENTA := Color("ff3ea5")
 const PINK := Color("ff9ccf")
@@ -15,8 +16,12 @@ const BAR := Rect2(48, 26, 384, 10)
 
 var boss: EnemyBase
 var title := ""
-## Fracción de vida donde empieza la fase 2 (marca en la barra).
+## Fracción de vida donde empieza la fase 2 (marca en la barra; negativa = sin marca).
 var phase_mark := 0.5
+## Fila (0 arriba, 1 debajo): para dos jefes a la vez.
+var slot := 0
+## Color de la barra (magenta por defecto).
+var color := MAGENTA
 
 var _shown := 1.0
 var _trail := 1.0
@@ -24,11 +29,13 @@ var _time := 0.0
 var _letters := 0.0
 
 
-static func show_for(hud: Node, target: EnemyBase, boss_name: String) -> BossBar:
+static func show_for(hud: Node, target: EnemyBase, boss_name: String, row := 0, bar_color := MAGENTA) -> BossBar:
 	var bar := BossBar.new()
 	bar.boss = target
 	bar.title = boss_name
-	bar.name = "BossBar"
+	bar.slot = row
+	bar.color = bar_color
+	bar.name = "BossBar" if row == 0 else "BossBar%d" % (row + 1)
 	hud.add_child(bar)
 	return bar
 
@@ -39,8 +46,8 @@ func _ready() -> void:
 	anchor_right = 0.5
 	offset_left = -WIDTH / 2.0
 	offset_right = WIDTH / 2.0
-	offset_top = 14.0
-	offset_bottom = 54.0
+	offset_top = 14.0 + slot * 46.0
+	offset_bottom = 54.0 + slot * 46.0
 	modulate.a = 0.0
 	create_tween().tween_property(self, "modulate:a", 1.0, 0.3)
 	_shown = 0.0
@@ -77,12 +84,12 @@ func _draw() -> void:
 	# Ícono: la pantalla enojada del jefe.
 	var icon := Rect2(Vector2(4, 4) + shake, Vector2(34, 32))
 	draw_rect(icon, DARK)
-	draw_rect(icon, MAGENTA, false, 1.5)
+	draw_rect(icon, color, false, 1.5)
 	var screen := icon.grow(-5)
 	draw_rect(screen, Color("1a0626"))
 	for side: int in [-1, 1]:
 		var eye := screen.get_center() + Vector2(side * 6, 1)
-		draw_colored_polygon(PackedVector2Array([eye + Vector2(-3 * side, -2), eye + Vector2(3 * side, 0), eye + Vector2(-2 * side, 2)]), MAGENTA)
+		draw_colored_polygon(PackedVector2Array([eye + Vector2(-3 * side, -2), eye + Vector2(3 * side, 0), eye + Vector2(-2 * side, 2)]), color)
 	# Nombre (se escribe letra por letra al aparecer).
 	draw_string(ThemeDB.fallback_font, Vector2(BAR.position.x, 19) + shake, title.substr(0, int(_letters)), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, PINK)
 	# Barra: fondo, estela blanca, vida y la marca de la fase 2.
@@ -90,8 +97,9 @@ func _draw() -> void:
 	draw_rect(bar.grow(2), DARK)
 	draw_rect(bar.grow(2), EDGE, false, 1.0)
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x * _trail, bar.size.y)), Color(1, 0.85, 0.95, 0.85))
-	var fill := MAGENTA.lerp(Color("ff2a55"), 0.35 if unstable else 0.0)
+	var fill := color.lerp(Color("ff2a55"), 0.35 if unstable else 0.0)
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x * _shown, bar.size.y)), fill)
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x * _shown, 2)), Color(PINK, 0.8))
-	var mark := bar.position.x + bar.size.x * phase_mark
-	draw_line(Vector2(mark, bar.position.y - 3), Vector2(mark, bar.end.y + 3), PINK, 1.5)
+	if phase_mark >= 0.0:
+		var mark := bar.position.x + bar.size.x * phase_mark
+		draw_line(Vector2(mark, bar.position.y - 3), Vector2(mark, bar.end.y + 3), PINK, 1.5)

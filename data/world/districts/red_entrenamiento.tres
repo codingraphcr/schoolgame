@@ -4,14 +4,29 @@
 [ext_resource type="Script" path="res://systems/world/layout_room.gd" id="2_cssk8"]
 [ext_resource type="Script" path="res://systems/world/district_layout.gd" id="3_0iytl"]
 
+[sub_resource type="Resource" id="Resource_5rbc6"]
+script = ExtResource("1_5rbc6")
+room_a = &"persecucion"
+door_a = &"este"
+room_b = &"arena_hermanos"
+door_b = &"oeste"
+requires = PackedStringArray()
+
 [sub_resource type="Resource" id="Resource_rcbap"]
 script = ExtResource("2_cssk8")
 room_id = &"persecucion"
 template_id = &"persecucion"
+
+[sub_resource type="Resource" id="Resource_cssk8"]
+script = ExtResource("2_cssk8")
+room_id = &"arena_hermanos"
+template_id = &"arena_hermanos"
+cell = Vector2i(10, 0)
 
 [resource]
 script = ExtResource("3_0iytl")
 id = &"red_entrenamiento"
 display_name = "Red de entrenamiento"
 start_room = &"persecucion"
-rooms = Array[ExtResource("2_cssk8")]([SubResource("Resource_rcbap")])
+rooms = Array[ExtResource("2_cssk8")]([SubResource("Resource_rcbap"), SubResource("Resource_cssk8")])
+links = Array[ExtResource("1_5rbc6")]([SubResource("Resource_5rbc6")])

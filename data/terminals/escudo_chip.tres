@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="TerminalChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/terminal/terminal_challenge.gd" id="1_term"]
+
+[resource]
+script = ExtResource("1_term")
+id = &"cap1_escudo_chip"
+title = "Escudo de Chip"
+objective = "Encuentra qué configuración le da el escudo a Chip."
+user = "kai"
+host = "escudo-chip"
+welcome = "Conexión con el escudo de datos de Chip.
+Escribe help para ver los comandos."
+files = Dictionary[String, String]({
+"escudo.cfg": "# Configuración del escudo de datos
+propietario: chip
+estado: ACTIVO
+permisos: escritura para todos
+# Cualquiera puede cambiar este archivo...
+"
+})
+goal_file = "escudo.cfg"
+allowed_commands = PackedStringArray("help", "ls", "cat")
+hints = PackedStringArray("Usa ls para ver qué archivos hay.", "Lee la configuración con cat escudo.cfg.")
+success_text = "Ahí está el problema: el escudo deja que TODOS escriban en su configuración."
+ecos_reward = 0

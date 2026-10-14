@@ -259,10 +259,10 @@ Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las 
 | 4 | Barrera, salud y caídas | ✅ `CorruptionBarrier` (1 por contacto, invulnerabilidad breve, se detiene en las zonas seguras, se apaga al final); caídas de 1,5 (`Room.fall_damage`) con vuelta a la última plataforma segura (nunca una que se mueve o desaparece) |
 | 5 | Checkpoints y preguntas | ✅ `EducationalCheckpoint` con `ChoiceWindow` (pausa el juego: Kai no recibe daño); incorrecta −15 s; correcta: puerta, marca `cap1_checkpoint_N` y guardado; no se repiten al cargar |
 | 6 | Temporizador | ✅ `ChaseTimer` (4:00, con la física); tiempo agotado o muerte: vuelta al último checkpoint con tiempo suficiente; desaparece después del tercer checkpoint |
-| 7 | Chip como enemigo | Pendiente |
-| 8 | Glitch como enemigo | Pendiente |
-| 9 | Coordinación de ataques | Pendiente |
-| 10 | Furia fraternal | Pendiente |
-| 11 | Arena y transiciones | Pendiente |
+| 7 | Chip como enemigo | ✅ `ChipBoss`: flota; disparos apuntados, trampas temporales, barreras pequeñas, apaga plataformas y escudo (a la mitad de su vida) |
+| 8 | Glitch como enemigo | ✅ `GlitchBoss`: corre con amagues; embestidas, saltos ofensivos y combos de tres; queda vulnerable después de atacar |
+| 9 | Coordinación de ataques | ✅ `DualBossController`: Camino cerrado, Distracción y Trampa sincronizada; fase segura del escudo con terminal (mínimo privilegio) |
+| 10 | Furia fraternal | ✅ Una sola vez y distinta según quién sobrevive: Chip en abanico, trampas dobles y pulsos de defensa; Glitch más rápido, embestidas encadenadas y salto + combo |
+| 11 | Arena y transiciones | En curso: ✅ la arena (checkpoint al llegar, sin temporizador, puerta, reinicio si Kai pierde, salida al cuarto técnico). Falta el nivel 1 y encadenar las misiones |
 | 12 | Cinemáticas y recompensas | Pendiente |
 | 13 | Pruebas y optimización | Pendiente |

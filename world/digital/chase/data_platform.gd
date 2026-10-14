@@ -96,6 +96,24 @@ func _on_stepped(body: Node) -> void:
 	_shape.set_deferred(&"disabled", false)
 
 
+## La apaga seconds segundos (Chip altera las plataformas de la arena). Parpadea antes.
+func force_close(seconds: float) -> void:
+	if _closing or _closed:
+		return
+	_closing = true
+	_blink = 0.0
+	add_to_group(&"unsafe_ground")
+	await get_tree().create_timer(0.5, false, true).timeout
+	_closing = false
+	_closed = true
+	_shape.set_deferred(&"disabled", true)
+	await get_tree().create_timer(seconds, false, true).timeout
+	_closed = false
+	_shape.set_deferred(&"disabled", false)
+	if kind == Kind.FIXED:
+		remove_from_group(&"unsafe_ground")
+
+
 func _rebuild() -> void:
 	if not is_inside_tree():
 		return

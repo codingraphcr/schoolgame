@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_xtmr3"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_jgaww"]
+
+[sub_resource type="Resource" id="Resource_p7wlo"]
+script = ExtResource("1_xtmr3")
+id = &"oeste"
+side = 0
+entry_id = &"desde_persecucion"
+
+[resource]
+script = ExtResource("2_jgaww")
+id = &"arena_hermanos"
+display_name = "Arena de los hermanos"
+scene_path = "res://world/zones/red_entrenamiento/arena_hermanos.tscn"
+room_type = &"digital"
+district_id = &"red_entrenamiento"
+doors = Array[ExtResource("1_xtmr3")]([SubResource("Resource_p7wlo")])
+fixed = true
+difficulty = 3
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 1
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray("travesuras_en_el_sistema")

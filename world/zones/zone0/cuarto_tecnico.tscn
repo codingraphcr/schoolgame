@@ -134,6 +134,12 @@ script = ExtResource("11_q57ws")
 id = &"desde_escaleras"
 facing = -1
 
+[node name="FromRed" type="Marker2D" parent="Entries" unique_id=1003627892]
+position = Vector2(500, 304)
+script = ExtResource("11_q57ws")
+id = &"desde_red"
+arrival_effect = "materialize"
+
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 
 [node name="ToEscaleras" type="Area2D" parent="Exits" unique_id=110878799]

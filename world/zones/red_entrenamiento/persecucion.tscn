@@ -12,12 +12,9 @@
 [ext_resource type="Resource" path="res://data/challenges/cap1_checkpoint_3.tres" id="10_pypt6"]
 [ext_resource type="Script" path="res://world/digital/chase/corruption_barrier.gd" id="11_ec0yk"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="12_3l0nv"]
-[ext_resource type="Script" path="res://characters/player/player.gd" id="13_6js36"]
 [ext_resource type="Texture2D" path="res://assets/art/light_soft.tres" id="14_jupwb"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="15_xf83c"]
-[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="16_iaqrh"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="17_dt0aw"]
-[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="18_wnugd"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="19_naxve"]
 [ext_resource type="Script" path="res://world/digital/chase/digital_chase_controller.gd" id="20_ay5lp"]
 [ext_resource type="Resource" path="res://data/chase/persecucion_cap1.tres" id="21_gri68"]
@@ -305,11 +302,8 @@ script = ExtResource("11_ec0yk")
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=1651188675]
 position = Vector2(80, 304)
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=1906118656 instance=ExtResource("12_3l0nv")]
+[node name="Player" parent="." unique_id=1906118656 instance=ExtResource("12_3l0nv")]
 position = Vector2(80, 304)
-collision_layer = 2
-floor_snap_length = 4.0
-script = ExtResource("13_6js36")
 
 [node name="SoulGlow" type="PointLight2D" parent="Player" unique_id=125802026]
 position = Vector2(0, -20)
@@ -318,20 +312,10 @@ energy = 0.6
 texture = ExtResource("14_jupwb")
 texture_scale = 1.4
 
-[node name="GameCamera" type="Camera2D" parent="." unique_id=305966165 node_paths=PackedStringArray("target") instance=ExtResource("15_xf83c")]
-zoom = Vector2(2, 2)
-process_callback = 0
-position_smoothing_enabled = true
-position_smoothing_speed = 7.0
-drag_vertical_enabled = true
-drag_top_margin = 0.25
-drag_bottom_margin = 0.15
-script = ExtResource("16_iaqrh")
+[node name="GameCamera" parent="." unique_id=305966165 node_paths=PackedStringArray("target") instance=ExtResource("15_xf83c")]
 target = NodePath("../Player")
 
-[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("17_dt0aw")]
-layer = 40
-script = ExtResource("18_wnugd")
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("17_dt0aw")]
 player = NodePath("../Player")
 
 [node name="Exits" type="Node2D" parent="." unique_id=1922104322]
@@ -339,7 +323,9 @@ player = NodePath("../Player")
 [node name="ToArena" type="Area2D" parent="Exits" unique_id=41485599]
 position = Vector2(4754, 176)
 script = ExtResource("19_naxve")
-door_id = &""
+door_id = &"este"
+target_scene = "res://world/zones/red_entrenamiento/arena_hermanos.tscn"
+target_entry = &"desde_persecucion"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToArena" unique_id=937105875]
 shape = SubResource("RectangleShape2D_vy3nh")

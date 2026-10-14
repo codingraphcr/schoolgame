@@ -638,6 +638,18 @@ Caídas: `Room.fall_damage` (1,5 aquí) y `PlayerDamage.fall_out_of_bounds(damag
 segura. `PlayerDamage.protected` lo protege mientras la historia lo pide. `Room.player_respawned` avisa al reaparecer
 después de morir.
 
+## Jefe doble: Chip y Glitch (Capítulo 1)
+
+La arena (`world/zones/red_entrenamiento/arena_hermanos.tscn`, después del tercer tramo). Valores en
+`data/bosses/chip_glitch.tres` (`DualBossConfig`). Arte provisional por código.
+
+| Pieza | Responsabilidad |
+|---|---|
+| `SiblingBoss` | Base de los dos: barra propia, máquina de estados propia (`_ai`), `telegraph()` antes de cada ataque, `frozen` (fase segura), `enter_rage()` una vez, `restore()`. **Nunca mueren:** al llegar a cero quedan neutralizados (mareados) y no se borran |
+| `ChipBoss` | Flota; disparos (`DataShot`), trampas (`DataTrap`), barreras (`ChipWall`), apaga plataformas (`DataPlatform.force_close`) y pide el escudo a la mitad de su vida. Furia: abanico, trampas dobles y rápidas, pulsos si Kai se acerca |
+| `GlitchBoss` | Corre con amagues; embestida, salto ofensivo y combo de tres, con un momento vulnerable después. Furia: más rápido, embestidas encadenadas, salto + combo |
+| `DualBossController` | Checkpoint al llegar, introducción, dos `BossBar` (fila 0 y 1), ataques combinados cada `combo_cooldown` (Camino cerrado, Distracción, Trampa sincronizada), fase segura del escudo (los dos quietos, ataques borrados, `PlayerDamage.protected`, terminal `escudo_chip` y desafío `cap1_escudo_chip`), furia del que queda, reinicio si Kai pierde, y el cierre (diálogo, `FragmentReading`, recompensa única `capitulo1:hermanos`, salida al cuarto técnico) |
+
 ## Misiones (`systems/quests/`)
 
 | Pieza | Responsabilidad |
@@ -774,6 +786,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_inmersion.gd` | Capítulo 1, etapa 2: la conexión del monitor solo con la Visión Digital, la primera vez con diálogo y la transición «INMERSIÓN DIGITAL», la habilidad permanente (partida, validador, «Mi perfil», Grimorio) y la segunda vez sin repetir nada |
 | `test_cuarto_tecnico.gd` | Capítulo 1, etapa 3: el cuarto técnico en el mapa, el descanso nuevo de las escaleras con la física real, la puerta cerrada con llave hasta el permiso del profesor (y que se abra con Kai parado ahí), la conexión del monitor solo cuando la historia lo pide, la vuelta y continuar una partida guardada ahí |
 | `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo las habilidades del capítulo, la barrera (1 por contacto, invulnerabilidad, sin daño en cada cuadro), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
+| `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11: checkpoint y sin temporizador, vida y barras independientes, ataques con aviso, los tres combos, fase segura con terminal, furia según quién sobrevive, los dos órdenes de derrota, hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |
 | `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |
 | `test_generador.gd` | M4: con fichas de prueba, la parte fija intacta, misma semilla = mismo mapa, 40 semillas válidas y distintas, solo puertas compatibles, respaldo si la parte variable no valida y error si la fija está mal; con los datos reales, aula o depósito al este de la biblioteca, el mapa se rearma igual al cargar, dos aulas con la misma escena, la puerta libre cerrada y continuar en la misma aula |
 | `test_biblioteca.gd` | M3: escaleras y biblioteca en el mapa, cerradas hasta el Capítulo 1, Kai sube los descansos con la física real y sin doble salto, ida y vuelta entre Pasillo, escaleras y biblioteca, estanterías como plataforma y continuar una partida guardada en la biblioteca |

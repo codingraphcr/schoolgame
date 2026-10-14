@@ -32,6 +32,8 @@ const FIRST_LINES: PackedStringArray = ["Nueva habilidad: Inmersión Digital", "
 @export var lines: PackedStringArray = ["Conexión encontrada", "Entrando al sistema..."]
 ## Segundos de la pantalla de transición.
 @export var transition_seconds := 2.4
+## Si hace falta la Visión Digital para verla (la de salida de un entorno digital, no).
+@export var needs_vision := true
 ## La conexión solo aparece cuando la historia llega a ese paso (vacío = siempre que haya Visión).
 @export var requires_quest: StringName = &""
 @export var requires_step: StringName = &""
@@ -60,8 +62,9 @@ func _ready() -> void:
 	add_child(shape)
 	super()
 	_prompt.self_modulate.a = 0.0
-	_canvas.add_to_group(&"digital_only")
-	_canvas.visible = _vision().is_active()
+	if needs_vision:
+		_canvas.add_to_group(&"digital_only")
+	_canvas.visible = _vision().is_active() or not needs_vision
 	var layer := _digital_layer()
 	if layer:
 		layer.add_child.call_deferred(_canvas)
@@ -74,7 +77,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	enabled = not _using and _vision().is_active() and is_available()
+	enabled = not _using and (_vision().is_active() or not needs_vision) and is_available()
 	super(delta)
 
 

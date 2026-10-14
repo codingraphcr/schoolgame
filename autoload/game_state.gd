@@ -210,6 +210,11 @@ func set_flag(flag: StringName) -> void:
 	_flags[flag] = true
 
 
+## Quita una marca (para rehacer algo: p. ej. volver a pelear contra un jefe en las pruebas).
+func clear_flag(flag: StringName) -> void:
+	_flags.erase(flag)
+
+
 ## Kai encuentra el Grimorio en el cuarto viejo (H5). Hasta entonces G no lo abre; lo aprendido
 ## antes (comandos, conceptos) ya queda anotado y aparece en sus páginas al encontrarlo.
 const GRIMORIO_FLAG := &"grimorio_obtenido"

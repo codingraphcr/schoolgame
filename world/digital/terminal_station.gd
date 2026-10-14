@@ -6,6 +6,9 @@ extends Interactable
 ## desafío lo completa (después de mostrar success_dialogue). Los comandos usados quedan
 ## aprendidos en GameState (para el Grimorio). El origen es la base, apoyada en el suelo.
 
+## La terminal se cerró con el desafío resuelto (después del diálogo y de completar el paso).
+signal solved
+
 const CYAN := Color("3ef2ff")
 const DIM := Color(0.4, 0.5, 0.7)
 
@@ -68,6 +71,8 @@ func _on_interacted(player: Player) -> void:
 			get_node("/root/GameState").complete_step(quest_id, step_id)
 	player.controls_locked = false
 	busy = false
+	if solved:
+		self.solved.emit()
 
 
 func _on_command_run(command: String, args: PackedStringArray, _target: String) -> void:
