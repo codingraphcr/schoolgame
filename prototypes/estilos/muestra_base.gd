@@ -130,7 +130,7 @@ func _build_hud() -> void:
 	help_settings.font_size = 14
 	help_settings.font_color = Color(0.75, 0.82, 0.95)
 	var help := Label.new()
-	help.text = "A/D: mover · Espacio: saltar (doble salto, salto en pared) · C: dash · Tab: siguiente muestra · Esc: menú"
+	help.text = "A/D: mover · Espacio: saltar (doble salto, salto en pared) · K: dash · Tab: siguiente muestra · Esc: menú"
 	if not sample_hint.is_empty():
 		help.text += "\n" + sample_hint
 	help.label_settings = help_settings

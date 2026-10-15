@@ -4,7 +4,8 @@ extends CanvasLayer
 ## (teclado, mando, mouse o pantalla táctil) y la explicación de cada elección. Una opción incorrecta
 ## explica por qué y deja volver a elegir; la correcta habilita «Continuar».
 ## Las flechas (o el mando) se mueven entre las opciones y los botones; Enter elige. El juego queda en
-## pausa mientras está abierta.
+## pausa mientras está abierta. Las opciones se muestran en un orden al azar cada vez que aparece una
+## pregunta (la respuesta no está siempre en el mismo lugar); choose() sigue usando el índice original.
 ## Uso: var window := ChoiceWindow.open(self, desafio); var completed: bool = await window.closed
 
 signal answered(question: int, option: int, correct: bool)
@@ -30,7 +31,10 @@ var _prompt: Label
 var _options: VBoxContainer
 var _feedback: Label
 var _continue: Button
+## Botón de cada opción, por su índice original (el orden en pantalla es al azar).
 var _buttons: Array[Button] = []
+## Orden en pantalla: índices originales de las opciones, de arriba hacia abajo.
+var display_order: Array[int] = []
 var _was_paused := false
 
 
@@ -116,6 +120,10 @@ func _show_question(index: int) -> void:
 	for button in _buttons:
 		button.queue_free()
 	_buttons.clear()
+	display_order.clear()
+	for i in question.options.size():
+		display_order.append(i)
+	display_order.shuffle()
 	for i in question.options.size():
 		var option := question.options[i]
 		var button := Button.new()
@@ -125,17 +133,18 @@ func _show_question(index: int) -> void:
 		button.add_theme_font_size_override("font_size", 19)
 		button.pressed.connect(choose.bind(i))
 		button.focus_entered.connect(func() -> void: Sfx.play(&"ui_move"))
-		_options.add_child(button)
 		_buttons.append(button)
+	for i in display_order:
+		_options.add_child(_buttons[i])
 	_focus_first_enabled()
 
 
 func _focus_first_enabled() -> void:
 	if DisplayServer.is_touchscreen_available():
 		return
-	for button in _buttons:
-		if not button.disabled:
-			button.grab_focus.call_deferred()
+	for i in display_order:
+		if not _buttons[i].disabled:
+			_buttons[i].grab_focus.call_deferred()
 			return
 
 

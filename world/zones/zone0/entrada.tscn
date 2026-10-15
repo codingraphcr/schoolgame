@@ -308,6 +308,19 @@ theme_override_colors/font_outline_color = Color(0.02, 0.03, 0.08, 1)
 theme_override_constants/outline_size = 6
 text = "Espacio: saltar (mantener = más alto)"
 
+[node name="HintHeal" type="Label" parent="Hints" unique_id=1739204581]
+texture_filter = 2
+offset_left = 520.0
+offset_top = 236.0
+offset_right = 520.0
+offset_bottom = 236.0
+scale = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.85, 1, 0.85)
+theme_override_colors/font_outline_color = Color(0.02, 0.03, 0.08, 1)
+theme_override_constants/outline_size = 6
+text = "L (mantener): curarte con tu energía"
+
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=494460373]
 position = Vector2(72, 304)
 

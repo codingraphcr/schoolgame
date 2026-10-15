@@ -95,8 +95,8 @@ tinte de las siluetas).
 | `move_up` / `move_down` | W / S, ↑ / ↓ | Stick izquierdo, cruceta |
 | `jump` | Espacio | A |
 | `attack` (Nullblade) | J | X |
-| `aegis_fire` | K | Y |
-| `dash` | C | RB |
+| `aegis_fire` | I | Y |
+| `dash` | K | RB |
 | `vision` (Visión Digital) | Q | LB |
 | `interact` | E | B |
 | `ultimate` (Dominio Nulo) | R | RT |
@@ -633,7 +633,7 @@ conexión del monitor del cuarto técnico. Valores en `data/chase/persecucion_ca
 | Pieza | Responsabilidad |
 |---|---|
 | `DataPlatform` | Bloque de datos de un solo sentido: fijo, que se mueve (con la física) o temporal (al pisarlo parpadea, desaparece y vuelve). Los que se mueven o desaparecen están en el grupo `unsafe_ground` |
-| `CorruptionBarrier` | Pared que avanza detrás de Kai (`barrier_speeds`: 130, 107 y 117 px/s, calibradas con el recorrido medido en `test_persecucion`: entre el 85 % y el 97 % de lo que aguanta un recorrido perfecto): quita `barrier_damage` (golpe común, con la invulnerabilidad de siempre), no pasa de la zona segura, `disable()` la apaga para siempre. Al arrancar un tramo empieza `barrier_start_gap` detrás de **Kai**; en las zonas seguras, después de un checkpoint y al reaparecer de una caída retrocede hasta quedar por lo menos `barrier_safe_gap` (260 px) detrás de él: nunca queda encima ni delante |
+| `CorruptionBarrier` | Pared que avanza detrás de Kai (persigue de cerca: `barrier_speeds` 130, 80 y 105 px/s como mínimo y, si Kai le saca más de `barrier_chase_gap` 120 px, acelera `barrier_catch_up` px/s por píxel de más hasta `barrier_max_speed`; la regla es `CorruptionBarrier.step_x()`, y `test_persecucion` la simula sobre un recorrido medido: no lo toca pero pasa cerca): quita `barrier_damage` (golpe común, con la invulnerabilidad de siempre), no pasa de la zona segura, `disable()` la apaga para siempre. Al arrancar un tramo empieza `barrier_start_gap` detrás de **Kai**; en las zonas seguras, después de un checkpoint y al reaparecer de una caída retrocede hasta quedar por lo menos `barrier_safe_gap` (260 px) detrás de él: nunca queda encima ni delante |
 | `CorruptEmitter` | Nodo corrupto que dispara datos (`DataShot`, siempre con aviso): `SHOOT` en línea recta o `RAIN` (lluvia desde arriba en lugares que rotan). Solo dispara con el tramo corriendo y Kai a menos de `active_range` |
 | `EducationalCheckpoint` | Pilar con la pregunta del tramo (`ChoiceChallenge` en `ChoiceWindow`, que pausa el juego); con E se vuelve a abrir |
 | `DigitalChaseController` | Une todo: arranca la barrera y el reloj al cruzar el inicio de cada tramo, los detiene en la zona segura, −15 s por respuesta incorrecta, marca `cap1_checkpoint_N` y guarda en la entrada `checkpoint_N`, reintentos con tiempo suficiente (tiempo agotado o muerte), y al terminar apaga la barrera y oculta el reloj |
