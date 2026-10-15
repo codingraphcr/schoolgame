@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_u0dce"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_gabx4"]
+
+[resource]
+script = ExtResource("2_gabx4")
+id = &"arena_bucle"
+display_name = "Núcleo del simulador"
+scene_path = "res://world/zones/simulador/arena_bucle.tscn"
+room_type = &"digital"
+district_id = &"simulador"
+fixed = true
+difficulty = 4
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 2
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray("Ciclos", "Condiciones de finalización", "Control de flujo", "Errores")
+mission_ids = PackedStringArray()

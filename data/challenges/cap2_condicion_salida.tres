@@ -1,0 +1,101 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Q0_O0"]
+script = ExtResource("2_option")
+text = "Dentro del ciclo nada cambia tarea_pendiente: la condición siempre es verdadera"
+correct = true
+feedback = "¡Correcto! Un ciclo se detiene cuando su condición deja de cumplirse. Si nada la cambia, se repite para siempre."
+
+[sub_resource type="Resource" id="Q0_O1"]
+script = ExtResource("2_option")
+text = "Le falta otro ciclo adentro que lo ayude a terminar"
+feedback = "Un ciclo dentro de otro también necesita su condición de salida: no arregla nada, repite todavía más."
+
+[sub_resource type="Resource" id="Q0_O2"]
+script = ExtResource("2_option")
+text = "Debería usar «si» en lugar de «mientras»"
+feedback = "Un «si» se ejecuta una sola vez: la tarea quedaría a medias. El problema es que la condición nunca cambia."
+
+[sub_resource type="Resource" id="Q0_O3"]
+script = ExtResource("2_option")
+text = "La computadora del simulador es demasiado lenta"
+feedback = "Con una computadora más rápida el ciclo sería igual de infinito: el error está en el programa."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "El programa de Bucle es:
+
+mientras tarea_pendiente:
+    realizar_tarea()
+
+Nunca se detiene. ¿Por qué?"
+options = Array[ExtResource("2_option")]([SubResource("Q0_O0"), SubResource("Q0_O1"), SubResource("Q0_O2"), SubResource("Q0_O3")])
+
+[sub_resource type="Resource" id="Q1_O0"]
+script = ExtResource("2_option")
+text = "mientras verdadero:
+    realizar_tarea()"
+feedback = "«mientras verdadero» nunca deja de cumplirse: es un ciclo infinito a propósito."
+
+[sub_resource type="Resource" id="Q1_O1"]
+script = ExtResource("2_option")
+text = "mientras tarea_pendiente:
+    realizar_tarea()
+    tarea_pendiente = quedan_procesos()"
+correct = true
+feedback = "¡Correcto! En cada vuelta se vuelve a revisar si quedan procesos: cuando no queden, la condición es falsa y el ciclo termina."
+
+[sub_resource type="Resource" id="Q1_O2"]
+script = ExtResource("2_option")
+text = "mientras tarea_pendiente:
+    realizar_tarea()
+    realizar_tarea()"
+feedback = "Repetir la tarea dos veces por vuelta no cambia la condición: sigue siendo infinito, y el doble de rápido."
+
+[sub_resource type="Resource" id="Q1_O3"]
+script = ExtResource("2_option")
+text = "repetir para siempre:
+    realizar_tarea()"
+feedback = "«Para siempre» es justo lo que hay que evitar: falta la condición de salida."
+
+[sub_resource type="Resource" id="Question_1"]
+script = ExtResource("1_question")
+prompt = "¿Qué versión se detiene cuando ya no hay tarea?"
+options = Array[ExtResource("2_option")]([SubResource("Q1_O0"), SubResource("Q1_O1"), SubResource("Q1_O2"), SubResource("Q1_O3")])
+
+[sub_resource type="Resource" id="Q2_O0"]
+script = ExtResource("2_option")
+text = "Un límite de vueltas: si llega a 100, se detiene y avisa el error"
+correct = true
+feedback = "¡Correcto! Un límite de intentos es una segunda salida segura: el programa no queda atrapado y alguien se entera del problema."
+
+[sub_resource type="Resource" id="Q2_O1"]
+script = ExtResource("2_option")
+text = "Ocultar los errores para que no molesten"
+feedback = "Ocultar un error no lo arregla: el ciclo seguiría trabado y nadie sabría por qué."
+
+[sub_resource type="Resource" id="Q2_O2"]
+script = ExtResource("2_option")
+text = "Reiniciar la computadora cada vez que se trabe"
+feedback = "Reiniciar corta el problema un rato, pero el programa vuelve a trabarse igual."
+
+[sub_resource type="Resource" id="Q2_O3"]
+script = ExtResource("2_option")
+text = "Que el ciclo vaya más despacio"
+feedback = "Más despacio sigue siendo infinito: lo que hace falta es una forma de salir."
+
+[sub_resource type="Resource" id="Question_2"]
+script = ExtResource("1_question")
+prompt = "Además, ¿qué protege al programa si algo falla y la tarea nunca termina?"
+options = Array[ExtResource("2_option")]([SubResource("Q2_O0"), SubResource("Q2_O1"), SubResource("Q2_O2"), SubResource("Q2_O3")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap2_condicion_salida"
+title = "Condición de salida"
+questions = Array[ExtResource("1_question")]([SubResource("Question_0"), SubResource("Question_1"), SubResource("Question_2")])
+ecos_reward = 0

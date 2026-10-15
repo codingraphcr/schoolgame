@@ -27,6 +27,8 @@ var color := MAGENTA
 var phase_marks: Array[float] = []
 ## Si tiene alfa, la barra va de color (izquierda) a color_to (derecha).
 var color_to := Color(0, 0, 0, 0)
+## Segmentos (p. ej. los 7 impactos clave de Bucle): la barra se divide en partes iguales. 0 = sin.
+var segments := 0
 
 var _shown := 1.0
 var _trail := 1.0
@@ -116,6 +118,9 @@ func _draw() -> void:
 	else:
 		draw_rect(Rect2(bar.position, Vector2(bar.size.x * _shown, bar.size.y)), fill)
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x * _shown, 2)), Color(PINK, 0.8))
+	for k in range(1, segments):
+		var x := bar.position.x + bar.size.x * k / segments
+		draw_line(Vector2(x, bar.position.y - 1), Vector2(x, bar.end.y + 1), DARK, 2.0)
 	for at: float in [phase_mark] + phase_marks:
 		if at >= 0.0:
 			var mark := bar.position.x + bar.size.x * at

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 2, nivel 4 (Código fuera de control): Kai encuentra a Bucle en el simulador.
+Bucle: ¡Hola! ¿Venís a ayudarme? Tengo que terminar mi tarea.
+Kai: ¿Qué tarea?
+Bucle: Ordenar los procesos del simulador. Uno, y otro, y otro... ¡Ya casi!
+Kai [pensativo]: El sistema está lleno de procesos repetidos... ¿Cuántas veces lo hiciste?
+Bucle: ¡No sé! La instrucción dice que siga mientras haya tarea pendiente.
+Kai [serio]: Bucle, esa tarea nunca se termina. Tenés que parar.
+Bucle: ¿Parar? No, no, no. Una vez más. ¡Solo una vez más!"

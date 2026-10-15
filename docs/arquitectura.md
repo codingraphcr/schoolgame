@@ -643,6 +643,20 @@ Caídas: `Room.fall_damage` (1,5 aquí) y `PlayerDamage.fall_out_of_bounds(damag
 segura. `PlayerDamage.protected` lo protege mientras la historia lo pide. `Room.player_respawned` avisa al reaparecer
 después de morir.
 
+## Jefe: Bucle Infinito (Capítulo 2)
+
+La arena (`world/zones/simulador/arena_bucle.tscn`, zona **Simulador**, ficha `arena_bucle`, se abre en el Capítulo 2;
+todavía sin conexión con otras salas: se prueba abriendo la escena). Especificación y plan en
+`docs/jefes/BUCLE_INFINITO.md`. Valores en `data/bosses/bucle.tres` (`BucleConfig` con siete `BucleCycle`).
+
+| Pieza | Responsabilidad |
+|---|---|
+| `BucleBoss` (`characters/enemies/bucle/`) | Máquina de estados (`INTRO`, `PREPARE_PATTERN`, `EXECUTE_PATTERN`, `FATIGUE`, `HIT_REACTION`, `TRANSFORMATION`, `DEFEATED`), cada estado con su reloj de física; **impactos clave**: redefine `_on_hit_received()` (solo para Bucle) y cuenta 1 por golpe válido, uno por ciclo (`hit_this_cycle`), sin importar el daño del arma; vida de 7 (los segmentos); época para cancelar el patrón; no muere (`DEFEATED` / `rest()`); señales `key_hit(count, risky)`, `cycle_started`, `transformed`, `execution_error`, `hit_ignored`, `finished` |
+| `BucleAttacks`, `LoopPulse`, `InstructionBlock`, `LoopRing` | Pulso repetitivo (ondas por el suelo), Lluvia de instrucciones (carriles; `rain_lanes()` siempre deja carriles libres y uno al lado de Kai) y Ciclo circular (anillo con dos huecos que giran; su forma de choque se pone en el punto del anillo dentro del Hurtbox de Kai: la colisión es la que se ve). Todos avisan antes y están en `boss_attack` |
+| `BucleArt` | Dibujo provisional: cuerpo del mismo tamaño siempre (con contorno) y las 7 etapas de instrucciones acumuladas y expresiones; interferencias según `GameSettings.glitch_factor()` (opción «reducir glitch») |
+| `BucleArenaController` (`world/zones/simulador/bucle_arena.gd`) | Checkpoint al llegar, introducción, `BossBar` «BUCLE» con `segments = 7`, golpe arriesgado (energía), Error de ejecución (`DataPlatform.force_close` de una plataforma por vez), fondo según la etapa (`bucle_background.gd`), reinicio si Kai pierde, final (diálogo, recompensa única `capitulo2:bucle`, marcas `cap2_bucle_vencido` / `cap2_bucle_liberado`, puzle `cap2_condicion_salida` y `cap2_condicion_corregida`) |
+| `SpeechBark` (`world/effects/speech_bark.gd`) | Globo de texto flotante que no pausa ni quita el control (las frases de cada impacto) |
+
 ## Jefe doble: Glitch y Chip (Capítulo 1)
 
 La arena (`world/zones/red_entrenamiento/arena_hermanos.tscn`, después del tercer tramo), con el fondo
@@ -824,6 +838,8 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_inmersion.gd` | Capítulo 1, etapa 2: la conexión del monitor solo con la Visión Digital, la primera vez con diálogo y la transición «INMERSIÓN DIGITAL», la habilidad permanente (partida, validador, «Mi perfil», Grimorio) y la segunda vez sin repetir nada |
 | `test_cuarto_tecnico.gd` | Capítulo 1, etapa 3: el cuarto técnico en el mapa, el descanso nuevo de las escaleras con la física real, la puerta cerrada con llave hasta el permiso del profesor (y que se abra con Kai parado ahí), la conexión del monitor solo cuando la historia lo pide, la vuelta y continuar una partida guardada ahí |
 | `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo salto + dash (sin doble salto), la barrera (empieza detrás de Kai, 1 por contacto, invulnerabilidad, sin daño en cada cuadro, después de cada checkpoint queda a 260 px detrás y nunca delante), los nodos que disparan (con aviso y dañan), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
+| `test_bucle.gd` | Bucle Infinito: las 20 validaciones de su especificación (ciclos, impactos clave uno por ciclo, golpe arriesgado, fatiga y repetición, ataques con aviso y cancelados, lluvia con carriles libres, colisión del anillo, una plataforma apagada por vez, séptimo impacto sin octava transformación, recompensa única, reinicio desde el checkpoint, estados que no se traban) y un tajo real de la Nullblade |
+| `test_orden_al_azar.gd` | Las respuestas de las preguntas y las contraseñas de la terminal salen en orden al azar cada vez |
 | `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11 (Glitch y Chip, diseño de Ariel): checkpoint y sin temporizador, dos barras (una por hermano), los 8 ataques individuales y los 10 en conjunto con su aviso y sus poses, el vínculo (el otro protege al aturdido), las tres fases (anillo y segunda melodía en la 2, fase segura con terminal al 35 %, Protocolo Dual), Furia fraternal en los dos sentidos, hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |
 | `test_capitulo1_historia.gd` | Capítulo 1, la historia de punta a punta: el prólogo lleva al capítulo, la Sala 3 (cerrada en el prólogo; se entra y se sale por su puerta con E), la clase, el registro y su desafío, la cinemática de los hermanos (Visión, cámara, escape), la persecución corta, la biblioteca, el permiso («NIVEL 1 COMPLETADO»), el servidor y el final con `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
 | `test_grimorio_map.gd` | M5: el mapa del Grimorio con el mapa real: salas desconocidas, descubiertas, cerradas hasta su capítulo, visitadas y completadas; las salas del generador; partidas viejas (marcas `visitada_<escena>`) y el libro abierto en el mapa |

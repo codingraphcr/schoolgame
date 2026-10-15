@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 2, nivel 4: después del séptimo impacto (texto de la especificación del equipo).
+(Los anillos de instrucciones se desintegran. Bucle queda agotado.)
+Kai: Ya terminaste.
+Bucle: Pero... la instrucción...
+Kai: No tenés que seguir repitiéndola.
+Bucle: ¿Y qué hago ahora?
+Kai: Podés decidirlo.
+(Bucle mira a su alrededor: las instrucciones desaparecieron.)
+Bucle: ¿Eso significa que fallé?
+Kai: No. Significa que terminaste."

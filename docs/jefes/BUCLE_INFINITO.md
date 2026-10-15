@@ -1,8 +1,11 @@
 # Jefe: Bucle Infinito (Bucle)
 
 **Capítulo:** 2 — Los primeros códigos · **Nivel:** 4 — Código fuera de control · **Recompensa:** Dominio Nulo I
-**Estado:** especificación oficial del equipo (14 de octubre de 2026) + diseño técnico **propuesto** (sección B).
-La implementación espera la autorización del equipo, fase por fase (sección B.10).
+**Estado:** especificación oficial del equipo (14 de octubre de 2026) y diseño técnico (sección B). **Autorizado e
+implementado** (fases 1 a 8): `characters/enemies/bucle/`, `systems/bosses/bucle_*.gd`, `data/bosses/bucle.tres`,
+`world/zones/simulador/` y `tests/test_bucle.gd`. Decisiones tomadas (B.11): Bucle en la Biblia v1.5; la arena se
+construye sola (zona «Simulador», capítulo 2) hasta que exista el resto del capítulo; sus ataques quitan 1 cristal;
+el golpe arriesgado da media barrita de energía. Se prueba abriendo `world/zones/simulador/arena_bucle.tscn` (F6).
 
 **Lección:** *un error pequeño, repetido sin control, puede terminar causando consecuencias enormes.*
 

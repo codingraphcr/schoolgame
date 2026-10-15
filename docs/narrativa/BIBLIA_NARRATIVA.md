@@ -1,6 +1,6 @@
 # BIBLIA NARRATIVA DEL VIDEOJUEGO
 
-**Versión:** 1.4 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
+**Versión:** 1.5 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
 **Estado:** Base narrativa de referencia; algunas decisiones siguen abiertas.  
 **Nombre oficial del videojuego:** Nullveil: Beyond the Firewall.  
 **Nombre provisional del proyecto de origen:** Proyecto Génesis.  
@@ -222,7 +222,12 @@ El estudiante llega al colegio, aprende movimiento, diálogo e interacción. Un 
 **Capítulo 2 — Los primeros códigos**
 
 - **Nivel 3 — El lenguaje de las máquinas:** Variables, condiciones, ciclos y resolución de acertijos.
-- **Nivel 4 — Código fuera de control:** Corrige errores de un sistema automatizado en una simulación.
+- **Nivel 4 — Código fuera de control:** Corrige errores de un sistema automatizado en una simulación. Jefe:
+  **Bucle** («Bucle Infinito», v1.5): una pequeña entidad digital nacida de un proceso de automatización
+  defectuoso. Parece inocente y curiosa; repite una instrucción que no tiene condición de salida y, sin querer,
+  acumula errores que alteran el simulador. No es malvado: cree que debe terminar su tarea. No muere: queda
+  agotado y liberado, y puede volver como personaje secundario. Lección: un error pequeño, repetido sin control,
+  puede causar consecuencias enormes (ver `docs/jefes/BUCLE_INFINITO.md`).
 - **Recompensa:** Desbloqueo de Dominio Nulo I.
 - **Pista:** Una anomalía reconoce su arquitectura digital.
 
@@ -439,6 +444,13 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
   El doble salto es una habilidad que se consigue más adelante; la propuesta es comprarlo con Ecos en las sodas (la
   soda del colegio), por definir (sección XVI). El capítulo 1 se supera con salto y dash.
 
-**FIN — BIBLIA NARRATIVA V1.4**
+**v1.5 — 14 de octubre de 2026** (aprobado por el equipo):
+
+- **Bucle** es el jefe del nivel 4 (Capítulo 2): entidad de un proceso automático defectuoso, sin condición de
+  salida; no muere y queda liberado. Su combate («Bucle Infinito») y su final están en `docs/jefes/BUCLE_INFINITO.md`.
+  Después del combate, el simulador se desestabiliza y Kai activa por instinto **Dominio Nulo I** (su origen sigue
+  pendiente, sección XVI).
+
+**FIN — BIBLIA NARRATIVA V1.5**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.
