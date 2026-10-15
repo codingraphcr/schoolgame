@@ -20,7 +20,7 @@ const RETURN_SCENE := "res://ui/menus/main_menu/main_menu.tscn"
 enum Page { MAPA, INVENTARIO, ARCHIVO }
 
 # El índice es la categoría (GrimorioEntry.Category); ARSENAL es el INVENTARIO (su propia página).
-const CATEGORY_TITLES: PackedStringArray = ["MAPA", "COMANDOS", "AMENAZAS", "CONCEPTOS", "REGISTROS", "INVENTARIO"]
+const CATEGORY_TITLES: PackedStringArray = ["MAPA", "COMANDOS", "AMENAZAS", "CONCEPTOS", "REGISTROS", "INVENTARIO", "BESTIARIO", "MISIONES"]
 const CATEGORY_DESCRIPTIONS: PackedStringArray = [
 	"Explora las áreas que has visitado y descubre nuevas rutas, secretos y conexiones.",
 	"Cómo moverse e interactuar, y los comandos de terminal que Kai aprende.",
@@ -28,6 +28,8 @@ const CATEGORY_DESCRIPTIONS: PackedStringArray = [
 	"Ideas de ciberseguridad que Kai va entendiendo en su camino.",
 	"Notas, mensajes y recuerdos de lo que ha pasado.",
 	"Lo que Kai lleva consigo: su arma, sus habilidades y sus recursos.",
+	"Las criaturas digitales que Kai registró con la Visión Digital: no hace falta vencerlas.",
+	"La historia, las misiones secundarias, las tareas y los descubrimientos.",
 ]
 const LOCKED_TEXT := "Aún no lo descubres. Sigue avanzando en la historia para completar esta página."
 
@@ -46,13 +48,15 @@ var _entry_group := ButtonGroup.new()
 var _tab_group := ButtonGroup.new()
 var _inventory: InventoryPage
 var _nav: GrimorioNav
+## Mapa del mundo físico o digital (en la página del mapa, en lugar del de la zona).
+var _world_map: GrimorioWorldMap
 
 @onready var _book: Control = %Book
 @onready var _tabs: Array[Node] = %Tabs.get_children()
 @onready var _back_button: Button = %BackButton
 @onready var _category_title: Label = %CategoryTitle
 @onready var _category_description: Label = %CategoryDescription
-@onready var _zone_buttons: HBoxContainer = %ZoneButtons
+@onready var _zone_buttons: Container = %ZoneButtons
 @onready var _map: GrimorioMap = %Map
 @onready var _entry_scroll: ScrollContainer = %EntryScroll
 @onready var _entry_list: VBoxContainer = %EntryList
@@ -92,6 +96,13 @@ func _ready() -> void:
 			if _category != category:
 				select_category(category))
 	_back_button.pressed.connect(close)
+	_world_map = GrimorioWorldMap.new()
+	_world_map.name = "WorldMap"
+	_world_map.position = _map.position
+	_world_map.size = _map.size
+	_world_map.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_world_map.visible = false
+	_map.get_parent().add_child(_world_map)
 	show_page(Page.INVENTARIO)
 	Sfx.play(&"book_open")
 	# Se abre con un pequeño acercamiento.
@@ -176,6 +187,7 @@ func _open_category(category: int) -> void:
 	_category_title.text = CATEGORY_TITLES[category]
 	_category_description.text = CATEGORY_DESCRIPTIONS[category]
 	_map.visible = is_map
+	_world_map.visible = false
 	_zone_buttons.visible = is_map
 	_entry_scroll.visible = not is_map
 	_entry_group = ButtonGroup.new()
@@ -193,6 +205,11 @@ func _open_category(category: int) -> void:
 		if first == null or (unlocked and not is_unlocked(first_entry)):
 			first = button
 			first_entry = entry
+	if is_map:
+		for data in [["MUNDO FÍSICO", WorldRegion.Kind.FISICA], ["MUNDO DIGITAL", WorldRegion.Kind.DIGITAL]]:
+			var world_button := _make_entry_button(data[0], true, true)
+			world_button.pressed.connect(show_world.bind(data[1]))
+			container.add_child(world_button)
 	if first:
 		first.set_pressed_no_signal(true)
 		show_entry(first_entry)
@@ -212,6 +229,8 @@ func show_entry(entry: GrimorioEntry) -> void:
 	_emblem.modulate = Color.WHITE if unlocked else Color(1, 1, 1, 0.35)
 	var facts: Dictionary[String, String] = {}
 	if entry.category == GrimorioEntry.Category.MAPA:
+		_map.visible = true
+		_world_map.visible = false
 		_map.zone = entry.resource_path.get_file().get_basename()
 		var rooms := _map.progress()
 		_entry_progress.text = "%d%%" % roundi(100.0 * rooms.x / maxi(rooms.y, 1))
@@ -228,6 +247,52 @@ func show_entry(entry: GrimorioEntry) -> void:
 				facts["Tecla"] = GameSettings.key_name(entry.action)
 			facts.merge(entry.facts)
 	_fill_facts(facts)
+
+## Muestra el mapa del mundo físico o del digital (WorldAtlas) en la página del mapa.
+func show_world(kind: WorldRegion.Kind) -> void:
+	_map.visible = false
+	_world_map.visible = true
+	_world_map.kind = kind
+	var physical := kind == WorldRegion.Kind.FISICA
+	var here := _world_map.current_region()
+	_entry_title.text = "Mundo físico" if physical else "Mundo digital"
+	_entry_subtitle.text = "Regiones inspiradas en San José, Cartago y Puntarenas" if physical else "La red: biomas que existían antes que Kai"
+	if here and here.kind == kind:
+		_entry_text.text = here.description
+	elif physical:
+		_entry_text.text = "Las regiones donde vive y estudia Kai."
+	else:
+		_entry_text.text = "Sistemas, conexiones e información. Se entra con la Inmersión Digital desde dispositivos concretos."
+	_illustration.visible = false
+	_emblem.visible = true
+	_emblem.modulate = Color.WHITE
+	var regions := _world_map.progress()
+	_entry_progress.text = "%d%%" % roundi(100.0 * regions.x / maxi(regions.y, 1))
+	_facts_header.text = "EXPLORACIÓN"
+	var facts: Dictionary[String, String] = {}
+	facts["Regiones visitadas"] = "%d / %d" % [regions.x, regions.y]
+	var game_state := get_node_or_null("/root/GameState")
+	var known := 0
+	var open := 0
+	if game_state:
+		for link in WorldAtlas.links():
+			if WorldAtlas.get_region(link.region_a).kind != kind and WorldAtlas.get_region(link.region_b).kind != kind:
+				continue
+			if WorldAtlas.is_link_known(link, game_state, get_node_or_null("/root/World")):
+				known += 1
+				if link.is_open(game_state):
+					open += 1
+	facts["Conexiones conocidas"] = "%d (%d abiertas)" % [known, open]
+	if here:
+		facts["Kai está en"] = here.display_name
+	if not physical and game_state:
+		var seen := 0
+		for creature in Bestiary.entries():
+			if Bestiary.stage(game_state, creature) > 0:
+				seen += 1
+		facts["Criaturas registradas"] = "%d / %d" % [seen, Bestiary.entries().size()]
+	_fill_facts(facts)
+
 
 func _fill_facts(facts: Dictionary[String, String]) -> void:
 	for child in _facts_grid.get_children():
@@ -309,8 +374,78 @@ func _load_entries() -> void:
 		var entry := load(ENTRIES_DIR.path_join(file)) as GrimorioEntry
 		if entry:
 			_entries.append(entry)
+	_entries.append_array(_bestiary_entries())
+	_entries.append_array(_quest_entries())
 	_entries.sort_custom(func(a: GrimorioEntry, b: GrimorioEntry) -> bool:
 		return a.order < b.order if a.category == b.category else a.category < b.category)
+
+
+## Páginas del bestiario (una por criatura que existe en el juego): cada etapa muestra más.
+func _bestiary_entries() -> Array[GrimorioEntry]:
+	var result: Array[GrimorioEntry] = []
+	var game_state := get_node_or_null("/root/GameState")
+	var creatures := Bestiary.entries()
+	for i in creatures.size():
+		var creature := creatures[i]
+		var stage := Bestiary.stage(game_state, creature) if game_state else 0
+		var region := WorldAtlas.get_region(creature.biome)
+		var region_name := region.display_name if region else "?"
+		var page := GrimorioEntry.new()
+		page.category = GrimorioEntry.Category.BESTIARIO
+		page.order = i
+		page.title = creature.display_name
+		page.subtitle = "%s · %s" % [region_name, Bestiary.STAGE_NAMES[stage]]
+		page.unlock_flag = StringName("bestiario_%s_1" % creature.id)
+		var parts := PackedStringArray()
+		match stage:
+			1:
+				parts.append(creature.appearance)
+			2:
+				parts.append(creature.behavior)
+			3:
+				parts.append(creature.function)
+			_:
+				parts.append(creature.appearance)
+		if stage >= 1 and not creature.kai_notes[stage - 1].is_empty():
+			parts.append("Kai: «%s»" % creature.kai_notes[stage - 1])
+		page.text = "\n\n".join(parts)
+		page.facts = { "Bioma": region_name, "Etapa": "%d / 3 · %s" % [stage, Bestiary.STAGE_NAMES[stage]] }
+		if stage >= 3:
+			page.facts["Concepto"] = creature.concept
+		elif stage == 1:
+			page.facts["Siguiente"] = "Seguir observándola con la Visión"
+		else:
+			page.facts["Siguiente"] = "Entender qué hace en su ecosistema"
+		result.append(page)
+	return result
+
+
+## Páginas de las misiones que empezaron: primero las en curso; la historia antes que las actividades.
+func _quest_entries() -> Array[GrimorioEntry]:
+	var result: Array[GrimorioEntry] = []
+	var game_state := get_node_or_null("/root/GameState")
+	if game_state == null:
+		return result
+	var started: Array[StringName] = game_state.get_started_quests()
+	for i in started.size():
+		var quest := QuestDB.get_quest(started[i])
+		if quest == null:
+			continue
+		var done: bool = game_state.is_quest_completed(quest.id)
+		var page := GrimorioEntry.new()
+		page.category = GrimorioEntry.Category.MISIONES
+		page.order = (1000 if done else 0) + quest.category * 100 + (started.size() - i)
+		page.title = quest.title
+		page.subtitle = "%s · %s" % [Quest.CATEGORY_NAMES[quest.category], "Completada" if done else "En curso"]
+		page.text = "Completada." if done else "Objetivo: " + game_state.get_quest_objective(quest.id)
+		page.facts = { "Tipo": Quest.CATEGORY_NAMES[quest.category] }
+		if not done:
+			var step: int = quest.get_step_index(game_state.get_current_step(quest.id))
+			page.facts["Paso"] = "%d / %d" % [step + 1, quest.steps.size()]
+		if quest.ecos_reward > 0:
+			page.facts["Recompensa"] = "%d Ecos" % quest.ecos_reward
+		result.append(page)
+	return result
 
 
 ## Abre el Grimorio encima del juego y lo pone en pausa.

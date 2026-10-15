@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="DistrictLayout" format=3]
+
+[ext_resource type="Script" path="res://systems/world/layout_link.gd" id="1_0w7ge"]
+[ext_resource type="Script" path="res://systems/world/layout_room.gd" id="2_wdi4q"]
+[ext_resource type="Script" path="res://systems/world/district_layout.gd" id="3_l4uhi"]
+
+[sub_resource type="Resource" id="Resource_xbwbx"]
+script = ExtResource("1_0w7ge")
+room_a = &"fibra_raices"
+door_a = &"este"
+room_b = &"fibra_claro"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_qd343"]
+script = ExtResource("2_wdi4q")
+room_id = &"fibra_raices"
+template_id = &"fibra_raices"
+
+[sub_resource type="Resource" id="Resource_hgyd7"]
+script = ExtResource("2_wdi4q")
+room_id = &"fibra_claro"
+template_id = &"fibra_claro"
+cell = Vector2i(2, 0)
+
+[resource]
+script = ExtResource("3_l4uhi")
+id = &"bosque_fibra"
+display_name = "Bosque de Fibra"
+start_room = &"fibra_raices"
+rooms = Array[ExtResource("2_wdi4q")]([SubResource("Resource_qd343"), SubResource("Resource_hgyd7")])
+links = Array[ExtResource("1_0w7ge")]([SubResource("Resource_xbwbx")])

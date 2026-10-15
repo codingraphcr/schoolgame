@@ -18,8 +18,10 @@
 [ext_resource type="Resource" path="res://data/challenges/cap2_condicion_salida.tres" id="19_ruioh"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_condicion.tres" id="20_7wed5"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_colapso.tres" id="21_pi2kj"]
-[ext_resource type="Resource" path="res://data/dialogues/capitulo2/dominio_instinto.tres" id="22_5nx6q"]
-[ext_resource type="Resource" path="res://data/dialogues/capitulo2/dominio_despues.tres" id="23_hibkq"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_muro_idea.tres" id="22_5nx6q"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_muro_despues.tres" id="23_hibkq"]
+
+[ext_resource type="Resource" path="res://data/challenges/cap2_atrapar_error.tres" id="90_wall"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3nlxs"]
 size = Vector2(704, 80)
@@ -155,5 +157,6 @@ exit_challenge = ExtResource("19_ruioh")
 after_puzzle_dialogue = ExtResource("20_7wed5")
 wall = NodePath("../MuroDeProcesos")
 collapse_dialogue = ExtResource("21_pi2kj")
-instinct_dialogue = ExtResource("22_5nx6q")
-domain_dialogue = ExtResource("23_hibkq")
+idea_dialogue = ExtResource("22_5nx6q")
+wall_challenge = ExtResource("90_wall")
+after_dialogue = ExtResource("23_hibkq")

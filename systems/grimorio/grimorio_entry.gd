@@ -4,7 +4,8 @@ extends Resource
 ## registro de la historia o una zona del mapa. Un .tres por entrada en data/grimorio/.
 ## Mientras no se desbloquea aparece como «???».
 
-enum Category { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS, ARSENAL }
+## BESTIARIO y MISIONES se arman en el momento (Bestiary y las misiones de la partida), sin archivos.
+enum Category { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS, ARSENAL, BESTIARIO, MISIONES }
 ## Dónde va en el INVENTARIO (solo para la categoría ARSENAL).
 enum InventoryKind { COLECCIONABLE, ARMA, HABILIDAD, DEFINITIVA, ECOS, FRAGMENTO_VIDA, FRAGMENTO_ENERGIA }
 

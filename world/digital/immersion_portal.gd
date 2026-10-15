@@ -78,6 +78,8 @@ func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
 	enabled = not _using and (_vision().is_active() or not needs_vision) and is_available()
+	# En salas sin DigitalWorld (p. ej. la calle del barrio), el brillo se muestra y oculta solo.
+	_canvas.visible = (_vision().is_active() or not needs_vision) and is_available()
 	super(delta)
 
 

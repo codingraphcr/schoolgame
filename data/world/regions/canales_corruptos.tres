@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"canales_corruptos"
+display_name = "Canales Corruptos"
+kind = 1
+description = "Túneles de datos dañados: corrientes de información corrupta, sectores contaminados y criaturas afectadas."
+concepts = PackedStringArray("Malware", "Detección", "Contención", "Recuperación", "Vulnerabilidades")
+districts = PackedStringArray()
+secret = false
+map_position = Vector2(3.6, 4.4)
+map_size = Vector2(3.0, 1.4)
+color = Color(0.7529, 0.2902, 0.5412, 1)

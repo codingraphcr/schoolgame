@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"archivo_criogenico"
+display_name = "Archivo Criogénico"
+kind = 1
+description = "Almacenamiento y memoria: estructuras cristalinas, archivos antiguos, plataformas resbaladizas y registros incompletos."
+concepts = PackedStringArray("Almacenamiento", "Integridad", "Respaldos", "Recuperación")
+districts = PackedStringArray()
+secret = false
+map_position = Vector2(7.4, 1.0)
+map_size = Vector2(2.8, 2.0)
+color = Color(0.6039, 0.8471, 1.0000, 1)

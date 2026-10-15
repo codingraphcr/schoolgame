@@ -10,9 +10,13 @@ const PATHS := {
 	# Capítulo 1 (todavía no empieza sola: se encadena cuando el nivel se pueda jugar).
 	&"una_clase_diferente": "res://data/quests/una_clase_diferente.tres",
 	&"travesuras_en_el_sistema": "res://data/quests/travesuras_en_el_sistema.tres",
+	# Entre el Capítulo 1 y el 2: la vuelta a casa (docs/escenarios/HOGAR_DE_KAI.md).
+	&"camino_a_casa": "res://data/quests/camino_a_casa.tres",
 	# Capítulo 2.
 	&"el_lenguaje_de_las_maquinas": "res://data/quests/el_lenguaje_de_las_maquinas.tres",
 	&"codigo_fuera_de_control": "res://data/quests/codigo_fuera_de_control.tres",
+	# Actividades del mundo (docs/misiones/MISIONES_SECUNDARIAS.md).
+	&"senal_del_barrio": "res://data/quests/senal_del_barrio.tres",
 }
 
 

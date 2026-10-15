@@ -1,6 +1,6 @@
 # BIBLIA NARRATIVA DEL VIDEOJUEGO
 
-**Versión:** 1.5 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
+**Versión:** 1.7 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
 **Estado:** Base narrativa de referencia; algunas decisiones siguen abiertas.  
 **Nombre oficial del videojuego:** Nullveil: Beyond the Firewall.  
 **Nombre provisional del proyecto de origen:** Proyecto Génesis.  
@@ -50,7 +50,9 @@ Después del fracaso, el profesor desarrolla un organismo de biomateria capaz de
 
 ### 5. La familia
 
-El profesor entrega al protagonista, cuando aún es pequeño, a una familia común sin vínculos con el proyecto, que desconoce su origen. La familia lo cría genuinamente como su hijo. No sigue órdenes secretas ni lo vigila. Su infancia, recuerdos, afectos y vínculos son reales. La forma legal y logística de la adopción sigue **pendiente de definir**.
+El profesor entrega al protagonista, cuando aún es pequeño, a una familia adoptiva común, sin vínculos con el proyecto. **Sus padres adoptivos conocen parte de su verdadero origen** (v1.6; reemplaza la versión anterior, que decía que lo desconocían por completo). Sin embargo, no conocen necesariamente todas sus capacidades, no saben cómo evolucionarán sus poderes y no tienen todas las respuestas sobre el Proyecto Génesis. No desean manipular sus decisiones ni lo consideran un experimento: lo aman y lo reconocen como su hijo, y quieren protegerlo sin impedirle construir su propia identidad. No siguen órdenes secretas ni lo vigilan. Su infancia, recuerdos, afectos y vínculos son reales.
+
+**Kai desconoce su origen** y no lo descubre en décimo. El misterio se construye despacio: los padres pueden mostrar preocupación, intercambiar miradas o usar frases con doble sentido, sin explicaciones directas (la primera vez, en «Camino a casa», al cerrar el Capítulo 1). Qué parte saben exactamente, cómo lo supieron y la forma legal y logística de la adopción siguen **pendientes de definir**.
 
 ### 6. Los años de silencio
 
@@ -109,8 +111,7 @@ Para repararlo debe consultar el Grimorio, analizar registros en terminales simu
 
 ## VI. El antagonista
 
-**Nombre definitivo:** Pendiente.  
-**Nombre de trabajo sugerido:** AXIOM (no confirmado).  
+**Nombre definitivo:** **Axiom** (v1.7, decisión del equipo).  
 **Naturaleza:** IA autónoma.  
 **Origen:** Mismo experimento que Aegis.  
 **Principio:** Control.
@@ -198,7 +199,7 @@ confirmados del antagonista.** Solo Kai los ve, con la Visión Digital. Aparecen
 (quedan neutralizados, nunca mueren) y empiezan a entender que detrás de cada computadora hay personas. Pueden volver
 más adelante.
 
-**Familia:** Presente en momentos cotidianos y emocionales, especialmente durante la crisis de identidad. Su amor y vínculo no se invalidan al conocerse el origen artificial.
+**Familia (mamá y papá; nombres pendientes):** Presente en momentos cotidianos y emocionales, especialmente durante la crisis de identidad. Conoce parte del origen de Kai (sección II.5) y lo deja ver solo en gestos y frases con doble sentido. Su amor y vínculo no se invalidan al conocerse el origen artificial. Su casa es un escenario recurrente de los tres años, que evoluciona con Kai (`docs/escenarios/HOGAR_DE_KAI.md`).
 
 La escuela debe sentirse viva: clases, trabajos, exámenes, ferias técnicas, vacaciones, proyectos, cierre de curso y graduación. El tiempo avanza mediante saltos narrativos entre capítulos; no es necesario simular un calendario día por día.
 
@@ -218,6 +219,7 @@ El estudiante llega al colegio, aprende movimiento, diálogo e interacción. Un 
 - **Nivel 2 — Travesuras en el sistema:** Chip y Glitch se esconden dentro de una computadora; Kai descubre la conexión con la Visión Digital y desbloquea la **Inmersión Digital**. Persecución digital con barrera de corrupción y checkpoints educativos, y combate contra los dos hermanos.
 - **Cierre:** Chip deja un Fragmento de Datos («ORIGEN: DESCONOCIDO · ESTADO: INCOMPLETO · OBSERVADOR: RECONOCIDO · PROTOCOLO: [DATOS CORRUPTOS]»). Cuando Kai se va, el profesor, solo frente a la computadora, ve aparecer el archivo **`GENESIS_ARCHIVE`**. No se explica qué es.
 - **Pista:** Las amenazas reaccionan de manera particular a su presencia.
+- **Camino a casa (transición, sin combate ni examen):** al terminar la jornada, los amigos comentan lo ocurrido; Kai vuelve caminando a su barrio y conoce a su familia. Primera charla familiar: el padre le habla de la responsabilidad de quien puede cambiar las cosas. Mientras Kai duerme, los padres hablan a solas («¿Creés que ya empezó?»), sin explicar nada. Esa noche, Kai siente por primera vez la **Resonancia Digital** (provisional): interferencias, una señal lejana y, por un instante, datos de un dispositivo cercano. Despierta sin entender qué pasó. Es un evento narrativo, no una habilidad; no reemplaza a la Visión ni a la Inmersión y no tiene que ver con Dominio Nulo I.
 
 **Capítulo 2 — Los primeros códigos** (propuesta de desarrollo: `capitulos/CAPITULO_02.md`)
 
@@ -228,12 +230,17 @@ El estudiante llega al colegio, aprende movimiento, diálogo e interacción. Un 
   acumula errores que alteran el simulador. No es malvado: cree que debe terminar su tarea. No muere: queda
   agotado y liberado, y puede volver como personaje secundario. Lección: un error pequeño, repetido sin control,
   puede causar consecuencias enormes (ver `docs/jefes/BUCLE_INFINITO.md`).
-- **Recompensa:** Desbloqueo de Dominio Nulo I.
+- **Cierre (v1.7):** el simulador se derrumba; Kai no rompe el muro de procesos a golpes (sería repetir), sino que
+  **atrapa el error** (try/catch) con lo que aprendió y los procesos se detienen. **Dominio Nulo I ya no se obtiene
+  aquí:** pasa al Capítulo 3.
 - **Pista:** Una anomalía reconoce su arquitectura digital.
 
 **Capítulo 3 — Amenazas invisibles**
 
-- **Nivel 5 — Contagio digital:** Investiga software malicioso y protege equipos.
+- **Nivel 5 — Contagio digital:** Investiga software malicioso y protege equipos. **Recompensa (v1.7):** Dominio Nulo
+  I, ligado a la contención (frena las amenazas a su alrededor).
+- **Bosque de Fibra (v1.7):** desde la caja de fibra óptica del barrio, Kai entra por primera vez a la red de biomas
+  (misión secundaria «Sin señal en el barrio»; ver `docs/mundo/`).
 - **Nivel 6 — La señal perdida:** Sigue una señal hacia una instalación restringida.
 - **Misión especial — Eco en la Red:** Encuentra a Aegis dañado; lo rescata y repara con comandos y desafíos defensivos.
 - **Recompensa:** Aegis Pulse.
@@ -347,7 +354,7 @@ El libro se cierra. Comienzan los créditos.
 ## XV. Reglas de coherencia narrativa
 
 1. En décimo, el protagonista desconoce su origen.
-2. Su familia no sabe que es artificial y nunca actuó como parte del experimento.
+2. Su familia conoce parte de su origen (no todo: ni todas sus capacidades ni cómo evolucionarán), lo cría como su hijo, nunca actuó como parte del experimento y no le revela nada antes de tiempo.
 3. El profesor conoce su identidad desde el comienzo.
 4. Aegis y el antagonista fueron creados antes que el protagonista.
 5. Aegis no recuerda todos los acontecimientos cuando es rescatado.
@@ -373,10 +380,12 @@ El libro se cierra. Comienzan los créditos.
 ## XVI. Decisiones pendientes
 
 - Personalidad concreta del profesor.
-- Nombre y diseño definitivo del antagonista (AXIOM es propuesta).
+- Diseño definitivo del antagonista (el nombre, **Axiom**, quedó confirmado en la v1.7).
 - Nombre del colegio y de la ciudad.
 - Identidad y trayectoria de los tres amigos.
-- Explicación legal y biográfica de la incorporación del protagonista a su familia.
+- Explicación legal y biográfica de la incorporación del protagonista a su familia; qué parte de su origen conocen los padres, cómo lo supieron y cuándo lo descubre Kai.
+- Nombres de la madre y el padre de Kai.
+- Qué es la **Resonancia Digital** y si llega a ser una habilidad (hoy es solo un evento narrativo del final del Capítulo 1).
 - Detonante preciso de la Visión Digital en el prólogo.
 - Origen de Nullblade.
 - Origen del Grimorio.
@@ -448,9 +457,39 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
 
 - **Bucle** es el jefe del nivel 4 (Capítulo 2): entidad de un proceso automático defectuoso, sin condición de
   salida; no muere y queda liberado. Su combate («Bucle Infinito») y su final están en `docs/jefes/BUCLE_INFINITO.md`.
-  Después del combate, el simulador se desestabiliza y Kai activa por instinto **Dominio Nulo I** (su origen sigue
+  Después del combate, el simulador se desestabiliza y Kai activa por instinto **Dominio Nulo I** (cambiado en la v1.7: ahora llega en el Capítulo 3; su origen sigue
   pendiente, sección XVI).
 
-**FIN — BIBLIA NARRATIVA V1.5**
+**v1.6 — 15 de octubre de 2026** (pedido del equipo):
+
+- **Cambio de canon — la familia:** los padres adoptivos de Kai **conocen parte de su verdadero origen** (sección II.5).
+  Reemplaza la versión anterior («desconoce su origen» y la regla 2). No conocen todas sus capacidades ni todas las
+  respuestas sobre el Proyecto Génesis; no lo manipulan ni lo ven como un experimento. Kai no lo sabe y no se revela
+  en décimo.
+- **El hogar de Kai:** escenario recurrente de los tres años (casa, cuarto con recuerdos, coleccionables y la Nullblade),
+  documentado en `docs/escenarios/HOGAR_DE_KAI.md`. Primera visita: misión **«Camino a casa»**, entre el Capítulo 1 y
+  el 2 (sección XII).
+- **Resonancia Digital** (provisional): sensación digital extraña la primera noche en casa. Evento narrativo, no
+  habilidad (sección XVI).
+
+**v1.7 — 15 de octubre de 2026** (especificación del mundo completo y decisiones del equipo):
+
+- **Axiom** es el nombre oficial del antagonista (sección VI).
+- **Dominio Nulo I** pasa del final del Capítulo 2 al **Capítulo 3, nivel 5 «Contagio digital»** (contención). En el
+  Capítulo 2, Kai sale del simulador **atrapando el error** (try/catch) con lo que aprendió. Corrige la v1.5.
+- **El mundo** (`docs/mundo/MAPA_MAESTRO.md`): un mundo físico inspirado en Costa Rica (Barrio de los Almendros,
+  Distrito Central, Altos de Cartago, Costa del Pacífico, los Conductos del Silencio bajo el colegio y el Laboratorio
+  Génesis) y un mundo digital de siete biomas (Distrito Caché, Bosque de Fibra, Núcleo Térmico, Archivo Criogénico,
+  Canales Corruptos, Santuario Raíz y El Velo Nulo). El mundo físico es real: nunca habrá un «todo era una
+  simulación». **Aegis y Axiom participaron en la creación y organización de los biomas; Kai no.**
+- **Laboratorio Génesis:** instalación física secreta vinculada al profesor Alvarado y su organización, donde
+  ocurrieron los experimentos relacionados con Aegis, Axiom y el origen de Kai. Kai no lo sabe; la revelación es
+  lenta y el acceso pide historia, habilidades y comprensión de sistemas (no solo una llave). No confundir con el
+  Santuario Raíz (digital).
+- **Bosque de Fibra:** primera entrada a los biomas en el Capítulo 3, por la caja de fibra del barrio.
+- Nombres de regiones y criaturas: provisionales salvo los aprobados. Personajes del Distrito Caché propuestos por el
+  equipo (NODO-7, Nox): solo nombres, su papel sigue pendiente.
+
+**FIN — BIBLIA NARRATIVA V1.7**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.

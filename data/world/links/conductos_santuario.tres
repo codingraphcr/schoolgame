@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 9
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Se abre en duodécimo."
+
+[resource]
+script = ExtResource("1_link")
+id = &"conductos_santuario"
+region_a = &"conductos_silencio"
+region_b = &"santuario_raiz"
+kind = 1
+one_way = false
+access_point = "Los servidores antiguos de los Conductos"
+purpose = "Sistemas que nadie apagó."
+requirement = SubResource("Requirement")

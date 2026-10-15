@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Keepsake" format=3]
+
+[ext_resource type="Script" path="res://systems/home/keepsake.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/home/keepsake_note.gd" id="2_note"]
+
+[sub_resource type="Resource" id="Note_0"]
+script = ExtResource("2_note")
+min_chapter = 0
+text = "El Fibroluz se quedaba esperando junto al corte. Si no lo hubiera seguido, no habría encontrado dónde se cortaba la señal."
+
+[resource]
+script = ExtResource("1_item")
+id = &"nota_vecino"
+display_name = "Nota del vecino"
+category = 0
+description = "Una nota escrita a mano: «Gracias por devolverle el internet a la cuadra. Su vecino.» Venía pegada a una bolsa de pan."
+unlock_flag = &"senal_del_barrio_completada"
+notes = Array[ExtResource("2_note")]([SubResource("Note_0")])
+art = &"nota"
+shelf_slot = 7

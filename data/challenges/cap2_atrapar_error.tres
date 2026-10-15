@@ -1,0 +1,90 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Q0_O0"]
+script = ExtResource("2_option")
+text = "Intenta ejecutar el código y, si ocurre un error, lo atrapa y ejecuta otra parte en vez de que todo se caiga"
+correct = true
+feedback = "¡Eso! El error no desaparece, pero queda atrapado: el programa decide qué hacer en lugar de trabarse."
+
+[sub_resource type="Resource" id="Q0_O1"]
+script = ExtResource("2_option")
+text = "Repite el código hasta que funcione"
+feedback = "Eso es justo lo que hizo Bucle: repetir sin parar."
+
+[sub_resource type="Resource" id="Q0_O2"]
+script = ExtResource("2_option")
+text = "Borra el error del registro para que nadie lo vea"
+feedback = "Esconder un error no lo resuelve; además, el registro sirve para entender qué pasó."
+
+[sub_resource type="Resource" id="Q0_O3"]
+script = ExtResource("2_option")
+text = "Apaga el simulador entero"
+feedback = "Funcionaría, pero se perdería todo lo demás. Se puede manejar solo el error."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "El muro de procesos falla una y otra vez y se reconstruye. ¿Qué hace un bloque try/catch?"
+options = Array[ExtResource("2_option")]([SubResource("Q0_O0"), SubResource("Q0_O1"), SubResource("Q0_O2"), SubResource("Q0_O3")])
+
+[sub_resource type="Resource" id="Q1_O0"]
+script = ExtResource("2_option")
+text = "En el bloque catch: lo que se hace cuando el error ocurre"
+correct = true
+feedback = "Correcto: el catch es la respuesta al error."
+
+[sub_resource type="Resource" id="Q1_O1"]
+script = ExtResource("2_option")
+text = "En el try, antes de la línea que falla"
+feedback = "El try es lo que se intenta; la respuesta al error va en el catch."
+
+[sub_resource type="Resource" id="Q1_O2"]
+script = ExtResource("2_option")
+text = "Dentro del ciclo, para que se repita"
+feedback = "Repetir la orden de parar dentro del ciclo no corta el ciclo."
+
+[sub_resource type="Resource" id="Q1_O3"]
+script = ExtResource("2_option")
+text = "En una variable que nadie usa"
+feedback = "Si nadie la usa, no hace nada."
+
+[sub_resource type="Resource" id="Question_1"]
+script = ExtResource("1_question")
+prompt = "¿Dónde va la instrucción que detiene los procesos cuando ocurre el error?"
+options = Array[ExtResource("2_option")]([SubResource("Q1_O0"), SubResource("Q1_O1"), SubResource("Q1_O2"), SubResource("Q1_O3")])
+
+[sub_resource type="Resource" id="Q2_O0"]
+script = ExtResource("2_option")
+text = "Registrar lo que pasó y terminar los procesos de forma controlada"
+correct = true
+feedback = "¡Eso es desarrollo seguro! Queda constancia y el sistema se detiene sin romper nada."
+
+[sub_resource type="Resource" id="Q2_O1"]
+script = ExtResource("2_option")
+text = "Volver a ejecutar todo igual, para siempre"
+feedback = "Sin cambios, el error volvería a aparecer."
+
+[sub_resource type="Resource" id="Q2_O2"]
+script = ExtResource("2_option")
+text = "Ignorarlo: si no se ve, no existe"
+feedback = "Un error ignorado sigue causando problemas."
+
+[sub_resource type="Resource" id="Q2_O3"]
+script = ExtResource("2_option")
+text = "Desactivar todos los registros del simulador"
+feedback = "Sin registros no se puede saber qué pasó ni evitar que se repita."
+
+[sub_resource type="Resource" id="Question_2"]
+script = ExtResource("1_question")
+prompt = "Después de atrapar el error, ¿qué es lo más seguro?"
+options = Array[ExtResource("2_option")]([SubResource("Q2_O0"), SubResource("Q2_O1"), SubResource("Q2_O2"), SubResource("Q2_O3")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap2_atrapar_error"
+title = "Atrapar el error"
+questions = Array[ExtResource("1_question")]([SubResource("Question_0"), SubResource("Question_1"), SubResource("Question_2")])
+ecos_reward = 0

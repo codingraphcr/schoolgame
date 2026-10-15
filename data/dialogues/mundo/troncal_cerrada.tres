@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(La troncal de fibra hacia el este está cortada. Del otro lado se ven luces de una ciudad.)
+Kai: Por ahí debe seguir la red... pero no hay enlace. Por ahora no puedo pasar."

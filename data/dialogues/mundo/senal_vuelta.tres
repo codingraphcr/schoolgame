@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Al volver a la calle: la consecuencia de la misión.
+(La luz de la caja del poste está verde.)
+Vecino: ¡Kai! ¡Volvió el internet! No sé qué hizo, pero muchas gracias.
+Kai: Un tramo de la conexión estaba cortado. Ya llega la señal.
+Vecino: Tome, para un fresco. Y salúdeme a su mamá."

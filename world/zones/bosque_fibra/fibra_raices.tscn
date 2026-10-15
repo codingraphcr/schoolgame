@@ -1,0 +1,189 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_bt26x"]
+[ext_resource type="Script" path="res://world/digital/fiber/fiber_forest_props.gd" id="2_a41wr"]
+[ext_resource type="Script" path="res://world/digital/fiber/vision_route.gd" id="3_32dbb"]
+[ext_resource type="Script" path="res://world/digital/fiber/fiber_landmarks.gd" id="4_0m2io"]
+[ext_resource type="Script" path="res://world/vision/data_fragment.gd" id="5_nx3je"]
+[ext_resource type="Script" path="res://characters/creatures/fibroluz.gd" id="6_f1qh2"]
+[ext_resource type="Resource" path="res://data/bestiary/fibroluz.tres" id="7_53653"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="8_rmbux"]
+[ext_resource type="Resource" path="res://data/dialogues/mundo/fibra_llegada.tres" id="9_qlmda"]
+[ext_resource type="Script" path="res://world/zones/bosque_fibra/fiber_story.gd" id="10_5ywc0"]
+[ext_resource type="Resource" path="res://data/dialogues/mundo/fibroluz_guia.tres" id="11_6vkow"]
+[ext_resource type="Script" path="res://world/digital/immersion_portal.gd" id="12_swpx8"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="13_3hr4t"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="14_fhml2"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="15_lm46e"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="16_bymj4"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="17_canfh"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="18_op7uf"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="19_c0g4y"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="20_uyvcy"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="21_7ky4g"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fmcwr"]
+size = Vector2(1024, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5fhwo"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_75wto"]
+size = Vector2(32, 400)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fyvdt"]
+radius = 14.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2c532"]
+size = Vector2(12, 256)
+
+[node name="FibraRaices" type="Node2D" unique_id=867851645 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_bt26x")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 960, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=332478587]
+
+[node name="Props" type="Node2D" parent="." unique_id=276552696]
+script = ExtResource("2_a41wr")
+trees = PackedFloat32Array(120, 400, 660, 900)
+plants = PackedFloat32Array(190, 270, 520, 610, 800)
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=859521302]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=2000745641]
+position = Vector2(480, 344)
+shape = SubResource("RectangleShape2D_fmcwr")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=538074508]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_5fhwo")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=831781277]
+position = Vector2(976, 180)
+shape = SubResource("RectangleShape2D_75wto")
+
+[node name="Mundo" type="Node2D" parent="." unique_id=1227818916]
+
+[node name="CaminoOculto" type="Node2D" parent="Mundo" unique_id=87409016]
+script = ExtResource("3_32dbb")
+platforms = Array[Rect2]([Rect2(300, 256, 60, 8), Rect2(392, 208, 60, 8), Rect2(300, 160, 60, 8), Rect2(150, 112, 110, 8)])
+
+[node name="FragmentoVisible" type="Node2D" parent="Mundo" unique_id=1618046282]
+position = Vector2(205, 112)
+script = ExtResource("4_0m2io")
+collected_flag = &"fibra_fragmento_recogido"
+
+[node name="Fragmento" type="Area2D" parent="Mundo" unique_id=261229642]
+position = Vector2(205, 90)
+script = ExtResource("5_nx3je")
+flag = &"fibra_fragmento_recogido"
+message = "¡Un Fragmento de Datos escondido entre las raíces de fibra! (+%d Ecos)"
+
+[node name="Shape" type="CollisionShape2D" parent="Mundo/Fragmento" unique_id=1731830552]
+shape = SubResource("CircleShape2D_fyvdt")
+
+[node name="NodoDeSalida" type="Node2D" parent="Mundo" unique_id=241062071]
+position = Vector2(60, 304)
+script = ExtResource("4_0m2io")
+kind = "salida"
+
+[node name="Fibroluz" type="Node2D" parent="Mundo" unique_id=1287013277]
+position = Vector2(560, 290)
+script = ExtResource("6_f1qh2")
+entry = ExtResource("7_53653")
+patrol = Array[Vector2]([Vector2(500, 290), Vector2(640, 290)])
+
+[node name="DigitalLayer" type="Node2D" parent="." unique_id=53337675]
+
+[node name="Historia" type="Node2D" parent="." unique_id=400581130]
+
+[node name="Llegada" type="Area2D" parent="Historia" unique_id=753653033]
+script = ExtResource("8_rmbux")
+quest_id = &"senal_del_barrio"
+step_id = &"revisar_caja"
+dialogue = ExtResource("9_qlmda")
+on_ready = true
+
+[node name="FiberStory" type="Node" parent="Historia" unique_id=1363173763 node_paths=PackedStringArray("fibroluz")]
+script = ExtResource("10_5ywc0")
+fibroluz = NodePath("../../Mundo/Fibroluz")
+guide_dialogue = ExtResource("11_6vkow")
+guide_points = Array[Vector2]([Vector2(720, 290), Vector2(930, 290)])
+
+[node name="SalidaAlBarrio" type="Area2D" parent="Historia" unique_id=1682652273]
+position = Vector2(60, 270)
+script = ExtResource("12_swpx8")
+target_scene = "res://world/zones/barrio/calle.tscn"
+target_entry = &"desde_caja"
+screen_size = Vector2(24, 26)
+title = "VOLVIENDO AL BARRIO..."
+lines = PackedStringArray("Siguiendo la fibra de vuelta", "Saliendo por la caja del poste...")
+needs_vision = false
+prompt_text = "E: entrar"
+prompt_offset = Vector2(-30, -40)
+
+[node name="Entries" type="Node2D" parent="." unique_id=961522303]
+
+[node name="DesdeBarrio" type="Marker2D" parent="Entries" unique_id=1117255666]
+position = Vector2(80, 304)
+script = ExtResource("13_3hr4t")
+id = &"desde_barrio"
+arrival_effect = "materialize"
+
+[node name="DesdeClaro" type="Marker2D" parent="Entries" unique_id=1099570345]
+position = Vector2(920, 304)
+script = ExtResource("13_3hr4t")
+id = &"desde_claro"
+facing = -1
+
+[node name="Exits" type="Node2D" parent="." unique_id=688624998]
+
+[node name="ToClaro" type="Area2D" parent="Exits" unique_id=1622171107]
+position = Vector2(954, 176)
+script = ExtResource("14_fhml2")
+door_id = &"este"
+target_scene = "res://world/zones/bosque_fibra/fibra_claro.tscn"
+target_entry = &"desde_raices"
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToClaro" unique_id=1711621914]
+shape = SubResource("RectangleShape2D_2c532")
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1251590607]
+position = Vector2(80, 304)
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=299383722 instance=ExtResource("15_lm46e")]
+position = Vector2(80, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("16_bymj4")
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1094914482 node_paths=PackedStringArray("target") instance=ExtResource("17_canfh")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("18_op7uf")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("19_c0g4y")]
+layer = 40
+script = ExtResource("20_uyvcy")
+player = NodePath("../Player")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=2005256569 node_paths=PackedStringArray("player", "ambient", "digital_layer")]
+script = ExtResource("21_7ky4g")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(1, 1, 1, 1)
+digital_ambient = Color(0.72, 0.82, 1, 1)
+digital_layer = NodePath("../DigitalLayer")

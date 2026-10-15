@@ -1,0 +1,242 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_mumv0"]
+[ext_resource type="Script" path="res://world/digital/fiber/fiber_forest_props.gd" id="2_2ay1c"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_g1j1k"]
+[ext_resource type="Script" path="res://world/digital/fiber/fiber_circuit.gd" id="4_l4ac7"]
+[ext_resource type="Script" path="res://world/digital/fiber/fiber_junction.gd" id="5_m4pxn"]
+[ext_resource type="Script" path="res://world/digital/fiber/fiber_landmarks.gd" id="6_1ubxo"]
+[ext_resource type="Script" path="res://world/objects/examinable.gd" id="7_fxfcg"]
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="8_rfh50"]
+[ext_resource type="Resource" path="res://data/dialogues/mundo/troncal_cerrada.tres" id="9_o2u3q"]
+[ext_resource type="Script" path="res://characters/creatures/fibroluz.gd" id="10_uorse"]
+[ext_resource type="Resource" path="res://data/bestiary/fibroluz.tres" id="11_n18ny"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="12_qk64h"]
+[ext_resource type="Resource" path="res://data/dialogues/mundo/fibra_corte.tres" id="13_r7k6a"]
+[ext_resource type="Script" path="res://world/zones/bosque_fibra/fiber_story.gd" id="14_0yvs3"]
+[ext_resource type="Resource" path="res://data/dialogues/mundo/fibra_reconectada.tres" id="15_y7auu"]
+[ext_resource type="Script" path="res://world/digital/immersion_portal.gd" id="16_0loto"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="17_qd2nv"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="18_fmrs6"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="19_1sg7c"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="20_crqq8"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="21_8en8r"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="22_n8yhg"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="23_n61ua"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="24_ru03a"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="25_71veh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i1odw"]
+size = Vector2(864, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fuu1f"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_htj36"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_14nfs"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aamrx"]
+size = Vector2(12, 256)
+
+[node name="FibraClaro" type="Node2D" unique_id=6828601 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_mumv0")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 800, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=1201867774]
+
+[node name="Props" type="Node2D" parent="." unique_id=14880449]
+script = ExtResource("2_2ay1c")
+width = 800.0
+trees = PackedFloat32Array(150, 470, 720)
+plants = PackedFloat32Array(110, 300, 600)
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=2142537811]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=1747360898]
+position = Vector2(400, 344)
+shape = SubResource("RectangleShape2D_i1odw")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1350605851]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_fuu1f")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=2025435908]
+position = Vector2(816, 180)
+shape = SubResource("RectangleShape2D_htj36")
+
+[node name="Mundo" type="Node2D" parent="." unique_id=2107641946]
+
+[node name="RaizAlta" type="AnimatableBody2D" parent="Mundo" unique_id=1040638274]
+position = Vector2(190, 248)
+script = ExtResource("3_g1j1k")
+width = 200.0
+
+[node name="Corte" type="Node2D" parent="Mundo" unique_id=2115255739 node_paths=PackedStringArray("junctions")]
+script = ExtResource("4_l4ac7")
+junctions = [NodePath("Empalme1"), NodePath("Empalme2"), NodePath("Empalme3"), NodePath("Empalme4")]
+source = Vector2(70, 280)
+sink = Vector2(540, 280)
+
+[node name="Empalme1" type="Node2D" parent="Mundo/Corte" unique_id=455860471]
+position = Vector2(200, 280)
+script = ExtResource("5_m4pxn")
+orientation = 0
+
+[node name="Empalme2" type="Node2D" parent="Mundo/Corte" unique_id=1513114173]
+position = Vector2(220, 222)
+script = ExtResource("5_m4pxn")
+
+[node name="Empalme3" type="Node2D" parent="Mundo/Corte" unique_id=182000020]
+position = Vector2(360, 222)
+script = ExtResource("5_m4pxn")
+orientation = 3
+
+[node name="Empalme4" type="Node2D" parent="Mundo/Corte" unique_id=197174789]
+position = Vector2(380, 280)
+script = ExtResource("5_m4pxn")
+orientation = 1
+
+[node name="Cartel" type="Label" parent="Mundo" unique_id=545474970]
+offset_left = 150.0
+offset_top = 120.0
+offset_right = 150.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.75, 0.95, 1, 0.9)
+theme_override_colors/font_outline_color = Color(0.02, 0.03, 0.08, 1)
+theme_override_constants/outline_size = 3
+text = "ORIGEN → EMPALMES → DESTINO
+Cada empalme tiene que apuntar al siguiente."
+
+[node name="TroncalCortada" type="Node2D" parent="Mundo" unique_id=2054525684]
+position = Vector2(740, 304)
+script = ExtResource("6_1ubxo")
+kind = "troncal"
+
+[node name="MirarTroncal" type="Area2D" parent="Mundo" unique_id=1145522927]
+position = Vector2(730, 304)
+script = ExtResource("7_fxfcg")
+dialogues = Array[ExtResource("8_rfh50")]([ExtResource("9_o2u3q")])
+size = Vector2(60, 60)
+prompt_text = "E: mirar la troncal"
+prompt_offset = Vector2(-50, -78)
+
+[node name="Fibroluz" type="Node2D" parent="Mundo" unique_id=425986084]
+position = Vector2(110, 290)
+script = ExtResource("10_uorse")
+entry = ExtResource("11_n18ny")
+patrol = Array[Vector2]([Vector2(470, 290), Vector2(620, 290)])
+
+[node name="NodoAlColegio" type="Node2D" parent="Mundo" unique_id=347696605]
+position = Vector2(640, 304)
+script = ExtResource("6_1ubxo")
+kind = "salida"
+
+[node name="DigitalLayer" type="Node2D" parent="." unique_id=134869245]
+
+[node name="Historia" type="Node2D" parent="." unique_id=745267904]
+
+[node name="LlegadaAlCorte" type="Area2D" parent="Historia" unique_id=1305154146]
+script = ExtResource("12_qk64h")
+quest_id = &"senal_del_barrio"
+step_id = &"seguir_fibroluz"
+dialogue = ExtResource("13_r7k6a")
+on_ready = true
+
+[node name="FiberStory" type="Node" parent="Historia" unique_id=813471033 node_paths=PackedStringArray("fibroluz", "circuit")]
+script = ExtResource("14_0yvs3")
+fibroluz = NodePath("../../Mundo/Fibroluz")
+circuit = NodePath("../../Mundo/Corte")
+solved_dialogue = ExtResource("15_y7auu")
+guide_points = Array[Vector2]([Vector2(540, 290), Vector2(700, 290)])
+
+[node name="SalidaAlColegio" type="Area2D" parent="Historia" unique_id=1746004051]
+position = Vector2(640, 270)
+script = ExtResource("16_0loto")
+target_scene = "res://world/zones/zone0/cuarto_tecnico.tscn"
+target_entry = &"desde_bosque"
+screen_size = Vector2(24, 26)
+title = "VOLVIENDO AL COLEGIO..."
+lines = PackedStringArray("Troncal de fibra del colegio", "Saliendo por el rack de red...")
+needs_vision = false
+requires_quest = &"senal_del_barrio"
+requires_step = &"volver_al_barrio"
+prompt_text = "E: entrar"
+prompt_offset = Vector2(-30, -40)
+
+[node name="Entries" type="Node2D" parent="." unique_id=1515019085]
+
+[node name="DesdeRaices" type="Marker2D" parent="Entries" unique_id=895000261]
+position = Vector2(40, 304)
+script = ExtResource("17_qd2nv")
+id = &"desde_raices"
+
+[node name="DesdeColegio" type="Marker2D" parent="Entries" unique_id=17433325]
+position = Vector2(640, 304)
+script = ExtResource("17_qd2nv")
+id = &"desde_colegio"
+facing = -1
+arrival_effect = "materialize"
+
+[node name="Exits" type="Node2D" parent="." unique_id=1334022824]
+
+[node name="ToRaices" type="Area2D" parent="Exits" unique_id=214751215]
+position = Vector2(6, 176)
+script = ExtResource("18_fmrs6")
+door_id = &"oeste"
+target_scene = "res://world/zones/bosque_fibra/fibra_raices.tscn"
+target_entry = &"desde_claro"
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/ToRaices" unique_id=733769051]
+shape = SubResource("RectangleShape2D_14nfs")
+
+[node name="TroncalAlCache" type="Area2D" parent="Exits" unique_id=57218568]
+position = Vector2(794, 176)
+script = ExtResource("18_fmrs6")
+closed_message = "La troncal hacia el Distrito Caché no tiene enlace. (Se abre más adelante)"
+
+[node name="Shape" type="CollisionShape2D" parent="Exits/TroncalAlCache" unique_id=549523506]
+shape = SubResource("RectangleShape2D_aamrx")
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=261993082]
+position = Vector2(40, 304)
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1630581081 instance=ExtResource("19_1sg7c")]
+position = Vector2(40, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("20_crqq8")
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1665935829 node_paths=PackedStringArray("target") instance=ExtResource("21_8en8r")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("22_n8yhg")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("23_n61ua")]
+layer = 40
+script = ExtResource("24_ru03a")
+player = NodePath("../Player")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=921171338 node_paths=PackedStringArray("player", "ambient", "digital_layer")]
+script = ExtResource("25_71veh")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(1, 1, 1, 1)
+digital_ambient = Color(0.72, 0.82, 1, 1)
+digital_layer = NodePath("../DigitalLayer")

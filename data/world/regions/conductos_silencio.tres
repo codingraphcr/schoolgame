@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"conductos_silencio"
+display_name = "Conductos del Silencio"
+kind = 0
+description = "Túneles de mantenimiento bajo el colegio: conductos, servidores antiguos, puertas de seguridad y sistemas eléctricos deteriorados."
+concepts = PackedStringArray("Instalaciones olvidadas")
+districts = PackedStringArray()
+secret = true
+map_position = Vector2(3.0, 3.5)
+map_size = Vector2(2.4, 1.0)
+color = Color(0.3529, 0.3529, 0.4157, 1)

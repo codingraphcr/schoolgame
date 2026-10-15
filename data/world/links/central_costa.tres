@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 6
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Se abre en undécimo (Capítulo 6)."
+
+[resource]
+script = ExtResource("1_link")
+id = &"central_costa"
+region_a = &"distrito_central"
+region_b = &"costa_pacifico"
+kind = 0
+one_way = false
+access_point = "La terminal de buses hacia el puerto"
+purpose = "Misiones de redes y comunicaciones en la costa."
+requirement = SubResource("Requirement")

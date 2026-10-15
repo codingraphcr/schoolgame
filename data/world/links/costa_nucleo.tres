@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 6
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Se abre en undécimo."
+
+[resource]
+script = ExtResource("1_link")
+id = &"costa_nucleo"
+region_a = &"costa_pacifico"
+region_b = &"nucleo_termico"
+kind = 1
+one_way = false
+access_point = "La planta de energía del puerto"
+purpose = "Sistemas industriales del puerto."
+requirement = SubResource("Requirement")

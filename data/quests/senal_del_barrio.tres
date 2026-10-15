@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_quest"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_step"]
+
+[sub_resource type="Resource" id="Resource_0"]
+script = ExtResource("2_step")
+id = &"revisar_caja"
+objective = "Revisá la caja de fibra del poste con la Visión Digital."
+room_id = &"calle"
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2_step")
+id = &"seguir_fibroluz"
+objective = "Seguí al Fibroluz hasta donde se corta la señal."
+room_id = &"fibra_claro"
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("2_step")
+id = &"reconectar"
+objective = "Reconectá los empalmes para que la señal llegue al barrio."
+room_id = &"fibra_claro"
+
+[sub_resource type="Resource" id="Resource_3"]
+script = ExtResource("2_step")
+id = &"volver_al_barrio"
+objective = "Volvé al barrio a ver si volvió la señal."
+room_id = &"calle"
+
+[resource]
+script = ExtResource("1_quest")
+id = &"senal_del_barrio"
+title = "Sin señal en el barrio"
+category = 1
+steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3")])
+completion_flag = &"senal_del_barrio_completada"
+ecos_reward = 60

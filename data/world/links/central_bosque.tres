@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 0
+flags = PackedStringArray()
+quests_completed = PackedStringArray("senal_del_barrio")
+abilities = PackedStringArray("inmersion")
+locked_text = "La troncal de fibra del colegio está cortada."
+
+[resource]
+script = ExtResource("1_link")
+id = &"central_bosque"
+region_a = &"distrito_central"
+region_b = &"bosque_fibra"
+kind = 1
+one_way = false
+access_point = "El gabinete de red (rack) del cuarto técnico del colegio"
+purpose = "La troncal de fibra del colegio; se puede usar cuando la señal del barrio vuelve a pasar por el bosque."
+requirement = SubResource("Requirement")

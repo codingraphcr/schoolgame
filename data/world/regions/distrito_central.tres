@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"distrito_central"
+display_name = "Distrito Central"
+kind = 0
+description = "La ciudad (inspirada en San José): el colegio técnico, calles, comercios, la biblioteca, talleres y laboratorios. Centro de la historia y de la navegación."
+concepts = PackedStringArray("Colegio técnico", "Ciudad", "Accesos a otras regiones")
+districts = PackedStringArray("colegio")
+secret = false
+map_position = Vector2(3.0, 1.0)
+map_size = Vector2(3.2, 2.0)
+color = Color(0.4157, 0.5412, 0.8471, 1)

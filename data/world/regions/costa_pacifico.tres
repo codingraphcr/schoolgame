@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"costa_pacifico"
+display_name = "Costa del Pacífico"
+kind = 0
+description = "Puerto, muelles, almacenes e infraestructura de comunicaciones (inspiración: Puntarenas). Redes y comunicaciones."
+concepts = PackedStringArray("Redes y comunicaciones", "Infraestructura")
+districts = PackedStringArray()
+secret = false
+map_position = Vector2(0.0, 1.2)
+map_size = Vector2(2.2, 1.8)
+color = Color(0.2902, 0.7216, 0.7843, 1)

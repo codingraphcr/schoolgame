@@ -96,7 +96,7 @@ func _test_grimorio() -> void:
 	var grimorio := current_scene
 	_check(grimorio.page == GrimorioScreen.Page.INVENTARIO and grimorio.get_node("Inventory").visible and not grimorio.get_node("%Book").visible,
 		"se abre en el INVENTARIO (la página principal)")
-	_check(grimorio.get_node("%Tabs").get_child_count() == 5, "el libro tiene 5 pestañas: mapa, comandos, conceptos, amenazas y registros")
+	_check(grimorio.get_node("%Tabs").get_child_count() == 7, "el libro tiene 7 pestañas: mapa, comandos, conceptos, amenazas, registros, bestiario y misiones")
 	# El inventario: fragmentos, arma, habilidades, coleccionables y Ecos (lo que no se tiene, apagado).
 	var game_state := root.get_node("GameState")
 	game_state.set_flag(&"ecos_descubiertos")

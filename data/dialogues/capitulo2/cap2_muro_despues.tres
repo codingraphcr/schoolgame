@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 2, nivel 4: el error queda atrapado y los procesos se detienen. (Dominio Nulo I llega en el Capítulo 3.)
+(El muro deja de reconstruirse. Los procesos se apagan uno por uno y la salida queda libre.)
+Bucle: ¡Se detuvo! ...Y nadie tuvo que romper nada.
+Kai: El error sigue ahí, pero ahora está atrapado: ya no tumba todo el simulador.
+Kai [serio]: Y ese mensaje... «arquitectura reconocida». ¿Reconocida por quién?"

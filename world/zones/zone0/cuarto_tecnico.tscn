@@ -234,6 +234,19 @@ script = ExtResource("19_5xygr")
 show_quest = &"travesuras_en_el_sistema"
 show_step = &"hablar_profesor"
 
+[node name="RackDeRed" type="Area2D" parent="." unique_id=814235763]
+position = Vector2(176, 236)
+script = ExtResource("13_w2cyt")
+target_scene = "res://world/zones/bosque_fibra/fibra_claro.tscn"
+target_entry = &"desde_colegio"
+screen_size = Vector2(24, 26)
+title = "CONECTANDO A LA TRONCAL..."
+lines = PackedStringArray("Rack de red del colegio", "Siguiendo la troncal de fibra...")
+requires_quest = &"senal_del_barrio"
+requires_step = &"volver_al_barrio"
+prompt_text = "E: entrar"
+prompt_offset = Vector2(-30, -40)
+
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("5_s4aes")]
 position = Vector2(596, 304)
 
@@ -280,6 +293,12 @@ facing = -1
 position = Vector2(500, 304)
 script = ExtResource("11_q57ws")
 id = &"desde_red"
+arrival_effect = "materialize"
+
+[node name="DesdeBosque" type="Marker2D" parent="Entries" unique_id=1826045644]
+position = Vector2(176, 304)
+script = ExtResource("11_q57ws")
+id = &"desde_bosque"
 arrival_effect = "materialize"
 
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]

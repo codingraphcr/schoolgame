@@ -1,10 +1,10 @@
 @tool
 class_name GrimorioTab
 extends Button
-## Pestaña del Grimorio (INVENTARIO, MAPA, COMANDOS, CONCEPTOS, AMENAZAS, REGISTROS): oscura con borde lila;
+## Pestaña del Grimorio (INVENTARIO, MAPA, COMANDOS, CONCEPTOS, AMENAZAS, REGISTROS, BESTIARIO, MISIONES): oscura con borde lila;
 ## la elegida se ilumina en lila y sobresale. El ícono se dibuja con líneas (sin imágenes).
 
-enum Icon { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS, ARSENAL }
+enum Icon { MAPA, COMANDOS, AMENAZAS, CONCEPTOS, REGISTROS, ARSENAL, BESTIARIO, MISIONES }
 
 @export var icon_kind := Icon.MAPA:
 	set(value):
@@ -102,6 +102,21 @@ func _draw() -> void:
 			_poly(o, PackedVector2Array([Vector2(16, 0), Vector2(16, 5), Vector2(21, 5)]), c)
 			for y in [10.0, 14.0, 18.0]:
 				draw_line(o + Vector2(7, y), o + Vector2(17, y), c, 2.0)
+		Icon.BESTIARIO:
+			# Una criaturita de luz con dos antenas y una lupa.
+			draw_circle(o + Vector2(10, 14), 6.0, c, false, 2.0)
+			draw_line(o + Vector2(8, 8), o + Vector2(5, 2), c, 2.0)
+			draw_line(o + Vector2(12, 8), o + Vector2(15, 2), c, 2.0)
+			draw_circle(o + Vector2(19, 18), 4.0, c, false, 2.0)
+			draw_line(o + Vector2(22, 21), o + Vector2(25, 24), c, 2.0)
+		Icon.MISIONES:
+			# Una lista con marcas.
+			for k in 3:
+				var y := 3.0 + k * 8.0
+				draw_rect(Rect2(o + Vector2(2, y), Vector2(5, 5)), c, false, 1.5)
+				draw_line(o + Vector2(10, y + 3.0), o + Vector2(22, y + 3.0), c, 2.0)
+			draw_line(o + Vector2(2, 6), o + Vector2(4, 8), c, 2.0)
+			draw_line(o + Vector2(4, 8), o + Vector2(8, 2), c, 2.0)
 
 
 func _poly(origin: Vector2, points: PackedVector2Array, color: Color) -> void:
