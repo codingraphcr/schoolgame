@@ -120,6 +120,16 @@ func _test_sala_3_en_clase() -> void:
 	await _frames(10)
 	var gente := current_scene.get_node("Gente") as Node2D
 	_check(not gente.visible, "durante la clase no están los del recreo en el Salón 3")
+	# Capítulo 2: tampoco durante la clase de programación ni mientras el profesor sigue en el salón.
+	for moment: Array in [["Clase de programación (Sala 3)", false], ["Simulador · ciclos y repaso", false],
+			["Final del capítulo (el profesor)", true]]:
+		DevPoints.prepare(_dev_point(moment[0]), state)
+		change_scene_to_file("res://world/zones/zone0/sala_3.tscn")
+		await _frames(10)
+		var seen: bool = (current_scene.get_node("Gente") as Node2D).visible
+		var class_seen: bool = (current_scene.get_node("Capitulo2/Clase") as Node2D).visible or (current_scene.get_node("Capitulo2/Profesor") as Node2D).visible
+		_check(seen == moment[1] and not (seen and class_seen),
+			"capítulo 2 · %s: los del recreo %s (nunca junto con la clase o el profesor)" % [moment[0], "están" if moment[1] else "no están"])
 	state.reset()
 
 
@@ -178,3 +188,11 @@ func _sprite(npc: Node) -> AnimatedSprite2D:
 		if child is AnimatedSprite2D:
 			return child
 	return null
+
+
+## Un punto del menú de pruebas (DevPoints) por su nombre.
+func _dev_point(point_name: String) -> Dictionary:
+	for point: Dictionary in DevPoints.POINTS:
+		if point["nombre"] == point_name:
+			return point
+	return {}

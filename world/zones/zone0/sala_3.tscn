@@ -397,6 +397,7 @@ alt_characters = PackedStringArray()
 script = ExtResource("8_y5xbq")
 hide_quest = &"una_clase_diferente"
 return_quest = &"travesuras_en_el_sistema"
+hide_while = Array[NodePath]([NodePath("../../Capitulo2/Clase/StoryPresence"), NodePath("../../Capitulo2/Profesor/StoryPresence")])
 
 [node name="Capitulo2" type="Node2D" parent="." unique_id=1574686011]
 

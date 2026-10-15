@@ -4,7 +4,8 @@ extends Node
 ## partida. Ej.: el profesor está en el laboratorio solo durante la clase del Capítulo 1.
 ##
 ## Se ve si: (show_quest vacío o ya se llegó a show_quest/show_step) y (hide_quest vacío o todavía no
-## se llegó a hide_quest/hide_step) — o si return_quest ya se completó (vuelve a aparecer).
+## se llegó a hide_quest/hide_step) — o si return_quest ya se completó (vuelve a aparecer) —, y siempre
+## que no se vea ninguno de los personajes de hide_while.
 ## Oculto, el padre no se ve ni procesa (no se puede hablar con él).
 
 @export var show_quest: StringName = &""
@@ -13,6 +14,9 @@ extends Node
 @export var hide_step: StringName = &""
 ## Al completar esta misión vuelve a verse aunque se haya ocultado.
 @export var return_quest: StringName = &""
+## Además se oculta mientras alguna de estas otras StoryPresence muestra a su personaje (p. ej. los
+## estudiantes del recreo del Salón 3, mientras están la clase o el profesor del capítulo 2).
+@export var hide_while: Array[NodePath] = []
 
 ## Último estado aplicado (−1 = ninguno todavía).
 var _applied := -1
@@ -27,6 +31,10 @@ func _process(_delta: float) -> void:
 
 
 func is_present() -> bool:
+	for path in hide_while:
+		var other := get_node_or_null(path) as StoryPresence
+		if other and other.is_present():
+			return false
 	var state := get_node("/root/GameState")
 	if return_quest != &"" and state.is_quest_completed(return_quest):
 		return true
