@@ -382,7 +382,7 @@ title = "SIMULADOR DE PRÁCTICAS"
 lines = PackedStringArray("Conexión encontrada", "Entrando al simulador...")
 requires_quest = &"el_lenguaje_de_las_maquinas"
 requires_step = &"entrar_simulador"
-closed_flag = &"cap2_dominio_nulo"
+closed_flag = &"cap2_simulador_terminado"
 prompt_text = "E: entrar"
 prompt_offset = Vector2(-30, -40)
 

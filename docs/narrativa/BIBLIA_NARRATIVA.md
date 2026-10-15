@@ -228,7 +228,7 @@ El estudiante llega al colegio, aprende movimiento, diálogo e interacción. Un 
   acumula errores que alteran el simulador. No es malvado: cree que debe terminar su tarea. No muere: queda
   agotado y liberado, y puede volver como personaje secundario. Lección: un error pequeño, repetido sin control,
   puede causar consecuencias enormes (ver `docs/jefes/BUCLE_INFINITO.md`).
-- **Recompensa:** Desbloqueo de Dominio Nulo I.
+- **Recompensa:** Dominio Nulo I ya no se desbloquea aquí (decisión de Ariel, 15 de octubre de 2026): dónde, por definir.
 - **Pista:** Una anomalía reconoce su arquitectura digital.
 
 **Capítulo 3 — Amenazas invisibles**
@@ -448,8 +448,8 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
 
 - **Bucle** es el jefe del nivel 4 (Capítulo 2): entidad de un proceso automático defectuoso, sin condición de
   salida; no muere y queda liberado. Su combate («Bucle Infinito») y su final están en `docs/jefes/BUCLE_INFINITO.md`.
-  Después del combate, el simulador se desestabiliza y Kai activa por instinto **Dominio Nulo I** (su origen sigue
-  pendiente, sección XVI).
+  Después del combate, Kai corrige su condición de salida y una anomalía «reconoce su arquitectura digital». (El
+  Dominio Nulo I ya no se obtiene en este combate: dónde, por definir; su origen sigue pendiente, sección XVI.)
 
 **FIN — BIBLIA NARRATIVA V1.5**
 

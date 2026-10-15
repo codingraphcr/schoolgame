@@ -40,6 +40,7 @@ func _run() -> void:
 	await _test_fatigue_and_repeat()
 	await _test_key_hits()
 	await _test_real_sword()
+	await _test_no_spam()
 	await _test_attacks()
 	await _test_safe_routes()
 	await _test_finish()
@@ -94,6 +95,22 @@ func _test_start() -> void:
 		"al llegar se cierra la puerta y se registra el checkpoint")
 	_check(fight.background.get_index() == 0 and room.room_size.size.x <= 640.0,
 		"el fondo queda detrás de todo y la arena entra entera en la pantalla (los peligros siempre se ven)")
+	# El fondo de Ariel: sus cinco plataformas pintadas se pisan, y Bucle está sobre el puente de arriba.
+	var platforms := room.get_node("Platforms").get_children().filter(func(p: Node) -> bool: return p is DataPlatform and p.name != "FloorVisual")
+	var bridge := room.get_node("Platforms/PlataformaCentral") as DataPlatform
+	_check(fight.background.get("picture") != null and platforms.size() == 5 and platforms.all(func(p: DataPlatform) -> bool: return not p.drawn),
+		"el fondo es el dibujo de Ariel y sus cinco plataformas se pisan (%d)" % platforms.size())
+	_check(absf(boss.global_position.y - (bridge.global_position.y - 5.0)) < 1.0 and boss.global_position.x > bridge.global_position.x
+		and boss.global_position.x < bridge.global_position.x + bridge.width and not fight.platforms.has(bridge),
+		"Bucle está sobre el puente (el más alto) y el Error de ejecución nunca apaga ese")
+	# La hoja de sprites de Ariel: una animación por estado, el color de la etapa y su retrato en los diálogos.
+	var anims := ["quieto", "preparar", "onda", "lluvia", "anillo", "dano", "aturdido", "recarga", "derrota"]
+	_check(anims.all(func(a: String) -> bool: return not BucleArt.animation("bucle_" + a).is_empty())
+		and int(BucleArt.animation("bucle_quieto").frames) == 8 and boss.current_anim() == "preparar",
+		"Bucle usa las animaciones de la hoja de Ariel (al anunciar la secuencia: preparar)")
+	var bucle_character := load("res://data/characters/bucle.tres") as DialogueCharacter
+	_check(bucle_character.portrait != null and boss.get_node("Cuerpo").material is ShaderMaterial,
+		"tiene su retrato en los diálogos y el color de cada etapa (shader)")
 
 
 ## Sin golpes: termina el patrón, se cansa y repite el mismo ciclo.
@@ -147,6 +164,36 @@ func _test_real_sword() -> void:
 	await _action(&"attack")
 	await _frames(12)
 	_check(boss.impacts == before + 1, "un tajo real de la Nullblade (J) cuenta como impacto clave (%d → %d)" % [before, boss.impacts])
+	player.teleport_to(Vector2(80, 296))
+	await _frames(2)
+
+
+## Quedarse pegado a Bucle y pegarle sin parar no lo vence: mientras anuncia tiene escudo (el golpe rebota y
+## empuja a Kai), mientras ataca está arriba (un tajo desde el puente no lo alcanza) y solo baja cansado.
+func _test_no_spam() -> void:
+	var player := room.player
+	await _until(func() -> bool: return boss.state == S.PREPARE_PATTERN)
+	var before := boss.impacts
+	var ignored_before := ignored
+	player.teleport_to(boss.global_position + Vector2(-20, 5))
+	await _frames(2)
+	_hit()
+	await _frames(2)
+	_check(boss.impacts == before and ignored > ignored_before and player.velocity.x < -100.0,
+		"mientras anuncia la secuencia tiene escudo: el golpe no cuenta y Kai sale despedido")
+	await _until(func() -> bool: return boss.state == S.EXECUTE_PATTERN)
+	await _frames(40)
+	_check(boss.global_position.y <= boss.hover_y - boss.rise + 4.0, "mientras ataca sube (y=%.0f): hay que saltar para alcanzarlo" % boss.global_position.y)
+	var bridge := room.get_node("Platforms/PlataformaCentral") as DataPlatform
+	player.teleport_to(Vector2(boss.global_position.x - 20.0, bridge.global_position.y))
+	player.facing = 1
+	await _frames(3)
+	await _action(&"attack")
+	await _frames(12)
+	_check(boss.impacts == before, "un tajo parado en el puente, al lado, no lo alcanza mientras ataca")
+	await _until(func() -> bool: return boss.state == S.FATIGUE)
+	await _frames(40)
+	_check(absf(boss.global_position.y - boss.hover_y) < 2.0, "cansado baja al puente: la ventana para golpearlo")
 	player.teleport_to(Vector2(80, 296))
 	await _frames(2)
 
@@ -206,9 +253,10 @@ func _test_finish() -> void:
 	_check(transformations == 6 and boss.stage == 7, "sin octava transformación (%d transformaciones)" % transformations)
 	_check(is_instance_valid(boss) and boss.visible and state.has_flag(&"cap2_bucle_liberado"), "Bucle no muere: queda en la arena, liberado")
 	await _leave_simulator()
-	_check(state.has_flag(&"cap2_bucle_vencido") and state.has_flag(&"cap2_condicion_corregida") and state.has_flag(&"cap2_dominio_nulo")
-		and state.domain_stage == 1 and not fight.gate.active,
-		"queda guardado: jefe vencido, condición de salida corregida, Dominio Nulo I y la puerta abierta")
+	_check(state.has_flag(&"cap2_bucle_vencido") and state.has_flag(&"cap2_condicion_corregida") and state.has_flag(&"cap2_simulador_terminado")
+		and not fight.gate.active and not fight.has_node("../MuroDeProcesos"),
+		"queda guardado: jefe vencido, condición de salida corregida y la puerta abierta (sin derrumbe ni muro)")
+	_check(state.domain_stage == 0 and not room.player.domain.is_unlocked(), "vencer a Bucle no da el Dominio Nulo I (se consigue más adelante)")
 	_check(root.get_node("Economy").ecos > ecos_before, "da su recompensa")
 	await _frames(240)
 	_check(boss.state == S.DEFEATED and get_nodes_in_group(&"boss_attack").is_empty(), "y ya no ataca: el jefe no sigue activo")
@@ -255,12 +303,8 @@ func _test_already_won() -> void:
 
 ## --- Ayudas ---
 
-## Después del combate el simulador se derrumba (lo prueba test_dominio_nulo): aquí se rompe el muro rápido.
+## Después del combate: el puzle (salteado en las pruebas), la pista y la salida abierta.
 func _leave_simulator() -> void:
-	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.COLLAPSE and state.domain_stage >= 1)
-	room.player.domain.activate(true)
-	if is_instance_valid(fight.wall):
-		fight.wall.health.take_damage(99.0)
 	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.DONE)
 
 

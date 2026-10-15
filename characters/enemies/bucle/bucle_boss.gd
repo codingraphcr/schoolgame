@@ -30,11 +30,23 @@ enum State { INTRO, PREPARE_PATTERN, EXECUTE_PATTERN, FATIGUE, HIT_REACTION, TRA
 
 ## Dónde se pone en cada ciclo (x): cambia de lugar en algunos; en el último queda atrapado en el centro.
 const ANCHORS: Array[float] = [320.0, 320.0, 200.0, 440.0, 320.0, 200.0, 320.0]
+## Altura donde flota si la escena no dice otra (hover_y): abajo, sobre el piso.
 const HOVER_Y := 296.0
+const TINT := preload("res://characters/enemies/bucle/bucle_tint.gdshader")
 
 @export var config: BucleConfig
 ## Límites de la arena: x de las paredes, y de arriba y del suelo (los ataques la usan).
 @export var arena := Rect2(40, 40, 560, 264)
+## Dónde flota (y) y la plataforma sobre la que está (en la arena de Ariel, el puente de arriba). Si tiene
+## ancho, el Pulso también corre por ella (si no, pararse junto a Bucle lo esquivaría siempre).
+@export var hover_y := HOVER_Y
+@export var perch := Rect2()
+## Mientras ataca sube rise px (fuera del alcance de un tajo desde el puente: hay que saltar) y va y viene
+## drift px a cada lado de su lugar. Cansado baja a hover_y: la ventana clara para golpearlo.
+@export var rise := 76.0
+@export var drift := 70.0
+## Empuje a Kai cuando un golpe rebota en el escudo o cuando recibe un impacto (para no quedarse pegado).
+@export var push := Vector2(260, -150)
 
 var state := State.INTRO
 var impacts := 0
@@ -52,6 +64,13 @@ var _state_left := 0.0
 var _pattern_done := false
 var _clock := 0.0
 var _flash := 0.0
+## El cuerpo (sprites de Ariel con el color de la etapa) y su animación en curso.
+var _body: Node2D
+var _anim := ""
+var _anim_since := 0.0
+## Su lugar (x) en este ciclo: cambia al transformarse (ANCHORS).
+var _anchor_x := 0.0
+var _shield_flash := 0.0
 
 
 func _ready() -> void:
@@ -61,10 +80,18 @@ func _ready() -> void:
 	gravity = 0.0
 	knockback_resistance = 1.0
 	body_size = Vector2(22, 24)
+	_body = Node2D.new()
+	_body.name = "Cuerpo"
+	var tint := ShaderMaterial.new()
+	tint.shader = TINT
+	_body.material = tint
+	add_child(_body)
+	_body.draw.connect(_draw_body)
 	if config:
 		max_health = config.key_hits
 		contact_damage = config.attack_damage
 	super()
+	_anchor_x = position.x
 	# No muere: con la vida en cero queda DEFEATED (no se desintegra ni se borra).
 	health.died.disconnect(_die)
 	contact.deactivate()
@@ -85,9 +112,10 @@ func cycle_data() -> BucleCycle:
 	return config.cycle(cycle())
 
 
-## Si un golpe ahora cuenta como impacto clave.
+## Si un golpe ahora cuenta como impacto clave: mientras ataca (arriba: hay que saltar) o cansado (abajo, en el
+## puente). Mientras anuncia la secuencia tiene escudo (los golpes rebotan y empujan a Kai).
 func is_vulnerable() -> bool:
-	return state in [State.PREPARE_PATTERN, State.EXECUTE_PATTERN, State.FATIGUE] and not hit_this_cycle
+	return state in [State.EXECUTE_PATTERN, State.FATIGUE] and not hit_this_cycle
 
 
 ## Vuelve a empezar (Kai perdió): ciclo 1, sin impactos, en su lugar.
@@ -101,7 +129,8 @@ func restore() -> void:
 	current_attack = &""
 	health.restore_full()
 	position.x = ANCHORS[0]
-	position.y = HOVER_Y
+	_anchor_x = position.x
+	position.y = hover_y
 	modulate = Color.WHITE
 	hurtbox.set_physics_process(true)
 	_set_state(State.INTRO)
@@ -128,12 +157,39 @@ func _ai(delta: float) -> void:
 		State.EXECUTE_PATTERN:
 			if _pattern_done:
 				_enter(State.FATIGUE)
+	_float(delta)
+
+
+## Dónde flota: mientras ataca, arriba y yendo y viniendo sobre el puente (sin salirse de él); en lo demás,
+## abajo en su lugar (al transformarse, va hacia el lugar del ciclo nuevo).
+func _float(delta: float) -> void:
+	if state in [State.INTRO, State.DEFEATED]:
+		return
+	var target := Vector2(_anchor_x, hover_y)
+	var speed := 220.0 if state == State.TRANSFORMATION else 150.0
+	if state == State.EXECUTE_PATTERN:
+		target = Vector2(_anchor_x + sin(_clock * 1.3) * drift, hover_y - rise)
+		speed = 190.0 * cycle_data().speed
+	if perch.size.x > 0.0:
+		target.x = clampf(target.x, perch.position.x + 16.0, perch.end.x - 16.0)
+	position = position.move_toward(target, speed * delta)
+
+
+## Empuja a Kai hacia el lado contrario (rebote en el escudo o al recibir un impacto).
+func _push_player() -> void:
+	var kai := get_player()
+	if kai == null or kai.global_position.distance_to(global_position) > 90.0:
+		return
+	var away := 1.0 if kai.global_position.x >= global_position.x else -1.0
+	kai.velocity = Vector2(away * push.x, push.y)
 
 
 func _physics_process(delta: float) -> void:
 	_clock += delta
 	_flash = maxf(_flash - delta, 0.0)
+	_shield_flash = maxf(_shield_flash - delta, 0.0)
 	queue_redraw()
+	_body.queue_redraw()
 	super(delta)
 
 
@@ -178,10 +234,8 @@ func _enter(next: State) -> void:
 			_state_left = config.transformation_time
 			stage = mini(impacts + 1, config.key_hits)
 			transformed.emit(stage)
-			var anchor := ANCHORS[clampi(stage - 1, 0, ANCHORS.size() - 1)]
-			if not is_equal_approx(anchor, position.x):
-				var tween := create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-				tween.tween_property(self, "position:x", anchor, config.transformation_time * 0.6).set_trans(Tween.TRANS_SINE)
+			# Se va a su lugar del ciclo nuevo (lo mueve _float).
+			_anchor_x = ANCHORS[clampi(stage - 1, 0, ANCHORS.size() - 1)]
 		State.DEFEATED:
 			current_attack = &""
 			contact.deactivate()
@@ -203,6 +257,9 @@ func _on_hit_received(_hit: HitData) -> void:
 	if not is_vulnerable():
 		hit_ignored.emit()
 		Sfx.play(&"enemy_hit", 1.6, -8.0)
+		# El golpe rebota (en el escudo o mientras reacciona): Kai sale despedido.
+		_shield_flash = 0.3
+		_push_player()
 		return
 	var risky := state == State.EXECUTE_PATTERN
 	hit_this_cycle = true
@@ -215,6 +272,7 @@ func _on_hit_received(_hit: HitData) -> void:
 	if config.hit_lines.size() >= impacts:
 		SpeechBark.say(self, config.hit_lines[impacts - 1], Vector2(0, -52))
 	key_hit.emit(impacts, risky)
+	_push_player()
 	_enter(State.HIT_REACTION)
 
 
@@ -247,6 +305,9 @@ func _attack(attack: StringName, data: BucleCycle, epoch: int) -> void:
 				if epoch != _epoch:
 					return
 				BucleAttacks.pulse(get_parent(), global_position, arena, config.pulse_speed * data.speed, telegraph, damage)
+				if perch.size.x > 0.0:
+					# Y por la plataforma donde está él (de la x de Bucle hacia sus dos bordes).
+					BucleAttacks.pulse(get_parent(), Vector2(global_position.x, perch.position.y), Rect2(perch.position.x, 0.0, perch.size.x, perch.position.y), config.pulse_speed * data.speed, telegraph, damage)
 				await _wait(telegraph + 0.45 / data.speed)
 		&"lluvia":
 			var lane_width := arena.size.x / config.rain_lanes
@@ -270,21 +331,72 @@ func _wait(seconds: float) -> void:
 ## --- Dibujo ---
 
 func _draw() -> void:
-	var mood: StringName = &""
-	match state:
-		State.FATIGUE:
-			mood = &"cansado"
-		State.HIT_REACTION:
-			mood = &"golpe"
-		State.DEFEATED:
-			mood = &"libre"
 	if state == State.PREPARE_PATTERN:
 		# Anuncia la secuencia: un anillo que se cierra sobre él.
 		var t := 1.0 - clampf(_state_left / maxf(config.prepare_time, 0.01), 0.0, 1.0)
 		draw_arc(BucleArt.CENTER, 40.0 - t * 22.0, 0.0, TAU, 32, Color(BucleArt.body_color(stage), 0.6), 2.0)
-	var shown_stage := stage if state != State.DEFEATED else 1
-	BucleArt.draw(self, shown_stage, _clock, mood, GameSettings.glitch_factor())
-	if _flash > 0.0:
-		draw_circle(BucleArt.CENTER, BucleArt.BODY_RADIUS + 3.0, Color(1, 1, 1, _flash * 3.0))
+		# Escudo: mientras anuncia, los golpes rebotan.
+		var color := BucleArt.body_color(stage)
+		draw_circle(BucleArt.CENTER, 17.0, Color(color, 0.12 + 0.25 * _shield_flash / 0.3))
+		for k in 6:
+			var a := _clock * 2.0 + k * TAU / 6.0
+			draw_arc(BucleArt.CENTER, 17.0, a, a + 0.6, 6, Color(color.lightened(0.4), 0.8), 1.5)
+	BucleArt.draw_around(self, _shown_stage(), _clock, GameSettings.glitch_factor())
 	if state == State.FATIGUE:
 		draw_string(ThemeDB.fallback_font, BucleArt.CENTER + Vector2(10, -16), "z", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(Color.WHITE, 0.6))
+
+
+## El cuerpo (los sprites de Ariel): va en su propio nodo, encima de lo de alrededor, con el shader que le da
+## el color de la etapa.
+func _draw_body() -> void:
+	var anim := current_anim()
+	if anim != _anim:
+		_anim = anim
+		_anim_since = _clock
+	_body.material.set_shader_parameter(&"target", BucleArt.body_color(_shown_stage()))
+	if not BucleArt.draw_sprite(_body, anim, _clock - _anim_since, _shown_stage(), _clock):
+		BucleArt.draw_fallback(_body, _shown_stage(), _clock, _mood())
+	if _flash > 0.0:
+		_body.draw_circle(BucleArt.CENTER, BucleArt.BODY_RADIUS + 3.0, Color(1, 1, 1, _flash * 3.0))
+
+
+## La animación de la hoja de Ariel para el estado actual (y, al atacar, para el ataque).
+func current_anim() -> String:
+	match state:
+		State.PREPARE_PATTERN:
+			return "preparar"
+		State.EXECUTE_PATTERN:
+			match current_attack:
+				&"pulso":
+					return "onda"
+				&"lluvia":
+					return "lluvia"
+				&"anillo":
+					return "anillo"
+			return "preparar"
+		State.FATIGUE:
+			return "aturdido"
+		State.HIT_REACTION:
+			return "dano"
+		State.TRANSFORMATION:
+			return "recarga"
+		State.DEFEATED:
+			return "derrota"
+	return "quieto"
+
+
+func _mood() -> StringName:
+	match state:
+		State.FATIGUE:
+			return &"cansado"
+		State.HIT_REACTION:
+			return &"golpe"
+		State.PREPARE_PATTERN, State.EXECUTE_PATTERN:
+			return &"preparando"
+		State.DEFEATED:
+			return &"libre"
+	return &""
+
+
+func _shown_stage() -> int:
+	return stage if state != State.DEFEATED else 1

@@ -22,6 +22,9 @@ enum Side { LEFT, RIGHT }
 ## Tamaño del retrato (1 = normal). Glitch y Chip van más chicos: su dibujo es casi todo cabeza y la caja
 ## les tapaba la cara.
 @export var portrait_scale := 1.0
+## Cuánto se corre el retrato hacia el centro (x) y hacia arriba (y), en píxeles de la pantalla. Los retratos
+## se apoyan en el borde de abajo (Kai y los gemelos se ven de pecho para arriba); Bucle es redondo y entero.
+@export var portrait_offset := Vector2.ZERO
 ## Color del nombre y del borde de la placa.
 @export var accent := Color(0.243, 0.949, 1.0)
 ## Color del texto de sus líneas (transparente = el color normal de la caja).

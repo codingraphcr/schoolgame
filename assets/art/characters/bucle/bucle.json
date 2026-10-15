@@ -1,0 +1,159 @@
+{
+	"animations": {
+		"bucle_anillo": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_anillo.png",
+			"fps": 12.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 8,
+			"loop": false
+		},
+		"bucle_aturdido": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_aturdido.png",
+			"fps": 7.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 7,
+			"loop": true
+		},
+		"bucle_dano": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_dano.png",
+			"fps": 16.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 8,
+			"loop": false
+		},
+		"bucle_derrota": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_derrota.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 8,
+			"loop": false
+		},
+		"bucle_desaparicion": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_desaparicion.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 7,
+			"loop": false
+		},
+		"bucle_lluvia": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_lluvia.png",
+			"fps": 10.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 8,
+			"loop": false
+		},
+		"bucle_mover": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_mover.png",
+			"fps": 12.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 8,
+			"loop": true
+		},
+		"bucle_onda": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_onda.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": false
+		},
+		"bucle_preparar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_preparar.png",
+			"fps": 12.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 8,
+			"loop": false
+		},
+		"bucle_quieto": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_quieto.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 8,
+			"loop": true
+		},
+		"bucle_recarga": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "bucle_bucle_recarga.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 8,
+			"loop": false
+		}
+	},
+	"scale": 0.5
+}

@@ -4,7 +4,7 @@ extends SceneTree
 ## conexión del laboratorio (con la Visión) al simulador; las salas de variables (la puerta con
 ## condición), condiciones (plataformas si / si no) y ciclos (el puente de n bloques y el repaso):
 ## «NIVEL 3 COMPLETADO»; los procesos repetidos (el generador, el registro y el manejo de errores);
-## Bucle y el derrumbe (se dan por hechos: tienen sus pruebas) con la salida al laboratorio; y el profesor:
+## Bucle (se da por hecho: tiene su prueba) con la salida al laboratorio; y el profesor:
 ## «FIN DEL CAPÍTULO 2». Con E sobre un nodo de variable de verdad.
 ## Ejecutar: godot --headless --path . --script res://tests/test_capitulo2.gd
 
@@ -191,7 +191,7 @@ func _test_processes() -> void:
 
 
 func _test_bucle_and_exit() -> void:
-	# Bucle y el derrumbe tienen sus pruebas (test_bucle, test_dominio_nulo): aquí se dan por hechos.
+	# Bucle tiene su prueba (test_bucle): aquí se da por hecho.
 	var scene := (load(SIM + "arena_bucle.tscn") as PackedScene).instantiate()
 	(scene.get_node("Fight") as BucleArenaController).skip_cinematics = true
 	current_scene.queue_free()
@@ -207,14 +207,9 @@ func _test_bucle_and_exit() -> void:
 		await _until(func() -> bool: return boss.is_vulnerable())
 		boss.hurtbox.hit_received.emit(HitData.new())
 		await _frames(2)
-	await _until(func() -> bool: return state.get_current_step(Q4) == &"salir_simulador")
-	_check(state.get_current_step(Q4) == &"salir_simulador", "vencer a Bucle cumple su paso")
-	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.COLLAPSE and state.domain_stage >= 1)
-	room.player.domain.activate(true)
-	fight.wall.health.take_damage(99.0)
 	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.DONE)
-	_check(state.get_current_step(Q4) == &"hablar_profesor" and state.has_flag(&"cap2_anomalia_vista"),
-		"salir del simulador cumple su paso (y queda la pista: «arquitectura reconocida»)")
+	_check(state.get_current_step(Q4) == &"hablar_profesor" and state.has_flag(&"cap2_anomalia_vista") and state.domain_stage == 0,
+		"vencer a Bucle cumple su paso y queda la pista «arquitectura reconocida» (sin el Dominio Nulo: es para más adelante)")
 	var exit := room.get_node("Exits/Salida") as RoomExit
 	_check(exit.resolve().get("scene", "") == Z + "laboratorio.tscn", "la salida lleva al laboratorio")
 

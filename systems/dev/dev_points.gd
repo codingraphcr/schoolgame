@@ -75,13 +75,10 @@ const POINTS: Array[Dictionary] = [
 		"sala": &"sim_procesos", "mision": [&"codigo_fuera_de_control", &"procesos"], "habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
 	{ "grupo": "Capítulo 2", "nombre": "Jefe: Bucle Infinito", "escena": SIM + "arena_bucle.tscn", "entrada": &"inicio",
 		"sala": &"arena_bucle", "mision": [&"codigo_fuera_de_control", &"vencer_bucle"], "habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
-	{ "grupo": "Capítulo 2", "nombre": "Derrumbe del simulador (Dominio Nulo I)", "escena": SIM + "arena_bucle.tscn",
-		"entrada": &"inicio", "sala": &"arena_bucle", "mision": [&"codigo_fuera_de_control", &"vencer_bucle"], "habilidades": [&"vision", &"nullblade", &"inmersion"],
-		"marcas": [&"cap2_bucle_vencido", &"cap2_bucle_liberado", &"cap2_condicion_corregida"] },
 	{ "grupo": "Capítulo 2", "nombre": "Final del capítulo (el profesor)", "escena": Z + "laboratorio.tscn",
 		"entrada": &"desde_simulador", "sala": &"laboratorio", "mision": [&"codigo_fuera_de_control", &"hablar_profesor"],
-		"habilidades": [&"vision", &"nullblade", &"inmersion", &"dominio"],
-		"marcas": [&"cap2_bucle_vencido", &"cap2_bucle_liberado", &"cap2_condicion_corregida", &"cap2_dominio_nulo"] },
+		"habilidades": [&"vision", &"nullblade", &"inmersion"],
+		"marcas": [&"cap2_bucle_vencido", &"cap2_bucle_liberado", &"cap2_condicion_corregida", &"cap2_anomalia_vista", &"cap2_simulador_terminado"] },
 ]
 
 

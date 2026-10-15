@@ -62,6 +62,7 @@ func _initialize() -> void:
 		_pixelate(_cut_out(sheet.get_region(CUTOUTS[out]), PackedVector2Array(KEEP.get(out, [])), HOLES.get(out, []))).save_png(out)
 		print(out.get_file())
 	_extract_siblings()
+	_extract_bucle()
 	for dir: String in EXPRESSIONS:
 		var prefix := "kai_" if dir == KAI else "profesor_"
 		for expression: String in EXPRESSIONS[dir]:
@@ -327,3 +328,43 @@ func _keep_largest(image: Image) -> void:
 		for x in w:
 			if keep[y * w + x] == 0:
 				image.set_pixel(x, y, Color(0, 0, 0, 0))
+
+
+## --- Bucle (la maqueta del diálogo de Ariel: bucle_dialogo.webp, el Bucle grande de la izquierda) ---
+## El fondo no es liso (el cuarto, la caja de diálogo y la placa del nombre): desde los bordes se borra todo lo
+## que no sea su luz cálida (anillo, antena y chispas). La cara oscura queda: está encerrada por el anillo.
+const BUCLE_SHEET := "res://docs/arte/referencias/bucle_dialogo.webp"
+const BUCLE_OUT := "res://assets/art/characters/bucle/bucle_retrato.png"
+const BUCLE_RECT := Rect2i(30, 195, 545, 620)
+
+
+func _extract_bucle() -> void:
+	var sheet := Image.load_from_file(ProjectSettings.globalize_path(BUCLE_SHEET))
+	if sheet == null:
+		push_error("No se encontró la hoja: " + BUCLE_SHEET)
+		return
+	sheet.convert(Image.FORMAT_RGBA8)
+	var image := sheet.get_region(BUCLE_RECT)
+	var w := image.get_width()
+	var h := image.get_height()
+	var done := PackedByteArray()
+	done.resize(w * h)
+	var stack: Array[Vector2i] = []
+	for x in w:
+		stack.append_array([Vector2i(x, 0), Vector2i(x, h - 1)])
+	for y in h:
+		stack.append_array([Vector2i(0, y), Vector2i(w - 1, y)])
+	while not stack.is_empty():
+		var p: Vector2i = stack.pop_back()
+		if p.x < 0 or p.y < 0 or p.x >= w or p.y >= h or done[p.y * w + p.x]:
+			continue
+		var c := image.get_pixelv(p)
+		if c.r - c.b > 0.18 and c.v > 0.3:
+			continue  # Su luz (anillo, antena, chispas): queda.
+		done[p.y * w + p.x] = 1
+		image.set_pixelv(p, Color(0, 0, 0, 0))
+		stack.append_array([p + Vector2i.RIGHT, p + Vector2i.LEFT, p + Vector2i.DOWN, p + Vector2i.UP])
+	image.crop(w, h)
+	image = image.get_region(image.get_used_rect())
+	image.save_png(ProjectSettings.globalize_path(BUCLE_OUT))
+	print(BUCLE_OUT.get_file())

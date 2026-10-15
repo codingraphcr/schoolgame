@@ -18,6 +18,8 @@ static func wait(node: Node, seconds: float) -> void:
 	var left := seconds
 	while left > 0.0 and node.is_inside_tree():
 		await node.get_tree().physics_frame
+		if not is_instance_valid(node):
+			return  # La sala se borró mientras esperaba (Kai perdió, cambio de sala).
 		left -= node.get_physics_process_delta_time() * threat_scale
 
 

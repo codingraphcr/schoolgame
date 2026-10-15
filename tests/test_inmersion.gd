@@ -159,7 +159,6 @@ func _test_una_sola_vez() -> void:
 		["Jefe: Glitch y Chip", "res://world/zones/zone0/cuarto_tecnico.tscn", "ImmersionPortal", true, "antes de vencer a Glitch y Chip, el monitor del cuarto técnico se puede usar"],
 		["Final (GENESIS_ARCHIVE)", "res://world/zones/zone0/cuarto_tecnico.tscn", "ImmersionPortal", false, "con Glitch y Chip vencidos, el monitor del cuarto técnico ya no está"],
 		["Laboratorio: la conexión al simulador", "res://world/zones/zone0/laboratorio.tscn", "Capitulo2/ConexionSimulador", true, "la conexión al simulador del laboratorio se puede usar"],
-		["Derrumbe del simulador (Dominio Nulo I)", "res://world/zones/zone0/laboratorio.tscn", "Capitulo2/ConexionSimulador", true, "con Bucle vencido pero sin terminar el derrumbe, se puede volver a terminarlo"],
 		["Final del capítulo (el profesor)", "res://world/zones/zone0/laboratorio.tscn", "Capitulo2/ConexionSimulador", false, "con el simulador terminado, la conexión del laboratorio ya no está"],
 	]
 	for case: Array in cases:

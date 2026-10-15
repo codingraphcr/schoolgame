@@ -15,12 +15,6 @@ id = &"vencer_bucle"
 objective = "Llega al núcleo del simulador y detén a Bucle."
 room_id = &"arena_bucle"
 
-[sub_resource type="Resource" id="Resource_jshvg"]
-script = ExtResource("2_diyt7")
-id = &"salir_simulador"
-objective = "Sal del simulador antes de que se derrumbe."
-room_id = &"arena_bucle"
-
 [sub_resource type="Resource" id="Resource_ayd6p"]
 script = ExtResource("2_diyt7")
 id = &"hablar_profesor"
@@ -31,7 +25,7 @@ room_id = &"laboratorio"
 script = ExtResource("1_h0ruk")
 id = &"codigo_fuera_de_control"
 title = "Código fuera de control"
-steps = Array[ExtResource("2_diyt7")]([SubResource("Resource_kc45l"), SubResource("Resource_fbcfk"), SubResource("Resource_jshvg"), SubResource("Resource_ayd6p")])
+steps = Array[ExtResource("2_diyt7")]([SubResource("Resource_kc45l"), SubResource("Resource_fbcfk"), SubResource("Resource_ayd6p")])
 completion_title = "FIN DEL CAPÍTULO 2"
 completion_subtitle = "LOS PRIMEROS CÓDIGOS"
 completion_flag = &"capitulo_2_completado"
