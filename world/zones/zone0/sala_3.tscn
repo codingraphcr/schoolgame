@@ -313,6 +313,61 @@ creatures_dialogue = ExtResource("29_wqn5y")
 escape_dialogue = ExtResource("30_hogho")
 hop_points = Array[Vector2]([Vector2(90, 264), Vector2(150, 264), Vector2(260, 264), Vector2(380, 264), Vector2(250, 146)])
 
+[node name="Gente" type="Node2D" parent="."]
+
+[node name="ChicoCompu" type="Node2D" parent="Gente"]
+position = Vector2(152, 304)
+script = ExtResource("7_v2urv")
+character = "m1"
+mode = 4
+
+[node name="ChicaFondo" type="Node2D" parent="Gente"]
+position = Vector2(600, 304)
+script = ExtResource("7_v2urv")
+character = "v7"
+mode = 0
+facing = -1
+
+[node name="ChicaCompu" type="Node2D" parent="Gente"]
+position = Vector2(90, 304)
+script = ExtResource("7_v2urv")
+character = "f1"
+mode = 4
+
+[node name="ChicoMirando" type="Node2D" parent="Gente"]
+position = Vector2(206, 304)
+script = ExtResource("7_v2urv")
+character = "x3"
+mode = 0
+
+[node name="ChicoCompu2" type="Node2D" parent="Gente"]
+position = Vector2(380, 304)
+script = ExtResource("7_v2urv")
+character = "m3"
+mode = 4
+
+[node name="ChicoCharla" type="Node2D" parent="Gente"]
+position = Vector2(466, 304)
+script = ExtResource("7_v2urv")
+character = "v9"
+mode = 2
+partner = NodePath("../ChicaCharla")
+chat_offset = 1.5
+
+[node name="ChicaCharla" type="Node2D" parent="Gente"]
+position = Vector2(496, 304)
+script = ExtResource("7_v2urv")
+character = "v18"
+mode = 2
+partner = NodePath("../ChicoCharla")
+talks_first = false
+chat_offset = 1.5
+
+[node name="StoryPresence" type="Node" parent="Gente"]
+script = ExtResource("8_y5xbq")
+hide_quest = &"una_clase_diferente"
+return_quest = &"travesuras_en_el_sistema"
+
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("31_sepej")]
 position = Vector2(40, 304)
 

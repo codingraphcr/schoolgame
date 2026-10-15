@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="11_n20mm"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="12_ewnad"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="13_wyh3i"]
+[ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="90_bgnpc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i4vep"]
 size = Vector2(704, 80)
@@ -102,6 +103,22 @@ texture_scale = 1.875
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=739778107]
 position = Vector2(40, 304)
+
+[node name="Gente" type="Node2D" parent="."]
+
+[node name="EstudianteConsulta" type="Node2D" parent="Gente"]
+position = Vector2(436, 304)
+script = ExtResource("90_bgnpc")
+character = "v10"
+alt_characters = PackedStringArray("v12")
+
+[node name="Profesor" type="Node2D" parent="Gente"]
+position = Vector2(470, 304)
+script = ExtResource("90_bgnpc")
+character = "pm"
+alt_characters = PackedStringArray("pf")
+mode = 0
+facing = -1
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("6_o27p0")]
 position = Vector2(40, 304)

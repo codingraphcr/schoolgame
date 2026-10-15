@@ -40,6 +40,10 @@ const TINT := Color(0.85, 0.85, 0.92)
 @export var talks_first := true
 ## Desfase de la charla (la pareja usa el mismo, así se turnan).
 @export var chat_offset := 0.0
+## Personajes para las otras copias de esta sala: el generador del mapa puede poner varias veces la misma
+## (p. ej. dos aulas seguidas) y así no sale la misma gente. En la copia n (desde la 2) se usa
+## alt_characters[(n - 2) % tamaño]; en la primera, character.
+@export var alt_characters: PackedStringArray = []
 
 ## Las animaciones de todos los NPC de fondo (se arman una sola vez).
 static var _shared: SpriteFrames
@@ -73,6 +77,8 @@ func _ready() -> void:
 		var other := get_node(partner) as Node2D
 		facing = 1 if other.global_position.x >= global_position.x else -1
 	_play(&"quieto")
+	# La sala recién sabe qué copia es cuando termina de prepararse (después de sus hijos).
+	_use_copy_variant.call_deferred()
 
 
 func _process(delta: float) -> void:
@@ -200,3 +206,19 @@ static func _frames() -> SpriteFrames:
 			atlas.region = Rect2(Vector2(i * size.x, 0), size)
 			_shared.add_frame(anim_name, atlas)
 	return _shared
+
+
+## En otra copia de la misma sala (ver alt_characters), otro personaje.
+func _use_copy_variant() -> void:
+	if alt_characters.is_empty():
+		return
+	var room := get_parent()
+	while room and not room is Room:
+		room = room.get_parent()
+	var world := get_node_or_null("/root/World")
+	if room == null or world == null or (room as Room).room_id.is_empty():
+		return
+	var copy: int = world.copy_number((room as Room).room_id)
+	if copy >= 2:
+		character = alt_characters[(copy - 2) % alt_characters.size()]
+		_bubble.position = Vector2(0, -_head_height())

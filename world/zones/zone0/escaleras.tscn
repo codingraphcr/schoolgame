@@ -17,6 +17,7 @@
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="11_07nrb"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="12_qpjia"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="13_dp20c"]
+[ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="90_bgnpc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t5qy6"]
 size = Vector2(704, 80)
@@ -86,6 +87,16 @@ signs = {
 Vector2(80, -120): "◀ CUARTO TÉCNICO",
 Vector2(90, 150): "1° PISO",
 Vector2(540, -120): "2° PISO · BIBLIOTECA ▶"
+}
+bins = Array[Vector2]([Vector2(84, 304), Vector2(455, -48)])
+recycling = Array[Vector2]([Vector2(468, 304)])
+plants = Array[Vector2]([Vector2(612, 304), Vector2(352, -48)])
+fountains = Array[Vector2]([Vector2(560, 304)])
+extinguishers = Array[Vector2]([Vector2(150, 288), Vector2(600, -66)])
+boards = Array[Rect2]([Rect2(332, 222, 80, 46), Rect2(380, -112, 70, 42)])
+posters = {
+Vector2(560, 210): "NO CORRER",
+Vector2(250, 200): "RECICLA"
 }
 
 [node name="Bajada" type="Area2D" parent="." unique_id=859757321]
@@ -196,6 +207,34 @@ once_flag = &"cap1_puerta_tecnica_vista"
 
 [node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Capitulo1/PuertaCerrada" unique_id=132840542]
 shape = SubResource("RectangleShape2D_t3xtd")
+
+[node name="Gente" type="Node2D" parent="."]
+
+[node name="ChicoBajando" type="Node2D" parent="Gente"]
+position = Vector2(430, 304)
+script = ExtResource("90_bgnpc")
+character = "m3"
+mode = 1
+walk_left = -70.0
+walk_right = 70.0
+
+[node name="ChicaMural" type="Node2D" parent="Gente"]
+position = Vector2(414, -48)
+script = ExtResource("90_bgnpc")
+character = "f2"
+mode = 4
+
+[node name="EstudianteSegundoPiso" type="Node2D" parent="Gente"]
+position = Vector2(565, -48)
+script = ExtResource("90_bgnpc")
+character = "v6"
+facing = -1
+
+[node name="ChicaDescanso" type="Node2D" parent="Gente"]
+position = Vector2(396, 188)
+script = ExtResource("90_bgnpc")
+character = "v11"
+facing = -1
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("6_824if")]
 position = Vector2(72, 304)

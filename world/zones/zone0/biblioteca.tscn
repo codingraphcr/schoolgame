@@ -20,6 +20,7 @@
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/biblioteca_resuelta.tres" id="12_okeg1"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="13_okeg1"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="14_7qgb7"]
+[ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="90_bgnpc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1mwm3"]
 size = Vector2(1024, 80)
@@ -226,6 +227,38 @@ catalog_dialogue = ExtResource("11_cqv8g")
 resolved_dialogue = ExtResource("12_okeg1")
 prompt_text = "E: revisar el catálogo"
 prompt_offset = Vector2(-44, -40)
+
+[node name="Gente" type="Node2D" parent="."]
+
+[node name="LectorEstante" type="Node2D" parent="Gente"]
+position = Vector2(190, 304)
+script = ExtResource("90_bgnpc")
+character = "m2"
+mode = 4
+
+[node name="ChicoMesa" type="Node2D" parent="Gente"]
+position = Vector2(384, 304)
+script = ExtResource("90_bgnpc")
+character = "v1"
+mode = 0
+
+[node name="ChicaMesa" type="Node2D" parent="Gente"]
+position = Vector2(436, 304)
+script = ExtResource("90_bgnpc")
+character = "v3"
+mode = 0
+facing = -1
+
+[node name="ChicoGorra" type="Node2D" parent="Gente"]
+position = Vector2(742, 304)
+script = ExtResource("90_bgnpc")
+character = "x1"
+
+[node name="ChicaLibro" type="Node2D" parent="Gente"]
+position = Vector2(798, 304)
+script = ExtResource("90_bgnpc")
+character = "v2"
+facing = -1
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("7_1mofi")]
 position = Vector2(56, 304)
