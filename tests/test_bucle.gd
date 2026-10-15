@@ -2,12 +2,16 @@ extends SceneTree
 ## Prueba automática: Bucle Infinito (Capítulo 2, nivel 4). Las 20 validaciones de
 ## docs/jefes/BUCLE_INFINITO.md (A.13): ciclo 1 al empezar; un impacto válido suma exactamente 1; no hay
 ## dos en el mismo ciclo; se puede golpear atacando (golpe arriesgado: energía) y cansado; la fatiga llega
-## al terminar el patrón; sin golpe repite el ciclo; cada impacto sube la dificultad; los ataques se
-## cancelan al cambiar de estado; siempre hay rutas seguras (una plataforma apagada como mucho y la
-## lluvia deja carriles libres); todos los ataques avisan; la colisión del anillo es la que se ve; el
-## séptimo termina el combate sin octava transformación; recompensa única; el jefe no sigue activo; el
-## fondo queda detrás; la arena entra en la pantalla; reinicio desde el checkpoint; el progreso queda
-## marcado; los estados no se traban; y todo funciona con arte provisional (sin texturas).
+## al terminar el patrón; sin golpe repite el ciclo (ciclo infinito: ×2, más rápido y con un ataque más);
+## cada impacto sube la dificultad; los ataques se cancelan al cambiar de estado; siempre hay rutas seguras
+## (los Errores de ejecución nunca apagan las dos plataformas de los costados y la lluvia, aun desbordada,
+## deja carriles libres); todos los ataques avisan (también la Iteración, la Recursión y los mini anillos);
+## la colisión del anillo y la del rayo son las que se ven; las tareas pendientes (romperlas todas lo cansa
+## antes y por más tiempo); se cansa en distintos lugares; las copias del proceso no reciben golpes; los
+## ataques combinados; los ciclos 6 y 7 sin descanso; el séptimo termina el combate sin octava
+## transformación; recompensa única; el jefe no sigue activo; el fondo queda detrás; la arena entra en la
+## pantalla; reinicio desde el checkpoint; el progreso queda marcado; los estados no se traban; y todo
+## funciona con arte provisional (sin texturas).
 ## Ejecutar: godot --headless --path . --script res://tests/test_bucle.gd
 
 const ARENA := "res://world/zones/simulador/arena_bucle.tscn"
@@ -38,11 +42,14 @@ func _run() -> void:
 	await _open()
 	_test_start()
 	await _test_fatigue_and_repeat()
+	await _test_no_escape()
 	await _test_key_hits()
 	await _test_real_sword()
 	await _test_no_spam()
+	await _test_condition()
 	await _test_attacks()
 	await _test_safe_routes()
+	await _test_high_cycles()
 	await _test_finish()
 	await _test_player_loses()
 	await _test_already_won()
@@ -82,6 +89,35 @@ func _test_data() -> void:
 					neighbor_free = true
 			ok = ok and free >= config.min_free_lanes and neighbor_free
 	_check(ok, "la lluvia siempre deja %d carriles libres o más (y uno al lado de Kai)" % config.min_free_lanes)
+	# Con el Desbordamiento: los apilados cuentan como tapados (entre los dos siempre quedan libres).
+	ok = true
+	var most := config.rain_lanes - config.min_free_lanes
+	for seed_value in 300:
+		rng.seed = seed_value
+		var taken: Array[int] = []
+		for i in rng.randi_range(0, most):
+			var lane := rng.randi_range(0, config.rain_lanes - 1)
+			if not taken.has(lane):
+				taken.append(lane)
+		var target := rng.randi_range(0, config.rain_lanes - 1)
+		var lanes := BucleAttacks.rain_lanes(rng.randi_range(1, config.rain_lanes), config.rain_lanes, config.min_free_lanes, target, rng, taken)
+		var covered := taken.duplicate()
+		for lane in lanes:
+			if not covered.has(lane):
+				covered.append(lane)
+		var neighbor_was_free := BucleAttacks._free_neighbors(taken, target, config.rain_lanes) > 0
+		ok = ok and config.rain_lanes - covered.size() >= config.min_free_lanes \
+			and (not neighbor_was_free or BucleAttacks._free_neighbors(covered, target, config.rain_lanes) > 0)
+	_check(ok, "con el Desbordamiento, entre los bloques apilados y los que caen siempre quedan carriles libres")
+	# Cada ciclo suma algo nuevo (las ideas de Yohann).
+	var c := func(n: int) -> BucleCycle: return config.cycle(n)
+	_check(c.call(2).attacks.has(&"iteracion") and c.call(3).overflow and c.call(3).condition_nodes >= 2 and c.call(3).roam_fatigue
+		and c.call(4).ring_split and c.call(4).iteration_beams == 2 and c.call(5).copies and c.call(5).iteration_split
+		and c.call(5).attacks.any(func(a: StringName) -> bool: return String(a).contains("+")),
+		"cada ciclo suma algo: Iteración (2), Desbordamiento, tareas y descanso en otro lugar (3), Recursión (4), copias y combinados (5)")
+	_check(c.call(6).no_fatigue and c.call(7).no_fatigue and not c.call(5).no_fatigue and c.call(6).error_platforms == 2
+		and c.call(7).error_platforms == 2 and c.call(5).error_platforms == 1,
+		"los ciclos 6 y 7 no descansan y su Error de ejecución apaga dos plataformas")
 
 
 func _test_start() -> void:
@@ -91,7 +127,7 @@ func _test_start() -> void:
 	_check(bar.title == "BUCLE" and bar.segments == 7 and boss.health.max_health == 7.0,
 		"la barra «BUCLE» tiene siete segmentos de integridad")
 	var saves := root.get_node("SaveManager")
-	_check(fight.gate.active and saves.read_slot(1)["ubicacion"]["punto"] == "inicio",
+	_check(fight.gate.active and fight.exit_gate.active and saves.read_slot(1)["ubicacion"]["punto"] == "inicio",
 		"al llegar se cierra la puerta y se registra el checkpoint")
 	_check(fight.background.get_index() == 0 and room.room_size.size.x <= 640.0,
 		"el fondo queda detrás de todo y la arena entra entera en la pantalla (los peligros siempre se ven)")
@@ -116,15 +152,18 @@ func _test_start() -> void:
 		and final_text.contains("Bucle [triste]"), "sus caras en los diálogos: al perder se pone triste (y al final vuelve a estar feliz)")
 
 
-## Sin golpes: termina el patrón, se cansa y repite el mismo ciclo.
+## Sin golpes: termina el patrón, se cansa y repite el ciclo (ciclo infinito: ×2, más rápido y con un ataque más).
 func _test_fatigue_and_repeat() -> void:
 	await _until(func() -> bool: return boss.state == S.EXECUTE_PATTERN)
 	_check(boss.state == S.EXECUTE_PATTERN and boss.current_attack == &"pulso", "ejecuta su secuencia (empieza con el Pulso)")
+	var base_speed := boss.attack_speed()
+	var base_steps := boss.sequence().size()
 	await _until(func() -> bool: return boss.state == S.FATIGUE)
 	_check(boss.state == S.FATIGUE and not boss.contact.active, "al terminar la secuencia queda cansado (y su contacto no daña)")
 	await _until(func() -> bool: return boss.state == S.PREPARE_PATTERN)
-	_check(boss.cycle() == 1 and boss.repeats == 1 and boss.impacts == 0,
-		"si nadie lo golpea, se recupera y repite el mismo ciclo (no sube la dificultad)")
+	_check(boss.cycle() == 1 and boss.repeats == 1 and boss.impacts == 0 and boss.attack_speed() > base_speed
+		and boss.sequence().size() == base_steps + 1,
+		"si nadie lo golpea repite el ciclo ×2: más rápido (%.2f → %.2f) y con un ataque más" % [base_speed, boss.attack_speed()])
 
 
 func _test_key_hits() -> void:
@@ -158,7 +197,10 @@ func _test_key_hits() -> void:
 
 ## Con la Nullblade de verdad (J): parado al lado de Bucle cansado, un tajo cuenta como impacto.
 func _test_real_sword() -> void:
-	await _until(func() -> bool: return boss.state == S.FATIGUE)
+	# Ciclo 3: se cansa en uno de sus lugares (el puente o una plataforma de los costados).
+	await _until(func() -> bool: return boss.is_resting())
+	_check(boss.cycle() == 3 and boss.fatigue_spots.has(boss.rest_spot()) and boss.global_position.distance_to(boss.rest_spot()) < 2.0,
+		"desde el ciclo 3 se cansa en distintos lugares (ahora en %s)" % boss.rest_spot())
 	var player := room.player
 	var before := boss.impacts
 	player.teleport_to(boss.global_position + Vector2(-22, 8))
@@ -199,14 +241,51 @@ func _test_no_spam() -> void:
 	await _action(&"attack")
 	await _frames(12)
 	_check(boss.impacts == before, "un tajo parado en el puente, al lado, no lo alcanza mientras ataca")
-	await _until(func() -> bool: return boss.state == S.FATIGUE)
-	await _frames(40)
-	_check(absf(boss.global_position.y - boss.hover_y) < 2.0, "cansado baja al puente: la ventana para golpearlo")
+	await _until(func() -> bool: return boss.is_resting())
+	_check(boss.global_position.y > boss.hover_y - 2.0 and boss.global_position.distance_to(boss.rest_spot()) < 2.0,
+		"cansado baja (al puente o a una plataforma de un costado): la ventana para golpearlo")
+	# Nunca se cansa dos veces seguidas en el mismo lugar ni en una plataforma apagada.
+	var spots: Array[Vector2] = []
+	var repeated := false
+	for i in 20:
+		var spot := boss._pick_rest()
+		repeated = repeated or (not spots.is_empty() and spots[-1] == spot)
+		spots.append(spot)
+	var distinct := {}
+	for spot in spots:
+		distinct[spot] = true
+	_check(not repeated and distinct.size() >= 3, "el lugar donde se cansa va cambiando (%d lugares distintos)" % distinct.size())
 	player.teleport_to(Vector2(80, 296))
 	await _frames(2)
 
 
+## Romper la condición: las tareas pendientes aparecen sobre plataformas encendidas; rotas todas, la secuencia
+## se corta y se cansa por más tiempo; si no, descansa muy poco.
+func _test_condition() -> void:
+	await _until(func() -> bool: return boss.state == S.PREPARE_PATTERN)
+	_check(boss.cycle() == 4 and boss.repeats >= 1, "ciclo infinito: el contador sube (×%d)" % (boss.repeats + 1))
+	await _until(func() -> bool: return boss.state == S.EXECUTE_PATTERN)
+	await _frames(2)
+	var tasks := boss.tasks.duplicate()
+	_check(tasks.size() == boss.cycle_data().condition_nodes and tasks.all(func(t: PendingTask) -> bool:
+		return boss.task_spots.has(t.global_position) and boss._ground_open(t.global_position)),
+		"aparecen %d tareas pendientes, sobre plataformas encendidas" % tasks.size())
+	for task: PendingTask in tasks:
+		task._hurt.hit_received.emit(HitData.new())
+		await _frames(2)
+	_check(boss.state == S.FATIGUE and boss.condition_met
+		and boss._state_left > boss.cycle_data().fatigue_time + boss.config.condition_bonus - 0.1
+		and get_nodes_in_group(&"boss_attack").all(func(n: Node) -> bool: return n.is_queued_for_deletion()),
+		"rotas todas: la condición se cumple, la secuencia se corta y se cansa por más tiempo")
+	await _until(func() -> bool: return boss.state == S.EXECUTE_PATTERN)
+	await _until(func() -> bool: return boss.state == S.FATIGUE)
+	_check(not boss.condition_met and boss._state_left <= boss.config.unbroken_fatigue + 0.01,
+		"si no las rompe, descansa muy poco (%.1f s)" % boss.config.unbroken_fatigue)
+
+
 func _test_attacks() -> void:
+	# Bucle queda quieto (su secuencia se corta) para que sus ataques no se mezclen.
+	await _freeze_boss()
 	# Todos los ataques avisan antes de dañar.
 	var parent := boss.get_parent()
 	var config := boss.config
@@ -238,18 +317,105 @@ func _test_attacks() -> void:
 	BucleAttacks.clear(self)
 	player.teleport_to(Vector2(80, 296))
 	await _frames(2)
+	# Iteración: avisa, y su colisión deja libre justo el hueco (abajo al salir, arriba pasada la mitad).
+	var beam := BucleAttacks.iteration(parent, -6.0, 646.0, 0.0, 304.0, 200.0, 280.0, 178.0, config.iteration_gap, 0.5, 1.0)
+	await _frames(2)
+	var beam_warned := not beam.is_live() and not beam.active
+	await _frames(40)
+	var top := beam._top
+	var top_edge := top.global_position.y + (top.shape as RectangleShape2D).size.y / 2.0
+	_check(beam_warned and beam.is_live() and not top.disabled and beam._bottom.disabled
+		and absf(top_edge - (280.0 - config.iteration_gap / 2.0)) < 1.0 and is_equal_approx(beam.gap_at(-6.0), 280.0)
+		and is_equal_approx(beam.gap_at(646.0), 178.0),
+		"la Iteración avisa y deja libre el hueco (abajo en la primera mitad, a la altura del puente en la segunda)")
+	BucleAttacks.clear(self)
+	await _frames(2)
+	# Desbordamiento: el bloque se queda apilado (y sigue dañando); el siguiente cae encima.
+	var first := BucleAttacks.rain(parent, boss.arena, [2] as Array[int], config.rain_lanes, 600.0, 0.4, 1.0, 1.5, 2)
+	await _until(func() -> bool: return first[0].is_landed())
+	var second := BucleAttacks.rain(parent, boss.arena, [2] as Array[int], config.rain_lanes, 600.0, 0.4, 1.0, 1.5, 2)
+	_check(first[0].active and BucleAttacks.stacked_lanes(self).has(2)
+		and is_equal_approx(second[0].floor_y, boss.arena.end.y - InstructionBlock.HEIGHT),
+		"Desbordamiento: los bloques se quedan apilados en el suelo (dañan) y el siguiente cae encima")
+	await _frames(150)
+	_check(not is_instance_valid(first[0]) and BucleAttacks.stacked_lanes(self).is_empty(), "y al rato se rompen")
+	# Recursión: el anillo, lejos, se divide en anillos chicos que vuelven (con aviso).
+	var split := BucleAttacks.ring(parent, Vector2(320, 150), 300.0, 10.0, 80.0, 0.0, 0.0, 0.4, 1.0)
+	split.split_radius = 60.0
+	split.split_count = config.split_count
+	var split_ref: WeakRef = weakref(split)
+	await _until(func() -> bool: return split_ref.get_ref() == null)
+	var shards := get_nodes_in_group(&"boss_attack").filter(func(n: Node) -> bool: return n is MiniLoop and (n as Node2D).global_position.distance_to(Vector2(320, 150)) < 80.0)
+	var returning := func(s: MiniLoop) -> bool: return not s.is_live() and s.direction.dot(Vector2(320, 150) - s.global_position) > 0.0
+	_check(shards.size() == config.split_count and shards.all(returning),
+		"Recursión: el anillo se divide en %d anillos chicos que avisan y vuelven hacia Bucle" % shards.size())
+	BucleAttacks.clear(self)
+	await _frames(2)
+	_resume_boss()
 
 
-## Error de ejecución: una sola plataforma apagada a la vez.
+## Error de ejecución: una plataforma (ciclos 4 y 5) o dos (6 y 7), nunca las dos de los costados (la ruta al
+## puente). Bucle queda quieto mientras tanto (sus propios errores no se mezclan).
 func _test_safe_routes() -> void:
-	var worst := 0
-	for k in 3:
-		fight._on_execution_error(4)
-		await _frames(30)
-		var closed := fight.platforms.filter(func(p: DataPlatform) -> bool: return p.is_in_group(&"unsafe_ground") or p.is_closed()).size()
-		worst = maxi(worst, closed)
-		await _until(func() -> bool: return fight.platforms.all(func(p: DataPlatform) -> bool: return not p.is_closed() and not p.is_in_group(&"unsafe_ground")))
-	_check(worst == 1, "el Error de ejecución apaga una sola plataforma por vez (siempre quedan rutas)")
+	boss.ai_enabled = false
+	var all_open := func() -> bool: return fight.platforms.all(func(p: DataPlatform) -> bool: return fight._is_open(p))
+	var exact := true
+	var route := true
+	for count in [1, 2]:
+		for k in 4:
+			await _until(all_open)
+			for i in count:
+				fight._close_one()
+			await _frames(30)
+			var closed := fight.platforms.filter(func(p: DataPlatform) -> bool: return not fight._is_open(p)).size()
+			exact = exact and closed == count
+			route = route and fight.essential.any(func(p: DataPlatform) -> bool: return fight._is_open(p))
+	await _until(all_open)
+	_check(exact and route, "el Error de ejecución apaga una o dos plataformas, pero nunca las dos de los costados (siempre hay ruta al puente)")
+	boss.ai_enabled = true
+
+
+## Ciclos altos: copias del proceso (solo el verdadero recibe golpes), ataques combinados y, en el 6 y el 7,
+## sin descanso y con dos plataformas apagadas.
+func _test_high_cycles() -> void:
+	await _hit_until(4)
+	await _until(func() -> bool: return boss.state == S.EXECUTE_PATTERN and boss.cycle() == 5)
+	await _frames(2)
+	var copies := boss.clones.duplicate()
+	var apart := func(k: BucleClone) -> bool: return is_instance_valid(k) and absf(k.global_position.x - boss.global_position.x) > 40.0
+	_check(copies.size() == 2 and copies.all(apart), "ciclo 5: aparecen dos copias del proceso, lejos del verdadero")
+	await _until(func() -> bool: return boss.current_attack == &"lluvia" or boss.state != S.EXECUTE_PATTERN)
+	await _frames(3)
+	var live := get_nodes_in_group(&"boss_attack")
+	_check(live.any(func(n: Node) -> bool: return n is InstructionBlock) and live.any(func(n: Node) -> bool: return n is LoopPulse)
+		and live.any(func(n: Node) -> bool: return n is MiniLoop), "ataques combinados: la lluvia y el pulso a la vez (y las copias tiran mini anillos)")
+	await _until(func() -> bool: return boss.is_vulnerable())
+	var before := boss.impacts
+	var ignored_before := ignored
+	var copy: BucleClone = boss.clones[0]
+	var copy_hurtbox: HurtboxComponent = copy.get_children().filter(func(n: Node) -> bool: return n is HurtboxComponent)[0]
+	copy_hurtbox.hit_received.emit(HitData.new())
+	await _frames(2)
+	_check(boss.impacts == before and ignored > ignored_before and boss.state == S.EXECUTE_PATTERN,
+		"golpear a una copia no cuenta (solo el verdadero recibe golpes)")
+	_hit()
+	await _frames(2)
+	_check(boss.impacts == before + 1 and boss.clones.is_empty(), "al verdadero sí, y las copias desaparecen")
+	# Ciclo 6: sin descanso y dos plataformas apagadas.
+	await _until(func() -> bool: return boss.state == S.EXECUTE_PATTERN and boss.cycle() == 6)
+	await _frames(2)
+	var closed := fight.platforms.filter(func(p: DataPlatform) -> bool: return not fight._is_open(p)).size()
+	_check(closed >= 2 and fight.essential.any(func(p: DataPlatform) -> bool: return fight._is_open(p)),
+		"ciclo 6: el Error de ejecución apaga dos plataformas (pero queda ruta al puente)")
+	var seen := [false]
+	var watch := func(next: int) -> void:
+		if next == S.FATIGUE:
+			seen[0] = true
+	boss.state_changed.connect(watch)
+	await _until(func() -> bool: return boss.state == S.PREPARE_PATTERN)
+	boss.state_changed.disconnect(watch)
+	_check(not seen[0] and boss.cycle() == 6 and boss.repeats == 1,
+		"ciclos 6 y 7 sin descanso: al terminar la secuencia empieza otra (×2); solo se le gana con golpes arriesgados")
 
 
 func _test_finish() -> void:
@@ -262,7 +428,7 @@ func _test_finish() -> void:
 	_check(is_instance_valid(boss) and boss.visible and state.has_flag(&"cap2_bucle_liberado"), "Bucle no muere: queda en la arena, liberado")
 	await _leave_simulator()
 	_check(state.has_flag(&"cap2_bucle_vencido") and state.has_flag(&"cap2_condicion_corregida") and state.has_flag(&"cap2_simulador_terminado")
-		and not fight.gate.active and not fight.has_node("../MuroDeProcesos"),
+		and not fight.gate.active and not fight.exit_gate.active and not fight.has_node("../MuroDeProcesos"),
 		"queda guardado: jefe vencido, condición de salida corregida y la puerta abierta (sin derrumbe ni muro)")
 	_check(state.domain_stage == 0 and not room.player.domain.is_unlocked(), "vencer a Bucle no da el Dominio Nulo I (se consigue más adelante)")
 	_check(root.get_node("Economy").ecos > ecos_before, "da su recompensa")
@@ -305,7 +471,7 @@ func _test_already_won() -> void:
 	state.set_flag(&"cap2_bucle_vencido")
 	await _open()
 	await _frames(10)
-	_check(fight.phase == BucleArenaController.Phase.DONE and boss.state == S.DEFEATED and not fight.gate.active
+	_check(fight.phase == BucleArenaController.Phase.DONE and boss.state == S.DEFEATED and not fight.gate.active and not fight.exit_gate.active
 		and room.get_node_or_null("CombatHUD/BossBar") == null, "con el combate ganado, Bucle descansa y la arena queda abierta")
 
 
@@ -381,3 +547,40 @@ func _check(condition: bool, message: String) -> void:
 	if not condition:
 		_failures += 1
 	print("%s %s" % ["OK  " if condition else "FAIL", message])
+
+
+## Corta la secuencia de Bucle y lo deja quieto (para probar ataques sueltos sin que se mezclen los suyos).
+func _freeze_boss() -> void:
+	boss.ai_enabled = false
+	boss._epoch += 1
+	BucleAttacks.clear(self)
+	await _frames(1)
+
+
+## Vuelve a empezar desde el anuncio de su secuencia.
+func _resume_boss() -> void:
+	boss.ai_enabled = true
+	boss._enter(S.PREPARE_PATTERN)
+
+
+## Durante la pelea no se puede salir de la arena: ni caminando por la derecha (la salida al laboratorio) ni
+## saltando desde los pilares por encima de las barreras.
+func _test_no_escape() -> void:
+	var player := room.player
+	var escaped := false
+	for side: Array in [[Vector2(600, 196), &"move_right"], [Vector2(36, 196), &"move_left"]]:
+		player.teleport_to(side[0])
+		await _frames(3)
+		Input.action_press(side[1])
+		for i in 90:
+			if i % 20 == 0:
+				Input.action_press(&"jump")
+			elif i % 20 == 12:
+				Input.action_release(&"jump")
+			await _frames(1)
+			escaped = escaped or current_scene != room or player.global_position.x > 628.0 or player.global_position.x < 12.0
+		Input.action_release(side[1])
+		Input.action_release(&"jump")
+	_check(not escaped and current_scene == room, "durante la pelea no se puede salir por ningún lado (ni saltando desde los pilares)")
+	player.teleport_to(Vector2(80, 296))
+	await _frames(2)

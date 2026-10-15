@@ -47,6 +47,23 @@ static func draw_around(c: CanvasItem, stage: int, clock: float, glitch: float) 
 		_draw_interference(c, stage, clock, glitch)
 
 
+## La flecha de ciclo sobre la cabeza (con las Copias del proceso): en el verdadero gira como las agujas del
+## reloj (direction 1) y en las copias al revés (-1).
+static func draw_cycle_arrow(c: CanvasItem, clock: float, direction: float, color: Color) -> void:
+	var at := Vector2(0, -68)
+	var start := clock * 3.5 * direction
+	var sweep := TAU * 0.72 * direction
+	c.draw_arc(at, 6.0, start, start + sweep, 16, OUTLINE, 3.5)
+	c.draw_arc(at, 6.0, start, start + sweep, 16, color.lightened(0.3), 2.0)
+	var end := start + sweep
+	var tip := at + Vector2.from_angle(end) * 6.0
+	var ahead := Vector2.from_angle(end + PI / 2.0 * direction)
+	var side := Vector2.from_angle(end)
+	var head := PackedVector2Array([tip + ahead * 4.0, tip - side * 3.5, tip + side * 3.5])
+	c.draw_colored_polygon(head, color.lightened(0.3))
+	c.draw_polyline(head + PackedVector2Array([head[0]]), OUTLINE, 1.0)
+
+
 ## El cuerpo provisional por código (si no están los sprites).
 static func draw_fallback(c: CanvasItem, stage: int, clock: float, mood: StringName) -> void:
 	_draw_body(c, stage, clock, mood if mood != &"" else MOODS[clampi(stage - 1, 0, 6)], body_color(stage))

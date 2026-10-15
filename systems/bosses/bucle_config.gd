@@ -35,6 +35,27 @@ extends Resource
 @export var repulse_radius := 56.0
 @export var repulse_telegraph := 0.45
 @export var repulse_cooldown := 1.3
+## Iteración: velocidad del rayo (px/s) y alto del hueco.
+@export var iteration_speed := 210.0
+@export var iteration_gap := 50.0
+## Desbordamiento: segundos que los bloques quedan apilados y cuántos se apilan por carril.
+@export var overflow_time := 3.5
+@export var overflow_stack := 2
+## Recursión: radio donde se divide el anillo, cuántos anillos chicos salen y su velocidad de regreso.
+@export var split_radius := 250.0
+@export var split_count := 6
+@export var split_speed := 130.0
+## Copias del proceso: velocidad de los mini anillos que tira cada clon hacia Kai.
+@export var copy_shot_speed := 170.0
+
+@export_group("Ciclo infinito")
+## Cada vez que repite un ciclo sin recibir golpe: más rápido (repeat_speed por repetición) y un ataque más
+## (hasta max_repeats repeticiones; se ve el contador ×2, ×3...).
+@export var repeat_speed := 0.06
+@export var max_repeats := 3
+## Romper la condición: descanso extra si Kai rompe todas las tareas, y el descanso si no las rompe.
+@export var condition_bonus := 1.0
+@export var unbroken_fatigue := 0.8
 
 @export_group("Recompensas")
 ## Energía que recibe Kai por un golpe arriesgado (mientras Bucle ataca): media barrita = una curación.
