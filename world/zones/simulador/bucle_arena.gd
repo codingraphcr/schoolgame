@@ -28,6 +28,11 @@ const PUZZLE_FLAG := &"cap2_condicion_corregida"
 const REWARD_ID := &"capitulo2:bucle"
 ## Kai ya obtuvo el Dominio Nulo I (y rompió el muro).
 const DOMAIN_FLAG := &"cap2_dominio_nulo"
+## La misión del nivel 4 (pasos vencer_bucle y salir_simulador).
+const QUEST := &"codigo_fuera_de_control"
+## Pista de la Biblia (capítulo 2): «Una anomalía reconoce su arquitectura digital». No se explica.
+const ANOMALY_LINES: PackedStringArray = ["ANOMALÍA DETECTADA", "ARQUITECTURA DIGITAL: RECONOCIDA", "ORIGEN: [SIN DATOS]"]
+const ANOMALY_FLAG := &"cap2_anomalia_vista"
 
 @export var boss: BucleBoss
 @export var gate: ArenaBarrier
@@ -142,6 +147,8 @@ func _victory() -> void:
 	var state := get_node("/root/GameState")
 	state.set_flag(DONE_FLAG)
 	state.set_flag(FREED_FLAG)
+	if state.get_current_step(QUEST) == &"vencer_bucle":
+		state.complete_step(QUEST, &"vencer_bucle")
 	# Recompensa única (aunque se repita el combate o se cargue la partida).
 	var economy := get_node("/root/Economy")
 	economy.claim_reward(REWARD_ID, economy.reward_for(EconomyConfig.Source.BOSS))
@@ -186,13 +193,24 @@ func _collapse() -> void:
 				await get_tree().physics_frame
 			_hide_hint()
 		await get_tree().physics_frame
+	# Un mensaje que nadie escribió (la pista del capítulo): no se explica quién ni por qué.
+	if not skip_cinematics and not state.has_flag(ANOMALY_FLAG):
+		Sfx.play(&"entity_whisper", 0.8)
+		var reading := FragmentReading.show_lines(self, ANOMALY_LINES)
+		await reading.closed
+	state.set_flag(ANOMALY_FLAG)
 	_finish_collapse()
 	await _play(domain_dialogue)
 
 
 func _finish_collapse() -> void:
 	_hide_hint()
-	get_node("/root/GameState").set_flag(DOMAIN_FLAG)
+	var state := get_node("/root/GameState")
+	state.set_flag(DOMAIN_FLAG)
+	if state.get_current_step(QUEST) == &"vencer_bucle":
+		state.complete_step(QUEST, &"vencer_bucle")
+	if state.get_current_step(QUEST) == &"salir_simulador":
+		state.complete_step(QUEST, &"salir_simulador")
 	_set_background_stage(1)
 	_room.player.damage.protected = false
 	gate.active = false

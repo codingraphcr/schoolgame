@@ -29,8 +29,8 @@ func get_lines() -> Array[Dictionary]:
 			continue
 		var separator := line.find(":")
 		# Solo cuenta como orador si el nombre es corto y no tiene espacios dobles (evita cortar
-		# frases que contienen ":" en medio del texto).
-		if separator > 0 and separator <= 40 and not line.substr(0, separator).contains("  "):
+		# frases que contienen ":" en medio del texto). Una línea entre paréntesis es siempre narración.
+		if not line.begins_with("(") and separator > 0 and separator <= 40 and not line.substr(0, separator).contains("  "):
 			var speaker := line.substr(0, separator).strip_edges()
 			var expression := ""
 			var bracket := speaker.find("[")

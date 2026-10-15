@@ -656,6 +656,29 @@ después de morir.
 - Al agregar una parte nueva de la historia se suma un punto a `POINTS`; `test_menu_pruebas.gd` comprueba que todos
   abran su sala con la misión y las habilidades correctas.
 
+## Capítulo 2: el simulador de prácticas
+
+Especificación en `docs/narrativa/capitulos/CAPITULO_02.md`. Misiones `el_lenguaje_de_las_maquinas` (nivel 3) y
+`codigo_fuera_de_control` (nivel 4); `Quest.start_flag` pone `capitulo_2` al empezar (abre las salas del capítulo) y
+`Quest.extra_completion_flags` agrega marcas al terminar. Zona **Simulador**: `sim_entrada` → `sim_variables` →
+`sim_condiciones` → `sim_ciclos` → `sim_procesos` → `arena_bucle` (se entra por la conexión del laboratorio con la
+Visión y se sale al laboratorio). Salas armadas por código (constructor del capítulo).
+
+| Pieza (`world/digital/sim/`) | Responsabilidad |
+|---|---|
+| `SimVariables` | Variables de una sala (nombre → valor), señal `changed`; `evaluate()` y `describe()` de condiciones (cláusulas `[variable, operador, valor]` con «y» / «o») y `format()` (verdadero / falso) |
+| `VariableNode` | Terminalita «nombre = valor»: con **E** pasa al siguiente valor de `options` |
+| `LogicDoor` | `ArenaBarrier` que se abre cuando se cumple su condición; la muestra como pseudocódigo (`si llave == verdadero y energia >= 3`) |
+| `LogicPlatform` | `DataPlatform` que existe «si» la condición se cumple (o «si no»); nunca es suelo seguro |
+| `LoopBridge` | «repetir n veces: poner_bloque()»: arma n bloques; con menos queda corto, con más choca con la pared (ERROR) |
+| `ChallengeKiosk` | Quiosco: con E abre un `ChoiceChallenge` hasta terminarlo (y completa su paso) |
+| `ProcessSpawner` / `RepeatedProcess` | «mientras verdadero: crear_proceso()»: crea enemigos (con el tiempo de las amenazas) hasta `stop()` |
+| `ProcessRoom` | Registro de procesos en la terminal → desafío de manejo de errores → corta el ciclo y abre la puerta |
+| `SimRoomGoal` | Completa el paso cuando la pieza emite su señal; si ya se pasó, deja la sala resuelta (`solved_values`) |
+
+Pista de la Biblia: al romper el muro con el Dominio por primera vez, `FragmentReading` muestra «ANOMALÍA DETECTADA ·
+ARQUITECTURA DIGITAL: RECONOCIDA» (marca `cap2_anomalia_vista`), sin explicación.
+
 ## Jefe: Bucle Infinito (Capítulo 2)
 
 La arena (`world/zones/simulador/arena_bucle.tscn`, zona **Simulador**, ficha `arena_bucle`, se abre en el Capítulo 2;
@@ -856,6 +879,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo salto + dash (sin doble salto), la barrera (empieza detrás de Kai, 1 por contacto, invulnerabilidad, sin daño en cada cuadro, después de cada checkpoint queda a 260 px detrás y nunca delante), los nodos que disparan (con aviso y dañan), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
 | `test_bucle.gd` | Bucle Infinito: las 20 validaciones de su especificación (ciclos, impactos clave uno por ciclo, golpe arriesgado, fatiga y repetición, ataques con aviso y cancelados, lluvia con carriles libres, colisión del anillo, una plataforma apagada por vez, séptimo impacto sin octava transformación, recompensa única, reinicio desde el checkpoint, estados que no se traban) y un tajo real de la Nullblade |
 | `test_dominio_nulo.gd` | Dominio Nulo I: bloqueado antes de obtenerlo, el muro que no se rompe sin él (golpes reales), obtenerlo y activarlo con R, amenazas al 80 % sin tocar el tiempo global ni el HUD, +10 % de daño, 15 s, la carga por golpe y la salida |
+| `test_capitulo2.gd` | El capítulo 2 de punta a punta: el 1 lleva al 2 (marca `capitulo_2`), la clase, la conexión con la Visión, variables (E de verdad), condiciones (si / si no y saltos alcanzables), ciclos (n corto, ERROR y justo), el repaso («NIVEL 3 COMPLETADO»), los procesos repetidos, Bucle y el derrumbe con la pista, la salida al laboratorio y «FIN DEL CAPÍTULO 2» |
 | `test_menu_pruebas.gd` | El menú de pruebas: cada punto abre su sala con la misión y las habilidades de ese momento sin guardar; F9 abre y cierra (pausa); los trucos |
 | `test_orden_al_azar.gd` | Las respuestas de las preguntas y las contraseñas de la terminal salen en orden al azar cada vez |
 | `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11 (Glitch y Chip, diseño de Ariel): checkpoint y sin temporizador, una barra para cada uno, vencer a cada uno (el vencido queda aturdido y el otro sigue solo) y una sola barra nueva en la Fase 3, los 8 ataques individuales y los 10 en conjunto con su aviso y sus animaciones cuadro por cuadro (aviso, acción y recuperación), el vínculo (el otro protege al aturdido), las tres fases (anillo y segunda melodía en la 2, fase segura con terminal al vencer a los dos, Protocolo Dual / Furia fraternal), hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |

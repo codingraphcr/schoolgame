@@ -1,0 +1,183 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_b2u21"]
+[ext_resource type="Script" path="res://world/zones/simulador/bucle_background.gd" id="2_7v7ri"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_8lkip"]
+[ext_resource type="Script" path="res://world/digital/sim/sim_variables.gd" id="4_ea2nj"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="5_v3pth"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="6_gpai7"]
+[ext_resource type="Script" path="res://world/digital/terminal_station.gd" id="7_sb378"]
+[ext_resource type="Resource" path="res://data/terminals/cap2_registro_procesos.tres" id="8_sbxo3"]
+[ext_resource type="Script" path="res://world/digital/sim/process_spawner.gd" id="9_lhpcf"]
+[ext_resource type="Script" path="res://world/digital/arena_barrier.gd" id="10_vydqu"]
+[ext_resource type="Script" path="res://world/digital/sim/process_room.gd" id="11_btldc"]
+[ext_resource type="Resource" path="res://data/challenges/cap2_manejo_errores.tres" id="12_ghwnk"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_procesos_corregido.tres" id="13_3b2jt"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="14_fcmxa"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_procesos_inicio.tres" id="15_vs07e"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="16_dya3w"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="17_gfjbu"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="18_jg36s"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="19_gu5ge"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="20_qsitg"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="21_5682u"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0y50q"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_shkq7"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wqbuy"]
+size = Vector2(900, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rqdk3"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h7ie3"]
+size = Vector2(12, 256)
+
+[node name="SimProcesos" type="Node2D" unique_id=1966425355 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_b2u21")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 900, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Background" type="Node2D" parent="." unique_id=2122722202]
+script = ExtResource("2_7v7ri")
+area = Rect2(0, 0, 900, 360)
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=1517897829]
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1036822357]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_0y50q")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=566264269]
+position = Vector2(916, 180)
+shape = SubResource("RectangleShape2D_shkq7")
+
+[node name="Floor1" type="CollisionShape2D" parent="Collisions" unique_id=121454734]
+position = Vector2(450, 344)
+shape = SubResource("RectangleShape2D_wqbuy")
+
+[node name="Platforms" type="Node2D" parent="." unique_id=972778740]
+
+[node name="Suelo1" type="AnimatableBody2D" parent="Platforms" unique_id=1512959470]
+position = Vector2(0, 304)
+script = ExtResource("3_8lkip")
+width = 900.0
+
+[node name="Repisa1" type="AnimatableBody2D" parent="Platforms" unique_id=1350861089]
+position = Vector2(320, 240)
+script = ExtResource("3_8lkip")
+width = 90.0
+
+[node name="Repisa2" type="AnimatableBody2D" parent="Platforms" unique_id=2132285864]
+position = Vector2(520, 220)
+script = ExtResource("3_8lkip")
+width = 90.0
+
+[node name="Variables" type="Node" parent="." unique_id=718301212]
+script = ExtResource("4_ea2nj")
+
+[node name="Entries" type="Node2D" parent="." unique_id=1404283182]
+
+[node name="DesdeOeste" type="Marker2D" parent="Entries" unique_id=503900346]
+position = Vector2(40, 304)
+script = ExtResource("5_v3pth")
+id = &"desde_oeste"
+
+[node name="DesdeEste" type="Marker2D" parent="Entries" unique_id=466105574]
+position = Vector2(860, 304)
+script = ExtResource("5_v3pth")
+id = &"desde_este"
+facing = -1
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=912069990]
+position = Vector2(40, 304)
+
+[node name="Exits" type="Node2D" parent="." unique_id=1485185032]
+
+[node name="ToOeste" type="Area2D" parent="Exits" unique_id=1083033867]
+position = Vector2(6, 176)
+script = ExtResource("6_gpai7")
+door_id = &"oeste"
+target_scene = "res://world/zones/simulador/sim_ciclos.tscn"
+target_entry = &"desde_este"
+
+[node name="@CollisionShape2D@16" type="CollisionShape2D" parent="Exits/ToOeste" unique_id=191731202]
+shape = SubResource("RectangleShape2D_rqdk3")
+
+[node name="ToEste" type="Area2D" parent="Exits" unique_id=1618579816]
+position = Vector2(894, 176)
+script = ExtResource("6_gpai7")
+door_id = &"este"
+target_scene = "res://world/zones/simulador/arena_bucle.tscn"
+target_entry = &"inicio"
+
+[node name="@CollisionShape2D@17" type="CollisionShape2D" parent="Exits/ToEste" unique_id=1145959383]
+shape = SubResource("RectangleShape2D_h7ie3")
+
+[node name="Capitulo2" type="Node2D" parent="." unique_id=1999002431]
+
+[node name="Terminal" type="Area2D" parent="Capitulo2" unique_id=1371611804]
+position = Vector2(170, 304)
+script = ExtResource("7_sb378")
+challenge = ExtResource("8_sbxo3")
+quest_id = &"codigo_fuera_de_control"
+step_id = &"procesos"
+completes_step = false
+
+[node name="Generador" type="Node2D" parent="Capitulo2" unique_id=1720141113]
+position = Vector2(660, 304)
+script = ExtResource("9_lhpcf")
+
+[node name="Puerta" type="StaticBody2D" parent="Capitulo2" unique_id=921009836]
+position = Vector2(860, 304)
+script = ExtResource("10_vydqu")
+height = 220.0
+
+[node name="Procesos" type="Node" parent="Capitulo2" unique_id=1790907891 node_paths=PackedStringArray("spawner", "terminal", "gate")]
+script = ExtResource("11_btldc")
+spawner = NodePath("../Generador")
+terminal = NodePath("../Terminal")
+error_challenge = ExtResource("12_ghwnk")
+gate = NodePath("../Puerta")
+fixed_dialogue = ExtResource("13_3b2jt")
+
+[node name="Llegada" type="Area2D" parent="Capitulo2" unique_id=1613607106]
+script = ExtResource("14_fcmxa")
+quest_id = &"codigo_fuera_de_control"
+step_id = &"procesos"
+dialogue = ExtResource("15_vs07e")
+on_ready = true
+completes_step = false
+once_flag = &"cap2_procesos_visto"
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=131707311 instance=ExtResource("16_dya3w")]
+position = Vector2(40, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("17_gfjbu")
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1676870915 node_paths=PackedStringArray("target") instance=ExtResource("18_jg36s")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("19_gu5ge")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("20_qsitg")]
+layer = 40
+script = ExtResource("21_5682u")
+player = NodePath("../Player")

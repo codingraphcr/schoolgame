@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 2, nivel 4 (Código fuera de control): la sala de los procesos repetidos.
+Kai [serio]: Procesos... copiándose solos. Alguien dejó un ciclo sin salida.
+Kai: La terminal tiene que tener el registro."

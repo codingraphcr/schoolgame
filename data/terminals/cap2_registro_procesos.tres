@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="TerminalChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/terminal/terminal_challenge.gd" id="1_term"]
+
+[resource]
+script = ExtResource("1_term")
+id = &"cap2_registro_procesos"
+title = "Simulador · Registro de procesos"
+objective = "Lee el registro de procesos del simulador."
+user = "kai"
+host = "simulador"
+welcome = "Simulador de prácticas del colegio.
+Escribe help para ver los comandos."
+files = Dictionary[String, String]({
+"LEEME.txt": "El registro de procesos está en la carpeta registro/.
+",
+"registro/procesos.log": "[0] tarea: ordenar_ejercicios   estado: ok
+[1] tarea: ordenar_ejercicios   estado: ok
+[2] tarea: ordenar_ejercicios   estado: ERROR (sin espacio)
+[3] tarea: ordenar_ejercicios   estado: ERROR (sin espacio)
+[4] tarea: ordenar_ejercicios   estado: ERROR (sin espacio)
+...
+[1846] tarea: ordenar_ejercicios   estado: ERROR (sin espacio)
+programa: mientras tarea_pendiente: crear_proceso()
+"
+})
+goal_file = "registro/procesos.log"
+allowed_commands = PackedStringArray("help", "ls", "cd", "cat")
+hints = PackedStringArray("Lee LEEME.txt: dice dónde está el registro.", "Entra a la carpeta con cd registro y lee el archivo con cat.")
+success_text = "La misma tarea, una y otra vez, aunque falle. Hay que decidir cómo manejar ese error."
+ecos_reward = -1

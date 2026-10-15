@@ -1,0 +1,161 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_4to7e"]
+[ext_resource type="Script" path="res://world/zones/simulador/bucle_background.gd" id="2_67im0"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_p60l4"]
+[ext_resource type="Script" path="res://world/digital/sim/sim_variables.gd" id="4_6t7fu"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="5_q3paj"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="6_0pccb"]
+[ext_resource type="Script" path="res://world/digital/sim/variable_node.gd" id="7_ymaai"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="8_4to5h"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_simulador_llegada.tres" id="9_ylc0o"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="10_hobl1"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="11_xqgpr"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="12_5nfge"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="13_a8aua"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="14_e1chi"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="15_7saqv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mcjrc"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4cf5w"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3v7qw"]
+size = Vector2(640, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lvhm6"]
+size = Vector2(12, 256)
+
+[node name="SimEntrada" type="Node2D" unique_id=1396007643 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_4to7e")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 640, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Background" type="Node2D" parent="." unique_id=559017326]
+script = ExtResource("2_67im0")
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=1254347045]
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=2090971061]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_mcjrc")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1862351479]
+position = Vector2(656, 180)
+shape = SubResource("RectangleShape2D_4cf5w")
+
+[node name="Floor1" type="CollisionShape2D" parent="Collisions" unique_id=1569885245]
+position = Vector2(320, 344)
+shape = SubResource("RectangleShape2D_3v7qw")
+
+[node name="Platforms" type="Node2D" parent="." unique_id=1411876700]
+
+[node name="Suelo1" type="AnimatableBody2D" parent="Platforms" unique_id=1850076810]
+position = Vector2(0, 304)
+script = ExtResource("3_p60l4")
+width = 640.0
+
+[node name="Variables" type="Node" parent="." unique_id=325745257]
+script = ExtResource("4_6t7fu")
+initial = Dictionary[StringName, Variant]({
+&"saludo": "hola"
+})
+
+[node name="Entries" type="Node2D" parent="." unique_id=306794632]
+
+[node name="DesdeEste" type="Marker2D" parent="Entries" unique_id=829037694]
+position = Vector2(600, 304)
+script = ExtResource("5_q3paj")
+id = &"desde_este"
+facing = -1
+
+[node name="DesdeLaboratorio" type="Marker2D" parent="Entries" unique_id=1969185744]
+position = Vector2(80, 304)
+script = ExtResource("5_q3paj")
+id = &"desde_laboratorio"
+arrival_effect = "materialize"
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=2033682426]
+position = Vector2(80, 304)
+
+[node name="Exits" type="Node2D" parent="." unique_id=1052892309]
+
+[node name="ToEste" type="Area2D" parent="Exits" unique_id=521487638]
+position = Vector2(634, 176)
+script = ExtResource("6_0pccb")
+door_id = &"este"
+target_scene = "res://world/zones/simulador/sim_variables.tscn"
+target_entry = &"desde_oeste"
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Exits/ToEste" unique_id=1725282184]
+shape = SubResource("RectangleShape2D_lvhm6")
+
+[node name="Capitulo2" type="Node2D" parent="." unique_id=1105503946]
+
+[node name="@Label@3" type="Label" parent="Capitulo2" unique_id=384305140]
+offset_left = 200.0
+offset_top = 120.0
+offset_right = 200.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.75, 0.9, 1, 0.9)
+theme_override_colors/font_outline_color = Color(0.02, 0.03, 0.08, 1)
+theme_override_constants/outline_size = 3
+text = "SIMULADOR DE PRÁCTICAS"
+
+[node name="@Label@4" type="Label" parent="Capitulo2" unique_id=454471042]
+offset_left = 140.0
+offset_top = 200.0
+offset_right = 140.0
+offset_bottom = 200.0
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.75, 0.9, 1, 0.9)
+theme_override_colors/font_outline_color = Color(0.02, 0.03, 0.08, 1)
+theme_override_constants/outline_size = 3
+text = "Con E sobre un nodo cambias el valor de una variable"
+
+[node name="NodoDePrueba" type="Area2D" parent="Capitulo2" unique_id=239490040 node_paths=PackedStringArray("variables")]
+position = Vector2(320, 304)
+script = ExtResource("7_ymaai")
+variables = NodePath("../../Variables")
+variable = &"saludo"
+options = ["hola", "chau", "¿fin?"]
+prompt_text = "E: cambiar valor"
+prompt_offset = Vector2(-34, -54)
+
+[node name="Llegada" type="Area2D" parent="Capitulo2" unique_id=1510834558]
+script = ExtResource("8_4to5h")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"entrar_simulador"
+dialogue = ExtResource("9_ylc0o")
+on_ready = true
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1996243754 instance=ExtResource("10_hobl1")]
+position = Vector2(80, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("11_xqgpr")
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1104250328 node_paths=PackedStringArray("target") instance=ExtResource("12_5nfge")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("13_a8aua")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_e1chi")]
+layer = 40
+script = ExtResource("15_7saqv")
+player = NodePath("../Player")

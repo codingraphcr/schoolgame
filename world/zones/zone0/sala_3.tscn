@@ -30,8 +30,11 @@
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/registro_resuelto.tres" id="28_8335o"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/clase_criaturas.tres" id="29_wqn5y"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/clase_escape.tres" id="30_hogho"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_profesor_recordatorio.tres" id="31_04ff4"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="31_sepej"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="32_ewl6c"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="32_ws05w"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_clase.tres" id="33_dvda5"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="33_qimxp"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="34_np0t7"]
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="35_dt8s2"]
@@ -154,6 +157,30 @@ quest_id = &"travesuras_en_el_sistema"
 step_id = &"hablar_profesor"
 dialogue = ExtResource("21_xfrip")
 
+[sub_resource type="Resource" id="Resource_04ff4"]
+script = ExtResource("12_l41jd")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"entrar_simulador"
+dialogue = ExtResource("31_04ff4")
+
+[sub_resource type="Resource" id="Resource_ws05w"]
+script = ExtResource("12_l41jd")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"variables"
+dialogue = ExtResource("31_04ff4")
+
+[sub_resource type="Resource" id="Resource_dvda5"]
+script = ExtResource("12_l41jd")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"condiciones"
+dialogue = ExtResource("31_04ff4")
+
+[sub_resource type="Resource" id="Resource_v2urv"]
+script = ExtResource("12_l41jd")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"ciclos"
+dialogue = ExtResource("31_04ff4")
+
 [node name="Sala3" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
 script = ExtResource("1_0tns8")
@@ -244,24 +271,28 @@ position = Vector2(40, 304)
 position = Vector2(90, 304)
 script = ExtResource("7_v2urv")
 mode = 4
+alt_characters = PackedStringArray()
 
 [node name="Estudiante_f2" type="Node2D" parent="Capitulo1/Clase" unique_id=725999742]
 position = Vector2(150, 304)
 script = ExtResource("7_v2urv")
 character = "f2"
 mode = 4
+alt_characters = PackedStringArray()
 
 [node name="Estudiante_m2" type="Node2D" parent="Capitulo1/Clase" unique_id=767717582]
 position = Vector2(260, 304)
 script = ExtResource("7_v2urv")
 character = "m2"
 mode = 4
+alt_characters = PackedStringArray()
 
 [node name="Estudiante_f1" type="Node2D" parent="Capitulo1/Clase" unique_id=1117997060]
 position = Vector2(380, 304)
 script = ExtResource("7_v2urv")
 character = "f1"
 mode = 4
+alt_characters = PackedStringArray()
 
 [node name="StoryPresence" type="Node" parent="Capitulo1/Clase" unique_id=187502815]
 script = ExtResource("8_y5xbq")
@@ -269,14 +300,9 @@ show_quest = &"una_clase_diferente"
 hide_quest = &"una_clase_diferente"
 hide_step = &"biblioteca"
 
-[node name="Profesor" type="Node2D" parent="Capitulo1" unique_id=1425553402 instance=ExtResource("9_p8mah")]
+[node name="Profesor" parent="Capitulo1" unique_id=1425553402 instance=ExtResource("9_p8mah")]
 position = Vector2(455, 304)
-script = ExtResource("10_snfhu")
-display_name = "Prof. Alvarado"
-dialogue = ExtResource("11_hat0x")
-repeat_dialogue = ExtResource("11_hat0x")
 conversations = Array[ExtResource("12_l41jd")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_trmnl"), SubResource("Resource_lltp1"), SubResource("Resource_elegir"), SubResource("Resource_invit"), SubResource("Resource_invrec1"), SubResource("Resource_invrec2"), SubResource("Resource_yi4qo"), SubResource("Resource_0b5hx"), SubResource("Resource_73d67"), SubResource("Resource_3qquy"), SubResource("Resource_rsnk6"), SubResource("Resource_mtlg1")])
-idle_extra_animation = &"notas"
 
 [node name="StoryPresence" type="Node" parent="Capitulo1/Profesor" unique_id=582807898]
 script = ExtResource("8_y5xbq")
@@ -313,48 +339,51 @@ creatures_dialogue = ExtResource("29_wqn5y")
 escape_dialogue = ExtResource("30_hogho")
 hop_points = Array[Vector2]([Vector2(90, 264), Vector2(150, 264), Vector2(260, 264), Vector2(380, 264), Vector2(250, 146)])
 
-[node name="Gente" type="Node2D" parent="."]
+[node name="Gente" type="Node2D" parent="." unique_id=953905925]
 
-[node name="ChicoCompu" type="Node2D" parent="Gente"]
+[node name="ChicoCompu" type="Node2D" parent="Gente" unique_id=1069823237]
 position = Vector2(152, 304)
 script = ExtResource("7_v2urv")
-character = "m1"
 mode = 4
+alt_characters = PackedStringArray()
 
-[node name="ChicaFondo" type="Node2D" parent="Gente"]
+[node name="ChicaFondo" type="Node2D" parent="Gente" unique_id=1665796904]
 position = Vector2(600, 304)
 script = ExtResource("7_v2urv")
 character = "v7"
-mode = 0
 facing = -1
+alt_characters = PackedStringArray()
 
-[node name="ChicaCompu" type="Node2D" parent="Gente"]
+[node name="ChicaCompu" type="Node2D" parent="Gente" unique_id=2087415863]
 position = Vector2(90, 304)
 script = ExtResource("7_v2urv")
 character = "f1"
 mode = 4
+alt_characters = PackedStringArray()
 
-[node name="ChicoMirando" type="Node2D" parent="Gente"]
+[node name="ChicoMirando" type="Node2D" parent="Gente" unique_id=1249238157]
 position = Vector2(206, 304)
 script = ExtResource("7_v2urv")
 character = "x3"
-mode = 0
+alt_characters = PackedStringArray()
 
-[node name="ChicoCompu2" type="Node2D" parent="Gente"]
+[node name="ChicoCompu2" type="Node2D" parent="Gente" unique_id=1326388839]
 position = Vector2(380, 304)
 script = ExtResource("7_v2urv")
 character = "m3"
 mode = 4
+alt_characters = PackedStringArray()
 
-[node name="ChicoCharla" type="Node2D" parent="Gente"]
+[node name="ChicoCharla" type="Node2D" parent="Gente" unique_id=1595765389]
 position = Vector2(466, 304)
 script = ExtResource("7_v2urv")
 character = "v9"
 mode = 2
 partner = NodePath("../ChicaCharla")
 chat_offset = 1.5
+alt_characters = PackedStringArray()
 
-[node name="ChicaCharla" type="Node2D" parent="Gente"]
+[node name="ChicaCharla" type="Node2D" parent="Gente" unique_id=1113829008]
 position = Vector2(496, 304)
 script = ExtResource("7_v2urv")
 character = "v18"
@@ -362,11 +391,71 @@ mode = 2
 partner = NodePath("../ChicoCharla")
 talks_first = false
 chat_offset = 1.5
+alt_characters = PackedStringArray()
 
-[node name="StoryPresence" type="Node" parent="Gente"]
+[node name="StoryPresence" type="Node" parent="Gente" unique_id=216502724]
 script = ExtResource("8_y5xbq")
 hide_quest = &"una_clase_diferente"
 return_quest = &"travesuras_en_el_sistema"
+
+[node name="Capitulo2" type="Node2D" parent="." unique_id=1574686011]
+
+[node name="Clase" type="Node2D" parent="Capitulo2" unique_id=1013157711]
+
+[node name="Estudiante_m2" type="Node2D" parent="Capitulo2/Clase" unique_id=706630276]
+position = Vector2(90, 304)
+script = ExtResource("7_v2urv")
+character = "m2"
+mode = 4
+alt_characters = PackedStringArray()
+
+[node name="Estudiante_f1" type="Node2D" parent="Capitulo2/Clase" unique_id=783055323]
+position = Vector2(150, 304)
+script = ExtResource("7_v2urv")
+character = "f1"
+mode = 4
+alt_characters = PackedStringArray()
+
+[node name="Estudiante_m3" type="Node2D" parent="Capitulo2/Clase" unique_id=1544245496]
+position = Vector2(260, 304)
+script = ExtResource("7_v2urv")
+character = "m3"
+mode = 4
+alt_characters = PackedStringArray()
+
+[node name="Estudiante_f3" type="Node2D" parent="Capitulo2/Clase" unique_id=2118241101]
+position = Vector2(380, 304)
+script = ExtResource("7_v2urv")
+character = "f3"
+mode = 4
+alt_characters = PackedStringArray()
+
+[node name="StoryPresence" type="Node" parent="Capitulo2/Clase" unique_id=632441299]
+script = ExtResource("8_y5xbq")
+show_quest = &"el_lenguaje_de_las_maquinas"
+hide_quest = &"el_lenguaje_de_las_maquinas"
+hide_step = &"variables"
+
+[node name="Profesor" type="Node2D" parent="Capitulo2" unique_id=1210871726 instance=ExtResource("9_p8mah")]
+position = Vector2(455, 304)
+script = ExtResource("10_snfhu")
+display_name = "Prof. Alvarado"
+dialogue = ExtResource("11_hat0x")
+repeat_dialogue = ExtResource("11_hat0x")
+conversations = Array[ExtResource("12_l41jd")]([SubResource("Resource_04ff4"), SubResource("Resource_ws05w"), SubResource("Resource_dvda5"), SubResource("Resource_v2urv")])
+idle_extra_animation = &"notas"
+
+[node name="StoryPresence" type="Node" parent="Capitulo2/Profesor" unique_id=1411639577]
+script = ExtResource("8_y5xbq")
+show_quest = &"el_lenguaje_de_las_maquinas"
+hide_quest = &"codigo_fuera_de_control"
+
+[node name="Clase2" type="Area2D" parent="Capitulo2" unique_id=2087973972]
+script = ExtResource("32_ws05w")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"clase_programacion"
+dialogue = ExtResource("33_dvda5")
+on_ready = true
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("31_sepej")]
 position = Vector2(40, 304)

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_ds5qt"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_xgtmp"]
+
+[sub_resource type="Resource" id="Resource_pdkfb"]
+script = ExtResource("1_ds5qt")
+id = &"este"
+entry_id = &"desde_este"
+
+[resource]
+script = ExtResource("2_xgtmp")
+id = &"sim_entrada"
+display_name = "Entrada del simulador"
+scene_path = "res://world/zones/simulador/sim_entrada.tscn"
+room_type = &"digital"
+district_id = &"simulador"
+doors = Array[ExtResource("1_ds5qt")]([SubResource("Resource_pdkfb")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 2
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray("el_lenguaje_de_las_maquinas")

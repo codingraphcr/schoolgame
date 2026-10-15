@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_1ke8d"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_6w122"]
+
+[sub_resource type="Resource" id="Resource_rdbh2"]
+script = ExtResource("1_1ke8d")
+id = &"oeste"
+side = 0
+entry_id = &"desde_oeste"
+
+[sub_resource type="Resource" id="Resource_8se3r"]
+script = ExtResource("1_1ke8d")
+id = &"este"
+entry_id = &"desde_este"
+
+[resource]
+script = ExtResource("2_6w122")
+id = &"sim_variables"
+display_name = "Sala de variables"
+scene_path = "res://world/zones/simulador/sim_variables.tscn"
+room_type = &"digital"
+district_id = &"simulador"
+doors = Array[ExtResource("1_1ke8d")]([SubResource("Resource_rdbh2"), SubResource("Resource_8se3r")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 2
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray("el_lenguaje_de_las_maquinas")

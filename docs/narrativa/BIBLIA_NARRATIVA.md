@@ -219,7 +219,7 @@ El estudiante llega al colegio, aprende movimiento, diálogo e interacción. Un 
 - **Cierre:** Chip deja un Fragmento de Datos («ORIGEN: DESCONOCIDO · ESTADO: INCOMPLETO · OBSERVADOR: RECONOCIDO · PROTOCOLO: [DATOS CORRUPTOS]»). Cuando Kai se va, el profesor, solo frente a la computadora, ve aparecer el archivo **`GENESIS_ARCHIVE`**. No se explica qué es.
 - **Pista:** Las amenazas reaccionan de manera particular a su presencia.
 
-**Capítulo 2 — Los primeros códigos**
+**Capítulo 2 — Los primeros códigos** (propuesta de desarrollo: `capitulos/CAPITULO_02.md`)
 
 - **Nivel 3 — El lenguaje de las máquinas:** Variables, condiciones, ciclos y resolución de acertijos.
 - **Nivel 4 — Código fuera de control:** Corrige errores de un sistema automatizado en una simulación. Jefe:

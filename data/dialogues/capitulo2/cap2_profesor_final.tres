@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 2: Kai vuelve del simulador; el profesor nota que funciona otra vez (no explica nada más).
+Prof. Alvarado [sorprendido]: ¡Kai! El simulador volvió a funcionar... los procesos repetidos desaparecieron.
+Kai: Algo así, profe. Era un ciclo sin condición de salida.
+Prof. Alvarado [pensativo]: Un error chiquito, repetido mil veces... Así empiezan los problemas grandes.
+Prof. Alvarado [sonriente]: Buen trabajo. La próxima clase vemos funciones."

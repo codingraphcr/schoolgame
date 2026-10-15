@@ -1,0 +1,90 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Q0_O0"]
+script = ExtResource("2_option")
+text = "Escribir una función poner_puente() y llamarla tres veces"
+correct = true
+feedback = "¡Correcto! Una función agrupa instrucciones con un nombre para reutilizarlas: si hay que corregirla, se corrige en un solo lugar."
+
+[sub_resource type="Resource" id="Q0_O1"]
+script = ExtResource("2_option")
+text = "Copiar el mismo código tres veces"
+feedback = "Funciona, pero si hay un error hay que arreglarlo en tres lugares. Para eso existen las funciones."
+
+[sub_resource type="Resource" id="Q0_O2"]
+script = ExtResource("2_option")
+text = "Escribir tres programas distintos"
+feedback = "Sería más trabajo y más difícil de mantener: la misma tarea se escribe una vez, en una función."
+
+[sub_resource type="Resource" id="Q0_O3"]
+script = ExtResource("2_option")
+text = "Usar un ciclo que nunca termine"
+feedback = "Un ciclo sin salida no termina nunca: justo lo que hay que evitar."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "Hay que poner el mismo puente en tres lugares del simulador. ¿Qué conviene?"
+options = Array[ExtResource("2_option")]([SubResource("Q0_O0"), SubResource("Q0_O1"), SubResource("Q0_O2"), SubResource("Q0_O3")])
+
+[sub_resource type="Resource" id="Q1_O0"]
+script = ExtResource("2_option")
+text = "Una variable"
+feedback = "Una variable guarda un valor. El molde con datos y acciones es otra cosa."
+
+[sub_resource type="Resource" id="Q1_O1"]
+script = ExtResource("2_option")
+text = "Una clase: cada robot es un objeto de esa clase"
+correct = true
+feedback = "¡Correcto! La clase describe qué datos (color, velocidad) y qué acciones (mover) tienen; cada robot es un objeto."
+
+[sub_resource type="Resource" id="Q1_O2"]
+script = ExtResource("2_option")
+text = "Una condición"
+feedback = "Una condición decide si se hace algo o no; no describe robots."
+
+[sub_resource type="Resource" id="Q1_O3"]
+script = ExtResource("2_option")
+text = "Un ciclo"
+feedback = "Un ciclo repite instrucciones; no describe cómo es un robot."
+
+[sub_resource type="Resource" id="Question_1"]
+script = ExtResource("1_question")
+prompt = "Cada robot de práctica tiene color, velocidad y una acción mover(). ¿Cómo se llama el molde que los describe?"
+options = Array[ExtResource("2_option")]([SubResource("Q1_O0"), SubResource("Q1_O1"), SubResource("Q1_O2"), SubResource("Q1_O3")])
+
+[sub_resource type="Resource" id="Q2_O0"]
+script = ExtResource("2_option")
+text = "Le pone 3 a energia"
+feedback = "Para guardar un valor se usa la asignación (energia = 3). Esto compara."
+
+[sub_resource type="Resource" id="Q2_O1"]
+script = ExtResource("2_option")
+text = "Repite lo de adentro 3 veces"
+feedback = "Repetir es un ciclo. «si» decide una sola vez."
+
+[sub_resource type="Resource" id="Q2_O2"]
+script = ExtResource("2_option")
+text = "Ejecuta lo de adentro solo cuando energia vale 3 o más"
+correct = true
+feedback = "¡Correcto! Es una condición: compara el valor de la variable y decide si se ejecuta."
+
+[sub_resource type="Resource" id="Q2_O3"]
+script = ExtResource("2_option")
+text = "Siempre ejecuta lo de adentro"
+feedback = "Solo cuando la condición se cumple: para eso es."
+
+[sub_resource type="Resource" id="Question_2"]
+script = ExtResource("1_question")
+prompt = "¿Qué hace «si energia >= 3:»?"
+options = Array[ExtResource("2_option")]([SubResource("Q2_O0"), SubResource("Q2_O1"), SubResource("Q2_O2"), SubResource("Q2_O3")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap2_repaso_funciones"
+title = "Repaso · Funciones y objetos"
+questions = Array[ExtResource("1_question")]([SubResource("Question_0"), SubResource("Question_1"), SubResource("Question_2")])
+ecos_reward = 0

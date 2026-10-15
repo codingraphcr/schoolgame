@@ -1,0 +1,187 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_y4o7a"]
+[ext_resource type="Script" path="res://world/zones/simulador/bucle_background.gd" id="2_xe1i0"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_u254l"]
+[ext_resource type="Script" path="res://world/digital/sim/sim_variables.gd" id="4_f724y"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="5_eys4w"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="6_ull2r"]
+[ext_resource type="Script" path="res://world/digital/sim/variable_node.gd" id="7_j1igb"]
+[ext_resource type="Script" path="res://world/digital/sim/logic_door.gd" id="8_osbju"]
+[ext_resource type="Script" path="res://world/digital/sim/sim_room_goal.gd" id="9_vusp8"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="10_38cr3"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="11_mrjrg"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="12_rn045"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="13_dqamj"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="14_kim43"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="15_yfsc7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5bjys"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vjhib"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0cxno"]
+size = Vector2(640, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p8wuy"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qwqwr"]
+size = Vector2(12, 256)
+
+[node name="SimVariables" type="Node2D" unique_id=663242563 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_y4o7a")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 640, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Background" type="Node2D" parent="." unique_id=1367283580]
+script = ExtResource("2_xe1i0")
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=389526094]
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1876417561]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_5bjys")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=335145120]
+position = Vector2(656, 180)
+shape = SubResource("RectangleShape2D_vjhib")
+
+[node name="Floor1" type="CollisionShape2D" parent="Collisions" unique_id=1505575136]
+position = Vector2(320, 344)
+shape = SubResource("RectangleShape2D_0cxno")
+
+[node name="Platforms" type="Node2D" parent="." unique_id=306429676]
+
+[node name="Suelo1" type="AnimatableBody2D" parent="Platforms" unique_id=416726411]
+position = Vector2(0, 304)
+script = ExtResource("3_u254l")
+width = 640.0
+
+[node name="Repisa" type="AnimatableBody2D" parent="Platforms" unique_id=1631452399]
+position = Vector2(250, 244)
+script = ExtResource("3_u254l")
+width = 90.0
+
+[node name="Variables" type="Node" parent="." unique_id=2043766797]
+script = ExtResource("4_f724y")
+initial = Dictionary[StringName, Variant]({
+&"energia": 1,
+&"llave": false
+})
+
+[node name="Entries" type="Node2D" parent="." unique_id=2035607240]
+
+[node name="DesdeOeste" type="Marker2D" parent="Entries" unique_id=1472663148]
+position = Vector2(40, 304)
+script = ExtResource("5_eys4w")
+id = &"desde_oeste"
+
+[node name="DesdeEste" type="Marker2D" parent="Entries" unique_id=818368899]
+position = Vector2(600, 304)
+script = ExtResource("5_eys4w")
+id = &"desde_este"
+facing = -1
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1959685432]
+position = Vector2(40, 304)
+
+[node name="Exits" type="Node2D" parent="." unique_id=1057336305]
+
+[node name="ToOeste" type="Area2D" parent="Exits" unique_id=1038758485]
+position = Vector2(6, 176)
+script = ExtResource("6_ull2r")
+door_id = &"oeste"
+target_scene = "res://world/zones/simulador/sim_entrada.tscn"
+target_entry = &"desde_este"
+
+[node name="@CollisionShape2D@5" type="CollisionShape2D" parent="Exits/ToOeste" unique_id=726931193]
+shape = SubResource("RectangleShape2D_p8wuy")
+
+[node name="ToEste" type="Area2D" parent="Exits" unique_id=2021527780]
+position = Vector2(634, 176)
+script = ExtResource("6_ull2r")
+door_id = &"este"
+target_scene = "res://world/zones/simulador/sim_condiciones.tscn"
+target_entry = &"desde_oeste"
+
+[node name="@CollisionShape2D@6" type="CollisionShape2D" parent="Exits/ToEste" unique_id=822605266]
+shape = SubResource("RectangleShape2D_qwqwr")
+
+[node name="Capitulo2" type="Node2D" parent="." unique_id=344246395]
+
+[node name="@Label@7" type="Label" parent="Capitulo2" unique_id=569449248]
+offset_left = 60.0
+offset_top = 120.0
+offset_right = 60.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.75, 0.9, 1, 0.9)
+theme_override_colors/font_outline_color = Color(0.02, 0.03, 0.08, 1)
+theme_override_constants/outline_size = 3
+text = "Variables: guardan un valor. Cámbialas con E."
+
+[node name="Nodo_llave" type="Area2D" parent="Capitulo2" unique_id=203098150 node_paths=PackedStringArray("variables")]
+position = Vector2(150, 304)
+script = ExtResource("7_j1igb")
+variables = NodePath("../../Variables")
+prompt_text = "E: cambiar valor"
+prompt_offset = Vector2(-34, -54)
+
+[node name="Nodo_energia" type="Area2D" parent="Capitulo2" unique_id=1060456795 node_paths=PackedStringArray("variables")]
+position = Vector2(295, 244)
+script = ExtResource("7_j1igb")
+variables = NodePath("../../Variables")
+variable = &"energia"
+options = [1, 2, 3, 4, 5]
+prompt_text = "E: cambiar valor"
+prompt_offset = Vector2(-34, -54)
+
+[node name="Puerta" type="StaticBody2D" parent="Capitulo2" unique_id=2069538528 node_paths=PackedStringArray("variables")]
+position = Vector2(560, 304)
+script = ExtResource("8_osbju")
+variables = NodePath("../../Variables")
+clauses = [[&"llave", "==", true], [&"energia", ">=", 3]]
+height = 150.0
+
+[node name="Objetivo" type="Node" parent="Capitulo2" unique_id=936617426 node_paths=PackedStringArray("source", "variables")]
+script = ExtResource("9_vusp8")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"variables"
+source = NodePath("../Puerta")
+variables = NodePath("../../Variables")
+solved_values = Dictionary[StringName, Variant]({
+&"energia": 3,
+&"llave": true
+})
+message = "¡La condición se cumple! La puerta se abrió."
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1229211862 instance=ExtResource("10_38cr3")]
+position = Vector2(40, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("11_mrjrg")
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1835022623 node_paths=PackedStringArray("target") instance=ExtResource("12_rn045")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("13_dqamj")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_kim43")]
+layer = 40
+script = ExtResource("15_yfsc7")
+player = NodePath("../Player")

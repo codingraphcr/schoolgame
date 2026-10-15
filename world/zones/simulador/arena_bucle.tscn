@@ -10,11 +10,8 @@
 [ext_resource type="Script" path="res://world/zones/simulador/process_wall.gd" id="8_1uboe"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="9_e8hxi"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="10_ga5tx"]
-[ext_resource type="Script" path="res://characters/player/player.gd" id="11_5pnbe"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="12_5wpra"]
-[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="13_da3sk"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="14_21f0g"]
-[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="15_k7dld"]
 [ext_resource type="Script" path="res://world/zones/simulador/bucle_arena.gd" id="16_qk0sg"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_intro.tres" id="17_50iar"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_final.tres" id="18_h33h4"]
@@ -34,6 +31,9 @@ size = Vector2(32, 400)
 size = Vector2(32, 400)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wn22a"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qlcwd"]
 size = Vector2(12, 256)
 
 [node name="ArenaBucle" type="Node2D" unique_id=1381410702 node_paths=PackedStringArray("player", "camera", "spawn_point")]
@@ -118,32 +118,29 @@ max_health = 4.4
 [node name="Salida" type="Area2D" parent="Exits" unique_id=285606364]
 position = Vector2(634, 176)
 script = ExtResource("9_e8hxi")
-target_scene = "res://world/zones/zone0/cuarto_tecnico.tscn"
-target_entry = &"desde_red"
+target_scene = "res://world/zones/zone0/laboratorio.tscn"
+target_entry = &"desde_simulador"
 
 [node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Exits/Salida" unique_id=1834689219]
 shape = SubResource("RectangleShape2D_wn22a")
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=1886901240 instance=ExtResource("10_ga5tx")]
-position = Vector2(48, 304)
-collision_layer = 2
-floor_snap_length = 4.0
-script = ExtResource("11_5pnbe")
+[node name="ToOeste" type="Area2D" parent="Exits" unique_id=854890719]
+position = Vector2(6, 176)
+script = ExtResource("9_e8hxi")
+door_id = &"oeste"
+target_scene = "res://world/zones/simulador/sim_procesos.tscn"
+target_entry = &"desde_este"
 
-[node name="GameCamera" type="Camera2D" parent="." unique_id=2012961075 node_paths=PackedStringArray("target") instance=ExtResource("12_5wpra")]
-zoom = Vector2(2, 2)
-process_callback = 0
-position_smoothing_enabled = true
-position_smoothing_speed = 7.0
-drag_vertical_enabled = true
-drag_top_margin = 0.25
-drag_bottom_margin = 0.15
-script = ExtResource("13_da3sk")
+[node name="@CollisionShape2D@18" type="CollisionShape2D" parent="Exits/ToOeste" unique_id=1263304241]
+shape = SubResource("RectangleShape2D_qlcwd")
+
+[node name="Player" parent="." unique_id=1886901240 instance=ExtResource("10_ga5tx")]
+position = Vector2(48, 304)
+
+[node name="GameCamera" parent="." unique_id=2012961075 node_paths=PackedStringArray("target") instance=ExtResource("12_5wpra")]
 target = NodePath("../Player")
 
-[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_21f0g")]
-layer = 40
-script = ExtResource("15_k7dld")
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_21f0g")]
 player = NodePath("../Player")
 
 [node name="Fight" type="Node" parent="." unique_id=1155115476 node_paths=PackedStringArray("boss", "gate", "platforms", "background", "wall")]

@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_h0ruk"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_diyt7"]
+
+[sub_resource type="Resource" id="Resource_kc45l"]
+script = ExtResource("2_diyt7")
+id = &"procesos"
+objective = "Corta el ciclo que crea procesos repetidos (lee el registro en la terminal)."
+room_id = &"sim_procesos"
+
+[sub_resource type="Resource" id="Resource_fbcfk"]
+script = ExtResource("2_diyt7")
+id = &"vencer_bucle"
+objective = "Llega al núcleo del simulador y detén a Bucle."
+room_id = &"arena_bucle"
+
+[sub_resource type="Resource" id="Resource_jshvg"]
+script = ExtResource("2_diyt7")
+id = &"salir_simulador"
+objective = "Sal del simulador antes de que se derrumbe."
+room_id = &"arena_bucle"
+
+[sub_resource type="Resource" id="Resource_ayd6p"]
+script = ExtResource("2_diyt7")
+id = &"hablar_profesor"
+objective = "Cuéntale al profesor qué le pasaba al simulador (en el laboratorio)."
+room_id = &"laboratorio"
+
+[resource]
+script = ExtResource("1_h0ruk")
+id = &"codigo_fuera_de_control"
+title = "Código fuera de control"
+steps = Array[ExtResource("2_diyt7")]([SubResource("Resource_kc45l"), SubResource("Resource_fbcfk"), SubResource("Resource_jshvg"), SubResource("Resource_ayd6p")])
+completion_title = "FIN DEL CAPÍTULO 2"
+completion_subtitle = "LOS PRIMEROS CÓDIGOS"
+completion_flag = &"capitulo_2_completado"
+extra_completion_flags = Array[StringName]([&"nivel_4_completado"])

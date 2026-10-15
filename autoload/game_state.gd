@@ -344,6 +344,9 @@ func start_quest(quest_id: StringName) -> bool:
 		return false
 	_quest_progress[quest_id] = 0
 	active_quest = quest_id
+	var quest := QuestDB.get_quest(quest_id)
+	if quest.start_flag != &"":
+		set_flag(quest.start_flag)
 	quest_started.emit(quest_id)
 	return true
 
@@ -376,6 +379,8 @@ func complete_step(quest_id: StringName, step_id: StringName) -> bool:
 		_economy().claim_reward(StringName("mision:%s" % quest_id), quest.ecos_reward)
 	if quest.completion_flag != &"":
 		set_flag(quest.completion_flag)
+	for flag in quest.extra_completion_flags:
+		set_flag(flag)
 	quest_completed.emit(quest_id)
 	if quest.next_quest != &"":
 		start_quest(quest.next_quest)

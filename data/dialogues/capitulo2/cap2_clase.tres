@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 2, nivel 3 (El lenguaje de las máquinas): el profesor empieza la unidad de programación.
+Prof. Alvarado: Buenos días. Hoy empezamos algo nuevo: programación.
+Prof. Alvarado: Una computadora no adivina: hace exactamente lo que le decimos, paso por paso.
+Prof. Alvarado [sonriente]: Para practicar vamos a usar el simulador del laboratorio. Sus programas van a mover puertas, plataformas y puentes.
+Prof. Alvarado: Tres ideas para hoy: las variables guardan un valor; las condiciones deciden «si» o «si no»; y los ciclos repiten.
+(En la pizarra, el simulador tarda en cargar. Una barra de progreso empieza, se detiene y vuelve a empezar.)
+Prof. Alvarado [preocupado]: Qué raro... el simulador anda lento hoy. Vayan al laboratorio y prueben igual con lo básico.
+Kai [pensativo]: (Esa barra se repite y se repite... como si algo adentro no supiera parar.)"

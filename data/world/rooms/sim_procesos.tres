@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_o5fpq"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_k8hy1"]
+
+[sub_resource type="Resource" id="Resource_oqwsv"]
+script = ExtResource("1_o5fpq")
+id = &"oeste"
+side = 0
+entry_id = &"desde_oeste"
+
+[sub_resource type="Resource" id="Resource_rba5c"]
+script = ExtResource("1_o5fpq")
+id = &"este"
+cell = Vector2i(1, 0)
+entry_id = &"desde_este"
+
+[resource]
+script = ExtResource("2_k8hy1")
+id = &"sim_procesos"
+display_name = "Procesos repetidos"
+scene_path = "res://world/zones/simulador/sim_procesos.tscn"
+room_type = &"digital"
+district_id = &"simulador"
+size_cells = Vector2i(2, 1)
+doors = Array[ExtResource("1_o5fpq")]([SubResource("Resource_oqwsv"), SubResource("Resource_rba5c")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 2
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray("codigo_fuera_de_control")

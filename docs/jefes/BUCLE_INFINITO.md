@@ -279,7 +279,7 @@ suaves. Se cambia de etapa en `TRANSFORMATION`, cuando no hay peligros en la are
   salida. Se reconstruye entero 1,6 s (del tiempo de las amenazas) después del primer golpe: sin el Dominio hacen
   falta 5 golpes (1,95 s), imposible; con el Dominio bastan 4 (1,5 s) y el bucle tarda 2 s. Kai obtiene el Dominio
   con la carga llena y se le pide pulsar R; si se termina sin romperlo, se vuelve a cargar. Nada hace daño.
-  Después se abre la salida (provisoria: al cuarto técnico, hasta que exista el resto del capítulo 2).
+  Después se abre la salida al laboratorio (el capítulo 2 completo está en `docs/narrativa/capitulos/CAPITULO_02.md`).
   Marca `cap2_dominio_nulo`; `test_dominio_nulo.gd` lo prueba con golpes reales.
 
 ### B.9 Cómo se prueba cada etapa (`tests/test_bucle.gd`, física determinista)

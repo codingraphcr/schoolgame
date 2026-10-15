@@ -69,7 +69,7 @@ func _test_domain() -> void:
 		"con el Dominio, el muro se rompe y se abre la salida")
 	_check(not player.damage.protected, "y Kai vuelve a poder recibir daño")
 	var exit := room.get_node("Exits/Salida") as RoomExit
-	_check(exit.resolve().get("scene", "") == "res://world/zones/zone0/cuarto_tecnico.tscn", "la salida lleva al cuarto técnico")
+	_check(exit.resolve().get("scene", "") == "res://world/zones/zone0/laboratorio.tscn", "la salida lleva al laboratorio")
 	await _until(func() -> bool: return not player.domain.active)
 	_check(not player.domain.active and is_equal_approx(CombatClock.threat_scale, 1.0), "a los 15 s se termina y todo vuelve a su velocidad")
 

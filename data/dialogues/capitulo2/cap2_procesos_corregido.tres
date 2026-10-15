@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 2, nivel 4: después de manejar el error.
+Kai: Listo: si algo falla, se detiene y avisa, en vez de repetirlo para siempre.
+Kai [pensativo]: Pero lo que crea todo esto sigue más adentro..."

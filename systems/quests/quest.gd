@@ -15,6 +15,10 @@ extends Resource
 @export var followup_subtitle := ""
 ## Marca que queda en GameState al completarla (p. ej. &"tutorial_terminado").
 @export var completion_flag: StringName = &""
+## Más marcas al completarla (p. ej. el nivel y el capítulo).
+@export var extra_completion_flags: Array[StringName] = []
+## Marca que queda al empezarla (p. ej. &"capitulo_2": abre las salas de ese capítulo).
+@export var start_flag: StringName = &""
 ## Misión que empieza automáticamente al completar esta (vacío = ninguna).
 @export var next_quest: StringName = &""
 ## Ecos que se reciben al completarla (0 = ninguno).

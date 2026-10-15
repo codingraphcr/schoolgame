@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 2, nivel 3: Kai entra al simulador de prácticas con la Inmersión Digital.
+Kai [sorprendido]: Así que esto es el simulador por dentro...
+Kai: Los ejercicios de práctica están trabados. Si los resuelvo, quizá llegue a lo que se repite allá al fondo.
+(Un cartel parpadea. «Con E sobre un nodo cambias el valor de una variable».)"

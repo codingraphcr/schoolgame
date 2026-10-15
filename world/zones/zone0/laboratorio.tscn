@@ -18,12 +18,19 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixel/packet_bad.png" id="15_tc3sw"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="16_kkawr"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="17_21gt4"]
+[ext_resource type="Script" path="res://world/digital/immersion_portal.gd" id="17_yfosi"]
+[ext_resource type="PackedScene" path="res://characters/npcs/profesor/profesor.tscn" id="18_fhapv"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="18_xwk6k"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="19_bv8qh"]
+[ext_resource type="Script" path="res://characters/npcs/npc.gd" id="19_keyrc"]
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="20_le1i0"]
+[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_saludo.tres" id="20_mjyh2"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="21_olkf2"]
+[ext_resource type="Script" path="res://characters/npcs/npc_conversation.gd" id="21_yicei"]
 [ext_resource type="Script" path="res://world/zones/zone0/lab_computer.gd" id="22_o7o5e"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_profesor_final.tres" id="22_xkdvc"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/computadora_pantalla.tres" id="23_d83o5"]
+[ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="23_tc3sw"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/computadora_despues.tres" id="24_qmmen"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="25_sorln"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="26_vubhy"]
@@ -158,6 +165,13 @@ animations = [{
 "name": &"default",
 "speed": 8.0
 }]
+
+[sub_resource type="Resource" id="Resource_yfosi"]
+script = ExtResource("21_yicei")
+quest_id = &"codigo_fuera_de_control"
+step_id = &"hablar_profesor"
+dialogue = ExtResource("22_xkdvc")
+completes_step = true
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kmyuo"]
 size = Vector2(40, 64)
@@ -357,6 +371,34 @@ infected_from_x = 296.0
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=739778107]
 position = Vector2(56, 304)
 
+[node name="Capitulo2" type="Node2D" parent="." unique_id=1590168136]
+
+[node name="ConexionSimulador" type="Area2D" parent="Capitulo2" unique_id=138870126]
+position = Vector2(460, 252)
+script = ExtResource("17_yfosi")
+target_scene = "res://world/zones/simulador/sim_entrada.tscn"
+target_entry = &"desde_laboratorio"
+title = "SIMULADOR DE PRÁCTICAS"
+lines = PackedStringArray("Conexión encontrada", "Entrando al simulador...")
+requires_quest = &"el_lenguaje_de_las_maquinas"
+requires_step = &"entrar_simulador"
+prompt_text = "E: entrar"
+prompt_offset = Vector2(-30, -40)
+
+[node name="Profesor" type="Node2D" parent="Capitulo2" unique_id=1425553402 instance=ExtResource("18_fhapv")]
+position = Vector2(400, 304)
+script = ExtResource("19_keyrc")
+display_name = "Prof. Alvarado"
+dialogue = ExtResource("20_mjyh2")
+repeat_dialogue = ExtResource("20_mjyh2")
+conversations = Array[ExtResource("21_yicei")]([SubResource("Resource_yfosi")])
+idle_extra_animation = &"notas"
+
+[node name="StoryPresence" type="Node" parent="Capitulo2/Profesor" unique_id=1751636797]
+script = ExtResource("23_tc3sw")
+show_quest = &"codigo_fuera_de_control"
+show_step = &"hablar_profesor"
+
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("16_kkawr")]
 position = Vector2(56, 304)
 
@@ -423,6 +465,13 @@ position = Vector2(680, 304)
 script = ExtResource("25_sorln")
 id = &"desde_pasillo_viejo"
 facing = -1
+
+[node name="DesdeSimulador" type="Marker2D" parent="Entries" unique_id=1949213479]
+position = Vector2(470, 304)
+script = ExtResource("25_sorln")
+id = &"desde_simulador"
+facing = -1
+arrival_effect = "materialize"
 
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 

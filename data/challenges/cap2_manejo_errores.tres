@@ -1,0 +1,90 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Q0_O0"]
+script = ExtResource("2_option")
+text = "Un ciclo que no tiene condición de salida"
+correct = true
+feedback = "¡Correcto! Nada en el ciclo lo hace terminar: crea procesos para siempre."
+
+[sub_resource type="Resource" id="Q0_O1"]
+script = ExtResource("2_option")
+text = "Una contraseña débil"
+feedback = "Las contraseñas protegen el acceso; acá el problema es un programa que no se detiene."
+
+[sub_resource type="Resource" id="Q0_O2"]
+script = ExtResource("2_option")
+text = "Un virus que entró al simulador"
+feedback = "No todo error es un ataque: este lo causa un programa con un ciclo mal hecho."
+
+[sub_resource type="Resource" id="Q0_O3"]
+script = ExtResource("2_option")
+text = "Solo falta más memoria"
+feedback = "Con más memoria el ciclo seguiría igual de infinito, solo tardaría más en trabarse."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "El registro muestra el mismo proceso creado cientos de veces por minuto. ¿Qué está pasando?"
+options = Array[ExtResource("2_option")]([SubResource("Q0_O0"), SubResource("Q0_O1"), SubResource("Q0_O2"), SubResource("Q0_O3")])
+
+[sub_resource type="Resource" id="Q1_O0"]
+script = ExtResource("2_option")
+text = "Intentarlo otra vez, para siempre"
+feedback = "Eso es justo lo que llenó el simulador de procesos."
+
+[sub_resource type="Resource" id="Q1_O1"]
+script = ExtResource("2_option")
+text = "Ocultar el error para que nadie se entere"
+feedback = "Ocultar un error no lo arregla y nadie podría corregirlo."
+
+[sub_resource type="Resource" id="Q1_O2"]
+script = ExtResource("2_option")
+text = "Capturar el error, dejar de repetir y anotarlo en el registro"
+correct = true
+feedback = "¡Correcto! Manejar la excepción: el programa se detiene de forma segura y avisa qué pasó."
+
+[sub_resource type="Resource" id="Q1_O3"]
+script = ExtResource("2_option")
+text = "Borrar el registro para que no se llene"
+feedback = "Sin registro no se sabría qué pasó: el registro es la pista."
+
+[sub_resource type="Resource" id="Question_1"]
+script = ExtResource("1_question")
+prompt = "Cuando crear_proceso() falla, ¿qué debería hacer el programa?"
+options = Array[ExtResource("2_option")]([SubResource("Q1_O0"), SubResource("Q1_O1"), SubResource("Q1_O2"), SubResource("Q1_O3")])
+
+[sub_resource type="Resource" id="Q2_O0"]
+script = ExtResource("2_option")
+text = "Para recorrerla, contarlos y encontrar el que se repite"
+correct = true
+feedback = "¡Correcto! Una estructura de datos como una lista permite revisar cada elemento y detectar el problema."
+
+[sub_resource type="Resource" id="Q2_O1"]
+script = ExtResource("2_option")
+text = "Para que el simulador vaya más rápido"
+feedback = "Ordenar los datos ayuda a analizarlos, no acelera el error."
+
+[sub_resource type="Resource" id="Q2_O2"]
+script = ExtResource("2_option")
+text = "No sirve: los datos deberían estar sueltos"
+feedback = "Sin una estructura sería mucho más difícil encontrar el patrón."
+
+[sub_resource type="Resource" id="Q2_O3"]
+script = ExtResource("2_option")
+text = "Para esconder los procesos"
+feedback = "La lista los muestra: por eso se puede encontrar el que se repite."
+
+[sub_resource type="Resource" id="Question_2"]
+script = ExtResource("1_question")
+prompt = "procesos.log guarda los procesos en una lista. ¿Para qué sirve tenerlos así?"
+options = Array[ExtResource("2_option")]([SubResource("Q2_O0"), SubResource("Q2_O1"), SubResource("Q2_O2"), SubResource("Q2_O3")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap2_manejo_errores"
+title = "Código fuera de control"
+questions = Array[ExtResource("1_question")]([SubResource("Question_0"), SubResource("Question_1"), SubResource("Question_2")])
+ecos_reward = 0

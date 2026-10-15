@@ -5,13 +5,84 @@
 [ext_resource type="Script" path="res://systems/world/district_layout.gd" id="3_7g5aa"]
 
 [sub_resource type="Resource" id="Resource_1ityy"]
+script = ExtResource("1_jvlqr")
+room_a = &"sim_entrada"
+door_a = &"este"
+room_b = &"sim_variables"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_yvimx"]
+script = ExtResource("1_jvlqr")
+room_a = &"sim_variables"
+door_a = &"este"
+room_b = &"sim_condiciones"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_djcxn"]
+script = ExtResource("1_jvlqr")
+room_a = &"sim_condiciones"
+door_a = &"este"
+room_b = &"sim_ciclos"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_tyvg0"]
+script = ExtResource("1_jvlqr")
+room_a = &"sim_ciclos"
+door_a = &"este"
+room_b = &"sim_procesos"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_lrom0"]
+script = ExtResource("1_jvlqr")
+room_a = &"sim_procesos"
+door_a = &"este"
+room_b = &"arena_bucle"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_r6sx1"]
+script = ExtResource("2_c3xw0")
+room_id = &"sim_entrada"
+template_id = &"sim_entrada"
+
+[sub_resource type="Resource" id="Resource_x4irl"]
+script = ExtResource("2_c3xw0")
+room_id = &"sim_variables"
+template_id = &"sim_variables"
+cell = Vector2i(1, 0)
+
+[sub_resource type="Resource" id="Resource_icaer"]
+script = ExtResource("2_c3xw0")
+room_id = &"sim_condiciones"
+template_id = &"sim_condiciones"
+cell = Vector2i(2, 0)
+
+[sub_resource type="Resource" id="Resource_856ur"]
+script = ExtResource("2_c3xw0")
+room_id = &"sim_ciclos"
+template_id = &"sim_ciclos"
+cell = Vector2i(4, 0)
+
+[sub_resource type="Resource" id="Resource_m6vcy"]
+script = ExtResource("2_c3xw0")
+room_id = &"sim_procesos"
+template_id = &"sim_procesos"
+cell = Vector2i(6, 0)
+
+[sub_resource type="Resource" id="Resource_enoat"]
 script = ExtResource("2_c3xw0")
 room_id = &"arena_bucle"
 template_id = &"arena_bucle"
+cell = Vector2i(8, 0)
 
 [resource]
 script = ExtResource("3_7g5aa")
 id = &"simulador"
 display_name = "Simulador"
-start_room = &"arena_bucle"
-rooms = Array[ExtResource("2_c3xw0")]([SubResource("Resource_1ityy")])
+start_room = &"sim_entrada"
+rooms = Array[ExtResource("2_c3xw0")]([SubResource("Resource_r6sx1"), SubResource("Resource_x4irl"), SubResource("Resource_icaer"), SubResource("Resource_856ur"), SubResource("Resource_m6vcy"), SubResource("Resource_enoat")])
+links = Array[ExtResource("1_jvlqr")]([SubResource("Resource_1ityy"), SubResource("Resource_yvimx"), SubResource("Resource_djcxn"), SubResource("Resource_tyvg0"), SubResource("Resource_lrom0")])

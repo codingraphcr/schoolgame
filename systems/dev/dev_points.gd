@@ -14,7 +14,7 @@ extends RefCounted
 
 ## Las misiones de la historia, en orden (cada una empieza la siguiente al completarse).
 const CHAIN: Array[StringName] = [&"prologo", &"contrasena_profesor", &"cuarto_viejo", &"una_clase_diferente",
-	&"travesuras_en_el_sistema"]
+	&"travesuras_en_el_sistema", &"el_lenguaje_de_las_maquinas", &"codigo_fuera_de_control"]
 
 const Z := "res://world/zones/zone0/"
 const RED := "res://world/zones/red_entrenamiento/"
@@ -57,12 +57,31 @@ const POINTS: Array[Dictionary] = [
 		"sala": &"cuarto_tecnico", "mision": [&"travesuras_en_el_sistema", &"hablar_profesor"],
 		"habilidades": [&"vision", &"nullblade", &"inmersion"],
 		"marcas": [&"cap1_checkpoint_1", &"cap1_checkpoint_2", &"cap1_checkpoint_3", &"cap1_hermanos_vencidos", &"cap1_fragmento_leido"] },
+	{ "grupo": "Capítulo 2", "nombre": "Inicio del capítulo (la entrada del colegio)", "escena": Z + "entrada.tscn",
+		"entrada": &"desde_pasillo", "sala": &"entrada", "mision": [&"el_lenguaje_de_las_maquinas", &"clase_programacion"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 2", "nombre": "Clase de programación (Sala 3)", "escena": Z + "sala_3.tscn", "entrada": &"desde_pasillo",
+		"sala": &"sala_3", "mision": [&"el_lenguaje_de_las_maquinas", &"clase_programacion"], "habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 2", "nombre": "Laboratorio: la conexión al simulador", "escena": Z + "laboratorio.tscn",
+		"entrada": &"desde_pasillo", "sala": &"laboratorio", "mision": [&"el_lenguaje_de_las_maquinas", &"entrar_simulador"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 2", "nombre": "Simulador · variables", "escena": SIM + "sim_variables.tscn", "entrada": &"desde_oeste",
+		"sala": &"sim_variables", "mision": [&"el_lenguaje_de_las_maquinas", &"variables"], "habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 2", "nombre": "Simulador · condiciones", "escena": SIM + "sim_condiciones.tscn", "entrada": &"desde_oeste",
+		"sala": &"sim_condiciones", "mision": [&"el_lenguaje_de_las_maquinas", &"condiciones"], "habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 2", "nombre": "Simulador · ciclos y repaso", "escena": SIM + "sim_ciclos.tscn", "entrada": &"desde_oeste",
+		"sala": &"sim_ciclos", "mision": [&"el_lenguaje_de_las_maquinas", &"ciclos"], "habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 2", "nombre": "Procesos repetidos", "escena": SIM + "sim_procesos.tscn", "entrada": &"desde_oeste",
+		"sala": &"sim_procesos", "mision": [&"codigo_fuera_de_control", &"procesos"], "habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
 	{ "grupo": "Capítulo 2", "nombre": "Jefe: Bucle Infinito", "escena": SIM + "arena_bucle.tscn", "entrada": &"inicio",
-		"sala": &"arena_bucle", "mision": [], "habilidades": [&"vision", &"nullblade", &"inmersion"],
-		"marcas": [&"capitulo_1_completado"] },
+		"sala": &"arena_bucle", "mision": [&"codigo_fuera_de_control", &"vencer_bucle"], "habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
 	{ "grupo": "Capítulo 2", "nombre": "Derrumbe del simulador (Dominio Nulo I)", "escena": SIM + "arena_bucle.tscn",
-		"entrada": &"inicio", "sala": &"arena_bucle", "mision": [], "habilidades": [&"vision", &"nullblade", &"inmersion"],
-		"marcas": [&"capitulo_1_completado", &"cap2_bucle_vencido", &"cap2_bucle_liberado", &"cap2_condicion_corregida"] },
+		"entrada": &"inicio", "sala": &"arena_bucle", "mision": [&"codigo_fuera_de_control", &"vencer_bucle"], "habilidades": [&"vision", &"nullblade", &"inmersion"],
+		"marcas": [&"cap2_bucle_vencido", &"cap2_bucle_liberado", &"cap2_condicion_corregida"] },
+	{ "grupo": "Capítulo 2", "nombre": "Final del capítulo (el profesor)", "escena": Z + "laboratorio.tscn",
+		"entrada": &"desde_simulador", "sala": &"laboratorio", "mision": [&"codigo_fuera_de_control", &"hablar_profesor"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion", &"dominio"],
+		"marcas": [&"cap2_bucle_vencido", &"cap2_bucle_liberado", &"cap2_condicion_corregida", &"cap2_dominio_nulo"] },
 ]
 
 
