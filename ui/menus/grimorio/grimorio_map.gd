@@ -10,8 +10,10 @@ extends Control
 ## - Visitada: Kai estuvo ahí (lila, con nombre).
 ## - Completada: visitada y con todas sus misiones terminadas (con una marca).
 ##
-## Muestra también las conexiones entre salas (las escaleras con peldaños), las terminales y dónde
-## está Kai. Una sala cuenta como visitada si está en World.visited o, en partidas anteriores al mapa,
+## Muestra también las conexiones entre salas (las escaleras con peldaños), las terminales, dónde
+## está Kai y **a dónde ir por la misión** (QuestStep.room_id del objetivo actual): una marca dorada que
+## late sobre esa sala (aunque todavía no se conozca) y arriba «MISIÓN: <sala>»; si la sala es de otra
+## zona, lo dice. Una sala cuenta como visitada si está en World.visited o, en partidas anteriores al mapa,
 ## por la marca "visitada_<escena>" que deja Room al entrar.
 
 enum State { UNKNOWN, DISCOVERED, LOCKED, VISITED, COMPLETED }
@@ -27,6 +29,7 @@ const LOCKED := Color("e0457b")
 const DONE := Color("5dff9a")
 const KAI := Color("3ef2ff")
 const TEXT := Color("e6deff")
+const MISSION := Color("ffd166")
 
 @export var zone: StringName = &"colegio":
 	set(value):
@@ -35,6 +38,36 @@ const TEXT := Color("e6deff")
 
 
 ## Salas visitadas (o completadas) y total de la zona: Vector2i(visitadas, total).
+## La sala de esta zona que marca la misión actual, o vacío (sin misión o en otra zona).
+func mission_room() -> StringName:
+	var graph := _graph()
+	var game_state := get_node_or_null("/root/GameState")
+	if graph == null or game_state == null:
+		return &""
+	var target: StringName = game_state.get_objective_room()
+	return target if graph.rooms.has(target) else &""
+
+
+## Lo que se escribe arriba del mapa sobre la misión (vacío si no hay).
+func mission_text() -> String:
+	var game_state := get_node_or_null("/root/GameState")
+	if game_state == null or _world() == null:
+		return ""
+	var target: StringName = game_state.get_objective_room()
+	if target == &"":
+		return ""
+	var graph := _graph()
+	if graph and graph.rooms.has(target):
+		return "MISIÓN: " + graph.template_of(target).display_name
+	var district: StringName = _world().district_of(target)
+	return "MISIÓN EN: " + String(_world().district_names.get(district, String(district)))
+
+
+func _process(_delta: float) -> void:
+	if not Engine.is_editor_hint() and is_visible_in_tree() and not mission_text().is_empty():
+		queue_redraw()  # La marca de la misión late.
+
+
 func progress() -> Vector2i:
 	var states := room_states()
 	var visited := 0
@@ -91,6 +124,12 @@ func _draw() -> void:
 		for room_id: StringName in graph.rooms:
 			if states[room_id] != State.UNKNOWN:
 				_draw_room(graph, room_id, states[room_id], origin, cell, font)
+		var target := mission_room()
+		if target != &"":
+			_draw_mission(_room_rect(graph, target, origin, cell), states[target] == State.UNKNOWN)
+		var mission := mission_text()
+		if not mission.is_empty():
+			draw_string(font, Vector2(10.0, 22.0), mission, HORIZONTAL_ALIGNMENT_LEFT, map_rect.size.x * 0.6, 13, MISSION)
 		var title := String(_world().district_names.get(zone, String(zone))).to_upper()
 		draw_string(font, Vector2(0, 22.0), title, HORIZONTAL_ALIGNMENT_RIGHT, map_rect.size.x - 10.0, 14, TEXT)
 		draw_string(font, Vector2(0, 38.0), "%d%%" % _percent(progress()), HORIZONTAL_ALIGNMENT_RIGHT, map_rect.size.x - 10.0, 11, Color(TEXT, 0.6))
@@ -150,12 +189,13 @@ func _draw_link(graph: RoomGraph, edge: Dictionary, origin: Vector2, cell: float
 
 func _draw_legend(at: Vector2, font: Font) -> void:
 	var rows := [
-		[VISITED, "Visitada"], [UNVISITED, "Sin visitar"], ["done", "Completada"],
-		["terminal", "Terminal"], ["locked", "Se abre más adelante"], ["kai", "Estás aquí"],
+		[VISITED, "Visitada"], [UNVISITED, "Sin visitar"], ["done", "Completada"], ["mission", "Misión"],
+		["terminal", "Terminal"], ["locked", "Más adelante"], ["kai", "Estás aquí"],
 	]
+	var columns := 4
 	draw_rect(Rect2(at, Vector2(size.x, LEGEND_HEIGHT - 6.0)), PANEL)
 	for i in rows.size():
-		var cell := at + Vector2(12.0 + (i % 3) * size.x / 3.0, 10.0 + (i / 3) * 26.0)
+		var cell := at + Vector2(12.0 + (i % columns) * size.x / columns, 10.0 + (i / columns) * 26.0)
 		var mark: Variant = rows[i][0]
 		if mark is Color:
 			draw_rect(Rect2(cell, Vector2(14, 14)), mark)
@@ -165,9 +205,11 @@ func _draw_legend(at: Vector2, font: Font) -> void:
 			_draw_check(cell + Vector2(7, 7), DONE)
 		elif mark == "kai":
 			_draw_kai(cell + Vector2(7, 7))
+		elif mark == "mission":
+			_draw_pin(cell + Vector2(7, 7), 1.0)
 		else:
 			_draw_unknown(Rect2(cell, Vector2(14, 14)))
-		draw_string(font, cell + Vector2(22, 12), rows[i][1], HORIZONTAL_ALIGNMENT_LEFT, size.x / 3.0 - 30.0, 11, TEXT)
+		draw_string(font, cell + Vector2(22, 12), rows[i][1], HORIZONTAL_ALIGNMENT_LEFT, size.x / columns - 30.0, 11, TEXT)
 
 
 ## Rayado en rosa (zona que todavía no se puede visitar).
@@ -195,6 +237,25 @@ func _draw_check(center: Vector2, color: Color) -> void:
 func _draw_lock(center: Vector2, color: Color) -> void:
 	draw_rect(Rect2(center - Vector2(5, 1), Vector2(10, 8)), color)
 	draw_arc(center + Vector2(0, -1), 3.5, PI, TAU, 8, color, 1.5)
+
+
+## A dónde ir: borde dorado que late (punteado si la sala todavía no se conoce) y un alfiler con «!».
+func _draw_mission(rect: Rect2, unknown: bool) -> void:
+	var pulse := 0.5 + 0.5 * sin(Time.get_ticks_msec() / 1000.0 * 4.0)
+	if unknown:
+		var corners := [rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y)]
+		for k in 4:
+			draw_dashed_line(corners[k], corners[(k + 1) % 4], Color(MISSION, 0.8), 2.0, 5.0)
+	else:
+		draw_rect(rect.grow(2.0 + pulse * 2.0), Color(MISSION, 0.35 + 0.4 * pulse), false, 2.0)
+	_draw_pin(Vector2(rect.end.x - 2.0, rect.position.y + 2.0), 1.0 + 0.15 * pulse)
+
+
+func _draw_pin(center: Vector2, grow: float) -> void:
+	draw_circle(center, 7.0 * grow, MISSION)
+	draw_circle(center, 7.0 * grow, Color(0.1, 0.06, 0.02), false, 1.0)
+	draw_line(center + Vector2(0, -4), center + Vector2(0, 1), Color(0.1, 0.06, 0.02), 2.0)
+	draw_circle(center + Vector2(0, 3.5), 1.1, Color(0.1, 0.06, 0.02))
 
 
 ## Kai: un rombo cian.

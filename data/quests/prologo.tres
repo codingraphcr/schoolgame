@@ -7,16 +7,19 @@
 script = ExtResource("2_onf2i")
 id = &"hablar_profesor"
 objective = "Busca al profesor en el pasillo."
+room_id = &"pasillo"
 
 [sub_resource type="Resource" id="Resource_b57hf"]
 script = ExtResource("2_onf2i")
 id = &"revisar_computadora"
 objective = "Revisa la computadora del laboratorio."
+room_id = &"laboratorio"
 
 [sub_resource type="Resource" id="Resource_gnj7q"]
 script = ExtResource("2_onf2i")
 id = &"volver_profesor"
 objective = "Cuéntale al profesor lo que pasó."
+room_id = &"pasillo"
 
 [resource]
 script = ExtResource("1_swvs6")

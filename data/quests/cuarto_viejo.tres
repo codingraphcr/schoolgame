@@ -7,26 +7,31 @@
 script = ExtResource("2_cvs")
 id = &"hablar_profesor"
 objective = "Habla con el profesor en el pasillo."
+room_id = &"pasillo"
 
 [sub_resource type="Resource" id="Resource_pasillo"]
 script = ExtResource("2_cvs")
 id = &"ir_pasillo_viejo"
 objective = "Busca el pasillo viejo al fondo del laboratorio."
+room_id = &"pasillo_viejo"
 
 [sub_resource type="Resource" id="Resource_puerta"]
 script = ExtResource("2_cvs")
 id = &"abrir_puerta"
 objective = "Descubre cómo abrir la puerta del cuarto viejo."
+room_id = &"pasillo_viejo"
 
 [sub_resource type="Resource" id="Resource_explorar"]
 script = ExtResource("2_cvs")
 id = &"explorar_cuarto"
 objective = "Explora el cuarto viejo."
+room_id = &"cuarto_viejo"
 
 [sub_resource type="Resource" id="Resource_salir"]
 script = ExtResource("2_cvs")
 id = &"salir_cuarto"
 objective = "Sal del cuarto viejo."
+room_id = &"pasillo_viejo"
 
 [resource]
 script = ExtResource("1_cvq")

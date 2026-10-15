@@ -398,6 +398,15 @@ func has_reached_step(quest_id: StringName, step_id: StringName = &"") -> bool:
 
 
 ## Texto del objetivo actual ("" si no hay misión activa).
+## Sala del mapa a la que hay que ir para el objetivo actual (QuestStep.room_id), o vacío.
+func get_objective_room() -> StringName:
+	var quest := QuestDB.get_quest(active_quest)
+	var index: int = _quest_progress.get(active_quest, -2)
+	if quest == null or index < 0 or index >= quest.steps.size():
+		return &""
+	return quest.steps[index].room_id
+
+
 func get_objective_text() -> String:
 	var quest := QuestDB.get_quest(active_quest)
 	var index: int = _quest_progress.get(active_quest, -2)
