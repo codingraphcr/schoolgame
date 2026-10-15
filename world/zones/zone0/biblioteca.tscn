@@ -228,37 +228,40 @@ resolved_dialogue = ExtResource("12_okeg1")
 prompt_text = "E: revisar el catálogo"
 prompt_offset = Vector2(-44, -40)
 
-[node name="Gente" type="Node2D" parent="."]
+[node name="Gente" type="Node2D" parent="." unique_id=727651649]
 
-[node name="LectorEstante" type="Node2D" parent="Gente"]
+[node name="LectorEstante" type="Node2D" parent="Gente" unique_id=864148253]
 position = Vector2(190, 304)
 script = ExtResource("90_bgnpc")
 character = "m2"
 mode = 4
+alt_characters = PackedStringArray()
 
-[node name="ChicoMesa" type="Node2D" parent="Gente"]
+[node name="ChicoMesa" type="Node2D" parent="Gente" unique_id=1597814638]
 position = Vector2(384, 304)
 script = ExtResource("90_bgnpc")
 character = "v1"
-mode = 0
+alt_characters = PackedStringArray()
 
-[node name="ChicaMesa" type="Node2D" parent="Gente"]
+[node name="ChicaMesa" type="Node2D" parent="Gente" unique_id=2068979103]
 position = Vector2(436, 304)
 script = ExtResource("90_bgnpc")
 character = "v3"
-mode = 0
 facing = -1
+alt_characters = PackedStringArray()
 
-[node name="ChicoGorra" type="Node2D" parent="Gente"]
+[node name="ChicoGorra" type="Node2D" parent="Gente" unique_id=2146049564]
 position = Vector2(742, 304)
 script = ExtResource("90_bgnpc")
 character = "x1"
+alt_characters = PackedStringArray()
 
-[node name="ChicaLibro" type="Node2D" parent="Gente"]
+[node name="ChicaLibro" type="Node2D" parent="Gente" unique_id=710221681]
 position = Vector2(798, 304)
 script = ExtResource("90_bgnpc")
 character = "v2"
 facing = -1
+alt_characters = PackedStringArray()
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("7_1mofi")]
 position = Vector2(56, 304)
@@ -312,7 +315,7 @@ facing = -1
 position = Vector2(6, 176)
 script = ExtResource("14_7qgb7")
 door_id = &"oeste"
-target_scene = "res://world/zones/zone0/escaleras.tscn"
+target_scene = "res://world/zones/zone0/pasillo_segundo.tscn"
 target_entry = &"desde_biblioteca"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToEscaleras" unique_id=1946857122]

@@ -601,8 +601,9 @@ func _attack_step(step: StringName, data: BucleCycle, epoch: int) -> void:
 	var running := [parts.size()]
 	for part in parts:
 		_attack_counted(StringName(part), data, epoch, running)
-	while running[0] > 0 and epoch == _epoch and is_inside_tree():
-		await get_tree().physics_frame
+	while running[0] > 0 and epoch == _epoch:
+		if not await FrameWait.physics(self):
+			return
 
 
 func _attack_counted(attack: StringName, data: BucleCycle, epoch: int, running: Array) -> void:

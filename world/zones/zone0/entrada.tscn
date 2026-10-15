@@ -11,13 +11,16 @@
 [ext_resource type="Texture2D" path="res://assets/art/pixel/board.png" id="9_kdujv"]
 [ext_resource type="Texture2D" path="res://assets/art/pixel/lockers.png" id="10_jo5h4"]
 [ext_resource type="Texture2D" path="res://assets/art/light_soft.tres" id="11_d4688"]
+[ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="12_ailnp"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="12_hgvtw"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="13_3jc38"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="14_dhj2v"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="15_r2rs5"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="16_1n0rg"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="17_ly34l"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="17_r0gc5"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="18_0p42w"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_amigos.tres" id="18_dlrsl"]
 [ext_resource type="Script" path="res://world/digital/save_point.gd" id="19_savep"]
 [ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="20_bgnpc"]
 
@@ -36,14 +39,20 @@ size = Vector2(32, 40)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3fodf"]
 size = Vector2(12, 256)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kdujv"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jo5h4"]
+size = Vector2(90, 120)
+
 [node name="Entrada" type="Node2D" unique_id=476933876 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
 script = ExtResource("1_7xiul")
-music_track = &"colegio"
 tile_layer = NodePath("Background")
 player = NodePath("Player")
 camera = NodePath("GameCamera")
 spawn_point = NodePath("SpawnPoint")
+music_track = &"colegio"
 
 [node name="Ambient" type="CanvasModulate" parent="." unique_id=1123155226]
 color = Color(0.7, 0.72, 0.88, 1)
@@ -183,30 +192,65 @@ texture = ExtResource("10_jo5h4")
 centered = false
 hframes = 2
 
-[node name="Gente" type="Node2D" parent="."]
+[node name="Gente" type="Node2D" parent="." unique_id=491926062]
 
-[node name="ChicaCharla" type="Node2D" parent="Gente"]
+[node name="ChicaCharla" type="Node2D" parent="Gente" unique_id=1576858015]
 position = Vector2(300, 304)
 script = ExtResource("20_bgnpc")
 character = "f1"
 mode = 2
 partner = NodePath("../ChicoCharla")
+alt_characters = PackedStringArray()
 
-[node name="ChicoCharla" type="Node2D" parent="Gente"]
+[node name="ChicoCharla" type="Node2D" parent="Gente" unique_id=668507978]
 position = Vector2(326, 304)
 script = ExtResource("20_bgnpc")
 character = "m2"
 mode = 2
 partner = NodePath("../ChicaCharla")
 talks_first = false
+alt_characters = PackedStringArray()
 
-[node name="Conserje" type="Node2D" parent="Gente"]
+[node name="Conserje" type="Node2D" parent="Gente" unique_id=1092786749]
 position = Vector2(560, 304)
 script = ExtResource("20_bgnpc")
 character = "cj"
 mode = 3
 walk_left = -30.0
 walk_right = 30.0
+alt_characters = PackedStringArray()
+
+[node name="AmigaSalida" type="Node2D" parent="Gente" unique_id=1072386401]
+position = Vector2(560, 304)
+script = ExtResource("20_bgnpc")
+character = "f1"
+mode = 2
+partner = NodePath("../AmigoSalida")
+alt_characters = PackedStringArray()
+
+[node name="StoryPresence" type="Node" parent="Gente/AmigaSalida" unique_id=2028169997]
+script = ExtResource("12_ailnp")
+show_quest = &"camino_a_casa"
+show_step = &"charla_amigos"
+hide_quest = &"camino_a_casa"
+hide_step = &"hablar_familia"
+
+[node name="AmigoSalida" type="Node2D" parent="Gente" unique_id=1374307840]
+position = Vector2(588, 304)
+script = ExtResource("20_bgnpc")
+character = "m2"
+mode = 2
+facing = -1
+partner = NodePath("../AmigaSalida")
+talks_first = false
+alt_characters = PackedStringArray()
+
+[node name="StoryPresence" type="Node" parent="Gente/AmigoSalida" unique_id=105117595]
+script = ExtResource("12_ailnp")
+show_quest = &"camino_a_casa"
+show_step = &"charla_amigos"
+hide_quest = &"camino_a_casa"
+hide_step = &"hablar_familia"
 
 [node name="Lights" type="Node2D" parent="." unique_id=539833872]
 
@@ -328,6 +372,8 @@ position = Vector2(72, 304)
 position = Vector2(640, 304)
 script = ExtResource("19_savep")
 save_id = &"entrada"
+prompt_text = "E: guardar partida"
+prompt_offset = Vector2(-42, -66)
 
 [node name="Entries" type="Node2D" parent="." unique_id=765024335]
 
@@ -336,6 +382,11 @@ position = Vector2(760, 304)
 script = ExtResource("12_hgvtw")
 id = &"desde_pasillo"
 facing = -1
+
+[node name="FromCalle" type="Marker2D" parent="Entries" unique_id=1765099675]
+position = Vector2(40, 304)
+script = ExtResource("12_hgvtw")
+id = &"desde_calle"
 
 [node name="Exits" type="Node2D" parent="." unique_id=1336867084]
 
@@ -348,6 +399,27 @@ target_entry = &"desde_entrada"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToPasillo" unique_id=1877800457]
 shape = SubResource("RectangleShape2D_3fodf")
+
+[node name="ToCalle" type="Area2D" parent="Exits" unique_id=896365218]
+position = Vector2(6, 176)
+script = ExtResource("13_3jc38")
+target_scene = "res://world/zones/barrio/calle.tscn"
+target_entry = &"desde_colegio"
+requires_quest = &"camino_a_casa"
+requires_step = &"volver_a_casa"
+
+[node name="@CollisionShape2D@7" type="CollisionShape2D" parent="Exits/ToCalle" unique_id=375438504]
+shape = SubResource("RectangleShape2D_kdujv")
+
+[node name="CharlaAmigos" type="Area2D" parent="." unique_id=676593619]
+position = Vector2(640, 260)
+script = ExtResource("17_r0gc5")
+quest_id = &"camino_a_casa"
+step_id = &"charla_amigos"
+dialogue = ExtResource("18_dlrsl")
+
+[node name="Shape" type="CollisionShape2D" parent="CharlaAmigos" unique_id=2138169736]
+shape = SubResource("RectangleShape2D_jo5h4")
 
 [node name="Player" parent="." unique_id=1231409875 instance=ExtResource("14_dhj2v")]
 position = Vector2(72, 304)

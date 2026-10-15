@@ -4,8 +4,15 @@ extends Resource
 ## completan los pasos con GameState.complete_step(id_mision, id_paso).
 ## Se edita en el Inspector; cada misión nueva se registra en QuestDB.
 
+## Principal (la historia), secundaria (historia opcional), tarea (encargo breve) o descubrimiento (lugar,
+## documento o ruta oculta). Ver docs/misiones/SISTEMA_DE_MISIONES.md.
+enum Category { PRINCIPAL, SECUNDARIA, TAREA, DESCUBRIMIENTO }
+
+const CATEGORY_NAMES: Array[String] = ["Misión principal", "Misión secundaria", "Tarea", "Descubrimiento"]
+
 @export var id: StringName = &""
 @export var title := ""
+@export var category := Category.PRINCIPAL
 @export var steps: Array[QuestStep] = []
 ## Título grande que aparece al completarla (p. ej. "EL DESPERTAR"). Vacío = ninguno.
 @export var completion_title := ""

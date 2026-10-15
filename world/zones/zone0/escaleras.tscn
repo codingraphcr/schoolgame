@@ -95,8 +95,8 @@ fountains = Array[Vector2]([Vector2(560, 304)])
 extinguishers = Array[Vector2]([Vector2(150, 288), Vector2(600, -66)])
 boards = Array[Rect2]([Rect2(332, 222, 80, 46), Rect2(380, -112, 70, 42)])
 posters = {
-Vector2(560, 210): "NO CORRER",
-Vector2(250, 200): "RECICLA"
+Vector2(250, 200): "RECICLA",
+Vector2(560, 210): "NO CORRER"
 }
 
 [node name="Bajada" type="Area2D" parent="." unique_id=859757321]
@@ -208,33 +208,37 @@ once_flag = &"cap1_puerta_tecnica_vista"
 [node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Capitulo1/PuertaCerrada" unique_id=132840542]
 shape = SubResource("RectangleShape2D_t3xtd")
 
-[node name="Gente" type="Node2D" parent="."]
+[node name="Gente" type="Node2D" parent="." unique_id=625828259]
 
-[node name="ChicoBajando" type="Node2D" parent="Gente"]
+[node name="ChicoBajando" type="Node2D" parent="Gente" unique_id=189701260]
 position = Vector2(430, 304)
 script = ExtResource("90_bgnpc")
 character = "m3"
 mode = 1
 walk_left = -70.0
 walk_right = 70.0
+alt_characters = PackedStringArray()
 
-[node name="ChicaMural" type="Node2D" parent="Gente"]
+[node name="ChicaMural" type="Node2D" parent="Gente" unique_id=247628652]
 position = Vector2(414, -48)
 script = ExtResource("90_bgnpc")
 character = "f2"
 mode = 4
+alt_characters = PackedStringArray()
 
-[node name="EstudianteSegundoPiso" type="Node2D" parent="Gente"]
+[node name="EstudianteSegundoPiso" type="Node2D" parent="Gente" unique_id=793556123]
 position = Vector2(565, -48)
 script = ExtResource("90_bgnpc")
 character = "v6"
 facing = -1
+alt_characters = PackedStringArray()
 
-[node name="ChicaDescanso" type="Node2D" parent="Gente"]
+[node name="ChicaDescanso" type="Node2D" parent="Gente" unique_id=1577063375]
 position = Vector2(396, 188)
 script = ExtResource("90_bgnpc")
 character = "v11"
 facing = -1
+alt_characters = PackedStringArray()
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("6_824if")]
 position = Vector2(72, 304)
@@ -293,7 +297,7 @@ id = &"desde_cuarto_tecnico"
 position = Vector2(634, -176)
 script = ExtResource("13_dp20c")
 door_id = &"este"
-target_scene = "res://world/zones/zone0/biblioteca.tscn"
+target_scene = "res://world/zones/zone0/pasillo_segundo.tscn"
 target_entry = &"desde_escaleras"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToBiblioteca" unique_id=1946857122]

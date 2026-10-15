@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CreatureEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/bestiary/creature_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+id = &"fibroluz"
+display_name = "Fibroluz"
+biome = &"bosque_fibra"
+appearance = "Una gotita de luz cian con dos antenas de fibra. Carga un paquete de luz amarilla."
+behavior = "Va y viene entre los nodos del bosque. Es curiosa: si Kai se queda quieto, se acerca. Se asusta con los ataques y el dash. No pelea."
+function = "Transporta señales entre los nodos del Bosque de Fibra. Si un enlace se corta, espera junto al corte: no tiene por dónde seguir."
+concept = "Transmisión de datos: la señal necesita un camino completo del origen al destino (capa física)."
+kai_notes = PackedStringArray("Una lucecita con patas... ¿me está mirando?", "No pelea: lleva algo de un lado a otro. Como un paquete de datos.", "Sin un camino completo, la señal no llega. Por eso se quedaba esperando junto al corte.")
+observe_seconds = 2.5
+understand_flag = &"senal_del_barrio_completada"

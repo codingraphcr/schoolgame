@@ -38,11 +38,22 @@ archivos de práctica modificados cientos de veces en un minuto.
   traviesos y se asustan; Chip dice que **eso no estaba en el plan** (pista de la Biblia: «las amenazas reaccionan
   de manera particular a su presencia»).
 
-### Escena 1.3 · Primera persecución corta (Pasillo → Escaleras)
+### Escena 1.3 · La persecución por el colegio (Pasillo → Escaleras → Pasillo del segundo piso)
 
 Chip y Glitch salen de la Sala 3. Kai los sigue por el Pasillo y suben por las escaleras (desde el Capítulo 1 ya
-se pueden usar). Persecución corta: los hermanos van delante y esperan cuando Kai se queda atrás. Sin daño ni
-temporizador: es la presentación de la mecánica.
+se pueden usar): es la presentación de la mecánica (sin daño ni temporizador).
+
+Arriba, en el **pasillo del segundo piso** (largo, entre las escaleras y la biblioteca), la persecución se pone
+seria. Glitch: «¡Todavía nos sigue!»; Chip: «Plan B: ¡obstáculos!».
+
+- **Chip tira estanterías.** Primero tiemblan (aviso «!»), después caen hacia Kai y quedan en el piso como un
+  obstáculo que hay que saltar. Si caen encima de Kai, le quitan medio cristal.
+- **Glitch tira cajas.** Ruedan por el piso hacia Kai; hay que saltarlas (medio cristal si tocan).
+- **Dos veces «¡casi!».** Los hermanos se quedan quietos hasta que Kai está a punto de tocarlos («¡Te tengo!»),
+  y se escapan a toda velocidad («¡Ups, casi!», «¡Por un pelo!»).
+- **Los estudiantes reaccionan** al pasar: «¡No se corre en los pasillos!», «¿Quién tiró eso?».
+
+Al final del pasillo, Chip: «¡Glitch, a la biblioteca!», y Kai grita «¡Esperen!» mientras desaparecen por la puerta.
 
 ### Escena 1.4 · La biblioteca
 
@@ -153,6 +164,18 @@ después, Kai aparece en la **entrada del colegio** (no vuelve al cuarto).
 **FIN DEL CAPÍTULO 1.** Marcas: `nivel_2_completado`, `capitulo_1_completado`.
 
 *Cuidado con la Biblia:* el profesor no explica nada ni dice qué es el archivo (reglas 3, 11 y 12). Kai no lo ve.
+
+### Después del capítulo · Camino a casa
+
+Misión `camino_a_casa`, entre el Capítulo 1 y el 2 (sin combate ni examen; detalle completo en
+`docs/escenarios/HOGAR_DE_KAI.md`). En la entrada, los amigos comentan el día («Mae, ¿viste cómo se pusieron las
+compus de la Sala 3?»). Objetivo: **«Regresá a casa.»** Kai cruza su barrio de tarde (opcional: el vecino, la
+pulpería, la parada, Canelo) y llega a su casa: la primera charla con mamá y papá («Recordá esto, Kai: cuanto más
+grande sea tu capacidad de cambiar las cosas, mayor será tu responsabilidad de hacer lo correcto»). Después de la
+cena, Kai explora su cuarto y se acuesta. Mientras duerme, los papás hablan a solas («¿Creés que ya empezó?» / «No lo
+sé.»), sin explicar nada. Esa noche, la **Resonancia Digital**; Kai despierta confundido y empieza el **Capítulo 2**.
+
+*Cuidado con la Biblia (v1.6):* los papás conocen parte del origen de Kai, pero no lo dicen; Kai no descubre nada.
 
 ---
 

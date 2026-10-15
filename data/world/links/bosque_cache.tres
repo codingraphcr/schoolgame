@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 4
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "La troncal hacia el Distrito Caché no tiene enlace (Capítulo 4)."
+
+[resource]
+script = ExtResource("1_link")
+id = &"bosque_cache"
+region_a = &"bosque_fibra"
+region_b = &"distrito_cache"
+kind = 0
+one_way = false
+access_point = "La troncal de fibra hacia la ciudad digital"
+purpose = "La ruta principal entre el bosque y el Distrito Caché."
+requirement = SubResource("Requirement")

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ComputerEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/home/computer_entry.gd" id="1_pc"]
+
+[resource]
+script = ExtResource("1_pc")
+section = 1
+title = "Redes · Tarea 1"
+from = "Fundamentos de redes"
+body = "Dibujar la red de la casa: el router, la compu, los celulares de mamá y papá y la tele. Pregunta extra: ¿qué dispositivo es el más vulnerable y por qué?
+
+Respuesta de Kai: la tele. Nadie le actualiza nada."
+min_chapter = 0
+requires_flag = &""
+hidden_flag = &""

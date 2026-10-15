@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 0
+flags = PackedStringArray("capitulo_1_completado")
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Todavía no terminan las clases."
+
+[resource]
+script = ExtResource("1_link")
+id = &"barrio_central"
+region_a = &"barrio_almendros"
+region_b = &"distrito_central"
+kind = 0
+one_way = false
+access_point = "La calle del barrio hasta el portón del colegio"
+purpose = "Kai va y viene caminando entre su casa y el colegio."
+requirement = SubResource("Requirement")

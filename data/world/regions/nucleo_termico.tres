@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"nucleo_termico"
+display_name = "Núcleo Térmico"
+kind = 1
+description = "Región industrial y volcánica: servidores sobrecalentados, maquinaria, conductos de energía y mecanismos automatizados."
+concepts = PackedStringArray("Procesamiento", "Automatización", "Rendimiento", "Gestión de recursos")
+districts = PackedStringArray()
+secret = false
+map_position = Vector2(0.0, 4.4)
+map_size = Vector2(2.8, 1.4)
+color = Color(1.0000, 0.4784, 0.2275, 1)

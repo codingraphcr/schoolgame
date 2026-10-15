@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_quest"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_step"]
+
+[sub_resource type="Resource" id="Resource_0"]
+script = ExtResource("2_step")
+id = &"charla_amigos"
+objective = "Tus amigos te esperan en la entrada del colegio."
+room_id = &"entrada"
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2_step")
+id = &"volver_a_casa"
+objective = "Regresá a casa."
+room_id = &"casa"
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("2_step")
+id = &"hablar_familia"
+objective = "Saludá a tu familia."
+room_id = &"casa"
+
+[sub_resource type="Resource" id="Resource_3"]
+script = ExtResource("2_step")
+id = &"descansar"
+objective = "Descansá en tu cuarto."
+room_id = &"cuarto_kai"
+
+[resource]
+script = ExtResource("1_quest")
+id = &"camino_a_casa"
+title = "Camino a casa"
+steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3")])
+completion_title = "CAPÍTULO 2"
+completion_subtitle = "LOS PRIMEROS CÓDIGOS"
+completion_flag = &"camino_a_casa_completado"
+next_quest = &"el_lenguaje_de_las_maquinas"

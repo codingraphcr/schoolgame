@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 8
+flags = PackedStringArray("conductos_puerta_abierta")
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Una puerta sellada."
+
+[resource]
+script = ExtResource("1_link")
+id = &"central_conductos"
+region_a = &"distrito_central"
+region_b = &"conductos_silencio"
+kind = 3
+one_way = false
+access_point = "Una puerta sellada en el pasillo viejo, cerca del Laboratorio 2"
+purpose = "Mantenimiento antiguo bajo el colegio."
+requirement = SubResource("Requirement")

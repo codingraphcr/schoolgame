@@ -3,10 +3,13 @@ extends VBoxContainer
 ## OBJETIVO de la misión activa (arriba a la derecha, bajo el indicador de la Visión Digital): un panel
 ## oscuro con borde cian, un rombo que late y el nombre de la misión, para que no pase desapercibido
 ## entre el resto de la pantalla. Al cambiar el objetivo entra deslizándose, dice «NUEVO OBJETIVO» unos
-## segundos y destella. Se oculta si no hay misión activa.
+## segundos y destella. Se oculta si no hay misión activa. Debajo, más chico, la actividad secundaria en
+## curso (misión secundaria, tarea o descubrimiento: «ACTIVIDAD · …»), sin quitarle el lugar a la historia.
+## Al terminar una actividad secundaria avisa con un mensaje (las principales tienen su cartel).
 
 const CYAN := Color("3ef2ff")
 const GOLD := Color("ffd166")
+const SIDE := Color("9dffb0")
 const PANEL := Color(0.03, 0.05, 0.12, 0.82)
 const PAD := Vector2(14, 8)
 ## Segundos que se muestra «NUEVO OBJETIVO» después de un cambio.
@@ -14,6 +17,7 @@ const NEW_TIME := 3.0
 
 var _title: Label
 var _text: Label
+var _side: Label
 var _flash := 0.0
 var _new_left := 0.0
 var _slide := 0.0
@@ -28,10 +32,12 @@ func _ready() -> void:
 	_title = _make_label(13, GOLD)
 	_text = _make_label(18, Color(0.95, 0.97, 1.0))
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_side = _make_label(13, SIDE)
+	_side.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var game_state := get_node("/root/GameState")
 	game_state.quest_started.connect(_on_quest_changed)
 	game_state.quest_step_changed.connect(_on_quest_changed)
-	game_state.quest_completed.connect(_on_quest_changed)
+	game_state.quest_completed.connect(_on_quest_completed)
 	_refresh(false)
 
 
@@ -50,6 +56,7 @@ func _process(delta: float) -> void:
 	var offset_x := 60.0 * _slide * _slide
 	_title.position.x = offset_x
 	_text.position.x = offset_x
+	_side.position.x = offset_x
 	queue_redraw()
 
 
@@ -58,11 +65,12 @@ func _draw() -> void:
 		return
 	var font := _text.get_theme_font("font")
 	var width := 0.0
-	for label: Label in [_title, _text]:
+	for label: Label in ([_title, _text, _side] if _side.visible else [_title, _text]):
 		var size_px := label.get_theme_font_size("font_size")
 		width = maxf(width, font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, size_px).x)
 	width = minf(width, size.x)
-	var content_h := _text.position.y + _text.size.y
+	var last := _side if _side.visible else _text
+	var content_h := last.position.y + last.size.y
 	var slide_x := 60.0 * _slide * _slide
 	var rect := Rect2(size.x - width - PAD.x + slide_x, -PAD.y, width + PAD.x * 2.0, content_h + PAD.y * 2.0)
 	# Brillo detrás al cambiar.
@@ -90,11 +98,23 @@ func _on_quest_changed(_quest_id: StringName) -> void:
 	_refresh(true)
 
 
+func _on_quest_completed(quest_id: StringName) -> void:
+	var quest := QuestDB.get_quest(quest_id)
+	if quest and quest.category != Quest.Category.PRINCIPAL:
+		var reward := " (+%d Ecos)" % quest.ecos_reward if quest.ecos_reward > 0 else ""
+		get_tree().call_group(&"toast", &"show_message", "%s completada: %s%s" % [Quest.CATEGORY_NAMES[quest.category], quest.title, reward], 3.0)
+	_refresh(true)
+
+
 func _refresh(flash: bool) -> void:
 	var game_state := get_node("/root/GameState")
 	var objective: String = game_state.get_objective_text()
-	visible = not objective.is_empty()
 	_text.text = objective
+	var side_id: StringName = game_state.get_side_quest()
+	var side_quest := QuestDB.get_quest(side_id)
+	_side.text = "ACTIVIDAD · %s: %s" % [side_quest.title, game_state.get_quest_objective(side_id)] if side_quest else ""
+	_side.visible = not _side.text.is_empty()
+	visible = not objective.is_empty() or _side.visible
 	var quest := QuestDB.get_quest(game_state.active_quest)
 	_quest_title = quest.title.to_upper() if quest and not quest.title.is_empty() else ""
 	if flash and visible:

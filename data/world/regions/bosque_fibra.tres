@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"bosque_fibra"
+display_name = "Bosque de Fibra"
+kind = 1
+description = "Naturaleza digital: árboles de fibra óptica, raíces de cables, plantas luminosas y caminos ocultos que se ven con la Visión Digital."
+concepts = PackedStringArray("Redes", "Conectividad", "Transmisión", "Flujo de datos")
+districts = PackedStringArray("bosque_fibra")
+secret = false
+map_position = Vector2(0.0, 1.8)
+map_size = Vector2(2.8, 1.8)
+color = Color(0.2431, 0.9490, 1.0000, 1)

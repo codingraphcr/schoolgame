@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Misión secundaria «Sin señal en el barrio» (Capítulo 3): empieza en la calle de Kai.
+(La luz de la caja de fibra del poste parpadea en rojo.)
+Vecino: ¡Kai! Usted sabe de computadoras, ¿verdad? Desde anoche no hay internet en toda la cuadra.
+Vecino: La compañía dice que vienen la otra semana... y la señora del 22 trabaja desde la casa.
+Kai: Voy a echarle un vistazo, don.
+(Kai mira la caja del poste. Tal vez la Visión Digital muestre qué pasa.)"

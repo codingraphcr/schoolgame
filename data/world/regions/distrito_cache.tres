@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"distrito_cache"
+display_name = "Distrito Caché"
+kind = 1
+description = "Gran ciudad digital: edificios, mercados, pasarelas, comerciantes y datos olvidados. Accesos y permisos."
+concepts = PackedStringArray("Accesos y permisos", "Comercio de Ecos")
+districts = PackedStringArray()
+secret = false
+map_position = Vector2(3.6, 1.0)
+map_size = Vector2(3.0, 2.0)
+color = Color(0.9490, 0.7569, 0.3059, 1)

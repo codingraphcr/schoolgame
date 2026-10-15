@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 7
+flags = PackedStringArray("canales_sector_restaurado")
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "La corriente está contaminada."
+
+[resource]
+script = ExtResource("1_link")
+id = &"canales_archivo"
+region_a = &"canales_corruptos"
+region_b = &"archivo_criogenico"
+kind = 2
+one_way = false
+access_point = "Una corriente vertical restaurada"
+purpose = "Atajo que aparece al restaurar un sector de los Canales."
+requirement = SubResource("Requirement")

@@ -116,7 +116,8 @@ func _dissolve(from: float, to: float, seconds: float, inward: bool) -> void:
 		while spawn >= 1.0:
 			spawn -= 1.0
 			_fragment(inward)
-		await get_tree().process_frame
+		if not await FrameWait.process(self):
+			return
 	_set_dissolve(to)
 
 

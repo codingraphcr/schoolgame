@@ -14,11 +14,13 @@ extends RefCounted
 
 ## Las misiones de la historia, en orden (cada una empieza la siguiente al completarse).
 const CHAIN: Array[StringName] = [&"prologo", &"contrasena_profesor", &"cuarto_viejo", &"una_clase_diferente",
-	&"travesuras_en_el_sistema", &"el_lenguaje_de_las_maquinas", &"codigo_fuera_de_control"]
+	&"travesuras_en_el_sistema", &"camino_a_casa", &"el_lenguaje_de_las_maquinas", &"codigo_fuera_de_control"]
 
 const Z := "res://world/zones/zone0/"
 const RED := "res://world/zones/red_entrenamiento/"
 const SIM := "res://world/zones/simulador/"
+const BARRIO := "res://world/zones/barrio/"
+const FIBRA := "res://world/zones/bosque_fibra/"
 
 const POINTS: Array[Dictionary] = [
 	{ "grupo": "Prólogo", "nombre": "Inicio del juego (la entrada)", "escena": Z + "entrada.tscn", "entrada": &"",
@@ -34,6 +36,9 @@ const POINTS: Array[Dictionary] = [
 	{ "grupo": "Capítulo 1", "nombre": "Persecución corta (pasillo y escaleras)", "escena": Z + "pasillo.tscn",
 		"entrada": &"desde_sala_3", "sala": &"pasillo", "mision": [&"una_clase_diferente", &"seguir_criaturas"],
 		"habilidades": [&"vision", &"nullblade"], "marcas": [] },
+	{ "grupo": "Capítulo 1", "nombre": "Persecución larga (pasillo del segundo piso)", "escena": Z + "pasillo_segundo.tscn",
+		"entrada": &"desde_escaleras", "sala": &"pasillo_segundo", "mision": [&"una_clase_diferente", &"seguir_criaturas"],
+		"habilidades": [&"vision", &"nullblade"], "marcas": [] },
 	{ "grupo": "Capítulo 1", "nombre": "Biblioteca (el archivo privado)", "escena": Z + "biblioteca.tscn",
 		"entrada": &"desde_escaleras", "sala": &"biblioteca", "mision": [&"una_clase_diferente", &"biblioteca"],
 		"habilidades": [&"vision", &"nullblade"], "marcas": [] },
@@ -43,6 +48,18 @@ const POINTS: Array[Dictionary] = [
 	{ "grupo": "Capítulo 1", "nombre": "Persecución digital · tramo 1", "escena": RED + "persecucion.tscn", "entrada": &"inicio",
 		"sala": &"persecucion", "mision": [&"travesuras_en_el_sistema", &"seguirlos_adentro"],
 		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 1", "nombre": "Camino a casa · los amigos en la entrada", "escena": Z + "entrada.tscn",
+		"entrada": &"desde_pasillo", "sala": &"entrada", "mision": [&"camino_a_casa", &"charla_amigos"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 1", "nombre": "Camino a casa · la calle del barrio", "escena": BARRIO + "calle.tscn",
+		"entrada": &"desde_colegio", "sala": &"calle", "mision": [&"camino_a_casa", &"volver_a_casa"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 1", "nombre": "Casa de Kai · la charla familiar", "escena": BARRIO + "casa.tscn",
+		"entrada": &"desde_calle", "sala": &"casa", "mision": [&"camino_a_casa", &"hablar_familia"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 1", "nombre": "Cuarto de Kai · la noche (descansar)", "escena": BARRIO + "cuarto_kai.tscn",
+		"entrada": &"desde_casa", "sala": &"cuarto_kai", "mision": [&"camino_a_casa", &"descansar"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [&"cap1_charla_familiar"] },
 	{ "grupo": "Capítulo 1", "nombre": "Persecución digital · tramo 2", "escena": RED + "persecucion.tscn", "entrada": &"checkpoint_1",
 		"sala": &"persecucion", "mision": [&"travesuras_en_el_sistema", &"persecucion"],
 		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [&"cap1_checkpoint_1"] },
@@ -79,6 +96,15 @@ const POINTS: Array[Dictionary] = [
 		"entrada": &"desde_simulador", "sala": &"laboratorio", "mision": [&"codigo_fuera_de_control", &"hablar_profesor"],
 		"habilidades": [&"vision", &"nullblade", &"inmersion"],
 		"marcas": [&"cap2_bucle_vencido", &"cap2_bucle_liberado", &"cap2_condicion_corregida", &"cap2_anomalia_vista", &"cap2_simulador_terminado"] },
+	{ "grupo": "Mundo (Capítulo 3)", "nombre": "Sin señal en el barrio · la caja de fibra", "escena": BARRIO + "calle.tscn",
+		"entrada": &"desde_casa", "sala": &"calle", "mision": [], "habilidades": [&"vision", &"nullblade", &"inmersion"],
+		"marcas": [&"capitulo_3"] },
+	{ "grupo": "Mundo (Capítulo 3)", "nombre": "Bosque de Fibra · raíces (seguir al Fibroluz)", "escena": FIBRA + "fibra_raices.tscn",
+		"entrada": &"desde_barrio", "sala": &"fibra_raices", "mision": [&"senal_del_barrio", &"seguir_fibroluz"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [&"capitulo_3"] },
+	{ "grupo": "Mundo (Capítulo 3)", "nombre": "Bosque de Fibra · el claro (reconectar)", "escena": FIBRA + "fibra_claro.tscn",
+		"entrada": &"desde_raices", "sala": &"fibra_claro", "mision": [&"senal_del_barrio", &"reconectar"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [&"capitulo_3"] },
 ]
 
 
@@ -108,8 +134,17 @@ static func prepare(point: Dictionary, state: Node) -> void:
 
 
 ## Completa en orden las misiones de la historia hasta que la actual sea quest_id en step_id (con los dos
-## vacíos, todas).
+## vacíos, todas). Si quest_id es una actividad (no está en CHAIN), termina toda la historia armada y avanza esa
+## actividad hasta el paso.
 static func _advance(state: Node, quest_id: StringName, step_id: StringName) -> void:
+	if quest_id != &"" and not CHAIN.has(quest_id):
+		_advance(state, &"", &"")
+		state.start_quest(quest_id)
+		for step in QuestDB.get_quest(quest_id).steps:
+			if step.id == step_id:
+				return
+			state.complete_step(quest_id, step.id)
+		return
 	state.start_quest(CHAIN[0])
 	for chain_quest in CHAIN:
 		if chain_quest == quest_id and state.get_current_step(chain_quest) == step_id:

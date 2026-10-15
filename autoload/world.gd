@@ -150,6 +150,7 @@ func enter(scene_path: String, hint: StringName = &"") -> StringName:
 	current_district = district_of(room_id)
 	if room_id != &"":
 		visited[room_id] = true
+		_discover_region(room_id)
 		room_entered.emit(room_id, current_district)
 	return room_id
 
@@ -185,3 +186,14 @@ func _add_district(district: RoomGraph) -> void:
 			continue
 		_room_district[room_id] = district.district_id
 	districts[district.district_id] = district
+
+
+## Primera vez en una región del mapa maestro (WorldAtlas): queda marcada y se avisa (desde el Capítulo 1;
+## en el prólogo, el colegio no es un «descubrimiento»).
+func _discover_region(room_id: StringName) -> void:
+	var state := get_node_or_null("/root/GameState")
+	if state == null:
+		return
+	var region := WorldAtlas.enter_room(room_id, state, self)
+	if region and ProgressTracker.chapter(state) >= 1:
+		get_tree().call_group.call_deferred(&"toast", &"show_message", "Región descubierta: %s" % region.display_name, 3.0)

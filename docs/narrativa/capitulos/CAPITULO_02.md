@@ -10,8 +10,10 @@ a punta con arte provisional por código.
 
 ## 1. Punto de partida
 
-Después de «FIN DEL CAPÍTULO 1» Kai aparece en la entrada del colegio. Tiene Visión Digital, Inmersión Digital,
-`Nullblade.exe` con el dash y el Grimorio. (El **Dominio Nulo I** ya no se obtiene en este capítulo con Bucle: dónde, por definir.)
+Después de «FIN DEL CAPÍTULO 1» Kai vuelve a casa (misión «Camino a casa», `docs/escenarios/HOGAR_DE_KAI.md`). El
+capítulo empieza **a la mañana siguiente**, en su cuarto («CAPÍTULO 2 · LOS PRIMEROS CÓDIGOS» al despertar): Kai
+desayuna con su familia y va caminando al colegio. Tiene Visión Digital, Inmersión Digital, `Nullblade.exe` con el
+dash y el Grimorio. (El **Dominio Nulo I** no se obtiene en este capítulo: provisionalmente, en el Capítulo 4; Biblia v1.8.)
 
 ## 2. Objetivos educativos (décimo, a validar con el programa completo del MEP)
 

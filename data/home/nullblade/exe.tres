@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="NullbladeForm" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://systems/home/nullblade_form.gd" id="1_form"]
+[ext_resource type="Script" path="res://systems/home/keepsake_note.gd" id="2_note"]
+
+[sub_resource type="Resource" id="Note_0"]
+script = ExtResource("2_note")
+min_chapter = 0
+text = "Todavía no entiendo por qué me eligió a mí. O si yo la elegí a ella."
+
+[resource]
+script = ExtResource("1_form")
+stage = 1
+display_name = "Nullblade.exe"
+description = "Una espada de luz y código. Aparece cuando Kai la necesita y se apaga cuando no."
+history = "Kai la encontró a oscuras en el cuarto viejo del colegio, junto al Grimorio, gracias a la Visión Digital. Nadie le ha dicho de dónde salió."
+abilities = PackedStringArray("Ataque básico", "Dash")
+notes = Array[ExtResource("2_note")]([SubResource("Note_0")])

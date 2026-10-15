@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 10
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Se abre en duodécimo."
+
+[resource]
+script = ExtResource("1_link")
+id = &"archivo_santuario"
+region_a = &"archivo_criogenico"
+region_b = &"santuario_raiz"
+kind = 0
+one_way = false
+access_point = "Los registros antiguos del Archivo"
+purpose = "Llegar al Santuario requiere comprender sus registros."
+requirement = SubResource("Requirement")

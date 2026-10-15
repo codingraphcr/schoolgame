@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 5
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray("aegis_bridge")
+locked_text = "Demasiado profundo por ahora."
+
+[resource]
+script = ExtResource("1_link")
+id = &"bosque_nucleo"
+region_a = &"bosque_fibra"
+region_b = &"nucleo_termico"
+kind = 4
+one_way = false
+access_point = "Raíces calientes que bajan al Núcleo"
+purpose = "Ruta alternativa que no pasa por el Distrito Caché."
+requirement = SubResource("Requirement")

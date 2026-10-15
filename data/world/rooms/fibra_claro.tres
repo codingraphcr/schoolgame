@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_c0syy"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_48ece"]
+
+[sub_resource type="Resource" id="Resource_b1coc"]
+script = ExtResource("1_c0syy")
+id = &"oeste"
+side = 0
+entry_id = &"desde_raices"
+
+[resource]
+script = ExtResource("2_48ece")
+id = &"fibra_claro"
+display_name = "El claro del corte"
+scene_path = "res://world/zones/bosque_fibra/fibra_claro.tscn"
+room_type = &"digital"
+district_id = &"bosque_fibra"
+size_cells = Vector2i(2, 1)
+doors = Array[ExtResource("1_c0syy")]([SubResource("Resource_b1coc")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 3
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray("Conectividad: la señal necesita un camino completo")
+mission_ids = PackedStringArray("senal_del_barrio")

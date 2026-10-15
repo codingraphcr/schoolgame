@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Keepsake" format=3]
+
+[ext_resource type="Script" path="res://systems/home/keepsake.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/home/keepsake_note.gd" id="2_note"]
+
+[sub_resource type="Resource" id="Note_0"]
+script = ExtResource("2_note")
+min_chapter = 0
+text = "Este bosque estaba antes que yo. ¿Quién lo hizo?"
+
+[resource]
+script = ExtResource("1_item")
+id = &"fragmento_bosque"
+display_name = "Fragmento de Datos del Bosque de Fibra"
+category = 1
+description = "Un fragmento escondido entre las raíces de fibra, en un camino que solo se ve con la Visión Digital."
+unlock_flag = &"fibra_fragmento_recogido"
+notes = Array[ExtResource("2_note")]([SubResource("Note_0")])
+data_lines = PackedStringArray("REGISTRO: RED DE DISTRIBUCIÓN", "ORIGEN: ANTERIOR AL COLEGIO")
+art = &"fragmento"
+shelf_slot = 2

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 9
+flags = PackedStringArray("tunel_cartago_descubierto")
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Un túnel derrumbado."
+
+[resource]
+script = ExtResource("1_link")
+id = &"cartago_conductos"
+region_a = &"altos_cartago"
+region_b = &"conductos_silencio"
+kind = 3
+one_way = false
+access_point = "Los túneles de una instalación antigua de los Altos"
+purpose = "Otra entrada a los Conductos (ruta alternativa)."
+requirement = SubResource("Requirement")

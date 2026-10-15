@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(El Fibroluz se detiene junto a un cable cortado y se le apaga el paquete de luz.)
+Kai: Aquí se corta. La señal sale de ese nodo, pero los empalmes apuntan para cualquier lado.
+Kai: Si un solo tramo no apunta al siguiente, la información no llega. Tengo que reconectarlos en orden."

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 1, «Camino a casa»: los amigos de Kai lo esperan en la entrada al terminar la jornada.
+Compañera: ¡Kai! Por fin salís. Te estábamos esperando.
+Compañero: Mae, ¿viste cómo se pusieron las compus de la Sala 3? Parecían poseídas.
+Kai: Sí... algo así.
+Compañera: Y vos saliste corriendo detrás de no sé qué. ¿Estás bien?
+Kai: Creo que sí. Fue un día raro.
+Compañero: Raro es poco. Bueno, ya sonó el timbre: ¡nos vemos mañana!
+Compañera: Descansá, Kai. Tenés cara de haber corrido una maratón.
+(Se despiden. Terminaron las clases.)"

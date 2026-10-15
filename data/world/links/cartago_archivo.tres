@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 8
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Se abre más adelante."
+
+[resource]
+script = ExtResource("1_link")
+id = &"cartago_archivo"
+region_a = &"altos_cartago"
+region_b = &"archivo_criogenico"
+kind = 1
+one_way = false
+access_point = "La antigua estación de comunicaciones de los Altos"
+purpose = "Registros guardados hace años."
+requirement = SubResource("Requirement")

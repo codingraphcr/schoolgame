@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(La caja de juguetes de cuando Kai era chiquito: un carrito, una pelota y un dinosaurio sin cola.)
+Kai: Debería regalarlos... pero todavía no me animo."

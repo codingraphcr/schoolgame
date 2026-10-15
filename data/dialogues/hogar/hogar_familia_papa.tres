@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 1, «Camino a casa»: la primera charla familiar (parte 2, papá). Frases con doble sentido, sin explicarlas.
+Papá: Kai, vení. Quiero decirte algo.
+Kai: ¿Hice algo malo?
+Papá: No, hijo. Todo lo contrario.
+Papá: Hay momentos en los que uno descubre que puede hacer cosas que antes parecían imposibles.
+Kai: ¿Y eso es bueno?
+Papá: Depende de lo que decidás hacer con ellas.
+Kai: ¿Cómo así?
+Papá: Tener la capacidad de hacer algo no significa que siempre debás hacerlo.
+Papá: Lo importante es pensar en cómo nuestras decisiones afectan a los demás.
+Papá: Recordá esto, Kai: cuanto más grande sea tu capacidad de cambiar las cosas, mayor será tu responsabilidad de hacer lo correcto.
+Kai: Creo que entiendo, pa.
+Papá: Eso espero, hijo.
+(Mamá y papá se miran un instante.)
+Mamá: Bueno, ¡a lavarse las manos, que ya casi está la cena!"

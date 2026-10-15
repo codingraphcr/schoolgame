@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"laboratorio_genesis"
+display_name = "Laboratorio Génesis"
+kind = 0
+description = "Instalación profunda y secreta, vinculada al profesor Alvarado y su organización."
+concepts = PackedStringArray("Revelaciones")
+districts = PackedStringArray()
+secret = true
+map_position = Vector2(3.0, 4.9)
+map_size = Vector2(2.4, 1.0)
+color = Color(0.7843, 0.7843, 0.9098, 1)

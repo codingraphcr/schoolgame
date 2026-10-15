@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ComputerEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/home/computer_entry.gd" id="1_pc"]
+
+[resource]
+script = ExtResource("1_pc")
+section = 1
+title = "Feria de ciencias (idea)"
+from = "Proyecto personal"
+body = "Idea: un robot que avise si alguien abre la puerta del cuarto. Materiales: el kit de electrónica, una caja de zapatos y paciencia."
+min_chapter = 0
+requires_flag = &""
+hidden_flag = &""

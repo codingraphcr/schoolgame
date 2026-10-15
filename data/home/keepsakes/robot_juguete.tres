@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="Keepsake" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://systems/home/keepsake.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/home/keepsake_note.gd" id="2_note"]
+
+[sub_resource type="Resource" id="Note_0"]
+script = ExtResource("2_note")
+min_chapter = 0
+text = "Mi papá me ayudó a repararlo cuando era pequeño. Creo que fue la primera vez que me interesó la tecnología."
+
+[sub_resource type="Resource" id="Note_1"]
+script = ExtResource("2_note")
+min_chapter = 5
+text = "A veces me pregunto por qué siempre me interesaron tanto las máquinas."
+
+[sub_resource type="Resource" id="Note_2"]
+script = ExtResource("2_note")
+min_chapter = 9
+text = "Durante mucho tiempo pensé que lo importante era saber quién había construido algo. Ahora creo que también importa lo que hacemos con ello."
+
+[resource]
+script = ExtResource("1_item")
+id = &"robot_juguete"
+display_name = "Robot de juguete"
+category = 0
+description = "Un pequeño robot que Kai conserva desde que era niño. Tiene una rueda dañada y una pegatina casi borrada."
+unlock_flag = &""
+notes = Array[ExtResource("2_note")]([SubResource("Note_0"), SubResource("Note_1"), SubResource("Note_2")])
+art = &"robot"
+shelf_slot = 0

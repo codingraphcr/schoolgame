@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 6
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Se abre en undécimo."
+
+[resource]
+script = ExtResource("1_link")
+id = &"nucleo_canales"
+region_a = &"nucleo_termico"
+region_b = &"canales_corruptos"
+kind = 0
+one_way = false
+access_point = "Los desagües térmicos"
+purpose = "Lo que el Núcleo descarta termina en los Canales."
+requirement = SubResource("Requirement")

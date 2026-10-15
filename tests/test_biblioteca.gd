@@ -10,6 +10,7 @@ extends SceneTree
 const PASILLO := "res://world/zones/zone0/pasillo.tscn"
 const STAIRS := "res://world/zones/zone0/escaleras.tscn"
 const LIBRARY := "res://world/zones/zone0/biblioteca.tscn"
+const CORRIDOR := "res://world/zones/zone0/pasillo_segundo.tscn"
 ## Descansos de la escalera (arriba = donde pisa Kai), del piso de abajo al de arriba.
 const LANDINGS := [Rect2(200, 246, 96, 10), Rect2(340, 188, 96, 10), Rect2(200, 130, 96, 10),
 	Rect2(60, 72, 96, 10), Rect2(200, 14, 96, 10), Rect2(330, -48, 310, 16)]
@@ -46,9 +47,12 @@ func _test_map() -> void:
 	_check(school.rooms.has(&"escaleras") and school.rooms.has(&"biblioteca") and school.is_linked(&"pasillo", &"escalera")
 		and school.is_linked(&"escaleras", &"este"), "el Colegio tiene las escaleras y la biblioteca, conectadas")
 	var up: Dictionary = world.destination(&"pasillo", &"escalera")
-	var library: Dictionary = world.destination(&"escaleras", &"este")
+	var corridor: Dictionary = world.destination(&"escaleras", &"este")
+	var library: Dictionary = world.destination(&"pasillo_segundo", &"este")
 	_check(up.get("scene") == STAIRS and up.get("entry") == &"desde_pasillo", "la escalera del Pasillo sube a las escaleras")
-	_check(library.get("scene") == LIBRARY and library.get("entry") == &"desde_escaleras", "el segundo piso lleva a la biblioteca")
+	_check(corridor.get("scene") == CORRIDOR and corridor.get("entry") == &"desde_escaleras"
+		and library.get("scene") == LIBRARY and library.get("entry") == &"desde_escaleras",
+		"el segundo piso lleva al pasillo del segundo piso, y ese pasillo a la biblioteca")
 	_check(world.template_of(&"escaleras").size_cells == Vector2i(1, 2) and world.template_of(&"biblioteca").room_type == &"library",
 		"las fichas: escaleras de 2 pisos y una biblioteca")
 	_check(not world.lock_reason(&"escaleras").is_empty() and not world.lock_reason(&"biblioteca").is_empty()
@@ -84,12 +88,21 @@ func _test_climb() -> void:
 		await _hop_to(target, direction, "descanso %d" % (i + 1))
 		from = target
 	_walk(1)
+	await _until(func() -> bool: return current_scene != null and current_scene.scene_file_path == CORRIDOR and current_scene.is_node_ready())
+	_release_all()
+	await _frames(10)
+	player = (current_scene as Room).player
+	_check(world.current_room == &"pasillo_segundo" and player.global_position.distance_to(Vector2(40, 304)) < 2.0,
+		"arriba, la salida del segundo piso lleva al pasillo del segundo piso (%s)" % player.global_position)
+	# Por el pasillo (largo) hasta la biblioteca.
+	await _drop_on(Vector2(1800, 290))
+	_walk(1)
 	await _until(func() -> bool: return current_scene != null and current_scene.scene_file_path == LIBRARY and current_scene.is_node_ready())
 	_release_all()
 	await _frames(10)
 	player = (current_scene as Room).player
 	_check(world.current_room == &"biblioteca" and player.global_position.distance_to(Vector2(40, 304)) < 2.0,
-		"arriba, la salida del segundo piso lleva a la biblioteca (%s)" % player.global_position)
+		"y al final del pasillo está la biblioteca (%s)" % player.global_position)
 
 
 func _test_library_and_back() -> void:
@@ -97,11 +110,18 @@ func _test_library_and_back() -> void:
 	_check(absf(player.global_position.y - 240.0) <= 1.0, "una estantería baja sirve de plataforma (y=%.0f)" % player.global_position.y)
 	await _drop_on(Vector2(40, 290))
 	_walk(-1)
+	await _until(func() -> bool: return current_scene != null and current_scene.scene_file_path == CORRIDOR and current_scene.is_node_ready())
+	_release_all()
+	await _frames(10)
+	player = (current_scene as Room).player
+	_check(player.global_position.distance_to(Vector2(1860, 304)) < 2.0, "de la biblioteca se vuelve al pasillo del segundo piso (%s)" % player.global_position)
+	await _drop_on(Vector2(100, 290))
+	_walk(-1)
 	await _until(func() -> bool: return current_scene != null and current_scene.scene_file_path == STAIRS and current_scene.is_node_ready())
 	_release_all()
 	await _frames(10)
 	player = (current_scene as Room).player
-	_check(player.global_position.distance_to(Vector2(600, -48)) < 2.0, "de la biblioteca se vuelve al segundo piso (%s)" % player.global_position)
+	_check(player.global_position.distance_to(Vector2(600, -48)) < 2.0, "y del pasillo, a las escaleras (%s)" % player.global_position)
 	await _drop_on(Vector2(32, 290))
 	await _action(&"interact")
 	await _until(func() -> bool: return current_scene != null and current_scene.scene_file_path == PASILLO and current_scene.is_node_ready())

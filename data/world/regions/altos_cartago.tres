@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"altos_cartago"
+display_name = "Altos de Cartago"
+kind = 0
+description = "Montañas, arquitectura histórica, ruinas e instalaciones tecnológicas abandonadas (inspiración: Cartago). Investigación y archivos antiguos."
+concepts = PackedStringArray("Investigación", "Archivos antiguos")
+districts = PackedStringArray()
+secret = false
+map_position = Vector2(7.4, 0.2)
+map_size = Vector2(2.8, 1.8)
+color = Color(0.5412, 0.6588, 0.4157, 1)

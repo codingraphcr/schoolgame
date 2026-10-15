@@ -343,8 +343,10 @@ func start_quest(quest_id: StringName) -> bool:
 		push_error("GameState: la misión '%s' no está registrada en QuestDB." % quest_id)
 		return false
 	_quest_progress[quest_id] = 0
-	active_quest = quest_id
 	var quest := QuestDB.get_quest(quest_id)
+	# Una actividad secundaria no le quita el lugar a la historia (solo lo ocupa si no hay misión activa).
+	if quest.category == Quest.Category.PRINCIPAL or active_quest == &"":
+		active_quest = quest_id
 	if quest.start_flag != &"":
 		set_flag(quest.start_flag)
 	quest_started.emit(quest_id)
@@ -385,6 +387,36 @@ func complete_step(quest_id: StringName, step_id: StringName) -> bool:
 	if quest.next_quest != &"":
 		start_quest(quest.next_quest)
 	return true
+
+
+## La actividad secundaria (secundaria, tarea o descubrimiento) en curso que no es la misión activa, o vacío
+## (si hay varias, la última que empezó).
+func get_side_quest() -> StringName:
+	var result: StringName = &""
+	for quest_id: StringName in _quest_progress:
+		if quest_id == active_quest or _quest_progress[quest_id] < 0:
+			continue
+		var quest := QuestDB.get_quest(quest_id)
+		if quest and quest.category != Quest.Category.PRINCIPAL:
+			result = quest_id
+	return result
+
+
+## Objetivo del paso actual de una misión ("" si no empezó o terminó).
+func get_quest_objective(quest_id: StringName) -> String:
+	var quest := QuestDB.get_quest(quest_id)
+	var index: int = _quest_progress.get(quest_id, -2)
+	if quest == null or index < 0 or index >= quest.steps.size():
+		return ""
+	return quest.steps[index].objective
+
+
+## Las misiones que empezaron (en curso o terminadas), en el orden en que empezaron.
+func get_started_quests() -> Array[StringName]:
+	var result: Array[StringName] = []
+	for quest_id: StringName in _quest_progress:
+		result.append(quest_id)
+	return result
 
 
 func is_quest_completed(quest_id: StringName) -> bool:

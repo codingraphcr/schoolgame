@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="RegionLink" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/region_link.gd" id="1_link"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Requirement"]
+script = ExtResource("2_req")
+min_chapter = 9
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+locked_text = "Sin autorización."
+
+[resource]
+script = ExtResource("1_link")
+id = &"cache_archivo"
+region_a = &"distrito_cache"
+region_b = &"archivo_criogenico"
+kind = 0
+one_way = false
+access_point = "La puerta de permisos del Distrito Caché"
+purpose = "Solo pasa quien tiene autorización."
+requirement = SubResource("Requirement")

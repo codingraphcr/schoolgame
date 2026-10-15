@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ComputerEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/home/computer_entry.gd" id="1_pc"]
+
+[resource]
+script = ExtResource("1_pc")
+section = 2
+title = "Cosas raras"
+from = "Notas de Kai"
+body = "1. La pantalla del colegio que decía «Por fin alguien está mirando».
+2. Chip y Glitch.
+3. ¿Por qué solo yo los veo?
+
+No le cuento a nadie todavía."
+min_chapter = 0
+requires_flag = &"capitulo_1_completado"
+hidden_flag = &""

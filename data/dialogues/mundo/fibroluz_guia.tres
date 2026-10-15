@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Kai: Hola, pequeñita. Tranquila, no te voy a hacer nada.
+(El Fibroluz da unos saltitos hacia adelante, se detiene y espera a Kai.)
+Kai: ¿Me querés enseñar algo?"

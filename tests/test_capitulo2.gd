@@ -51,10 +51,14 @@ func _run() -> void:
 func _test_start() -> void:
 	_check(root.get_node("World").lock_reason(&"sim_variables") != "", "antes del capítulo 2 el simulador está cerrado")
 	state.complete_step(Q2, &"hablar_profesor")
-	_check(state.is_quest_completed(Q2) and state.get_current_step(Q3) == &"clase_programacion" and state.has_flag(&"capitulo_2"),
-		"al terminar el capítulo 1 empieza el 2: «El lenguaje de las máquinas»")
+	_check(state.is_quest_completed(Q2) and state.get_current_step(&"camino_a_casa") == &"charla_amigos" and not state.has_flag(&"capitulo_2"),
+		"al terminar el capítulo 1, primero Kai vuelve a casa («Camino a casa», test_hogar.gd)")
+	for step in [&"charla_amigos", &"volver_a_casa", &"hablar_familia", &"descansar"]:
+		state.complete_step(&"camino_a_casa", step)
+	_check(state.is_quest_completed(&"camino_a_casa") and state.get_current_step(Q3) == &"clase_programacion" and state.has_flag(&"capitulo_2"),
+		"a la mañana siguiente empieza el capítulo 2: «El lenguaje de las máquinas»")
 	_check(ProgressTracker.chapter(state) == 2 and root.get_node("World").lock_reason(&"sim_variables") == "", "la partida está en el capítulo 2 y el simulador se abre")
-	_check(QuestDB.get_quest(Q2).followup_title == "CAPÍTULO 2", "después de «FIN DEL CAPÍTULO 1» aparece «CAPÍTULO 2 · LOS PRIMEROS CÓDIGOS»")
+	_check(QuestDB.get_quest(&"camino_a_casa").completion_title == "CAPÍTULO 2", "al despertar aparece «CAPÍTULO 2 · LOS PRIMEROS CÓDIGOS»")
 
 
 func _test_class() -> void:

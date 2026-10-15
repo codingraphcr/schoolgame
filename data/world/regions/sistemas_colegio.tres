@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldRegion" format=3]
+
+[ext_resource type="Script" path="res://systems/world_map/world_region.gd" id="1_region"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[resource]
+script = ExtResource("1_region")
+id = &"sistemas_colegio"
+display_name = "Sistemas del colegio"
+kind = 1
+description = "Sistemas locales y controlados del colegio (la red de entrenamiento, el simulador de prácticas, la computadora del profesor): no son parte de la red de biomas."
+concepts = PackedStringArray("Entornos de práctica", "Simulación")
+districts = PackedStringArray("red_entrenamiento", "simulador", "pc_profesor")
+secret = false
+map_position = Vector2(0.0, 0.0)
+map_size = Vector2(2.4, 1.0)
+color = Color(0.6549, 0.4824, 1.0000, 1)
