@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 1, «Camino a casa»: Kai sale del colegio (una vez).
+(El sol se está escondiendo detrás de las montañas. El barrio huele a café y a tierra mojada.)
+Kai: Qué día... Todavía siento como si las cosas brillaran un poquito."

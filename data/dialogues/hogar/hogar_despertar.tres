@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 1, «Camino a casa»: después de la Resonancia Digital. Kai no entiende qué pasó.
+(Amanece. Kai se despierta de golpe.)
+Kai: ...¿Qué fue eso?
+Kai: Sentí como si la computadora me hablara. Una señal lejos... pero adentro de mi cabeza.
+Kai: Fue solo un sueño. ¿Verdad?"

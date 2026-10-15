@@ -1,0 +1,326 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_lmbng"]
+[ext_resource type="Script" path="res://world/home/phase_light.gd" id="2_tij21"]
+[ext_resource type="Script" path="res://world/home/house_props.gd" id="3_616yj"]
+[ext_resource type="Script" path="res://world/objects/examinable.gd" id="4_8mflg"]
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="5_xmbgm"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_fotos.tres" id="6_kvhkr"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_tele.tres" id="7_wquru"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_refri.tres" id="8_lpbly"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_estatura.tres" id="9_etry1"]
+[ext_resource type="Script" path="res://characters/npcs/familia/family_member.gd" id="10_cshrr"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_mama_dia.tres" id="11_a88fs"]
+[ext_resource type="Script" path="res://characters/npcs/npc_conversation.gd" id="12_5w4vw"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_mama_noche.tres" id="13_eq76a"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_mama_manana.tres" id="14_8njc2"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_pf_quieto.png" id="15_3t34h"]
+[ext_resource type="Script" path="res://components/interaction/interactable.gd" id="16_xto3j"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_papa_dia.tres" id="17_s4p6d"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_papa_noche.tres" id="18_1dj4e"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_papa_manana.tres" id="19_twvcc"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_pm_quieto.png" id="20_vpul7"]
+[ext_resource type="Script" path="res://world/home/home_story.gd" id="21_cu7ca"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_familia_mama.tres" id="22_xhcyv"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_familia_papa.tres" id="23_ep75q"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_padres_noche.tres" id="24_12f1h"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="25_4ihk1"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="26_c65w4"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="27_jlpf8"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="28_kphni"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="29_sju5p"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="30_bbwla"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="31_5wuv1"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="32_6ykyn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_26dn4"]
+size = Vector2(1104, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4lro0"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w445s"]
+size = Vector2(32, 400)
+
+[sub_resource type="Resource" id="Resource_wpq0o"]
+script = ExtResource("12_5w4vw")
+quest_id = &"camino_a_casa"
+step_id = &"descansar"
+dialogue = ExtResource("13_eq76a")
+
+[sub_resource type="Resource" id="Resource_vloc1"]
+script = ExtResource("12_5w4vw")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"clase_programacion"
+dialogue = ExtResource("14_8njc2")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fqm65"]
+atlas = ExtResource("15_3t34h")
+region = Rect2(0, 0, 96, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6kw4o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fqm65")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fqm65")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y0fup"]
+size = Vector2(48, 56)
+
+[sub_resource type="Resource" id="Resource_iecch"]
+script = ExtResource("12_5w4vw")
+quest_id = &"camino_a_casa"
+step_id = &"descansar"
+dialogue = ExtResource("18_1dj4e")
+
+[sub_resource type="Resource" id="Resource_jyu1h"]
+script = ExtResource("12_5w4vw")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"clase_programacion"
+dialogue = ExtResource("19_twvcc")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ysvph"]
+atlas = ExtResource("20_vpul7")
+region = Rect2(0, 0, 96, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v3okw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ysvph")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ysvph")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7y1su"]
+size = Vector2(48, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d5i61"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nha8p"]
+size = Vector2(12, 256)
+
+[node name="Casa" type="Node2D" unique_id=258031617 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_lmbng")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 1040, 360)
+music_track = &"hogar"
+
+[node name="Luz" type="CanvasModulate" parent="." unique_id=1230458086]
+script = ExtResource("2_tij21")
+indoors = true
+
+[node name="Props" type="Node2D" parent="." unique_id=1554021175]
+script = ExtResource("3_616yj")
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=604264440]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=2142866868]
+position = Vector2(520, 344)
+shape = SubResource("RectangleShape2D_26dn4")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=40947572]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_4lro0")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1479494976]
+position = Vector2(1056, 180)
+shape = SubResource("RectangleShape2D_w445s")
+
+[node name="Objetos" type="Node2D" parent="." unique_id=1797571886]
+
+[node name="Fotos" type="Area2D" parent="Objetos" unique_id=542231401]
+position = Vector2(180, 304)
+script = ExtResource("4_8mflg")
+dialogues = Array[ExtResource("5_xmbgm")]([ExtResource("6_kvhkr")])
+size = Vector2(90, 60)
+prompt_text = "E: mirar las fotos"
+prompt_offset = Vector2(-46.8, -78)
+
+[node name="Tele" type="Area2D" parent="Objetos" unique_id=1552191802]
+position = Vector2(494, 304)
+script = ExtResource("4_8mflg")
+dialogues = Array[ExtResource("5_xmbgm")]([ExtResource("7_wquru")])
+size = Vector2(70, 50)
+prompt_text = "E: ver la tele"
+prompt_offset = Vector2(-36.4, -68)
+
+[node name="Refri" type="Area2D" parent="Objetos" unique_id=1336904791]
+position = Vector2(906, 304)
+script = ExtResource("4_8mflg")
+dialogues = Array[ExtResource("5_xmbgm")]([ExtResource("8_lpbly")])
+size = Vector2(44, 60)
+prompt_text = "E: mirar la refri"
+prompt_offset = Vector2(-44.2, -78)
+
+[node name="Estatura" type="Area2D" parent="Objetos" unique_id=129540051]
+position = Vector2(958, 304)
+script = ExtResource("4_8mflg")
+dialogues = Array[ExtResource("5_xmbgm")]([ExtResource("9_etry1")])
+size = Vector2(24, 60)
+prompt_text = "E: mirar el marco"
+prompt_offset = Vector2(-44.2, -78)
+
+[node name="Familia" type="Node2D" parent="." unique_id=1192000819]
+
+[node name="Mama" type="Node2D" parent="Familia" unique_id=1024903453]
+position = Vector2(830, 304)
+script = ExtResource("10_cshrr")
+shirt_color = Color(0.84705883, 0.4627451, 0.41568628, 1)
+pants_color = Color(0.2901961, 0.2901961, 0.41568628, 1)
+routine = {
+0: [Vector2(790, 304), -1, &"cocinar"],
+1: [Vector2(830, 304), -1, &"cocinar"],
+2: [Vector2(612, 304), 1, &""],
+3: [Vector2(830, 304), -1, &"cocinar"]
+}
+display_name = "Mamá"
+dialogue = ExtResource("11_a88fs")
+repeat_dialogue = ExtResource("11_a88fs")
+conversations = Array[ExtResource("12_5w4vw")]([SubResource("Resource_wpq0o"), SubResource("Resource_vloc1")])
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Familia/Mama" unique_id=1672382626]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_6kw4o")
+animation = &"idle"
+offset = Vector2(0, -55)
+
+[node name="Interactable" type="Area2D" parent="Familia/Mama" unique_id=1081919621]
+script = ExtResource("16_xto3j")
+prompt_text = "E: hablar"
+prompt_offset = Vector2(-20, -74)
+
+[node name="Shape" type="CollisionShape2D" parent="Familia/Mama/Interactable" unique_id=50421968]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_y0fup")
+
+[node name="Papa" type="Node2D" parent="Familia" unique_id=1951033680]
+position = Vector2(330, 304)
+script = ExtResource("10_cshrr")
+shirt_color = Color(0.2901961, 0.47843137, 0.3529412, 1)
+pants_color = Color(0.41568628, 0.3529412, 0.2509804, 1)
+routine = {
+0: [Vector2(420, 304), 1, &"leer"],
+1: [Vector2(330, 304), 1, &"leer"],
+2: [Vector2(392, 304), 1, &""],
+3: [Vector2(668, 304), -1, &""]
+}
+display_name = "Papá"
+dialogue = ExtResource("17_s4p6d")
+repeat_dialogue = ExtResource("17_s4p6d")
+conversations = Array[ExtResource("12_5w4vw")]([SubResource("Resource_iecch"), SubResource("Resource_jyu1h")])
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Familia/Papa" unique_id=1400939255]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_v3okw")
+animation = &"idle"
+offset = Vector2(0, -55)
+
+[node name="Interactable" type="Area2D" parent="Familia/Papa" unique_id=930613515]
+script = ExtResource("16_xto3j")
+prompt_text = "E: hablar"
+prompt_offset = Vector2(-20, -74)
+
+[node name="Shape" type="CollisionShape2D" parent="Familia/Papa/Interactable" unique_id=16081088]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_7y1su")
+
+[node name="HomeStory" type="Node" parent="." unique_id=588953570 node_paths=PackedStringArray("mom", "dad")]
+script = ExtResource("21_cu7ca")
+mom = NodePath("../Familia/Mama")
+dad = NodePath("../Familia/Papa")
+mom_dialogue = ExtResource("22_xhcyv")
+dad_dialogue = ExtResource("23_ep75q")
+parents_dialogue = ExtResource("24_12f1h")
+
+[node name="Entries" type="Node2D" parent="." unique_id=400226147]
+
+[node name="DesdeCalle" type="Marker2D" parent="Entries" unique_id=748375125]
+position = Vector2(70, 304)
+script = ExtResource("25_4ihk1")
+id = &"desde_calle"
+
+[node name="DesdeCuarto" type="Marker2D" parent="Entries" unique_id=1179317741]
+position = Vector2(970, 304)
+script = ExtResource("25_4ihk1")
+id = &"desde_cuarto"
+facing = -1
+
+[node name="EscenaNoche" type="Marker2D" parent="Entries" unique_id=1924048447]
+position = Vector2(500, 304)
+script = ExtResource("25_4ihk1")
+id = &"escena_noche"
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1091053967]
+position = Vector2(70, 304)
+
+[node name="Exits" type="Node2D" parent="." unique_id=255560436]
+
+[node name="ToCalle" type="Area2D" parent="Exits" unique_id=1387470627]
+position = Vector2(6, 176)
+script = ExtResource("26_c65w4")
+door_id = &"oeste"
+target_scene = "res://world/zones/barrio/calle.tscn"
+target_entry = &"desde_casa"
+
+[node name="@CollisionShape2D@4" type="CollisionShape2D" parent="Exits/ToCalle" unique_id=1071870735]
+shape = SubResource("RectangleShape2D_d5i61")
+
+[node name="ToCuarto" type="Area2D" parent="Exits" unique_id=805183234]
+position = Vector2(1034, 176)
+script = ExtResource("26_c65w4")
+door_id = &"este"
+target_scene = "res://world/zones/barrio/cuarto_kai.tscn"
+target_entry = &"desde_casa"
+
+[node name="@CollisionShape2D@5" type="CollisionShape2D" parent="Exits/ToCuarto" unique_id=387780463]
+shape = SubResource("RectangleShape2D_nha8p")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=922834335 instance=ExtResource("27_jlpf8")]
+position = Vector2(70, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("28_kphni")
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1182706966 node_paths=PackedStringArray("target") instance=ExtResource("29_sju5p")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("30_bbwla")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("31_5wuv1")]
+layer = 40
+script = ExtResource("32_6ykyn")
+player = NodePath("../Player")

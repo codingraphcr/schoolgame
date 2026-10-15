@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_sa2kd"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_u6prh"]
+
+[sub_resource type="Resource" id="Resource_7umof"]
+script = ExtResource("1_sa2kd")
+id = &"oeste"
+side = 0
+kind = 1
+entry_id = &"desde_casa"
+
+[resource]
+script = ExtResource("2_u6prh")
+id = &"cuarto_kai"
+display_name = "Cuarto de Kai"
+scene_path = "res://world/zones/barrio/cuarto_kai.tscn"
+room_type = &"home"
+district_id = &"barrio"
+doors = Array[ExtResource("1_sa2kd")]([SubResource("Resource_7umof")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 1
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray("camino_a_casa")

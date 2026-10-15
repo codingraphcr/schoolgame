@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ComputerEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/home/computer_entry.gd" id="1_pc"]
+
+[resource]
+script = ExtResource("1_pc")
+section = 2
+title = "El sueño"
+from = "Notas de Kai"
+body = "Anoche la compu se prendió sola. O lo soñé. Escuché como una señal, lejos, y vi números. ¿01001011...?
+
+No me acuerdo del resto."
+min_chapter = 0
+requires_flag = &"resonancia_digital_1"
+hidden_flag = &""

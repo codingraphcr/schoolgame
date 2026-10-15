@@ -33,7 +33,9 @@ func _run() -> void:
 
 func _test_entrada() -> void:
 	var npcs := _npcs()
-	_check(npcs.size() == 3, "la Entrada tiene 3 NPC de fondo (hay %d)" % npcs.size())
+	var always := npcs.filter(func(npc: Node) -> bool: return not npc.has_node("StoryPresence"))
+	_check(always.size() == 3 and npcs.size() == 5,
+		"la Entrada tiene 3 NPC de fondo, más los 2 amigos de «Camino a casa» (hay %d y %d)" % [always.size(), npcs.size()])
 	for npc in npcs:
 		_check(absf(npc.global_position.y - FLOOR_Y) < 0.5, "%s está parado en el suelo" % npc.name)
 		_check(npc.find_children("*", "CollisionObject2D").is_empty(), "%s no choca con nada" % npc.name)

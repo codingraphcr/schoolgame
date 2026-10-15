@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="NullbladeForm" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://systems/home/nullblade_form.gd" id="1_form"]
+[ext_resource type="Script" path="res://systems/home/keepsake_note.gd" id="2_note"]
+
+[resource]
+script = ExtResource("1_form")
+stage = 3
+display_name = "Nullblade.void"
+description = "Una forma que distorsiona lo que toca."
+history = ""
+abilities = PackedStringArray("Ataques cargados", "Distorsión", "Debilita ciertas defensas")
+notes = Array[ExtResource("2_note")]([])

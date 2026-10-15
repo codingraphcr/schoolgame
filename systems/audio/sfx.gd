@@ -77,6 +77,12 @@ const RECIPES := {
 	# Bucle: cálido y redondo, con un saltito que se repite (como su instrucción).
 	&"voice_bucle": { "wave": "triangle", "freq": 620.0, "freq_end": 700.0, "dur": 0.05, "volume": 0.12, "arp": [[0.0, 1.0], [0.33, 1.2], [0.66, 1.0]], "lowpass": 2800.0 },
 	&"voice_amenaza": { "wave": "saw", "freq": 230.0, "freq_end": 190.0, "dur": 0.06, "volume": 0.1, "noise": 0.2, "crush": 9.0, "lowpass": 2200.0 },
+	&"voice_mama": { "wave": "triangle", "freq": 290.0, "freq_end": 270.0, "dur": 0.07, "attack": 0.01, "volume": 0.22, "vibrato": [4.0, 7.0], "lowpass": 1800.0 },
+	&"voice_papa": { "wave": "triangle", "freq": 140.0, "freq_end": 128.0, "dur": 0.09, "attack": 0.01, "volume": 0.3, "vibrato": [3.0, 5.0], "noise": 0.03, "lowpass": 1100.0 },
+	&"voice_companero": { "wave": "square", "freq": 260.0, "freq_end": 280.0, "dur": 0.05, "volume": 0.06, "duty": 0.35, "lowpass": 2000.0 },
+	&"voice_companera": { "wave": "square", "freq": 400.0, "freq_end": 420.0, "dur": 0.05, "volume": 0.06, "duty": 0.35, "lowpass": 2400.0 },
+	# Resonancia Digital: una señal lejana, como un módem a mucha distancia.
+	&"distant_signal": { "wave": "sine", "freq": 1320.0, "freq_end": 990.0, "dur": 2.2, "attack": 0.6, "volume": 0.07, "vibrato": [22.0, 30.0], "arp": [[0.0, 1.0], [0.2, 1.5], [0.35, 1.0], [0.55, 1.33], [0.75, 1.0]], "crush": 5.0, "lowpass": 2600.0 },
 	# Interfaz (suaves y bajos: en el menú se oyen solos)
 	&"ui_move": { "wave": "triangle", "freq": 900.0, "dur": 0.035, "volume": 0.07, "lowpass": 2400.0 },
 	&"ui_accept": { "wave": "triangle", "freq": 600.0, "freq_end": 1000.0, "dur": 0.09, "volume": 0.1, "lowpass": 2600.0 },

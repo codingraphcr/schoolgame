@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Mamá: ¡Buenos días! Te dejé gallo pinto en la mesa.
+Kai: Gracias, ma.
+Mamá: ¿Dormiste bien? Te escuché moverte toda la noche.
+Kai: Tuve un sueño raro... como si la compu me hablara.
+(Mamá deja de revolver la olla un segundo.)
+Mamá: Bueno... los sueños son sueños. Andá, que se te hace tarde para la clase del profe."

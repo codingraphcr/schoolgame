@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ComputerEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/home/computer_entry.gd" id="1_pc"]
+
+[resource]
+script = ExtResource("1_pc")
+section = 0
+title = "¿Viste lo de las compus?"
+from = "Compañero"
+body = "Mae, ¿viste lo que pasó con las computadoras del laboratorio? Todavía no entiendo cómo logramos arreglar eso 😂"
+min_chapter = 0
+requires_flag = &"capitulo_1_completado"
+hidden_flag = &""

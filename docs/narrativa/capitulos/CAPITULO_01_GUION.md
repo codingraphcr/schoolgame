@@ -165,6 +165,18 @@ después, Kai aparece en la **entrada del colegio** (no vuelve al cuarto).
 
 *Cuidado con la Biblia:* el profesor no explica nada ni dice qué es el archivo (reglas 3, 11 y 12). Kai no lo ve.
 
+### Después del capítulo · Camino a casa
+
+Misión `camino_a_casa`, entre el Capítulo 1 y el 2 (sin combate ni examen; detalle completo en
+`docs/escenarios/HOGAR_DE_KAI.md`). En la entrada, los amigos comentan el día («Mae, ¿viste cómo se pusieron las
+compus de la Sala 3?»). Objetivo: **«Regresá a casa.»** Kai cruza su barrio de tarde (opcional: el vecino, la
+pulpería, la parada, Canelo) y llega a su casa: la primera charla con mamá y papá («Recordá esto, Kai: cuanto más
+grande sea tu capacidad de cambiar las cosas, mayor será tu responsabilidad de hacer lo correcto»). Después de la
+cena, Kai explora su cuarto y se acuesta. Mientras duerme, los papás hablan a solas («¿Creés que ya empezó?» / «No lo
+sé.»), sin explicar nada. Esa noche, la **Resonancia Digital**; Kai despierta confundido y empieza el **Capítulo 2**.
+
+*Cuidado con la Biblia (v1.6):* los papás conocen parte del origen de Kai, pero no lo dicen; Kai no descubre nada.
+
 ---
 
 ## Datos de esta etapa

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Keepsake" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://systems/home/keepsake.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/home/keepsake_note.gd" id="2_note"]
+
+[sub_resource type="Resource" id="Note_0"]
+script = ExtResource("2_note")
+min_chapter = 0
+text = "La hicimos en el recreo y prometimos no quitárnosla nunca. Ya veremos cuánto dura la promesa."
+
+[resource]
+script = ExtResource("1_item")
+id = &"pulsera_amistad"
+display_name = "Pulsera de la amistad"
+category = 0
+description = "Una pulsera tejida con hilos de colores."
+unlock_flag = &"recuerdo_pulsera_amistad"
+notes = Array[ExtResource("2_note")]([SubResource("Note_0")])
+art = &"pulsera"
+shelf_slot = 3
