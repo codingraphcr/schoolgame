@@ -247,13 +247,15 @@ func face_player() -> void:
 
 ## Espera seconds de juego. Devuelve false si se interrumpió mientras tanto.
 func wait(seconds: float, epoch: int) -> bool:
+	if not is_inside_tree():
+		return false
 	await get_tree().create_timer(seconds, false, true).timeout
 	return still(epoch)
 
 
-## Si el ataque de esta época puede seguir.
+## Si el ataque de esta época puede seguir (si la sala se cerró a mitad, no).
 func still(epoch: int) -> bool:
-	return epoch == _epoch and not is_dead and not frozen and not stunned and not downed
+	return epoch == _epoch and not is_dead and not frozen and not stunned and not downed and is_inside_tree()
 
 
 ## Aviso visual antes de un ataque (un «!» de su color). Devuelve false si se interrumpió.
@@ -318,7 +320,8 @@ func blink_to(x: float, epoch: int) -> bool:
 func jump(height: float, epoch: int, horizontal := 0.0) -> bool:
 	velocity = Vector2(horizontal, -sqrt(2.0 * _gravity() * height))
 	_squash = Vector2(0.8, 1.2)
-	await get_tree().physics_frame
+	if not await FrameWait.physics(self):
+		return false
 	var elapsed := 0.0
 	while not is_on_floor() and elapsed < 2.0:
 		await get_tree().physics_frame

@@ -67,7 +67,8 @@ func _run() -> void:
 		elapsed += delta
 		var rate := lerpf(4.0, 22.0, elapsed / 1.3)
 		_sword.modulate.a = 0.35 + 0.65 * absf(sin(elapsed * rate))
-		await get_tree().process_frame
+		if not await FrameWait.process(self):
+			return
 	# 2. Kai la aprieta con más fuerza: tiembla y brilla.
 	_pose(&"ataque_1", 0.6)
 	_sword.modulate.a = 1.0
@@ -78,7 +79,8 @@ func _run() -> void:
 		elapsed += delta
 		_sword.position = Vector2(11 * player.facing, -12) + Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0))
 		_glow = elapsed / 0.6
-		await get_tree().process_frame
+		if not await FrameWait.process(self):
+			return
 	# 3. Se deshace en partículas violetas hasta desaparecer.
 	Sfx.play(&"blade_shatter")
 	player.combat.weapon = null
@@ -92,7 +94,8 @@ func _run() -> void:
 			var at := _sword.position + Vector2(randf_range(-4.0, 4.0), randf_range(-14.0, 14.0)).rotated(_sword.rotation)
 			_particles.append({ "pos": at, "vel": Vector2(randf_range(-15.0, 15.0), randf_range(-40.0, -10.0)),
 				"accel": Vector2(0, -15.0), "life": randf_range(0.5, 1.0), "color": [VIOLET, LIGHT, DEEP].pick_random() })
-		await get_tree().process_frame
+		if not await FrameWait.process(self):
+			return
 	_sword.queue_free()
 	await get_tree().create_timer(0.8).timeout
 

@@ -656,6 +656,49 @@ después de morir.
 - Al agregar una parte nueva de la historia se suma un punto a `POINTS`; `test_menu_pruebas.gd` comprueba que todos
   abran su sala con la misión y las habilidades correctas.
 
+## El mundo: regiones, conexiones, bestiario y actividades
+
+Diseño completo en `docs/mundo/` (mapa maestro, regiones físicas, biomas, conexiones y accesos),
+`docs/misiones/`, `docs/criaturas/BESTIARIO_DIGITAL.md` y `docs/progresion/MATRIZ_MEP_Y_CAPITULOS.md`.
+
+| Pieza | Dónde | Qué hace |
+|---|---|---|
+| `WorldRegion` / `RegionLink` / `WorldRequirement` / `WorldAtlas` | `systems/world_map/`, datos en `data/world/regions/` y `data/world/links/` | Las 14 regiones (físicas y digitales) y sus 22 conexiones con requisitos; qué sabe el jugador de cada una (desconocida, niebla, descubierta, visitada). `World` avisa «Región descubierta» la primera vez |
+| `Quest.category` | `systems/quests/quest.gd` | Principal, secundaria, tarea o descubrimiento. Una actividad no le quita el lugar a la historia (`GameState.get_side_quest()`); el HUD la muestra debajo («ACTIVIDAD · …») y avisa al terminarla |
+| `QuestStarter` | `systems/quests/` | Empieza una misión al entrar en una zona si se cumple un `WorldRequirement` |
+| `DigitalCreature` / `Fibroluz` | `characters/creatures/` | Criaturas con estados (reposo, patrulla, investigación, huida, defensa, interacción/guía) y registro con la Visión |
+| `CreatureEntry` / `Bestiary` | `systems/bestiary/`, datos en `data/bestiary/` | Bestiario en tres etapas (avistamiento, observación, comprensión), con marcas por ranura |
+| `FiberJunction` / `FiberCircuit` / `VisionRoute` | `world/digital/fiber/` | Empalmes que dirigen la señal; camino de plataformas que solo existe con la Visión (capa 7) |
+| `FiberStory` | `world/zones/bosque_fibra/` | La misión «Sin señal en el barrio» dentro del bosque (guía del Fibroluz, el corte reconectado) |
+| `GrimorioWorldMap` | `ui/menus/grimorio/` | Mapa del mundo físico y digital con niebla, conexiones (cerradas con candado), Kai y la misión; el Grimorio suma las pestañas BESTIARIO y MISIONES |
+| Bosque de Fibra | `world/zones/bosque_fibra/` (distrito `bosque_fibra`) | Raíces del barrio (camino oculto, fragmento) y el claro del corte (empalmes, salida al colegio, troncal cerrada al Distrito Caché). Accesos: la caja de fibra de la calle y el rack del cuarto técnico |
+
+## El hogar de Kai («Camino a casa», entre el Capítulo 1 y el 2)
+
+Detalle de diseño en `docs/escenarios/HOGAR_DE_KAI.md`. Distrito **Barrio** (`data/world/districts/barrio.tres`):
+`calle` ↔ `casa` ↔ `cuarto_kai` (`world/zones/barrio/`); la calle se une a la Entrada del colegio con salidas sin
+puerta en la ficha (`RoomExit.door_id` vacío, como los portales). La salida de la Entrada (`Exits/ToCalle`) se abre
+con `requires_quest` = `camino_a_casa` / `volver_a_casa`.
+
+| Pieza | Dónde | Qué hace |
+|---|---|---|
+| `DayPhase` | `systems/home/` | Momento del día según la misión (Día, Tarde, Noche, Mañana; `RULES` con marca opcional) y sus colores (luz, cielo) |
+| `PhaseLight` | `world/home/` | `CanvasModulate` de la sala con la luz del momento (más cálida adentro) |
+| `Keepsake` / `KeepsakeNote` / `HomeCollection` | `systems/home/`, datos en `data/home/keepsakes/` | Recuerdos, Fragmentos de Datos y regalos: desbloqueo por marca de `GameState` (por ranura, sin duplicados) y lo que piensa Kai según el capítulo (recuerdos dinámicos) |
+| `KeepsakeArt` | `systems/home/` | Dibujos provisionales de los objetos (o su `texture`) |
+| `NullbladeForm` | `systems/home/`, datos en `data/home/nullblade/` | Las cuatro formas; se conocen con `GameState.nullblade_stage` (solo la historia) |
+| `ComputerEntry` | `systems/home/`, datos en `data/home/computadora/` | Mensajes, proyectos y notas de la computadora de Kai, por capítulo y marca |
+| `InspectionWindow` | `ui/home/` | Pantalla de inspección (pausa; teclado, mando y mouse); la usan estanterías y el soporte de la Nullblade |
+| `KaiComputerWindow` | `ui/home/` | La computadora (secciones; marca `pc_leido_<archivo>` al leer) |
+| `ResonanceOverlay` | `ui/home/` | La Resonancia Digital (interferencias, señal lejana, datos con fallas) |
+| `ConfirmPrompt` | `ui/components/` | Pregunta sí / no (empieza en «No») |
+| `KeepsakeShelf`, `NullbladeStand`, `KaiComputer`, `KaiBed` | `world/home/` | Muebles interactivos del cuarto |
+| `Examinable` | `world/objects/` | Algo que se mira con E y dice un diálogo distinto cada vez (fotos, tele, perro...) |
+| `FamilyMember` | `characters/npcs/familia/` | Mamá y papá: un `Npc` con rutina por momento del día, respiración y tarea, y ropa propia (`parent_recolor.gdshader`) sobre un sprite provisional |
+| `HomeStory` | Casa | Llegada, la charla familiar en dos partes, «Más tarde...» y la charla a solas de los papás mientras Kai duerme |
+| `HomeNight` | Cuarto | Acostarse, ir a la escena de los papás, la Resonancia Digital, despertar, completar la misión y guardar en la cama |
+| `house_props.gd`, `bedroom_props.gd`, `street_props.gd`, `street_dog.gd` | `world/home/` | Arte provisional por código |
+
 ## Capítulo 2: el simulador de prácticas
 
 Especificación en `docs/narrativa/capitulos/CAPITULO_02.md`. Misiones `el_lenguaje_de_las_maquinas` (nivel 3) y
@@ -691,7 +734,8 @@ todavía sin conexión con otras salas: se prueba abriendo la escena). Especific
 | `BucleAttacks`, `LoopPulse`, `InstructionBlock`, `LoopRing` | Pulso repetitivo (ondas por el suelo), Lluvia de instrucciones (carriles; `rain_lanes()` siempre deja carriles libres y uno al lado de Kai) y Ciclo circular (anillo con dos huecos que giran; su forma de choque se pone en el punto del anillo dentro del Hurtbox de Kai: la colisión es la que se ve). Todos avisan antes y están en `boss_attack` |
 | `BucleArt` | Dibujo provisional: cuerpo del mismo tamaño siempre (con contorno) y las 7 etapas de instrucciones acumuladas y expresiones; interferencias según `GameSettings.glitch_factor()` (opción «reducir glitch») |
 | `BucleArenaController` (`world/zones/simulador/bucle_arena.gd`) | Checkpoint al llegar, introducción, `BossBar` «BUCLE» con `segments = 7`, golpe arriesgado (energía), Error de ejecución (`DataPlatform.force_close` de una plataforma por vez), fondo según la etapa (`bucle_background.gd`), reinicio si Kai pierde, final (diálogo, recompensa única `capitulo2:bucle`, marcas `cap2_bucle_vencido` / `cap2_bucle_liberado`, puzle `cap2_condicion_salida` y `cap2_condicion_corregida`) |
-| `ProcessWall` y Dominio Nulo I | Después del puzle, el simulador se derrumba: el muro de procesos (`world/zones/simulador/process_wall.gd`) se reconstruye 1,6 s después del primer golpe; Kai obtiene **Dominio Nulo I** (`PlayerDomain`, R) y con él lo rompe; marca `cap2_dominio_nulo`; salida provisoria al cuarto técnico. Ver `docs/jefes/BUCLE_INFINITO.md`, B.8 |
+| `ProcessWall` y la salida | Después del puzle, el simulador se derrumba: el muro de procesos (`world/zones/simulador/process_wall.gd`) se reconstruye 1,6 s después del primer golpe; Kai lo detiene atrapando el error en la terminal del muro (desafío `cap2_atrapar_error`, marca `cap2_error_atrapado`; las partidas viejas con `cap2_dominio_nulo` cuentan igual). Dominio Nulo I llega en el Capítulo 3 (Biblia v1.7). Ver `docs/jefes/BUCLE_INFINITO.md`, A.12 y B.8 |
+| `FrameWait` (`systems/world/frame_wait.gd`) | Esperar un cuadro sin romperse si la sala se cierra a mitad (cambio de escena, F9, cargar): `if not await FrameWait.physics(self): return`. Lo usan `CombatClock.wait`, el combate de Chip y Glitch (además, `SiblingBoss.still()` y `DualBossController._alive()` piden que el nodo siga en la escena), la secuencia de muerte, la Nullblade que se deshace y el final del Capítulo 1. Nunca `await get_tree().physics_frame` dentro de un bucle |
 | `CombatClock` / `PlayerDomain` | Reloj de las amenazas (0,8 con el Dominio, sin tocar `Engine.time_scale`) y la definitiva de Kai: carga (10 por golpe), 15 s, +10 % de daño aplicado en `PlayerCombat`, barra del HUD |
 | `SpeechBark` (`world/effects/speech_bark.gd`) | Globo de texto flotante que no pausa ni quita el control (las frases de cada impacto) |
 
@@ -877,10 +921,12 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_capitulo1_datos.gd` | Capítulo 1, etapa 1: misiones y su orden, diálogos con oradores conocidos y los textos de la especificación sin cambios, desafíos con una sola respuesta correcta y explicación, páginas del Grimorio, voces de Chip y Glitch, y ningún texto que revele el origen de Kai |
 | `test_inmersion.gd` | Capítulo 1, etapa 2: la conexión del monitor solo con la Visión Digital, la primera vez con diálogo y la transición «INMERSIÓN DIGITAL», la habilidad permanente (partida, validador, «Mi perfil», Grimorio) y la segunda vez sin repetir nada |
 | `test_cuarto_tecnico.gd` | Capítulo 1, etapa 3: el cuarto técnico en el mapa, el descanso nuevo de las escaleras con la física real, la puerta cerrada con llave hasta el permiso del profesor (y que se abra con Kai parado ahí), la conexión del monitor solo cuando la historia lo pide, la vuelta y continuar una partida guardada ahí |
+| `test_hogar.gd` | «Camino a casa» completo: la cadena (Chip y Glitch → casa → Capítulo 2), los amigos y la salida a la calle, la calle (comentario, perro, tarde), la charla familiar (dos partes, sin revelar nada), la noche y las rutinas, la estantería (lo que Kai tiene, pausa, recuerdos por año), la vitrina («???»), la Nullblade (formas bloqueadas, no se pierde), la computadora, la cama (pregunta, «No», fuera de momento), los papás a solas, la Resonancia Digital, la mañana («CAPÍTULO 2», guardado en la cama), cargar y otra ranura |
 | `test_persecucion_colegio.gd` | Capítulo 1, el pasillo del segundo piso: conexiones (escaleras ↔ pasillo ↔ biblioteca, en las salidas y en el mapa), punto del menú de pruebas, la persecución larga (3 estanterías, 3 cajas, 2 «casi», desaparecen al final), la estantería caída no se pasa caminando y sí saltando, el aviso antes de caer, una caja quita medio cristal, los comentarios de los estudiantes y el pasillo tranquilo fuera del paso |
 | `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo salto + dash (sin doble salto), la barrera (empieza detrás de Kai, 1 por contacto, invulnerabilidad, sin daño en cada cuadro, después de cada checkpoint queda a 260 px detrás y nunca delante), los nodos que disparan (con aviso y dañan), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
-| `test_bucle.gd` | Bucle Infinito: las 20 validaciones de su especificación (ciclos, impactos clave uno por ciclo, golpe arriesgado, fatiga y repetición, ataques con aviso y cancelados, lluvia con carriles libres, colisión del anillo, una plataforma apagada por vez, séptimo impacto sin octava transformación, recompensa única, reinicio desde el checkpoint, estados que no se traban) y un tajo real de la Nullblade |
-| `test_dominio_nulo.gd` | Dominio Nulo I: bloqueado antes de obtenerlo, el muro que no se rompe sin él (golpes reales), obtenerlo y activarlo con R, amenazas al 80 % sin tocar el tiempo global ni el HUD, +10 % de daño, 15 s, la carga por golpe y la salida |
+| `test_bucle.gd` | Bucle Infinito (versión difícil: se teletransporta por la arena, esquiva, descansa lejos y alcanzable, Barrido, Rastreo, combinados, un cristal por golpe) y las 20 validaciones de su especificación (ciclos, impactos clave uno por ciclo, golpe arriesgado, fatiga y repetición, ataques con aviso y cancelados, lluvia con carriles libres, colisión del anillo, una plataforma apagada por vez, séptimo impacto sin octava transformación, recompensa única, reinicio desde el checkpoint, estados que no se traban) y un tajo real de la Nullblade |
+| `test_dominio_nulo.gd` | El final del Capítulo 2 sin Dominio (el muro que no se rompe a golpes, la terminal «Atrapar el error», la salida, Kai sin el Dominio) y el Dominio Nulo I como sistema: activarlo con R, amenazas al 80 % sin tocar el tiempo global ni el HUD, +10 % de daño, 15 s y la carga por golpe |
+| `test_mundo.gd` | El MVP del mundo: el mapa maestro como datos (regiones, conexiones), las actividades secundarias que no le quitan el lugar a la historia, la caja de fibra (vecino, acceso de Inmersión con la Visión), el Bosque de Fibra (región descubierta, el Distrito Caché con niebla y su troncal cerrada, El Velo Nulo oculto), el Fibroluz (avistamiento, observación, guía, no se puede dañar), el camino que solo existe con la Visión y su Fragmento, los empalmes del claro, la vuelta al barrio (Ecos una vez, caja en verde, comprensión, recuerdo, acceso desde el rack), el Grimorio (mapas físico y digital, bestiario, misiones), guardar y cargar, y otra ranura |
 | `test_capitulo2.gd` | El capítulo 2 de punta a punta: el 1 lleva al 2 (marca `capitulo_2`), la clase, la conexión con la Visión, variables (E de verdad), condiciones (si / si no y saltos alcanzables), ciclos (n corto, ERROR y justo), el repaso («NIVEL 3 COMPLETADO»), los procesos repetidos, Bucle y el derrumbe con la pista, la salida al laboratorio y «FIN DEL CAPÍTULO 2» |
 | `test_menu_pruebas.gd` | El menú de pruebas: cada punto abre su sala con la misión y las habilidades de ese momento sin guardar; F9 abre y cierra (pausa); los trucos |
 | `test_orden_al_azar.gd` | Las respuestas de las preguntas y las contraseñas de la terminal salen en orden al azar cada vez |

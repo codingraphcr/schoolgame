@@ -3,85 +3,119 @@
 [ext_resource type="Script" path="res://systems/bosses/bucle_cycle.gd" id="1_ubq7l"]
 [ext_resource type="Script" path="res://systems/bosses/bucle_config.gd" id="2_qijdj"]
 
-[sub_resource type="Resource" id="Resource_83rt5"]
+[sub_resource type="Resource" id="Ciclo_1"]
 script = ExtResource("1_ubq7l")
-attacks = Array[StringName]([&"pulso", &"lluvia"])
-telegraph = 0.75
-gap = 0.6
-ring_gap = 90.0
-ring_spin = 20.0
-
-[sub_resource type="Resource" id="Resource_ed3iv"]
-script = ExtResource("1_ubq7l")
-attacks = Array[StringName]([&"pulso", &"lluvia", &"anillo"])
-speed = 1.08
-fatigue_time = 2.3
-gap = 0.55
-ring_gap = 85.0
-ring_spin = 25.0
-
-[sub_resource type="Resource" id="Resource_mvftp"]
-script = ExtResource("1_ubq7l")
-attacks = Array[StringName]([&"lluvia", &"pulso", &"anillo"])
-speed = 1.15
-fatigue_time = 2.1
-telegraph = 0.65
-pulse_count = 2
-rain_blocks = 4
-
-[sub_resource type="Resource" id="Resource_pxley"]
-script = ExtResource("1_ubq7l")
-attacks = Array[StringName]([&"pulso", &"anillo", &"lluvia", &"pulso"])
-speed = 1.22
+attacks = Array[StringName]([&"pulso", &"lluvia", &"barrido"])
+speed = 1.0
 fatigue_time = 1.9
 telegraph = 0.6
-gap = 0.45
+gap = 0.35
+pulse_count = 1
+rain_blocks = 4
+ring_gap = 80.0
+ring_spin = 25.0
+execution_error = false
+seeker_count = 2
+dodge = false
+
+[sub_resource type="Resource" id="Ciclo_2"]
+script = ExtResource("1_ubq7l")
+attacks = Array[StringName]([&"barrido", &"pulso+lluvia", &"rastreo", &"anillo"])
+speed = 1.08
+fatigue_time = 1.8
+telegraph = 0.55
+gap = 0.3
 pulse_count = 2
 rain_blocks = 4
 ring_gap = 75.0
+ring_spin = 30.0
+execution_error = false
+seeker_count = 2
+dodge = true
+
+[sub_resource type="Resource" id="Ciclo_3"]
+script = ExtResource("1_ubq7l")
+attacks = Array[StringName]([&"anillo+barrido", &"rastreo", &"lluvia", &"pulso+barrido"])
+speed = 1.15
+fatigue_time = 1.7
+telegraph = 0.52
+gap = 0.28
+pulse_count = 2
+rain_blocks = 5
+ring_gap = 72.0
 ring_spin = 35.0
 execution_error = true
+seeker_count = 3
+dodge = true
 
-[sub_resource type="Resource" id="Resource_qr75f"]
+[sub_resource type="Resource" id="Ciclo_4"]
 script = ExtResource("1_ubq7l")
-attacks = Array[StringName]([&"anillo", &"lluvia", &"pulso", &"anillo"])
-speed = 1.3
-fatigue_time = 1.7
-telegraph = 0.55
-gap = 0.4
+attacks = Array[StringName]([&"rastreo+lluvia", &"barrido", &"anillo+pulso", &"barrido"])
+speed = 1.22
+fatigue_time = 1.6
+telegraph = 0.5
+gap = 0.25
 pulse_count = 2
 rain_blocks = 5
 ring_gap = 70.0
 ring_spin = 40.0
 execution_error = true
+seeker_count = 3
+dodge = true
 
-[sub_resource type="Resource" id="Resource_auk88"]
+[sub_resource type="Resource" id="Ciclo_5"]
 script = ExtResource("1_ubq7l")
-attacks = Array[StringName]([&"pulso", &"lluvia", &"anillo", &"pulso", &"lluvia"])
-speed = 1.38
+attacks = Array[StringName]([&"barrido", &"anillo+rastreo", &"pulso+barrido", &"lluvia+barrido"])
+speed = 1.3
 fatigue_time = 1.5
-telegraph = 0.5
-gap = 0.35
+telegraph = 0.46
+gap = 0.22
 pulse_count = 3
 rain_blocks = 5
-ring_gap = 65.0
+ring_gap = 66.0
 ring_spin = 45.0
 execution_error = true
+seeker_count = 3
+dodge = true
 
-[sub_resource type="Resource" id="Resource_k68iw"]
+[sub_resource type="Resource" id="Ciclo_6"]
 script = ExtResource("1_ubq7l")
-attacks = Array[StringName]([&"lluvia", &"anillo", &"pulso", &"lluvia", &"anillo"])
-speed = 1.46
-fatigue_time = 1.5
-telegraph = 0.45
-gap = 0.3
+attacks = Array[StringName]([&"rastreo+anillo", &"barrido", &"pulso+lluvia", &"barrido+rastreo", &"anillo"])
+speed = 1.38
+fatigue_time = 1.45
+telegraph = 0.43
+gap = 0.2
 pulse_count = 3
 rain_blocks = 6
-ring_gap = 60.0
+ring_gap = 62.0
 ring_spin = 50.0
 execution_error = true
+seeker_count = 4
+dodge = true
+
+[sub_resource type="Resource" id="Ciclo_7"]
+script = ExtResource("1_ubq7l")
+attacks = Array[StringName]([&"anillo+barrido", &"rastreo+lluvia", &"pulso+barrido", &"anillo+rastreo", &"lluvia+barrido"])
+speed = 1.46
+fatigue_time = 1.4
+telegraph = 0.4
+gap = 0.18
+pulse_count = 3
+rain_blocks = 6
+ring_gap = 58.0
+ring_spin = 55.0
+execution_error = true
+seeker_count = 4
+dodge = true
 
 [resource]
 script = ExtResource("2_qijdj")
-cycles = Array[ExtResource("1_ubq7l")]([SubResource("Resource_83rt5"), SubResource("Resource_ed3iv"), SubResource("Resource_mvftp"), SubResource("Resource_pxley"), SubResource("Resource_qr75f"), SubResource("Resource_auk88"), SubResource("Resource_k68iw")])
+cycles = Array[ExtResource("1_ubq7l")]([SubResource("Ciclo_1"), SubResource("Ciclo_2"), SubResource("Ciclo_3"), SubResource("Ciclo_4"), SubResource("Ciclo_5"), SubResource("Ciclo_6"), SubResource("Ciclo_7")])
+prepare_time = 0.75
+reaction_time = 0.7
+transformation_time = 1.1
+attack_damage = 2.0
+pulse_speed = 230.0
+rain_fall_speed = 330.0
+ring_speed = 165.0
 hit_lines = PackedStringArray("No pasa nada. Puedo repetirlo.", "Otra vez. Esta vez funcionará.", "¿Por qué sigue fallando?", "Tengo que terminar...", "¡NO PUEDO DETENERME!", "Una vez más... solamente una vez más...", "¿Ya... puedo descansar?")

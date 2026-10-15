@@ -108,7 +108,8 @@ func _genesis_ending() -> void:
 	await _wait(0.3)
 	var card := room.get_node_or_null("CombatHUD/TitleCard")
 	while card and card.is_showing() and not quick:
-		await get_tree().process_frame
+		if not await FrameWait.process(self):
+			return
 	# Kai aparece en otro lugar (la entrada del colegio): no vuelve al cuarto.
 	scenes.go_to_room(after_scene, after_entry, after_room)
 

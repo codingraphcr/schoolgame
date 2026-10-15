@@ -3,8 +3,9 @@ extends Resource
 ## Un ciclo del combate contra Bucle (Capítulo 2): la secuencia de instrucciones que repite y qué tan
 ## rápido. Siete en data/bosses/bucle.tres (BucleConfig). Ver docs/jefes/BUCLE_INFINITO.md.
 
-## Ataques en orden: &"pulso" (onda por el suelo), &"lluvia" (bloques desde arriba) y &"anillo"
-## (anillo que se expande con huecos).
+## Ataques en orden: &"pulso" (onda por el suelo), &"lluvia" (bloques desde arriba), &"anillo" (anillo
+## que se expande con huecos), &"barrido" (línea que cruza la arena a la altura de Kai) y &"rastreo"
+## (procesos huérfanos que persiguen a Kai). Con «+» van a la vez: &"pulso+barrido".
 @export var attacks: Array[StringName] = []
 ## Multiplica la velocidad de los ataques (1 = base).
 @export var speed := 1.0
@@ -23,3 +24,7 @@ extends Resource
 @export var ring_spin := 30.0
 ## Si empieza con un Error de ejecución (una plataforma se apaga unos segundos).
 @export var execution_error := false
+## Procesos huérfanos en cada Rastreo.
+@export var seeker_count := 2
+## Si esquiva a Kai (se teletransporta) cuando se le acerca mientras prepara o ataca.
+@export var dodge := true

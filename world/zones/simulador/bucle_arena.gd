@@ -12,9 +12,10 @@ extends Node
 ## - Final: diálogo, recompensa única, Bucle liberado (no muere: queda en la arena), el puzle de la
 ##   condición de salida (simulado).
 ## - Después, el simulador se desestabiliza: un muro de procesos (ProcessWall) que se reconstruye bloquea
-##   la salida. Kai no puede romperlo; por instinto obtiene EXPANSIÓN DIGITAL: DOMINIO NULO I (carga llena)
-##   y se le pide activarlo (R). Con el Dominio rompe el muro y se abre la salida. Es seguro: nada hace
-##   daño (PlayerDamage.protected) y si el Dominio se acaba sin romperlo, se vuelve a cargar.
+##   la salida. Kai no puede romperlo a golpes (es otra repetición); usa lo que aprendió en el nivel: en la
+##   terminal del muro **atrapa el error** (try/catch, wall_challenge) y los procesos se detienen. Se abre la
+##   salida. Es seguro: nada hace daño (PlayerDamage.protected). Dominio Nulo I ya no se obtiene aquí: llega
+##   en el Capítulo 3, «Contagio digital» (decisión del equipo del 15 de octubre de 2026, Biblia v1.7).
 
 signal fight_started
 signal victory
@@ -26,8 +27,10 @@ const DONE_FLAG := &"cap2_bucle_vencido"
 const FREED_FLAG := &"cap2_bucle_liberado"
 const PUZZLE_FLAG := &"cap2_condicion_corregida"
 const REWARD_ID := &"capitulo2:bucle"
-## Kai ya obtuvo el Dominio Nulo I (y rompió el muro).
-const DOMAIN_FLAG := &"cap2_dominio_nulo"
+## Kai atrapó el error y detuvo el muro de procesos (salió del derrumbe).
+const ESCAPE_FLAG := &"cap2_error_atrapado"
+## Las partidas de antes de este cambio salían con el Dominio Nulo (cuenta igual).
+const LEGACY_DOMAIN_FLAG := &"cap2_dominio_nulo"
 ## La misión del nivel 4 (pasos vencer_bucle y salir_simulador).
 const QUEST := &"codigo_fuera_de_control"
 ## Pista de la Biblia (capítulo 2): «Una anomalía reconoce su arquitectura digital». No se explica.
@@ -47,9 +50,12 @@ const ANOMALY_FLAG := &"cap2_anomalia_vista"
 ## El muro de procesos que bloquea la salida después del combate.
 @export var wall: ProcessWall
 @export var collapse_dialogue: Dialogue
-@export var instinct_dialogue: Dialogue
-@export var domain_dialogue: Dialogue
-## Segundos que Kai prueba el muro antes de que despierte el Dominio (o hasta que se reconstruya una vez).
+## Kai se da cuenta de que golpear es repetir: hay que atrapar el error.
+@export var idea_dialogue: Dialogue
+## El desafío de la terminal del muro (try/catch).
+@export var wall_challenge: ChoiceChallenge
+@export var after_dialogue: Dialogue
+## Segundos que Kai prueba el muro antes de la idea (o hasta que se reconstruya una vez).
 @export var try_time := 6.0
 ## Entrada donde se guarda la partida al llegar (el checkpoint de la arena).
 @export var entry_id: StringName = &"inicio"
@@ -71,6 +77,7 @@ func _ready() -> void:
 	boss.transformed.connect(_on_transformed)
 	boss.execution_error.connect(_on_execution_error)
 	boss.finished.connect(_victory)
+	boss.spot_filter = _spot_available
 	_room.player_respawned.connect(_on_player_respawned)
 	if wall:
 		wall.set_enabled(false)
@@ -121,6 +128,10 @@ func _on_transformed(stage: int) -> void:
 func _on_execution_error(_cycle: int) -> void:
 	if platforms.is_empty():
 		return
+	# Nunca dos a la vez: si todavía hay una apagada (o por apagarse), este error no apaga otra.
+	for other in platforms:
+		if other.is_closed() or other.is_in_group(&"unsafe_ground"):
+			return
 	var platform := platforms[_error_index % platforms.size()]
 	_error_index += 1
 	platform.force_close(boss.config.error_time)
@@ -161,7 +172,7 @@ func _victory() -> void:
 	await _collapse()
 
 
-## El simulador se desestabiliza y Kai obtiene el Dominio Nulo I para romper el muro.
+## El simulador se desestabiliza; Kai detiene el muro atrapando el error.
 func _collapse() -> void:
 	phase = Phase.COLLAPSE
 	var state := get_node("/root/GameState")
@@ -178,21 +189,25 @@ func _collapse() -> void:
 	var rebuilt := [false]
 	wall.rebuilt.connect(func() -> void: rebuilt[0] = true, CONNECT_ONE_SHOT)
 	var waited := 0.0
+	var tree := get_tree()
 	while waited < try_time and not rebuilt[0] and is_instance_valid(wall):
-		await get_tree().physics_frame
+		await tree.physics_frame
+		if not is_inside_tree():
+			return  # La sala se cerró a mitad del derrumbe (al volver, empieza otra vez).
 		waited += get_physics_process_delta_time()
-	await _play(instinct_dialogue)
-	if state.domain_stage < 1:
-		state.set_domain_stage(1)
-	_room.get_node("CombatHUD/TitleCard").show_title("EXPANSIÓN DIGITAL", "DOMINIO NULO I")
-	while is_instance_valid(wall) and not wall.is_dead:
-		if not player.domain.active:
-			player.domain.set_charge(player.domain.cost())
-			_show_hint("Pulsa %s: Dominio Nulo · las amenazas van más lento y la Nullblade pega más" % GameSettings.key_name(&"ultimate"))
-			while not player.domain.active and is_instance_valid(wall) and not wall.is_dead:
-				await get_tree().physics_frame
-			_hide_hint()
-		await get_tree().physics_frame
+	await _play(idea_dialogue)
+	if not is_inside_tree():
+		return
+	# La terminal del muro: atrapar el error (se repite hasta resolverlo; sin castigo).
+	if wall_challenge and not skip_cinematics:
+		await StoryHelper.choose_until_done(self, wall_challenge)
+	if not is_inside_tree():
+		return
+	if is_instance_valid(wall) and not wall.is_dead:
+		wall.health.take_damage(wall.health.current + 1.0)
+	await tree.physics_frame
+	if not is_inside_tree():
+		return
 	# Un mensaje que nadie escribió (la pista del capítulo): no se explica quién ni por qué.
 	if not skip_cinematics and not state.has_flag(ANOMALY_FLAG):
 		Sfx.play(&"entity_whisper", 0.8)
@@ -200,13 +215,13 @@ func _collapse() -> void:
 		await reading.closed
 	state.set_flag(ANOMALY_FLAG)
 	_finish_collapse()
-	await _play(domain_dialogue)
+	await _play(after_dialogue)
 
 
 func _finish_collapse() -> void:
 	_hide_hint()
 	var state := get_node("/root/GameState")
-	state.set_flag(DOMAIN_FLAG)
+	state.set_flag(ESCAPE_FLAG)
 	if state.get_current_step(QUEST) == &"vencer_bucle":
 		state.complete_step(QUEST, &"vencer_bucle")
 	if state.get_current_step(QUEST) == &"salir_simulador":
@@ -239,7 +254,8 @@ func _hide_hint() -> void:
 
 func _already_won() -> void:
 	boss.rest()
-	if get_node("/root/GameState").has_flag(DOMAIN_FLAG):
+	var state := get_node("/root/GameState")
+	if state.has_flag(ESCAPE_FLAG) or state.has_flag(LEGACY_DOMAIN_FLAG):
 		phase = Phase.DONE
 		gate.active = false
 		if wall:
@@ -248,6 +264,18 @@ func _already_won() -> void:
 		# Ganó, pero no terminó de salir: el simulador vuelve a desestabilizarse.
 		gate.active = true
 		_collapse.call_deferred()
+
+
+## Si Bucle puede descansar en ese lugar: las plataformas apagadas por un Error de ejecución no sirven.
+func _spot_available(spot: Vector2) -> bool:
+	for platform in platforms:
+		if not is_instance_valid(platform) or platform.position.y >= 300.0:
+			continue
+		var on_top := absf(platform.position.y - (spot.y + 8.0)) < 4.0
+		var inside := spot.x >= platform.position.x and spot.x <= platform.position.x + platform.width
+		if on_top and inside and (platform.is_closed() or platform.is_in_group(&"unsafe_ground")):
+			return false
+	return true
 
 
 func _set_background_stage(stage: int) -> void:

@@ -16,8 +16,9 @@ static func scaled(delta: float) -> float:
 ## Espera seconds del tiempo de las amenazas (con la física): con el Dominio activo, tarda más.
 static func wait(node: Node, seconds: float) -> void:
 	var left := seconds
-	while left > 0.0 and node.is_inside_tree():
-		await node.get_tree().physics_frame
+	while left > 0.0:
+		if not await FrameWait.physics(node):
+			return  # La sala se cerró a mitad.
 		left -= node.get_physics_process_delta_time() * threat_scale
 
 

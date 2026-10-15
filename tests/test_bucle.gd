@@ -40,6 +40,7 @@ func _run() -> void:
 	await _test_fatigue_and_repeat()
 	await _test_key_hits()
 	await _test_real_sword()
+	await _test_hardcore()
 	await _test_attacks()
 	await _test_safe_routes()
 	await _test_finish()
@@ -62,10 +63,17 @@ func _test_data() -> void:
 	_check(harder, "cada ciclo es más difícil: más rápido, menos descanso, igual o más ataques y avisos más cortos")
 	var readable := true
 	for n in range(1, 8):
-		readable = readable and maxf(config.cycle(n).telegraph, config.min_telegraph) >= 0.4 and config.cycle(n).fatigue_time >= 1.5
-	_check(readable, "pero siempre con aviso de 0,4 s o más y por lo menos 1,5 s de descanso")
-	_check(config.cycle(1).attacks == [&"pulso", &"lluvia"] and config.cycle(7).attacks.size() == 5,
-		"las secuencias de la especificación (ciclo 1: pulso y lluvia; ciclo 7: cinco ataques)")
+		readable = readable and maxf(config.cycle(n).telegraph, config.min_telegraph) >= 0.4 and config.cycle(n).fatigue_time >= 1.4
+	_check(readable, "pero siempre con aviso de 0,4 s o más y por lo menos 1,4 s de descanso")
+	_check(config.cycle(1).attacks == [&"pulso", &"lluvia", &"barrido"] and config.cycle(7).attacks.size() == 5,
+		"las secuencias (ciclo 1: pulso, lluvia y barrido; ciclo 7: cinco ataques, combinados)")
+	var combos := 0
+	for n in range(2, 8):
+		for attack in config.cycle(n).attacks:
+			if String(attack).contains("+"):
+				combos += 1
+	_check(combos >= 8 and not str(config.cycle(1).attacks).contains("+"), "desde el ciclo 2 lanza ataques combinados a la vez (%d)" % combos)
+	_check(is_equal_approx(config.attack_damage * 0.5, 1.0), "cada golpe de Bucle quita un cristal entero")
 	# La lluvia nunca tapa todos los carriles y siempre deja libre un vecino del carril de Kai.
 	var rng := RandomNumberGenerator.new()
 	var ok := true
@@ -129,8 +137,8 @@ func _test_key_hits() -> void:
 	_check(boss.impacts == 1 and ignored >= 2 and boss.stage == 2, "no se registran dos impactos en el mismo ciclo (y se transforma: etapa 2)")
 	await _until(func() -> bool: return boss.state == S.PREPARE_PATTERN)
 	_check(boss.cycle() == 2 and boss.cycle_data().speed > 1.0 and boss.repeats == 0, "empieza el ciclo 2, más rápido")
-	# Golpe cansado: cuenta, sin ser arriesgado.
-	await _until(func() -> bool: return boss.state == S.FATIGUE)
+	# Golpe cansado: cuenta, sin ser arriesgado (cuando termina de teletransportarse al descanso).
+	await _until(func() -> bool: return boss.state == S.FATIGUE and not boss.is_blinking())
 	_hit()
 	await _frames(2)
 	_check(boss.impacts == 2 and hits[-1] == [2, false], "también se le puede golpear cansado")
@@ -138,7 +146,7 @@ func _test_key_hits() -> void:
 
 ## Con la Nullblade de verdad (J): parado al lado de Bucle cansado, un tajo cuenta como impacto.
 func _test_real_sword() -> void:
-	await _until(func() -> bool: return boss.state == S.FATIGUE)
+	await _until(func() -> bool: return boss.state == S.FATIGUE and not boss.is_blinking())
 	var player := room.player
 	var before := boss.impacts
 	player.teleport_to(boss.global_position + Vector2(-22, 8))
@@ -148,6 +156,34 @@ func _test_real_sword() -> void:
 	await _frames(12)
 	_check(boss.impacts == before + 1, "un tajo real de la Nullblade (J) cuenta como impacto clave (%d → %d)" % [before, boss.impacts])
 	player.teleport_to(Vector2(80, 296))
+	await _frames(2)
+
+
+## La versión difícil: se mueve por toda la arena, esquiva a Kai y descansa lejos (pero alcanzable).
+func _test_hardcore() -> void:
+	var spots := {}
+	var high := false
+	await _until(func() -> bool: return boss.state == S.EXECUTE_PATTERN)
+	for i in 400:
+		spots[Vector2i(boss.position)] = true
+		high = high or boss.position.y < 150.0
+		if boss.state == S.FATIGUE:
+			break
+		await _frames(1)
+	_check(spots.size() >= 3 and high, "en su secuencia se teletransporta por la arena (%d lugares), también arriba, donde no se le alcanza" % spots.size())
+	await _until(func() -> bool: return boss.state == S.FATIGUE and not boss.is_blinking())
+	var kai := room.player.global_position
+	var distance := boss.position.distance_to(kai)
+	_check(boss.config.rest_spots.has(boss.position) and distance >= boss.config.rest_min_distance - 1.0 and distance <= boss.config.rest_max_distance + 1.0,
+		"descansa poco y lejos de Kai (%.0f px), en un lugar alcanzable %s" % [distance, boss.position])
+	# Esquiva: si Kai se le pega mientras prepara o ataca, se va.
+	await _until(func() -> bool: return boss.state == S.PREPARE_PATTERN and not boss.is_blinking())
+	var before := boss.position
+	room.player.teleport_to(boss.global_position + Vector2(-20, 8))
+	await _frames(4)
+	_check(boss.position.distance_to(before) > 50.0, "si Kai se le acerca mientras prepara o ataca, lo esquiva (se teletransporta)")
+	_check(not boss.is_vulnerable() or not boss.is_blinking(), "mientras parpadea no se le puede golpear")
+	room.player.teleport_to(Vector2(80, 296))
 	await _frames(2)
 
 
@@ -183,6 +219,19 @@ func _test_attacks() -> void:
 	BucleAttacks.clear(self)
 	player.teleport_to(Vector2(80, 296))
 	await _frames(2)
+	# Los ataques nuevos de la versión difícil.
+	await _frames(2)
+	var sweep := BucleAttacks.sweep(room, boss.arena, 280.0, 0.5, 0.35, 2.0)
+	var orbs := BucleAttacks.seekers(room, Vector2(320, 120), boss.arena, 2, room.player, 115.0, 2.2, 2.0, 0.5, 2.0)
+	await _frames(3)
+	_check(not sweep.is_live() and not sweep.active and orbs.all(func(o: LoopSeeker) -> bool: return not o.is_live() and not o.active),
+		"el Barrido y los procesos huérfanos también avisan antes de dañar")
+	var orb_start := orbs[0].global_position
+	await _frames(70)
+	_check(is_instance_valid(orbs[0]) and orbs[0].is_live() and orbs[0].global_position.distance_to(room.player.global_position) < orb_start.distance_to(room.player.global_position),
+		"los procesos huérfanos persiguen a Kai")
+	BucleAttacks.clear(self)
+	await _frames(2)
 
 
 ## Error de ejecución: una sola plataforma apagada a la vez.
@@ -206,9 +255,9 @@ func _test_finish() -> void:
 	_check(transformations == 6 and boss.stage == 7, "sin octava transformación (%d transformaciones)" % transformations)
 	_check(is_instance_valid(boss) and boss.visible and state.has_flag(&"cap2_bucle_liberado"), "Bucle no muere: queda en la arena, liberado")
 	await _leave_simulator()
-	_check(state.has_flag(&"cap2_bucle_vencido") and state.has_flag(&"cap2_condicion_corregida") and state.has_flag(&"cap2_dominio_nulo")
-		and state.domain_stage == 1 and not fight.gate.active,
-		"queda guardado: jefe vencido, condición de salida corregida, Dominio Nulo I y la puerta abierta")
+	_check(state.has_flag(&"cap2_bucle_vencido") and state.has_flag(&"cap2_condicion_corregida") and state.has_flag(&"cap2_error_atrapado")
+		and state.domain_stage == 0 and not fight.gate.active,
+		"queda guardado: jefe vencido, condición de salida corregida, el error atrapado y la puerta abierta (sin Dominio Nulo: Capítulo 3)")
 	_check(root.get_node("Economy").ecos > ecos_before, "da su recompensa")
 	await _frames(240)
 	_check(boss.state == S.DEFEATED and get_nodes_in_group(&"boss_attack").is_empty(), "y ya no ataca: el jefe no sigue activo")
@@ -255,12 +304,9 @@ func _test_already_won() -> void:
 
 ## --- Ayudas ---
 
-## Después del combate el simulador se derrumba (lo prueba test_dominio_nulo): aquí se rompe el muro rápido.
+## Después del combate el simulador se derrumba (lo prueba test_dominio_nulo): sin diálogos ni desafío, el error
+## se atrapa solo y el muro se detiene.
 func _leave_simulator() -> void:
-	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.COLLAPSE and state.domain_stage >= 1)
-	room.player.domain.activate(true)
-	if is_instance_valid(fight.wall):
-		fight.wall.health.take_damage(99.0)
 	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.DONE)
 
 

@@ -188,7 +188,7 @@ func start_pattern(pattern: StringName) -> void:
 
 
 func _alive(token: int) -> bool:
-	return token == _token and phase == Phase.FIGHT
+	return token == _token and phase == Phase.FIGHT and is_inside_tree()
 
 
 func _pattern(pattern: StringName, token: int) -> void:
@@ -264,7 +264,8 @@ func _individual(attack: StringName) -> void:
 ## Espera a que boss termine su ataque (o a que se corte la secuencia).
 func _until_free(boss: SiblingBoss, token: int) -> void:
 	while boss.busy and _alive(token):
-		await get_tree().physics_frame
+		if not await FrameWait.physics(self):
+			return
 
 
 ## Los dos aparecen en sus lugares con un parpadeo (para los ataques en conjunto).
@@ -316,7 +317,8 @@ func _sincronizacion_aerea(token: int) -> void:
 		if chip.still(epoch):
 			chip.throw_discs(2)
 		while chip.still(epoch) and not chip.is_on_floor():
-			await get_tree().physics_frame
+			if not await FrameWait.physics(self):
+				return
 	chip.end_attack(epoch)
 	await _until_free(glitch, token)
 
@@ -386,7 +388,8 @@ func _campo_dual(token: int) -> void:
 			throws += 1
 			glitch.face_player()
 			glitch.throw_fragments(_room.player.global_position + Vector2(0, -16), 3)
-		await get_tree().physics_frame
+		if not await FrameWait.physics(self):
+			return
 		elapsed += get_physics_process_delta_time()
 	glitch.end_attack(ge)
 	chip.end_attack(ce)
@@ -495,7 +498,8 @@ func _remolino_doble(token: int) -> void:
 				chip.face_player()
 				chip.throw_discs(1)
 			turn += 1
-		await get_tree().physics_frame
+		if not await FrameWait.physics(self):
+			return
 		elapsed += get_physics_process_delta_time()
 	glitch.release_hold()
 	chip.release_hold()
@@ -506,7 +510,8 @@ func _remolino_doble(token: int) -> void:
 ## Espera a que boss deje de moverse (después de un dash), o a que se corte su ataque.
 func _until_moving_stops(boss: SiblingBoss, epoch: int) -> void:
 	while boss.still(epoch) and absf(boss.velocity.x) > 1.0:
-		await get_tree().physics_frame
+		if not await FrameWait.physics(self):
+			return
 
 
 ## --- Como las Mantis Lords y los Cogwork Dancers ---
