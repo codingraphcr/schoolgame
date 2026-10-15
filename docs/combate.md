@@ -17,7 +17,7 @@ y **defensa** (herramientas reales de ciberseguridad).
 |---|---|---|---|
 | **Nullblade** | Espada digital, cuerpo a cuerpo. Carga energía al golpear | Tutorial | .exe → .zero → .void → .max |
 | **Aegis** | Núcleo flotante: disparo teledirigido manual (I), barrera, plataformas | Capítulo 3, misión especial «Eco en la Red»: Kai lo rescata y lo repara con comandos | Pulse → Bridge → Sync |
-| **Expansión Digital: Dominio Nulo** | Ultimate: enemigos al 80 % de velocidad y bonificación de daño. Barra propia | Capítulo 2 | I (15 s, +10 %, 100) · II (20 s, +15 %, 115) · III (30 s, +30 %, 138) |
+| **Expansión Digital: Dominio Nulo** | Ultimate: enemigos al 80 % de velocidad y bonificación de daño. Barra propia | Por definir (ya no con Bucle, cap. 2) | I (15 s, +10 %, 100) · II (20 s, +15 %, 115) · III (30 s, +30 %, 138) |
 | **Dash-parry** | Un dash justo antes de recibir un golpe hace el parry (no hay botón de parry). Reemplaza al Escudo MFA | Con el primer dash | Mejora con los niveles del dash |
 
 Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `HurtboxComponent.immune`).
@@ -31,7 +31,7 @@ Ninguna capacidad ni bonificación puede saltarse un **escudo educativo** (ver `
 | **Combate (jefe)** | La «Contraseña débil» es el **jefe del prólogo**: de una ventanita "123456" salen decenas de ventanas de error que forman su cuerpo; camina para presionar, embiste y lanza contraseñas comunes; tras embestir queda agachado y se le puede hacer **pogo**. Dos fases (la 2, desde la mitad de la vida: ventanas inestables, más rápido, combina ataques). La **Nullblade aparece como un destello** (animación de Ariel). Al vencerlo sus ventanas muestran «ACCESO DENEGADO» y explotan; **la Nullblade se deshace en la mano de Kai** («¿Eh...? ¿A dónde se fue?») y no logra invocarla otra vez. Deja el **primer fragmento de vida** (4 forman una vida nueva) | Nullblade (solo en la pelea) + 1 fragmento de vida |
 | **Recompensa** | El jugador **crea su propia contraseña** para el profesor (con un medidor que explica cada regla; se guarda solo su huella y tendrá que recordarla en el capítulo 4 y en misiones extra) y elige el segundo paso (aplicación de autenticación), con explicación de cada opción. El profesor agradece, la **Visión Digital se usa con Q** desde aquí y Kai vuelve al laboratorio. En la PC los Ecos solo los da el villano | + Visión Digital |
 | **La habitación vieja** | El profesor lo invita a visitar unas instalaciones: un pasillo donde está el cuarto viejo. Para entrar hay un desafío de **Visión Digital + terminal** (con Q se ven pistas ocultas; con ellas se resuelve el acceso en una terminal; tema del MEP: control de acceso). Adentro está la **Nullblade oficial**: con ella llega el **dash** (el doble salto, más adelante en la historia), la tarjeta «NUEVO EQUIPAMIENTO» y el título **«EL DESPERTAR»** | + Nullblade (para siempre) y **dash** (nivel 1) |
-| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (cap. 2), **Aegis (cap. 3, «Eco en la Red»)** y mejoras con Ecos |
+| **Capítulo 1** | Empieza la aventura | Más adelante: salto de pared, Dominio Nulo (dónde, por definir), **Aegis (cap. 3, «Eco en la Red»)** y mejoras con Ecos |
 
 **No existe una sala de pruebas dentro del juego:** cada arma y habilidad se prueba en el mapa a medida que
 se desbloquea. La sala gris (`tests/fixtures/`) solo la usan las pruebas automáticas.
@@ -115,7 +115,7 @@ Es el vínculo entre el combate y el contenido educativo.
 | C5 | Energía (curación con L) + carga del Dominio | ✅ La carga del Dominio sube 10 por golpe de la Nullblade a un enemigo |
 | C7 | Dash-parry + torreta de llaves | ⏳ |
 | C8 | Terminal + escudo educativo | ⏳ |
-| C9 | Dominio Nulo I | ✅ `PlayerDomain` (R): 15 s, +10 %, 100 de carga, amenazas al 80 %; se obtiene después de Bucle |
+| C9 | Dominio Nulo I | ✅ `PlayerDomain` (R): 15 s, +10 %, 100 de carga, amenazas al 80 %; dónde se obtiene: por definir (ya no después de Bucle) |
 | C10 | Aegis Pulse (si hay tiempo) | ⏳ |
 | C11 | Evoluciones visuales y ataque cargado de Nullblade (si hay tiempo) | ⏳ |
 | C12 | Controles táctiles + prueba en Android | ⏳ |

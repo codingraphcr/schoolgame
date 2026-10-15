@@ -10,28 +10,22 @@ extends Node
 ## - Cada impacto: el fondo cambia con la etapa de Bucle (background.stage).
 ## - Si Kai pierde, reaparece en la entrada y el combate vuelve a empezar (ciclo 1, sin introducción).
 ## - Final: diálogo, recompensa única, Bucle liberado (no muere: queda en la arena), el puzle de la
-##   condición de salida (simulado).
-## - Después, el simulador se desestabiliza: un muro de procesos (ProcessWall) que se reconstruye bloquea
-##   la salida. Kai no puede romperlo a golpes (es otra repetición); usa lo que aprendió en el nivel: en la
-##   terminal del muro **atrapa el error** (try/catch, wall_challenge) y los procesos se detienen. Se abre la
-##   salida. Es seguro: nada hace daño (PlayerDamage.protected). Dominio Nulo I ya no se obtiene aquí: llega
-##   en el Capítulo 3, «Contagio digital» (decisión del equipo del 15 de octubre de 2026, Biblia v1.7).
+##   condición de salida (simulado), la pista «arquitectura reconocida» y la salida abierta. (En esta pelea
+##   no se obtiene el Dominio Nulo I: se consigue más adelante.)
 
 signal fight_started
 signal victory
 
-enum Phase { WAITING, INTRO, FIGHT, CLOSING, COLLAPSE, DONE }
+enum Phase { WAITING, INTRO, FIGHT, CLOSING, DONE }
 
 const DONE_FLAG := &"cap2_bucle_vencido"
 ## Bucle queda libre (podrá volver como personaje secundario).
 const FREED_FLAG := &"cap2_bucle_liberado"
 const PUZZLE_FLAG := &"cap2_condicion_corregida"
 const REWARD_ID := &"capitulo2:bucle"
-## Kai atrapó el error y detuvo el muro de procesos (salió del derrumbe).
-const ESCAPE_FLAG := &"cap2_error_atrapado"
-## Las partidas de antes de este cambio salían con el Dominio Nulo (cuenta igual).
-const LEGACY_DOMAIN_FLAG := &"cap2_dominio_nulo"
-## La misión del nivel 4 (pasos vencer_bucle y salir_simulador).
+## Kai terminó todo en el simulador (el puzle y la pista): la conexión del laboratorio se cierra.
+const FINISHED_FLAG := &"cap2_simulador_terminado"
+## La misión del nivel 4 (paso vencer_bucle).
 const QUEST := &"codigo_fuera_de_control"
 ## Pista de la Biblia (capítulo 2): «Una anomalía reconoce su arquitectura digital». No se explica.
 const ANOMALY_LINES: PackedStringArray = ["ANOMALÍA DETECTADA", "ARQUITECTURA DIGITAL: RECONOCIDA", "ORIGEN: [SIN DATOS]"]
@@ -47,16 +41,8 @@ const ANOMALY_FLAG := &"cap2_anomalia_vista"
 @export var closing_dialogue: Dialogue
 @export var exit_challenge: ChoiceChallenge
 @export var after_puzzle_dialogue: Dialogue
-## El muro de procesos que bloquea la salida después del combate.
-@export var wall: ProcessWall
-@export var collapse_dialogue: Dialogue
-## Kai se da cuenta de que golpear es repetir: hay que atrapar el error.
-@export var idea_dialogue: Dialogue
-## El desafío de la terminal del muro (try/catch).
-@export var wall_challenge: ChoiceChallenge
-@export var after_dialogue: Dialogue
-## Segundos que Kai prueba el muro antes de la idea (o hasta que se reconstruya una vez).
-@export var try_time := 6.0
+## Kai, después del mensaje «arquitectura reconocida».
+@export var anomaly_dialogue: Dialogue
 ## Entrada donde se guarda la partida al llegar (el checkpoint de la arena).
 @export var entry_id: StringName = &"inicio"
 ## Saltear diálogos y el puzle (solo pruebas).
@@ -67,7 +53,6 @@ var phase := Phase.WAITING
 var _room: Room
 var _bar: BossBar
 var _error_index := 0
-var _hint: Label
 
 
 func _ready() -> void:
@@ -77,10 +62,7 @@ func _ready() -> void:
 	boss.transformed.connect(_on_transformed)
 	boss.execution_error.connect(_on_execution_error)
 	boss.finished.connect(_victory)
-	boss.spot_filter = _spot_available
 	_room.player_respawned.connect(_on_player_respawned)
-	if wall:
-		wall.set_enabled(false)
 	if get_node("/root/GameState").has_flag(DONE_FLAG):
 		_already_won()
 		return
@@ -104,7 +86,7 @@ func _begin_fight() -> void:
 	_set_background_stage(1)
 	if is_instance_valid(_bar):
 		_bar.queue_free()
-	_bar = BossBar.show_for(_room.get_node("CombatHUD"), boss, "BUCLE", 0, BucleArt.WARM)
+	_bar = BossBar.show_for(_room.get_node("CombatHUD"), boss, "BUCLE", 0, BucleArt.PALETTE[0])
 	_bar.phase_mark = -1.0
 	_bar.segments = boss.config.key_hits
 	boss.ai_enabled = true
@@ -128,10 +110,6 @@ func _on_transformed(stage: int) -> void:
 func _on_execution_error(_cycle: int) -> void:
 	if platforms.is_empty():
 		return
-	# Nunca dos a la vez: si todavía hay una apagada (o por apagarse), este error no apaga otra.
-	for other in platforms:
-		if other.is_closed() or other.is_in_group(&"unsafe_ground"):
-			return
 	var platform := platforms[_error_index % platforms.size()]
 	_error_index += 1
 	platform.force_close(boss.config.error_time)
@@ -154,7 +132,6 @@ func _victory() -> void:
 	_set_background_stage(1)
 	if is_instance_valid(_bar):
 		_bar.dismiss()
-	_room.player.damage.protected = true
 	var state := get_node("/root/GameState")
 	state.set_flag(DONE_FLAG)
 	state.set_flag(FREED_FLAG)
@@ -165,117 +142,41 @@ func _victory() -> void:
 	economy.claim_reward(REWARD_ID, economy.reward_for(EconomyConfig.Source.BOSS))
 	victory.emit()
 	await _play(closing_dialogue)
+	await _after_victory()
+
+
+## Después del combate: el puzle de la condición de salida, la pista de la anomalía y la salida abierta.
+## (Si se cerró el juego antes de terminarlo, al volver a la arena sigue desde aquí.)
+func _after_victory() -> void:
+	phase = Phase.CLOSING
+	var state := get_node("/root/GameState")
+	_room.player.damage.protected = true
 	if exit_challenge and not skip_cinematics:
 		await StoryHelper.choose_until_done(self, exit_challenge)
 	state.set_flag(PUZZLE_FLAG)
 	await _play(after_puzzle_dialogue)
-	await _collapse()
-
-
-## El simulador se desestabiliza; Kai detiene el muro atrapando el error.
-func _collapse() -> void:
-	phase = Phase.COLLAPSE
-	var state := get_node("/root/GameState")
-	var player := _room.player
-	player.damage.protected = true  # Situación segura: nada hace daño.
-	if wall == null or not is_instance_valid(wall):
-		_finish_collapse()
-		return
-	_set_background_stage(7)
-	_room.camera.shake(3.0, 0.6)
-	wall.set_enabled(true)
-	await _play(collapse_dialogue)
-	# Kai prueba romperlo: se reconstruye.
-	var rebuilt := [false]
-	wall.rebuilt.connect(func() -> void: rebuilt[0] = true, CONNECT_ONE_SHOT)
-	var waited := 0.0
-	var tree := get_tree()
-	while waited < try_time and not rebuilt[0] and is_instance_valid(wall):
-		await tree.physics_frame
-		if not is_inside_tree():
-			return  # La sala se cerró a mitad del derrumbe (al volver, empieza otra vez).
-		waited += get_physics_process_delta_time()
-	await _play(idea_dialogue)
-	if not is_inside_tree():
-		return
-	# La terminal del muro: atrapar el error (se repite hasta resolverlo; sin castigo).
-	if wall_challenge and not skip_cinematics:
-		await StoryHelper.choose_until_done(self, wall_challenge)
-	if not is_inside_tree():
-		return
-	if is_instance_valid(wall) and not wall.is_dead:
-		wall.health.take_damage(wall.health.current + 1.0)
-	await tree.physics_frame
-	if not is_inside_tree():
-		return
 	# Un mensaje que nadie escribió (la pista del capítulo): no se explica quién ni por qué.
 	if not skip_cinematics and not state.has_flag(ANOMALY_FLAG):
 		Sfx.play(&"entity_whisper", 0.8)
 		var reading := FragmentReading.show_lines(self, ANOMALY_LINES)
 		await reading.closed
 	state.set_flag(ANOMALY_FLAG)
-	_finish_collapse()
-	await _play(after_dialogue)
-
-
-func _finish_collapse() -> void:
-	_hide_hint()
-	var state := get_node("/root/GameState")
-	state.set_flag(ESCAPE_FLAG)
-	if state.get_current_step(QUEST) == &"vencer_bucle":
-		state.complete_step(QUEST, &"vencer_bucle")
-	if state.get_current_step(QUEST) == &"salir_simulador":
-		state.complete_step(QUEST, &"salir_simulador")
-	_set_background_stage(1)
+	await _play(anomaly_dialogue)
+	state.set_flag(FINISHED_FLAG)
 	_room.player.damage.protected = false
 	gate.active = false
 	phase = Phase.DONE
 
 
-func _show_hint(text: String) -> void:
-	_hide_hint()
-	_hint = Label.new()
-	_hint.text = text
-	_hint.add_theme_font_size_override("font_size", 18)
-	_hint.add_theme_color_override("font_color", Color("3ef2ff"))
-	_hint.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.08))
-	_hint.add_theme_constant_override("outline_size", 6)
-	_hint.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	_hint.offset_top = 120.0
-	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_room.get_node("CombatHUD").add_child(_hint)
-
-
-func _hide_hint() -> void:
-	if is_instance_valid(_hint):
-		_hint.queue_free()
-	_hint = null
-
-
 func _already_won() -> void:
 	boss.rest()
-	var state := get_node("/root/GameState")
-	if state.has_flag(ESCAPE_FLAG) or state.has_flag(LEGACY_DOMAIN_FLAG):
+	if get_node("/root/GameState").has_flag(FINISHED_FLAG):
 		phase = Phase.DONE
 		gate.active = false
-		if wall:
-			wall.queue_free()
 	else:
-		# Ganó, pero no terminó de salir: el simulador vuelve a desestabilizarse.
+		# Ganó, pero no terminó (se cerró el juego en el puzle): sigue desde ahí.
 		gate.active = true
-		_collapse.call_deferred()
-
-
-## Si Bucle puede descansar en ese lugar: las plataformas apagadas por un Error de ejecución no sirven.
-func _spot_available(spot: Vector2) -> bool:
-	for platform in platforms:
-		if not is_instance_valid(platform) or platform.position.y >= 300.0:
-			continue
-		var on_top := absf(platform.position.y - (spot.y + 8.0)) < 4.0
-		var inside := spot.x >= platform.position.x and spot.x <= platform.position.x + platform.width
-		if on_top and inside and (platform.is_closed() or platform.is_in_group(&"unsafe_ground")):
-			return false
-	return true
+		_after_victory.call_deferred()
 
 
 func _set_background_stage(stage: int) -> void:

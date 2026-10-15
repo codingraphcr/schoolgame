@@ -13,12 +13,6 @@ extends EnemyBase
 ##   el séptimo → HIT_REACTION → DEFEATED (se queda en la arena: no muere).
 ## Golpear durante EXECUTE es un golpe arriesgado (key_hit con risky = true: el controlador lo premia).
 ## Al cambiar de estado se cancelan los ataques en curso (época) y se borran los peligros.
-##
-## Versión difícil («como Sans»): Bucle no se queda quieto. Antes de cada ataque se teletransporta
-## (parpadeo, blink_time) a otro lugar de la arena (config.attack_spots, también arriba, donde Kai no llega);
-## si Kai se le acerca mientras prepara o ataca, lo esquiva (dodge); y descansa (FATIGUE) poco tiempo en un
-## lugar alcanzable pero lejos de Kai (config.rest_spots), a veces encima de una plataforma. Mientras
-## parpadea no se le puede golpear. Ataques nuevos (Barrido, Rastreo) y combinados («a+b»).
 
 signal state_changed(state: State)
 ## count: impactos hasta ahora (1 a 7). risky: llegó mientras atacaba.
@@ -31,15 +25,30 @@ signal transformed(stage: int)
 ## Pide al controlador un Error de ejecución (apagar una plataforma un rato).
 signal execution_error(number: int)
 signal finished
+## Soltó una repulsión (Kai estaba pegado a él).
+signal repulsed
 
 enum State { INTRO, PREPARE_PATTERN, EXECUTE_PATTERN, FATIGUE, HIT_REACTION, TRANSFORMATION, DEFEATED }
 
+## Dónde se pone en cada ciclo (x): cambia de lugar en algunos; en el último queda atrapado en el centro.
+const ANCHORS: Array[float] = [320.0, 320.0, 200.0, 440.0, 320.0, 200.0, 320.0]
+## Altura donde flota si la escena no dice otra (hover_y): abajo, sobre el piso.
 const HOVER_Y := 296.0
-const DODGE_LINES: PackedStringArray = ["¡Fuera de rango!", "¡Otra vez no!", "Repetir... ¡en otro lado!", "¡Jijiji, no!"]
+const TINT := preload("res://characters/enemies/bucle/bucle_tint.gdshader")
 
 @export var config: BucleConfig
 ## Límites de la arena: x de las paredes, y de arriba y del suelo (los ataques la usan).
 @export var arena := Rect2(40, 40, 560, 264)
+## Dónde flota (y) y la plataforma sobre la que está (en la arena de Ariel, el puente de arriba). Si tiene
+## ancho, el Pulso también corre por ella (si no, pararse junto a Bucle lo esquivaría siempre).
+@export var hover_y := HOVER_Y
+@export var perch := Rect2()
+## Mientras ataca sube rise px (fuera del alcance de un tajo desde el puente: hay que saltar) y va y viene
+## drift px a cada lado de su lugar. Cansado baja a hover_y: la ventana clara para golpearlo.
+@export var rise := 76.0
+@export var drift := 70.0
+## Empuje a Kai cuando un golpe rebota en el escudo o cuando recibe un impacto (para no quedarse pegado).
+@export var push := Vector2(260, -150)
 
 var state := State.INTRO
 var impacts := 0
@@ -57,13 +66,15 @@ var _state_left := 0.0
 var _pattern_done := false
 var _clock := 0.0
 var _flash := 0.0
-## Teletransporte en curso (segundos que faltan) y de dónde venía (para dibujar el rastro).
-var _blink_left := 0.0
-var _blink_from := Vector2.ZERO
-var _dodge_cd := 0.0
-var _dodges := 0
-## Quién decide si un lugar de descanso está disponible (p. ej. la plataforma no está apagada).
-var spot_filter := Callable()
+## El cuerpo (sprites de Ariel con el color de la etapa) y su animación en curso.
+var _body: Node2D
+var _anim := ""
+var _anim_since := 0.0
+## Su lugar (x) en este ciclo: cambia al transformarse (ANCHORS).
+var _anchor_x := 0.0
+var _shield_flash := 0.0
+## Espera hasta la próxima repulsión.
+var _repulse_cd := 0.0
 
 
 func _ready() -> void:
@@ -73,10 +84,18 @@ func _ready() -> void:
 	gravity = 0.0
 	knockback_resistance = 1.0
 	body_size = Vector2(22, 24)
+	_body = Node2D.new()
+	_body.name = "Cuerpo"
+	var tint := ShaderMaterial.new()
+	tint.shader = TINT
+	_body.material = tint
+	add_child(_body)
+	_body.draw.connect(_draw_body)
 	if config:
 		max_health = config.key_hits
 		contact_damage = config.attack_damage
 	super()
+	_anchor_x = position.x
 	# No muere: con la vida en cero queda DEFEATED (no se desintegra ni se borra).
 	health.died.disconnect(_die)
 	contact.deactivate()
@@ -97,21 +116,13 @@ func cycle_data() -> BucleCycle:
 	return config.cycle(cycle())
 
 
-## Si un golpe ahora cuenta como impacto clave (no mientras parpadea).
+## Si un golpe ahora cuenta como impacto clave: mientras ataca (arriba: hay que saltar) o cansado (abajo, en el
+## puente). Mientras anuncia la secuencia y mientras sube tiene escudo (los golpes rebotan y empujan a Kai).
 func is_vulnerable() -> bool:
-	return state in [State.PREPARE_PATTERN, State.EXECUTE_PATTERN, State.FATIGUE] and not hit_this_cycle and _blink_left <= 0.0
-
-
-func is_blinking() -> bool:
-	return _blink_left > 0.0
-
-
-## Se teletransporta a target (parpadeo corto).
-func blink_to(target: Vector2) -> void:
-	_blink_from = position
-	_blink_left = config.blink_time
-	position = target
-	Sfx.play(&"dash", 1.6, -8.0)
+	if hit_this_cycle:
+		return false
+	# Mientras ataca, recién cuando llegó arriba (mientras sube sigue con el escudo).
+	return state == State.FATIGUE or (state == State.EXECUTE_PATTERN and position.y <= hover_y - rise * 0.85)
 
 
 ## Vuelve a empezar (Kai perdió): ciclo 1, sin impactos, en su lugar.
@@ -124,9 +135,9 @@ func restore() -> void:
 	hit_this_cycle = false
 	current_attack = &""
 	health.restore_full()
-	position = Vector2(320, HOVER_Y)
-	_blink_left = 0.0
-	_dodge_cd = 0.0
+	position.x = ANCHORS[0]
+	_anchor_x = position.x
+	position.y = hover_y
 	modulate = Color.WHITE
 	hurtbox.set_physics_process(true)
 	_set_state(State.INTRO)
@@ -145,9 +156,6 @@ func rest() -> void:
 
 func _ai(delta: float) -> void:
 	velocity = Vector2.ZERO
-	_blink_left = maxf(_blink_left - delta, 0.0)
-	_dodge_cd = maxf(_dodge_cd - delta, 0.0)
-	_try_dodge()
 	match state:
 		State.PREPARE_PATTERN, State.FATIGUE, State.HIT_REACTION, State.TRANSFORMATION:
 			_state_left -= delta
@@ -156,12 +164,60 @@ func _ai(delta: float) -> void:
 		State.EXECUTE_PATTERN:
 			if _pattern_done:
 				_enter(State.FATIGUE)
+	_float(delta)
+	_check_repulse(delta)
+
+
+## Dónde flota: mientras ataca, arriba y yendo y viniendo sobre el puente (sin salirse de él); en lo demás,
+## abajo en su lugar (al transformarse, va hacia el lugar del ciclo nuevo).
+func _float(delta: float) -> void:
+	if state in [State.INTRO, State.DEFEATED]:
+		return
+	var target := Vector2(_anchor_x, hover_y)
+	var speed := 220.0 if state == State.TRANSFORMATION else 150.0
+	if state == State.EXECUTE_PATTERN:
+		target = Vector2(_anchor_x + sin(_clock * 1.3) * drift, hover_y - rise)
+		speed = 190.0 * cycle_data().speed
+	if perch.size.x > 0.0:
+		target.x = clampf(target.x, perch.position.x + 16.0, perch.end.x - 16.0)
+	position = position.move_toward(target, speed * delta)
+
+
+
+## Repulsión: si Kai se queda pegado mientras Bucle anuncia o ataca, estalla alrededor (con aviso).
+func _check_repulse(delta: float) -> void:
+	_repulse_cd = maxf(_repulse_cd - CombatClock.scaled(delta), 0.0)
+	if _repulse_cd > 0.0 or state not in [State.PREPARE_PATTERN, State.EXECUTE_PATTERN]:
+		return
+	var kai := get_player()
+	var center := global_position + BucleArt.CENTER
+	if kai == null or (kai.global_position + Vector2(0, -20)).distance_to(center) > config.repulse_range:
+		return
+	_repulse_cd = config.repulse_cooldown / maxf(cycle_data().speed, 0.1)
+	var burst := RepulseBurst.new()
+	burst.radius = config.repulse_radius
+	burst.telegraph = maxf(config.repulse_telegraph / cycle_data().speed, config.min_telegraph)
+	burst.damage = config.attack_damage
+	burst.color = BucleArt.body_color(stage)
+	get_parent().add_child(burst)
+	burst.global_position = center
+	repulsed.emit()
+
+## Empuja a Kai hacia el lado contrario (rebote en el escudo o al recibir un impacto).
+func _push_player() -> void:
+	var kai := get_player()
+	if kai == null or kai.global_position.distance_to(global_position) > 90.0:
+		return
+	var away := 1.0 if kai.global_position.x >= global_position.x else -1.0
+	kai.velocity = Vector2(away * push.x, push.y)
 
 
 func _physics_process(delta: float) -> void:
 	_clock += delta
 	_flash = maxf(_flash - delta, 0.0)
+	_shield_flash = maxf(_shield_flash - delta, 0.0)
 	queue_redraw()
+	_body.queue_redraw()
 	super(delta)
 
 
@@ -197,7 +253,6 @@ func _enter(next: State) -> void:
 			current_attack = &""
 			_state_left = cycle_data().fatigue_time
 			contact.deactivate()  # Cansado: se puede acercar sin que el contacto dañe.
-			blink_to(rest_spot())
 		State.HIT_REACTION:
 			current_attack = &""
 			_state_left = config.reaction_time
@@ -207,6 +262,8 @@ func _enter(next: State) -> void:
 			_state_left = config.transformation_time
 			stage = mini(impacts + 1, config.key_hits)
 			transformed.emit(stage)
+			# Se va a su lugar del ciclo nuevo (lo mueve _float).
+			_anchor_x = ANCHORS[clampi(stage - 1, 0, ANCHORS.size() - 1)]
 		State.DEFEATED:
 			current_attack = &""
 			contact.deactivate()
@@ -228,6 +285,9 @@ func _on_hit_received(_hit: HitData) -> void:
 	if not is_vulnerable():
 		hit_ignored.emit()
 		Sfx.play(&"enemy_hit", 1.6, -8.0)
+		# El golpe rebota (en el escudo o mientras reacciona): Kai sale despedido.
+		_shield_flash = 0.3
+		_push_player()
 		return
 	var risky := state == State.EXECUTE_PATTERN
 	hit_this_cycle = true
@@ -240,56 +300,8 @@ func _on_hit_received(_hit: HitData) -> void:
 	if config.hit_lines.size() >= impacts:
 		SpeechBark.say(self, config.hit_lines[impacts - 1], Vector2(0, -52))
 	key_hit.emit(impacts, risky)
+	_push_player()
 	_enter(State.HIT_REACTION)
-
-
-## --- Movimiento ---
-
-## Un lugar de descanso alcanzable, lejos de Kai (entre rest_min_distance y rest_max_distance), al azar.
-func rest_spot() -> Vector2:
-	var kai := get_player()
-	var options: Array[Vector2] = []
-	var fallback := position
-	var best := -1.0
-	for spot in config.rest_spots:
-		if spot_filter.is_valid() and not spot_filter.call(spot):
-			continue
-		var distance := spot.distance_to(kai.global_position) if kai else 200.0
-		if distance >= config.rest_min_distance and distance <= config.rest_max_distance:
-			options.append(spot)
-		if distance > best and distance <= config.rest_max_distance:
-			best = distance
-			fallback = spot
-	return options[rng.randi_range(0, options.size() - 1)] if not options.is_empty() else fallback
-
-
-## Un lugar para atacar distinto del actual y no pegado a Kai.
-func attack_spot() -> Vector2:
-	var kai := get_player()
-	var options: Array[Vector2] = []
-	for spot in config.attack_spots:
-		if spot.distance_to(position) < 60.0:
-			continue
-		if kai and spot.distance_to(kai.global_position) < 140.0:
-			continue
-		options.append(spot)
-	if options.is_empty():
-		return config.attack_spots[rng.randi_range(0, config.attack_spots.size() - 1)]
-	return options[rng.randi_range(0, options.size() - 1)]
-
-
-## Esquiva: si Kai se acerca mientras prepara o ataca, se va a otro lugar.
-func _try_dodge() -> void:
-	if state not in [State.PREPARE_PATTERN, State.EXECUTE_PATTERN] or not cycle_data().dodge or _dodge_cd > 0.0 or hit_this_cycle:
-		return
-	var kai := get_player()
-	if kai == null or (global_position + BucleArt.CENTER).distance_to(kai.global_position + Vector2(0, -20)) > config.dodge_distance:
-		return
-	_dodge_cd = config.dodge_cooldown
-	_dodges += 1
-	blink_to(attack_spot())
-	if _dodges % 3 == 1:
-		SpeechBark.say(self, DODGE_LINES[int(_dodges / 3.0) % DODGE_LINES.size()], Vector2(0, -52), 1.0)
 
 
 ## --- La secuencia del ciclo ---
@@ -298,22 +310,11 @@ func _run_pattern(epoch: int) -> void:
 	var data := cycle_data()
 	if data.execution_error:
 		execution_error.emit(cycle())
-	for i in data.attacks.size():
+	for attack in data.attacks:
 		if epoch != _epoch:
 			return
-		var attack: StringName = data.attacks[i]
-		# Cambia de lugar antes de cada ataque (salvo el primero del ciclo 1: se presenta en su lugar).
-		if cycle() > 1 or i > 0:
-			blink_to(attack_spot())
-			await _wait(config.blink_time)
-			if epoch != _epoch:
-				return
 		current_attack = attack
-		var parts := String(attack).split("+", false)
-		# Los combinados («a+b») van a la vez: se espera al último.
-		for k in parts.size() - 1:
-			_attack(StringName(parts[k]), data, epoch)
-		await _attack(StringName(parts[parts.size() - 1]), data, epoch)
+		await _attack(attack, data, epoch)
 		if epoch != _epoch:
 			return
 		await _wait(data.gap / maxf(data.speed, 0.1))
@@ -332,6 +333,9 @@ func _attack(attack: StringName, data: BucleCycle, epoch: int) -> void:
 				if epoch != _epoch:
 					return
 				BucleAttacks.pulse(get_parent(), global_position, arena, config.pulse_speed * data.speed, telegraph, damage)
+				if perch.size.x > 0.0:
+					# Y por la plataforma donde está él (de la x de Bucle hacia sus dos bordes).
+					BucleAttacks.pulse(get_parent(), Vector2(global_position.x, perch.position.y), Rect2(perch.position.x, 0.0, perch.size.x, perch.position.y), config.pulse_speed * data.speed, telegraph, damage)
 				await _wait(telegraph + 0.45 / data.speed)
 		&"lluvia":
 			var lane_width := arena.size.x / config.rain_lanes
@@ -345,15 +349,6 @@ func _attack(attack: StringName, data: BucleCycle, epoch: int) -> void:
 			BucleAttacks.ring(get_parent(), center, config.ring_speed * data.speed, config.ring_width, data.ring_gap, data.ring_spin,
 				angle, telegraph, damage)
 			await _wait(telegraph + 0.9)
-		&"barrido":
-			var kai := get_player()
-			var y := kai.global_position.y - 14.0 if kai else arena.end.y - 14.0
-			BucleAttacks.sweep(get_parent(), arena, y, telegraph, config.sweep_live, damage)
-			await _wait(telegraph + config.sweep_live)
-		&"rastreo":
-			BucleAttacks.seekers(get_parent(), center, arena, maxi(data.seeker_count, 1), get_player(),
-				config.seeker_speed * data.speed, config.seeker_turn, config.seeker_life, telegraph, damage)
-			await _wait(telegraph + 0.8)
 
 
 ## Espera con el tiempo de las amenazas (el Dominio Nulo la alarga).
@@ -364,30 +359,72 @@ func _wait(seconds: float) -> void:
 ## --- Dibujo ---
 
 func _draw() -> void:
-	var mood: StringName = &""
-	match state:
-		State.FATIGUE:
-			mood = &"cansado"
-		State.HIT_REACTION:
-			mood = &"golpe"
-		State.DEFEATED:
-			mood = &"libre"
 	if state == State.PREPARE_PATTERN:
 		# Anuncia la secuencia: un anillo que se cierra sobre él.
 		var t := 1.0 - clampf(_state_left / maxf(config.prepare_time, 0.01), 0.0, 1.0)
 		draw_arc(BucleArt.CENTER, 40.0 - t * 22.0, 0.0, TAU, 32, Color(BucleArt.body_color(stage), 0.6), 2.0)
-	var shown_stage := stage if state != State.DEFEATED else 1
-	if _blink_left > 0.0:
-		# Rastro del teletransporte: un eco que se desvanece donde estaba.
-		var t := _blink_left / maxf(config.blink_time, 0.01)
-		draw_set_transform(_blink_from - position)
-		draw_arc(BucleArt.CENTER, BucleArt.BODY_RADIUS + 4.0, 0, TAU, 20, Color(BucleArt.body_color(stage), 0.6 * t), 2.0)
-		draw_set_transform(Vector2.ZERO)
-		modulate.a = 1.0 - t * 0.7
-	else:
-		modulate.a = 1.0
-	BucleArt.draw(self, shown_stage, _clock, mood, GameSettings.glitch_factor())
-	if _flash > 0.0:
-		draw_circle(BucleArt.CENTER, BucleArt.BODY_RADIUS + 3.0, Color(1, 1, 1, _flash * 3.0))
+		# Escudo: mientras anuncia, los golpes rebotan.
+		var color := BucleArt.body_color(stage)
+		draw_circle(BucleArt.CENTER, 17.0, Color(color, 0.12 + 0.25 * _shield_flash / 0.3))
+		for k in 6:
+			var a := _clock * 2.0 + k * TAU / 6.0
+			draw_arc(BucleArt.CENTER, 17.0, a, a + 0.6, 6, Color(color.lightened(0.4), 0.8), 1.5)
+	BucleArt.draw_around(self, _shown_stage(), _clock, GameSettings.glitch_factor())
 	if state == State.FATIGUE:
 		draw_string(ThemeDB.fallback_font, BucleArt.CENTER + Vector2(10, -16), "z", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(Color.WHITE, 0.6))
+
+
+## El cuerpo (los sprites de Ariel): va en su propio nodo, encima de lo de alrededor, con el shader que le da
+## el color de la etapa.
+func _draw_body() -> void:
+	var anim := current_anim()
+	if anim != _anim:
+		_anim = anim
+		_anim_since = _clock
+	_body.material.set_shader_parameter(&"target", BucleArt.body_color(_shown_stage()))
+	if not BucleArt.draw_sprite(_body, anim, _clock - _anim_since, _shown_stage(), _clock):
+		BucleArt.draw_fallback(_body, _shown_stage(), _clock, _mood())
+	if _flash > 0.0:
+		_body.draw_circle(BucleArt.CENTER, BucleArt.BODY_RADIUS + 3.0, Color(1, 1, 1, _flash * 3.0))
+
+
+## La animación de la hoja de Ariel para el estado actual (y, al atacar, para el ataque).
+func current_anim() -> String:
+	match state:
+		State.PREPARE_PATTERN:
+			return "preparar"
+		State.EXECUTE_PATTERN:
+			match current_attack:
+				&"pulso":
+					return "onda"
+				&"lluvia":
+					return "lluvia"
+				&"anillo":
+					return "anillo"
+			return "preparar"
+		State.FATIGUE:
+			return "aturdido"
+		State.HIT_REACTION:
+			return "dano"
+		State.TRANSFORMATION:
+			return "recarga"
+		State.DEFEATED:
+			return "derrota"
+	return "quieto"
+
+
+func _mood() -> StringName:
+	match state:
+		State.FATIGUE:
+			return &"cansado"
+		State.HIT_REACTION:
+			return &"golpe"
+		State.PREPARE_PATTERN, State.EXECUTE_PATTERN:
+			return &"preparando"
+		State.DEFEATED:
+			return &"libre"
+	return &""
+
+
+func _shown_stage() -> int:
+	return stage if state != State.DEFEATED else 1

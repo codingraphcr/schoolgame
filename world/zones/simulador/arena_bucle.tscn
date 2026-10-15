@@ -7,7 +7,6 @@
 [ext_resource type="Script" path="res://world/digital/arena_barrier.gd" id="5_jw8xu"]
 [ext_resource type="Script" path="res://characters/enemies/bucle/bucle_boss.gd" id="6_6toqw"]
 [ext_resource type="Resource" path="res://data/bosses/bucle.tres" id="7_y6ao3"]
-[ext_resource type="Script" path="res://world/zones/simulador/process_wall.gd" id="8_1uboe"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="9_e8hxi"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="10_ga5tx"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="12_5wpra"]
@@ -17,11 +16,8 @@
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_final.tres" id="18_h33h4"]
 [ext_resource type="Resource" path="res://data/challenges/cap2_condicion_salida.tres" id="19_ruioh"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_condicion.tres" id="20_7wed5"]
-[ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_colapso.tres" id="21_pi2kj"]
-[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_muro_idea.tres" id="22_5nx6q"]
-[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_muro_despues.tres" id="23_hibkq"]
-
-[ext_resource type="Resource" path="res://data/challenges/cap2_atrapar_error.tres" id="90_wall"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/simulador_bucle.webp" id="22_fondo"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_despues.tres" id="23_anomalia"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3nlxs"]
 size = Vector2(704, 80)
@@ -52,6 +48,7 @@ music_track = &"computadora"
 
 [node name="Background" type="Node2D" parent="." unique_id=592603790]
 script = ExtResource("2_45kmw")
+picture = ExtResource("22_fondo")
 
 [node name="Collisions" type="StaticBody2D" parent="." unique_id=1521554512]
 
@@ -73,21 +70,37 @@ shape = SubResource("RectangleShape2D_b2w47")
 position = Vector2(0, 304)
 script = ExtResource("3_0t1iy")
 width = 640.0
+drawn = false
 
 [node name="PlataformaIzquierda" type="AnimatableBody2D" parent="Platforms" unique_id=903643630]
-position = Vector2(60, 230)
+position = Vector2(62, 246)
 script = ExtResource("3_0t1iy")
-width = 120.0
+width = 83.0
+drawn = false
 
 [node name="PlataformaDerecha" type="AnimatableBody2D" parent="Platforms" unique_id=634983574]
-position = Vector2(460, 230)
+position = Vector2(493, 246)
 script = ExtResource("3_0t1iy")
-width = 120.0
+width = 81.0
+drawn = false
 
 [node name="PlataformaCentral" type="AnimatableBody2D" parent="Platforms" unique_id=279338243]
-position = Vector2(260, 170)
+position = Vector2(147, 181)
 script = ExtResource("3_0t1iy")
-width = 120.0
+width = 344.0
+drawn = false
+
+[node name="PilarIzquierdo" type="AnimatableBody2D" parent="Platforms"]
+position = Vector2(0, 196)
+script = ExtResource("3_0t1iy")
+width = 71.0
+drawn = false
+
+[node name="PilarDerecho" type="AnimatableBody2D" parent="Platforms"]
+position = Vector2(566, 196)
+script = ExtResource("3_0t1iy")
+width = 74.0
+drawn = false
 
 [node name="Entries" type="Node2D" parent="." unique_id=1835581424]
 
@@ -106,14 +119,12 @@ script = ExtResource("5_jw8xu")
 height = 220.0
 
 [node name="Bucle" type="CharacterBody2D" parent="." unique_id=901945035]
-position = Vector2(320, 296)
+position = Vector2(320, 176)
 script = ExtResource("6_6toqw")
 config = ExtResource("7_y6ao3")
+hover_y = 176.0
+perch = Rect2(147, 181, 344, 0)
 
-[node name="MuroDeProcesos" type="CharacterBody2D" parent="." unique_id=1143136787]
-position = Vector2(600, 304)
-script = ExtResource("8_1uboe")
-max_health = 4.4
 
 [node name="Exits" type="Node2D" parent="." unique_id=904449206]
 
@@ -145,18 +156,14 @@ target = NodePath("../Player")
 [node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_21f0g")]
 player = NodePath("../Player")
 
-[node name="Fight" type="Node" parent="." unique_id=1155115476 node_paths=PackedStringArray("boss", "gate", "platforms", "background", "wall")]
+[node name="Fight" type="Node" parent="." unique_id=1155115476 node_paths=PackedStringArray("boss", "gate", "platforms", "background")]
 script = ExtResource("16_qk0sg")
 boss = NodePath("../Bucle")
 gate = NodePath("../Gate")
-platforms = [NodePath("../Platforms/PlataformaIzquierda"), NodePath("../Platforms/PlataformaDerecha"), NodePath("../Platforms/PlataformaCentral")]
+platforms = [NodePath("../Platforms/PlataformaIzquierda"), NodePath("../Platforms/PlataformaDerecha"), NodePath("../Platforms/PilarIzquierdo"), NodePath("../Platforms/PilarDerecho")]
 background = NodePath("../Background")
 intro_dialogue = ExtResource("17_50iar")
 closing_dialogue = ExtResource("18_h33h4")
 exit_challenge = ExtResource("19_ruioh")
 after_puzzle_dialogue = ExtResource("20_7wed5")
-wall = NodePath("../MuroDeProcesos")
-collapse_dialogue = ExtResource("21_pi2kj")
-idea_dialogue = ExtResource("22_5nx6q")
-wall_challenge = ExtResource("90_wall")
-after_dialogue = ExtResource("23_hibkq")
+anomaly_dialogue = ExtResource("23_anomalia")

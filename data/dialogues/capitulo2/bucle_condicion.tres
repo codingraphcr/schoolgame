@@ -6,6 +6,6 @@
 script = ExtResource("1_dlg")
 script_text = "# Capítulo 2, nivel 4: después de corregir la condición de salida (puzle educativo).
 Kai: Listo. Ahora tu ciclo tiene una condición de salida.
-Bucle: Entonces... cuando la tarea termine, ¿me puedo detener?
+Bucle [preocupado]: Entonces... cuando la tarea termine, ¿me puedo detener?
 Kai [sonriente]: Exacto. Y si algo falla, también: no tenés que repetirlo para siempre.
 Bucle: ...Gracias. Creo que voy a descansar un rato."

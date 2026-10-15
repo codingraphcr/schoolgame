@@ -6,8 +6,6 @@ extends RefCounted
 ## - pulse(): Pulso repetitivo, dos ondas por el suelo (una a cada lado).
 ## - rain(): Lluvia de instrucciones en carriles; nunca tapa todos (rain_lanes()).
 ## - ring(): Ciclo circular, anillo con dos huecos que giran.
-## - sweep(): Barrido, una línea que cruza toda la arena a la altura de Kai.
-## - seekers(): Rastreo, procesos huérfanos que persiguen a Kai un rato.
 
 
 static func pulse(parent: Node, at: Vector2, arena: Rect2, speed: float, telegraph: float, damage: float) -> Array[LoopPulse]:
@@ -80,36 +78,6 @@ static func ring(parent: Node, at: Vector2, speed: float, width: float, gap: flo
 	parent.add_child(node)
 	node.global_position = at
 	return node
-
-
-static func sweep(parent: Node, arena: Rect2, y: float, telegraph: float, live_time: float, damage: float) -> LoopSweep:
-	var line := LoopSweep.new()
-	line.width = arena.size.x
-	line.telegraph = telegraph
-	line.live_time = live_time
-	line.damage = damage
-	parent.add_child(line)
-	line.global_position = Vector2(arena.position.x, clampf(y, arena.position.y + 10.0, arena.end.y - 8.0))
-	return line
-
-
-static func seekers(parent: Node, from: Vector2, arena: Rect2, count: int, target: Node2D, speed: float, turn: float, life: float,
-		telegraph: float, damage: float) -> Array[LoopSeeker]:
-	var result: Array[LoopSeeker] = []
-	for i in count:
-		var orb := LoopSeeker.new()
-		orb.target = target
-		orb.speed = speed
-		orb.turn_rate = turn
-		orb.life = life
-		orb.arena = arena
-		orb.telegraph = telegraph + i * 0.15
-		orb.damage = damage
-		parent.add_child(orb)
-		var spread := (i - (count - 1) / 2.0) * 22.0
-		orb.global_position = from + Vector2(spread, -6.0)
-		result.append(orb)
-	return result
 
 
 static func clear(tree: SceneTree) -> void:

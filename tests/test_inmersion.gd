@@ -31,6 +31,7 @@ func _run() -> void:
 	await _first_entry()
 	await _second_entry()
 	_test_save()
+	await _test_una_sola_vez()
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
 
@@ -149,6 +150,35 @@ func _frames(count: int) -> void:
 		await process_frame
 		await physics_frame
 
+
+
+## A cada entorno digital de la historia se entra una sola vez: con el jefe de adentro vencido y Kai afuera,
+## el cuadro desaparece (aun con la Visión Digital). Partidas preparadas con los puntos del menú de pruebas.
+func _test_una_sola_vez() -> void:
+	var cases := [
+		["Jefe: Glitch y Chip", "res://world/zones/zone0/cuarto_tecnico.tscn", "ImmersionPortal", true, "antes de vencer a Glitch y Chip, el monitor del cuarto técnico se puede usar"],
+		["Final (GENESIS_ARCHIVE)", "res://world/zones/zone0/cuarto_tecnico.tscn", "ImmersionPortal", false, "con Glitch y Chip vencidos, el monitor del cuarto técnico ya no está"],
+		["Laboratorio: la conexión al simulador", "res://world/zones/zone0/laboratorio.tscn", "Capitulo2/ConexionSimulador", true, "la conexión al simulador del laboratorio se puede usar"],
+		["Final del capítulo (el profesor)", "res://world/zones/zone0/laboratorio.tscn", "Capitulo2/ConexionSimulador", false, "con el simulador terminado, la conexión del laboratorio ya no está"],
+	]
+	for case: Array in cases:
+		DevPoints.prepare(_dev_point(case[0]), state)
+		change_scene_to_file(case[1])
+		await _until(func() -> bool: return current_scene != null and current_scene.scene_file_path == case[1] and current_scene.is_node_ready())
+		await _frames(6)
+		vision.activate(true)
+		await _frames(4)
+		var portal := current_scene.get_node(case[2]) as ImmersionPortal
+		_check(portal.is_available() == case[3] and portal.enabled == case[3], case[4])
+		vision.activate(false)
+	state.reset()
+
+
+func _dev_point(point_name: String) -> Dictionary:
+	for point: Dictionary in DevPoints.POINTS:
+		if point["nombre"] == point_name:
+			return point
+	return {}
 
 func _check(condition: bool, message: String) -> void:
 	if not condition:

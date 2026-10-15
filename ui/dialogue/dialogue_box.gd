@@ -204,7 +204,7 @@ func _update_portraits(character: DialogueCharacter, expression: String) -> int:
 		var changed: bool = _side_character[active_side] != character or portrait.texture != texture or not portrait.visible
 		_side_character[active_side] = character
 		if changed:
-			_place_portrait(portrait, texture, active_side, character.flip_portrait, character.portrait_scale)
+			_place_portrait(portrait, texture, active_side, character.flip_portrait, character.portrait_scale, character.portrait_offset)
 	for side in _portraits:
 		var portrait: TextureRect = _portraits[side]
 		var active: bool = side == active_side
@@ -220,9 +220,9 @@ func _update_portraits(character: DialogueCharacter, expression: String) -> int:
 	return active_side
 
 
-func _place_portrait(portrait: TextureRect, texture: Texture2D, side: int, flipped: bool, size_scale := 1.0) -> void:
+func _place_portrait(portrait: TextureRect, texture: Texture2D, side: int, flipped: bool, size_scale := 1.0, offset := Vector2.ZERO) -> void:
 	var shown := texture.get_size() * minf(PORTRAIT_HEIGHT / texture.get_height(), MAX_UPSCALE) * size_scale
-	var x := 0.0 if side == DialogueCharacter.Side.LEFT else size.x - shown.x
+	var x := offset.x if side == DialogueCharacter.Side.LEFT else size.x - shown.x - offset.x
 	portrait.texture = texture
 	portrait.flip_h = flipped
 	portrait.size = shown
@@ -232,10 +232,10 @@ func _place_portrait(portrait: TextureRect, texture: Texture2D, side: int, flipp
 	portrait.visible = true
 	# Entra deslizándose desde su lado y desde abajo.
 	var from := -SLIDE if side == DialogueCharacter.Side.LEFT else SLIDE
-	portrait.position = Vector2(x + from, size.y - shown.y + 20.0)
+	portrait.position = Vector2(x + from, size.y - shown.y - offset.y + 20.0)
 	portrait.modulate.a = 0.0
 	var tween := create_tween().set_parallel().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(portrait, "position:y", size.y - shown.y, 0.3)
+	tween.tween_property(portrait, "position:y", size.y - shown.y - offset.y, 0.3)
 	tween.tween_property(portrait, "modulate:a", 1.0, 0.18)
 
 

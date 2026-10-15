@@ -29,28 +29,12 @@ extends Resource
 @export var ring_width := 10.0
 ## Segundos que una plataforma queda apagada por un Error de ejecución.
 @export var error_time := 4.0
-## Segundos que daña el Barrido después de su aviso.
-@export var sweep_live := 0.35
-## Velocidad (px/s), giro (rad/s) y vida (s) de los procesos huérfanos del Rastreo.
-@export var seeker_speed := 115.0
-@export var seeker_turn := 2.2
-@export var seeker_life := 2.8
-
-@export_group("Movimiento")
-## Lugares desde donde ataca (por toda la arena, también arriba, donde Kai no llega).
-@export var attack_spots: Array[Vector2] = [Vector2(100, 296), Vector2(320, 296), Vector2(540, 296), Vector2(120, 200),
-	Vector2(520, 200), Vector2(200, 92), Vector2(440, 92), Vector2(320, 70), Vector2(80, 124), Vector2(560, 124)]
-## Lugares donde descansa (FATIGUE): siempre alcanzables (en el piso o encima de una plataforma).
-@export var rest_spots: Array[Vector2] = [Vector2(110, 296), Vector2(320, 296), Vector2(530, 296), Vector2(120, 222),
-	Vector2(520, 222), Vector2(320, 162)]
-## Distancia a Kai de los lugares de descanso que elige (ni pegado ni imposible de alcanzar a tiempo).
-@export var rest_min_distance := 110.0
-@export var rest_max_distance := 290.0
-## Esquiva: si Kai se acerca a menos de dodge_distance, se teletransporta (con esta recarga).
-@export var dodge_distance := 64.0
-@export var dodge_cooldown := 0.9
-## Segundos del teletransporte (parpadeo; en ese momento no se le puede golpear).
-@export var blink_time := 0.22
+## Repulsión (RepulseBurst): si Kai está a menos de repulse_range px mientras Bucle anuncia o ataca, después
+## de repulse_telegraph segundos estalla alrededor (radio repulse_radius). Una cada repulse_cooldown segundos.
+@export var repulse_range := 72.0
+@export var repulse_radius := 56.0
+@export var repulse_telegraph := 0.45
+@export var repulse_cooldown := 1.3
 
 @export_group("Recompensas")
 ## Energía que recibe Kai por un golpe arriesgado (mientras Bucle ataca): media barrita = una curación.

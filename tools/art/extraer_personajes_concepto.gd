@@ -39,6 +39,7 @@ const OUTLINE := Color("0a0d1c")
 ##          cálculo automático (centro de la cabeza) no sirve. only_body: conserva solo la figura
 ##          principal (descarta, por ejemplo, un globo de diálogo que quedó dentro de la zona).
 ##          rotate: gira la pose 90° (desplomada boca abajo, la cabeza hacia donde mira).
+##          scale (opcional): agranda o achica esa pose (la hoja dibuja a algunos más chicos en ciertas filas).
 ##   rows (opcional): filas de cuadros numerados (hojas de animación cuadro por cuadro). Por fila: y (de dónde
 ##          a dónde van los dibujos, debajo de los números) y labels (la columna del número de cada cuadro:
 ##          cada cuadro va de su número al siguiente). Crea las poses "<fila>_1", "<fila>_2"… con only_body
@@ -515,6 +516,122 @@ const CHARACTERS := {
 			"chip_picada_fin": { "row": "picada", "frames": [12], "fps": 1.0, "loop": true },
 		},
 	},
+	# Bucle Infinito (Capítulo 2): hoja de sprites de Ariel bucle_sprites.webp («BUCLE · SPRITE SHEET», 22 px en el
+	# juego). Cada fila es una animación de 8 cuadros; feet_y es la línea de base de la fila (así no salta de altura
+	# entre cuadros). Los rectángulos los encontró una búsqueda de manchas brillantes. Escala: el primer cuadro de
+	# quieto mide 46 (en el mundo, 23 px: la mitad de Kai, como dice la hoja). El color de cada etapa lo pone el
+	# juego (BucleArt, con un shader: del amarillo de la hoja al violeta).
+	"bucle": {
+		"source": "res://docs/arte/referencias/bucle_sprites.webp",
+		"out": "res://assets/art/characters/bucle/",
+		"prefix": "bucle",
+		"background": Color("03050f"),
+		"tolerance": 0.2,
+		"reference": "quieto_1",
+		"height": 46,
+		"poses": {
+			"quieto_1": { "rect": Rect2i(425, 80, 59, 64), "feet_y": 143, "only_body": true, "soft_glow": true },
+			"quieto_2": { "rect": Rect2i(494, 78, 59, 66), "feet_y": 143, "only_body": true, "soft_glow": true },
+			"quieto_3": { "rect": Rect2i(562, 75, 60, 69), "feet_y": 143, "only_body": true, "soft_glow": true },
+			"quieto_4": { "rect": Rect2i(630, 80, 58, 64), "feet_y": 143, "only_body": true, "soft_glow": true },
+			"quieto_5": { "rect": Rect2i(696, 78, 59, 66), "feet_y": 143, "only_body": true, "soft_glow": true },
+			"quieto_6": { "rect": Rect2i(766, 80, 58, 64), "feet_y": 143, "only_body": true, "soft_glow": true },
+			"quieto_7": { "rect": Rect2i(835, 78, 59, 66), "feet_y": 143, "only_body": true, "soft_glow": true },
+			"quieto_8": { "rect": Rect2i(902, 80, 59, 64), "feet_y": 143, "only_body": true, "soft_glow": true },
+			"preparar_1": { "rect": Rect2i(28, 410, 51, 51), "feet_y": 460, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"preparar_2": { "rect": Rect2i(87, 410, 51, 51), "feet_y": 460, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"preparar_3": { "rect": Rect2i(146, 409, 50, 52), "feet_y": 460, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"preparar_4": { "rect": Rect2i(203, 407, 52, 54), "feet_y": 460, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"preparar_5": { "rect": Rect2i(263, 405, 53, 56), "feet_y": 460, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"preparar_6": { "rect": Rect2i(321, 405, 54, 56), "feet_y": 460, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"preparar_7": { "rect": Rect2i(380, 406, 54, 55), "feet_y": 460, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"preparar_8": { "rect": Rect2i(440, 407, 52, 54), "feet_y": 460, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"recarga_1": { "rect": Rect2i(1038, 407, 54, 58), "feet_y": 464, "only_body": true, "soft_glow": true, "scale": 1.08 },
+			"recarga_2": { "rect": Rect2i(1098, 407, 54, 58), "feet_y": 464, "only_body": true, "soft_glow": true, "scale": 1.08 },
+			"recarga_3": { "rect": Rect2i(1158, 406, 50, 59), "feet_y": 464, "only_body": true, "soft_glow": true, "scale": 1.08 },
+			"recarga_4": { "rect": Rect2i(1214, 402, 52, 63), "feet_y": 464, "only_body": true, "soft_glow": true, "scale": 1.08 },
+			"recarga_5": { "rect": Rect2i(1273, 402, 54, 63), "feet_y": 464, "only_body": true, "soft_glow": true, "scale": 1.08 },
+			"recarga_6": { "rect": Rect2i(1334, 402, 52, 63), "feet_y": 464, "only_body": true, "soft_glow": true, "scale": 1.08 },
+			"recarga_7": { "rect": Rect2i(1394, 402, 56, 63), "feet_y": 464, "only_body": true, "soft_glow": true, "scale": 1.08 },
+			"recarga_8": { "rect": Rect2i(1456, 403, 55, 62), "feet_y": 464, "only_body": true, "soft_glow": true, "scale": 1.08 },
+			"onda_1": { "rect": Rect2i(29, 559, 43, 46), "feet_y": 604, "only_body": false, "soft_glow": true, "scale": 1.3 },
+			"onda_2": { "rect": Rect2i(86, 558, 46, 47), "feet_y": 604, "only_body": false, "soft_glow": true, "scale": 1.3 },
+			"onda_3": { "rect": Rect2i(144, 552, 50, 53), "feet_y": 604, "only_body": false, "soft_glow": true, "scale": 1.3 },
+			"onda_4": { "rect": Rect2i(202, 549, 58, 56), "feet_y": 604, "only_body": false, "soft_glow": true, "scale": 1.3 },
+			"onda_5": { "rect": Rect2i(262, 548, 58, 57), "feet_y": 604, "only_body": false, "soft_glow": true, "scale": 1.3 },
+			"onda_6": { "rect": Rect2i(322, 544, 58, 61), "feet_y": 604, "only_body": false, "soft_glow": true, "scale": 1.3 },
+			"onda_7": { "rect": Rect2i(382, 548, 57, 57), "feet_y": 604, "only_body": false, "soft_glow": true, "scale": 1.3 },
+			"onda_8": { "rect": Rect2i(443, 545, 57, 60), "feet_y": 604, "only_body": false, "soft_glow": true, "scale": 1.3 },
+			"lluvia_1": { "rect": Rect2i(519, 534, 70, 73), "feet_y": 606, "only_body": true, "soft_glow": true, "scale": 1.15 },
+			"lluvia_2": { "rect": Rect2i(577, 534, 70, 73), "feet_y": 606, "only_body": true, "soft_glow": true, "scale": 1.15 },
+			"lluvia_3": { "rect": Rect2i(633, 534, 70, 73), "feet_y": 606, "only_body": true, "soft_glow": true, "scale": 1.15 },
+			"lluvia_4": { "rect": Rect2i(696, 534, 70, 73), "feet_y": 606, "only_body": true, "soft_glow": true, "scale": 1.15 },
+			"lluvia_5": { "rect": Rect2i(762, 534, 70, 73), "feet_y": 606, "only_body": true, "soft_glow": true, "scale": 1.15 },
+			"lluvia_6": { "rect": Rect2i(826, 534, 70, 73), "feet_y": 606, "only_body": true, "soft_glow": true, "scale": 1.15 },
+			"lluvia_7": { "rect": Rect2i(892, 534, 70, 73), "feet_y": 606, "only_body": true, "soft_glow": true, "scale": 1.15 },
+			"lluvia_8": { "rect": Rect2i(954, 534, 58, 73), "feet_y": 606, "only_body": true, "soft_glow": true, "scale": 1.15 },
+			"anillo_1": { "rect": Rect2i(1039, 557, 53, 50), "feet_y": 606, "only_body": true, "soft_glow": true },
+			"anillo_2": { "rect": Rect2i(1094, 553, 57, 54), "feet_y": 606, "only_body": true, "soft_glow": true },
+			"anillo_3": { "rect": Rect2i(1154, 556, 56, 51), "feet_y": 606, "only_body": true, "soft_glow": true },
+			"anillo_4": { "rect": Rect2i(1212, 548, 60, 59), "feet_y": 606, "only_body": true, "soft_glow": true },
+			"anillo_5": { "rect": Rect2i(1272, 544, 63, 63), "feet_y": 606, "only_body": true, "soft_glow": true },
+			"anillo_6": { "rect": Rect2i(1334, 544, 64, 63), "feet_y": 606, "only_body": true, "soft_glow": true },
+			"anillo_7": { "rect": Rect2i(1398, 542, 63, 65), "feet_y": 606, "only_body": true, "soft_glow": true },
+			"anillo_8": { "rect": Rect2i(1460, 543, 59, 64), "feet_y": 606, "only_body": true, "soft_glow": true },
+			"dano_1": { "rect": Rect2i(25, 693, 45, 50), "feet_y": 742, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"dano_2": { "rect": Rect2i(75, 693, 45, 50), "feet_y": 742, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"dano_3": { "rect": Rect2i(123, 693, 45, 50), "feet_y": 742, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"dano_4": { "rect": Rect2i(173, 693, 44, 50), "feet_y": 742, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"dano_5": { "rect": Rect2i(220, 693, 45, 50), "feet_y": 742, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"dano_6": { "rect": Rect2i(268, 693, 45, 50), "feet_y": 742, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"dano_7": { "rect": Rect2i(315, 693, 45, 50), "feet_y": 742, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"dano_8": { "rect": Rect2i(364, 693, 45, 50), "feet_y": 742, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"aturdido_1": { "rect": Rect2i(425, 695, 46, 51), "feet_y": 745, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"aturdido_2": { "rect": Rect2i(474, 694, 43, 52), "feet_y": 745, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"aturdido_3": { "rect": Rect2i(520, 694, 41, 52), "feet_y": 745, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"aturdido_4": { "rect": Rect2i(565, 695, 43, 51), "feet_y": 745, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"aturdido_5": { "rect": Rect2i(612, 696, 44, 50), "feet_y": 745, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"aturdido_6": { "rect": Rect2i(662, 696, 43, 50), "feet_y": 745, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"aturdido_7": { "rect": Rect2i(710, 695, 46, 51), "feet_y": 745, "only_body": true, "soft_glow": true, "scale": 1.3 },
+			"derrota_1": { "rect": Rect2i(783, 697, 43, 52), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"derrota_2": { "rect": Rect2i(827, 687, 54, 62), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"derrota_3": { "rect": Rect2i(882, 696, 47, 53), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"derrota_4": { "rect": Rect2i(930, 708, 47, 41), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"derrota_5": { "rect": Rect2i(978, 692, 48, 57), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"derrota_6": { "rect": Rect2i(1029, 691, 43, 58), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"derrota_7": { "rect": Rect2i(1072, 692, 48, 57), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"derrota_8": { "rect": Rect2i(1120, 693, 46, 56), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"desaparicion_1": { "rect": Rect2i(1188, 697, 40, 52), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"desaparicion_2": { "rect": Rect2i(1227, 691, 35, 58), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"desaparicion_3": { "rect": Rect2i(1267, 697, 41, 52), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"desaparicion_4": { "rect": Rect2i(1309, 703, 41, 46), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"desaparicion_5": { "rect": Rect2i(1350, 692, 41, 57), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"desaparicion_6": { "rect": Rect2i(1392, 711, 42, 38), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"desaparicion_7": { "rect": Rect2i(1434, 712, 28, 37), "feet_y": 748, "only_body": false, "soft_glow": true, "scale": 1.25 },
+			"mover_1": { "rect": Rect2i(31, 268, 52, 47), "feet_y": 314, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"mover_2": { "rect": Rect2i(97, 268, 49, 47), "feet_y": 314, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"mover_3": { "rect": Rect2i(154, 268, 53, 47), "feet_y": 314, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"mover_4": { "rect": Rect2i(217, 268, 52, 47), "feet_y": 314, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"mover_5": { "rect": Rect2i(281, 269, 49, 46), "feet_y": 314, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"mover_6": { "rect": Rect2i(341, 269, 48, 46), "feet_y": 314, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"mover_7": { "rect": Rect2i(402, 269, 47, 46), "feet_y": 314, "only_body": true, "soft_glow": true, "scale": 1.25 },
+			"mover_8": { "rect": Rect2i(462, 269, 46, 46), "feet_y": 314, "only_body": true, "soft_glow": true, "scale": 1.25 },
+		},
+		"animations": {
+			"bucle_quieto": { "poses": ["quieto_1", "quieto_2", "quieto_3", "quieto_4", "quieto_5", "quieto_6", "quieto_7", "quieto_8"], "fps": 8.0, "loop": true },
+			"bucle_preparar": { "poses": ["preparar_1", "preparar_2", "preparar_3", "preparar_4", "preparar_5", "preparar_6", "preparar_7", "preparar_8"], "fps": 12.0, "loop": false },
+			"bucle_recarga": { "poses": ["recarga_1", "recarga_2", "recarga_3", "recarga_4", "recarga_5", "recarga_6", "recarga_7", "recarga_8"], "fps": 8.0, "loop": false },
+			# Desde el cuadro 3, en la hoja Bucle se vuelve la onda: el juego dibuja la suya (LoopPulse) y él queda en el 2.
+			"bucle_onda": { "poses": ["onda_1", "onda_2"], "fps": 8.0, "loop": false },
+			"bucle_lluvia": { "poses": ["lluvia_1", "lluvia_2", "lluvia_3", "lluvia_4", "lluvia_5", "lluvia_6", "lluvia_7", "lluvia_8"], "fps": 10.0, "loop": false },
+			"bucle_anillo": { "poses": ["anillo_1", "anillo_2", "anillo_3", "anillo_4", "anillo_5", "anillo_6", "anillo_7", "anillo_8"], "fps": 12.0, "loop": false },
+			"bucle_dano": { "poses": ["dano_1", "dano_2", "dano_3", "dano_4", "dano_5", "dano_6", "dano_7", "dano_8"], "fps": 16.0, "loop": false },
+			"bucle_aturdido": { "poses": ["aturdido_1", "aturdido_2", "aturdido_3", "aturdido_4", "aturdido_5", "aturdido_6", "aturdido_7"], "fps": 7.0, "loop": true },
+			"bucle_derrota": { "poses": ["derrota_1", "derrota_2", "derrota_3", "derrota_4", "derrota_5", "derrota_6", "derrota_7", "derrota_8"], "fps": 6.0, "loop": false },
+			"bucle_desaparicion": { "poses": ["desaparicion_1", "desaparicion_2", "desaparicion_3", "desaparicion_4", "desaparicion_5", "desaparicion_6", "desaparicion_7"], "fps": 8.0, "loop": false },
+			"bucle_mover": { "poses": ["mover_1", "mover_2", "mover_3", "mover_4", "mover_5", "mover_6", "mover_7", "mover_8"], "fps": 12.0, "loop": true },
+		},
+	},
 }
 
 var _config: Dictionary
@@ -900,7 +1017,7 @@ func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 		anchor = _head_center(image)
 	# Fila de los pies dentro del recorte (-1 = el borde de abajo).
 	var bottom: float = pose.feet_y - rect.position.y - box.position.y if pose.has("feet_y") else -1.0
-	return { "image": image, "anchor_x": anchor, "bottom": bottom }
+	return { "image": image, "anchor_x": anchor, "bottom": bottom, "scale": float(pose.get("scale", 1.0)) }
 
 
 ## Centro horizontal de la cabeza: marca dónde está el cuerpo aunque la pose tenga un arma o una
@@ -954,7 +1071,9 @@ func _largest_component(image: Image) -> Array[Vector2i]:
 
 func _scaled(cutout: Dictionary) -> Dictionary:
 	var image: Image = (cutout.image as Image).duplicate()
-	var size := Vector2i(roundi(image.get_width() * _scale), roundi(image.get_height() * _scale))
+	# scale (opcional, por pose): la hoja dibuja a algunos personajes más chicos en ciertas filas.
+	var factor: float = _scale * float(cutout.get("scale", 1.0))
+	var size := Vector2i(roundi(image.get_width() * factor), roundi(image.get_height() * factor))
 	image.resize(size.x, size.y, Image.INTERPOLATE_LANCZOS)
 	for y in image.get_height():
 		for x in image.get_width():
@@ -964,9 +1083,9 @@ func _scaled(cutout: Dictionary) -> Dictionary:
 	var padded := Image.create_empty(size.x + 2, size.y + 2, false, Image.FORMAT_RGBA8)
 	padded.blit_rect(image, Rect2i(Vector2i.ZERO, size), Vector2i.ONE)
 	_clean_edges(padded)
-	var anchor := roundi(cutout.anchor_x * _scale) + 1
+	var anchor := roundi(cutout.anchor_x * factor) + 1
 	return {
-		"image": padded, "anchor_x": anchor, "bottom": padded.get_height() if cutout.bottom < 0.0 else roundi(cutout.bottom * _scale) + 1,
+		"image": padded, "anchor_x": anchor, "bottom": padded.get_height() if cutout.bottom < 0.0 else roundi(cutout.bottom * factor) + 1,
 		"half_width": maxi(anchor, padded.get_width() - anchor) + 2,
 	}
 

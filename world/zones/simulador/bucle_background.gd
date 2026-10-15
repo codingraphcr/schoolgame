@@ -1,6 +1,7 @@
 @tool
 extends Node2D
-## Fondo del simulador donde está Bucle (Capítulo 2), dibujado por código hasta que Ariel lo dibuje: una
+## Fondo del simulador donde está Bucle (Capítulo 2): el dibujo de Ariel (picture, docs/arte/referencias/
+## bucle_fondo.webp), con sus cinco plataformas justo donde están las de la arena. Sin dibujo, una
 ## grilla de datos y columnas de código que caen. Con cada etapa de Bucle (stage 1 a 7) el código se
 ## acumula: más columnas, más rápido, y el color pasa de cálido a rojo. Desde la etapa 6 aparecen
 ## franjas de interferencia (suaves con «reducir glitch»). Nunca tapa las plataformas ni los ataques:
@@ -13,6 +14,10 @@ const RED := Color("ff4a6a")
 const WORDS: PackedStringArray = ["repetir()", "mientras", "i = i + 1", "otra vez", "tarea()", "loop", "¿fin?"]
 
 @export var area := Rect2(0, 0, 640, 360)
+## El dibujo del fondo y dónde va (a la mitad de su tamaño: el piso pintado queda en el piso de la arena, y
+## sus plataformas sobre las de la arena).
+@export var picture: Texture2D
+@export var picture_rect := Rect2(-181, -1, 1000, 375)
 @export var stage := 1:
 	set(value):
 		stage = clampi(value, 1, 7)
@@ -28,18 +33,22 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	draw_rect(area, BASE)
-	var x := area.position.x
-	while x < area.end.x:
-		draw_line(Vector2(x, area.position.y), Vector2(x, area.end.y), GRID, 1.0)
-		x += 32.0
-	var y := area.position.y
-	while y < area.end.y:
-		draw_line(Vector2(area.position.x, y), Vector2(area.end.x, y), GRID, 1.0)
-		y += 32.0
+	if picture:
+		draw_texture_rect(picture, picture_rect, false)
+	else:
+		var x := area.position.x
+		while x < area.end.x:
+			draw_line(Vector2(x, area.position.y), Vector2(x, area.end.y), GRID, 1.0)
+			x += 32.0
+		var y := area.position.y
+		while y < area.end.y:
+			draw_line(Vector2(area.position.x, y), Vector2(area.end.x, y), GRID, 1.0)
+			y += 32.0
 	var t := (stage - 1) / 6.0
 	var color := WARM.lerp(RED, t)
 	var font := ThemeDB.fallback_font
-	var columns := 4 + stage * 3
+	# Con el dibujo de Ariel, menos columnas (el fondo ya tiene sus instrucciones): se suman con cada etapa.
+	var columns := stage * 2 if picture else 4 + stage * 3
 	for i in columns:
 		var column_x := area.position.x + fmod(i * 97.0, area.size.x)
 		var speed := 18.0 + stage * 6.0 + (i % 3) * 7.0

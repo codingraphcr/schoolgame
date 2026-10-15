@@ -1,8 +1,8 @@
 # Jefe: Bucle Infinito (Bucle)
 
-**Capítulo:** 2 — Los primeros códigos · **Nivel:** 4 — Código fuera de control · **Recompensa:** Ecos (Dominio Nulo I pasó al Capítulo 3 en la Biblia v1.7)
+**Capítulo:** 2 — Los primeros códigos · **Nivel:** 4 — Código fuera de control · **Recompensa:** Ecos (el Dominio Nulo I ya no se obtiene aquí: ver A.12)
 **Estado:** especificación oficial del equipo (14 de octubre de 2026) y diseño técnico (sección B). **Autorizado e
-implementado** (fases 1 a 9; la 9 es Dominio Nulo I, ver B.8): `characters/enemies/bucle/`, `systems/bosses/bucle_*.gd`, `data/bosses/bucle.tres`,
+implementado** (fases 1 a 9; la 9, Dominio Nulo I, quedó como habilidad sin obtener: ver B.8): `characters/enemies/bucle/`, `systems/bosses/bucle_*.gd`, `data/bosses/bucle.tres`,
 `world/zones/simulador/` y `tests/test_bucle.gd`. Decisiones tomadas (B.11): Bucle en la Biblia v1.5; la arena se
 construye sola (zona «Simulador», capítulo 2) hasta que exista el resto del capítulo; sus ataques quitan 1 cristal;
 el golpe arriesgado da media barrita de energía. Se prueba abriendo `world/zones/simulador/arena_bucle.tscn` (F6).
@@ -143,14 +143,12 @@ Tras el séptimo impacto, Bucle queda agotado y los anillos se desintegran.
 > **Bucle:** ¿Eso significa que fallé?
 > **Kai:** No. Significa que terminaste.
 
-### A.12 El derrumbe y la salida (actualizado: Biblia v1.7)
+### A.12 Dominio Nulo I: ya no se obtiene en esta pelea
 
-El simulador se desestabiliza por los procesos acumulados; Kai intenta escapar y un muro de procesos bloquea el
-camino. Golpearlo es repetir: se reconstruye. Kai usa lo que aprendió en el nivel y, en la terminal del muro,
-**atrapa el error** (try/catch, desafío `cap2_atrapar_error`): los procesos se detienen y se abre la salida. Es una
-situación segura (nada hace daño). **Dominio Nulo I ya no se obtiene aquí:** llega en el Capítulo 3, «Contagio
-digital» (decisión del equipo del 15 de octubre de 2026). El sistema del Dominio (B.8) sigue igual y se probará en
-ese capítulo. La regla de los siete impactos clave no cambia.
+**Decisión de Ariel (15 de octubre de 2026):** el Dominio Nulo I no se consigue en el combate con Bucle. Se quitaron
+el derrumbe del simulador, el muro de procesos y sus diálogos. Después del puzle de la condición de salida queda la
+pista de la Biblia («arquitectura reconocida») y se abre la salida al laboratorio. **Dónde se obtiene: por definir.**
+La habilidad (`PlayerDomain`, `CombatClock`) sigue en el juego, apagada, para entonces.
 
 ### A.13 Validaciones pedidas
 
@@ -163,24 +161,6 @@ fatiga, repite el ciclo. 7. Cada impacto sube la dificultad. 8. Los ataques se c
 18. El progreso se guarda. 19. Los estados no se traban por animaciones interrumpidas. 20. Funciona con arte provisional.
 
 ---
-
-### A.14 Versión difícil (15 de octubre de 2026, pedido del equipo: «como Sans»)
-
-Las reglas de A.2 no cambian (siete impactos clave, uno por ciclo; inocente al principio). Lo que cambia:
-
-- **Se mueve por toda la arena:** antes de cada ataque se teletransporta (parpadeo de 0,22 s) a otro lugar
-  (`BucleConfig.attack_spots`), también arriba, donde Kai no llega. Mientras parpadea no se le puede golpear.
-- **Esquiva:** desde el ciclo 2, si Kai se le acerca (64 px) mientras prepara o ataca, se teletransporta lejos
-  (recarga de 0,9 s). Golpearlo mientras ataca exige un dash bien medido.
-- **Descansa poco y lejos:** al terminar su secuencia descansa en un lugar alcanzable (`rest_spots`: el piso o encima
-  de una plataforma) a 110–290 px de Kai; nunca en una plataforma apagada por el Error de ejecución. El descanso
-  baja de 1,9 s (ciclo 1) a 1,4 s (ciclo 7).
-- **Ataques nuevos:** **Barrido** (una línea que cruza la arena a la altura de Kai: saltar o bajar) y **Rastreo**
-  (procesos huérfanos que persiguen a Kai y se esquivan cambiando de dirección o con el dash).
-- **Combinados:** desde el ciclo 2, dos ataques a la vez («pulso+barrido»); 16 combinados en total.
-- **Daño:** cada golpe de Bucle quita un cristal entero (antes, medio).
-- **Siempre legible:** aviso de 0,4 s o más en todo ataque y la Lluvia siempre deja carriles libres; el Error de
-  ejecución nunca apaga dos plataformas a la vez.
 
 ## B. Diseño técnico propuesto
 
@@ -287,7 +267,7 @@ asustada → agotada. Etapas 5 y más: interferencias (franjas); etapa 6: el con
 opción **reducir destellos** (nueva en Ajustes) las interferencias y parpadeos se reemplazan por cambios de color
 suaves. Se cambia de etapa en `TRANSFORMATION`, cuando no hay peligros en la arena.
 
-### B.8 Dominio Nulo I (fase 9, hecha; desde la v1.7 se obtiene en el Capítulo 3)
+### B.8 Dominio Nulo I (fase 9: la habilidad, sin obtener por ahora)
 
 - `CombatClock` (`systems/combat/combat_clock.gd`): multiplicador del tiempo de las amenazas (0,8 con el Dominio).
   Lo leen `EnemyBase` (IA y movimiento), los ataques de Bucle, `DataShot` y las esperas de Bucle. Nunca toca
@@ -295,14 +275,8 @@ suaves. Se cambia de etapa en `TRANSFORMATION`, cuando no hay peligros en la are
 - `PlayerDomain` (`characters/player/player_domain.gd`, hijo de Kai): carga en `GameState.domain_charge` (10 por
   golpe a un enemigo), activación con **R** (acción `ultimate`), 15 s, +10 % de daño (aplicado en un solo lugar:
   `PlayerCombat` al activar el golpe), barra en el HUD y un velo violeta.
-- La lección: después del puzle, el simulador se desestabiliza y un **muro de procesos** (`ProcessWall`) bloquea la
-  salida. Se reconstruye entero 1,6 s (del tiempo de las amenazas) después del primer golpe: sin el Dominio hacen
-  falta 5 golpes (1,95 s), imposible; con el Dominio bastan 4 (1,5 s) y el bucle tarda 2 s. Kai obtiene el Dominio
-  con la carga llena y se le pide pulsar R; si se termina sin romperlo, se vuelve a cargar. Nada hace daño.
-  Después se abre la salida al laboratorio (el capítulo 2 completo está en `docs/narrativa/capitulos/CAPITULO_02.md`).
-  Marca `cap2_dominio_nulo` (partidas viejas). **Desde la v1.7** el muro se detiene con el desafío
-  `cap2_atrapar_error` (marca `cap2_error_atrapado`) y Kai no obtiene el Dominio; `test_dominio_nulo.gd` prueba la
-  salida nueva y, aparte, el sistema del Dominio con golpes reales.
+- **Quitado (15 de octubre de 2026, ver A.12):** la lección del muro de procesos (`ProcessWall`) después del
+  puzle y la marca `cap2_dominio_nulo`. `test_dominio_nulo.gd` prueba la habilidad sola, en la sala de pruebas.
 
 ### B.9 Cómo se prueba cada etapa (`tests/test_bucle.gd`, física determinista)
 

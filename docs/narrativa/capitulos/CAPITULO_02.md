@@ -13,7 +13,7 @@ a punta con arte provisional por código.
 Después de «FIN DEL CAPÍTULO 1» Kai vuelve a casa (misión «Camino a casa», `docs/escenarios/HOGAR_DE_KAI.md`). El
 capítulo empieza **a la mañana siguiente**, en su cuarto («CAPÍTULO 2 · LOS PRIMEROS CÓDIGOS» al despertar): Kai
 desayuna con su familia y va caminando al colegio. Tiene Visión Digital, Inmersión Digital, `Nullblade.exe` con el
-dash y el Grimorio. (Dominio Nulo I ya no llega en este capítulo: pasa al Capítulo 3, «Contagio digital»; Biblia v1.7.)
+dash y el Grimorio. (El **Dominio Nulo I** no se obtiene en este capítulo: provisionalmente, en el Capítulo 4; Biblia v1.8.)
 
 ## 2. Objetivos educativos (décimo, a validar con el programa completo del MEP)
 
@@ -37,11 +37,9 @@ repitiendo un bloque *n* veces: ni uno más, ni uno menos). Al final, un repaso 
 **Nivel 4 — Código fuera de control.** Más adentro, un proceso automático repite su tarea sin parar: el simulador se
 llena de **procesos repetidos** (enemigos que no dejan de aparecer). Kai lee el registro (una lista de procesos), elige
 cómo manejar el error y corta la repetición. En el núcleo está **Bucle** (jefe). Después del puzle de la condición de
-salida el simulador se derrumba: un muro de procesos se reconstruye cada vez que Kai lo golpea. Kai entiende que
-golpear es repetir y, en la terminal del muro, **atrapa el error** (try/catch, desafío «Atrapar el error»): los
-procesos se detienen y se abre la salida.
+salida aparece la pista de la anomalía y se abre la salida al laboratorio.
 
-**Pista de la Biblia («Una anomalía reconoce su arquitectura digital»):** al detenerse el muro, el
+**Pista de la Biblia («Una anomalía reconoce su arquitectura digital»):** después del puzle de la condición de salida, el
 simulador muestra un mensaje que nadie escribió: «ANOMALÍA DETECTADA · ARQUITECTURA DIGITAL: RECONOCIDA». No se explica
 quién ni por qué (Biblia XV, regla 11; el antagonista en décimo solo observa y deja señales).
 
@@ -53,7 +51,7 @@ repetidos, sin explicar nada más. «FIN DEL CAPÍTULO 2».
 | Misión | Pasos (sala) |
 |---|---|
 | `el_lenguaje_de_las_maquinas` (nivel 3) | `clase_programacion` (Sala 3) → `entrar_simulador` (Laboratorio, conexión con la Visión) → `variables` (sim_variables) → `condiciones` (sim_condiciones) → `ciclos` (sim_ciclos, con el repaso). «NIVEL 3 COMPLETADO» |
-| `codigo_fuera_de_control` (nivel 4) | `procesos` (sim_procesos) → `vencer_bucle` (arena_bucle) → `salir_simulador` (arena_bucle) → `hablar_profesor` (Laboratorio). «FIN DEL CAPÍTULO 2» |
+| `codigo_fuera_de_control` (nivel 4) | `procesos` (sim_procesos) → `vencer_bucle` (arena_bucle) → `hablar_profesor` (Laboratorio). «FIN DEL CAPÍTULO 2» |
 
 El capítulo empieza al terminar «Travesuras en el sistema» (marca `capitulo_2`: se abren las salas del capítulo 2).
 
@@ -66,7 +64,7 @@ El capítulo empieza al terminar «Travesuras en el sistema» (marca `capitulo_2
 | `sim_condiciones` | Un nodo `modo` (día / noche). Plataformas **si** `modo == día` y **si no**: hay que cambiar el modo en el camino para cruzar |
 | `sim_ciclos` | `repetir n veces: poner bloque`: el puente se arma solo con el *n* exacto (con menos queda corto; con más choca con la pared: error). Al final, el repaso de funciones y objetos |
 | `sim_procesos` | Un generador de **procesos repetidos** crea enemigos sin parar (un ciclo sin salida). En la terminal: `cat procesos.log` (la lista); después el desafío de manejo de errores corta la repetición y abre la puerta |
-| `arena_bucle` | Bucle, el puzle y el muro de procesos (se detiene atrapando el error). Sale al laboratorio |
+| `arena_bucle` | Bucle, el puzle y la pista. Sale al laboratorio |
 
 ## 6. Piezas técnicas
 

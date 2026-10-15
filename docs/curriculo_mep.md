@@ -25,8 +25,8 @@ se ubican los contenidos de la tabla del MEP. Sigue siendo provisional hasta val
 | **1** El origen digital | 1 · Una clase diferente | Principios de ciberseguridad, ética y leyes de los datos, internet de todo |
 | | 2 · Travesuras en el sistema | Protección e integridad de la información, tipos de ataques, control de acceso, primeros comandos de Linux |
 | **2** Los primeros códigos | 3 · El lenguaje de las máquinas | Condicionales, ciclos, funciones, clases y objetos |
-| | 4 · Código fuera de control | Control de flujo, estructuras de datos, errores y excepciones (Kai sale del simulador atrapando el error), desarrollo seguro (SGSI) |
-| **3** Amenazas invisibles | 5 · Contagio digital | Malware y código malicioso; protección de equipos. Recompensa: Dominio Nulo I (contención; Biblia v1.7) |
+| | 4 · Código fuera de control | Control de flujo, estructuras de datos, errores y excepciones, desarrollo seguro (SGSI) |
+| **3** Amenazas invisibles | 5 · Contagio digital | Malware y código malicioso; protección de equipos |
 | | 6 · La señal perdida | Redes: LAN/WAN, protocolos, modelos OSI y TCP/IP, registros (SIEM). Misión especial **«Eco en la Red»**: Kai rescata a **Aegis** y lo **repara con comandos** (Aegis Pulse) |
 | **4** Guardianes de la información | 7 · Identidad robada | Contraseñas, autenticación, criptografía (huellas/hash) y acceso. Kai vuelve a necesitar **la contraseña que creó** para el profesor (o su código de respaldo). Aegis Bridge |
 | | 8 · El último día | Integra el año: direccionamiento IPv4/IPv6, Ethernet y MAC, TCP/UDP. Misión especial «Los nodos olvidados»: Salto de Nexo |

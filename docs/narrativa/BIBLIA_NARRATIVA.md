@@ -1,6 +1,6 @@
 # BIBLIA NARRATIVA DEL VIDEOJUEGO
 
-**Versión:** 1.7 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
+**Versión:** 1.8 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
 **Estado:** Base narrativa de referencia; algunas decisiones siguen abiertas.  
 **Nombre oficial del videojuego:** Nullveil: Beyond the Firewall.  
 **Nombre provisional del proyecto de origen:** Proyecto Génesis.  
@@ -230,15 +230,12 @@ El estudiante llega al colegio, aprende movimiento, diálogo e interacción. Un 
   acumula errores que alteran el simulador. No es malvado: cree que debe terminar su tarea. No muere: queda
   agotado y liberado, y puede volver como personaje secundario. Lección: un error pequeño, repetido sin control,
   puede causar consecuencias enormes (ver `docs/jefes/BUCLE_INFINITO.md`).
-- **Cierre (v1.7):** el simulador se derrumba; Kai no rompe el muro de procesos a golpes (sería repetir), sino que
-  **atrapa el error** (try/catch) con lo que aprendió y los procesos se detienen. **Dominio Nulo I ya no se obtiene
-  aquí:** pasa al Capítulo 3.
+- **Recompensa:** Dominio Nulo I ya no se desbloquea aquí (decisión de Ariel, 15 de octubre de 2026); provisionalmente llega en el **Capítulo 4** (v1.8).
 - **Pista:** Una anomalía reconoce su arquitectura digital.
 
 **Capítulo 3 — Amenazas invisibles**
 
-- **Nivel 5 — Contagio digital:** Investiga software malicioso y protege equipos. **Recompensa (v1.7):** Dominio Nulo
-  I, ligado a la contención (frena las amenazas a su alrededor).
+- **Nivel 5 — Contagio digital:** Investiga software malicioso y protege equipos.
 - **Bosque de Fibra (v1.7):** desde la caja de fibra óptica del barrio, Kai entra por primera vez a la red de biomas
   (misión secundaria «Sin señal en el barrio»; ver `docs/mundo/`).
 - **Nivel 6 — La señal perdida:** Sigue una señal hacia una instalación restringida.
@@ -251,6 +248,7 @@ El estudiante llega al colegio, aprende movimiento, diálogo e interacción. Un 
 - **Nivel 7 — Identidad robada:** Autenticación, contraseñas, acceso y datos expuestos.
 - **Nivel 8 — El último día:** Incidente de cierre de curso que combina aprendizajes del año.
 - **Progresión propuesta:** Aegis Bridge durante este capítulo.
+- **Recompensa provisional (v1.8):** Dominio Nulo I (en qué nivel o misión, por definir).
 - **Misión final especial — Los nodos olvidados:** Tras cumplir requisitos, desbloquea Salto de Nexo.
 - **Revelación:** Se encuentra un registro antiguo acerca de una entidad de biomateria posiblemente vinculada al protagonista.
 
@@ -457,8 +455,8 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
 
 - **Bucle** es el jefe del nivel 4 (Capítulo 2): entidad de un proceso automático defectuoso, sin condición de
   salida; no muere y queda liberado. Su combate («Bucle Infinito») y su final están en `docs/jefes/BUCLE_INFINITO.md`.
-  Después del combate, el simulador se desestabiliza y Kai activa por instinto **Dominio Nulo I** (cambiado en la v1.7: ahora llega en el Capítulo 3; su origen sigue
-  pendiente, sección XVI).
+  Después del combate, Kai corrige su condición de salida y una anomalía «reconoce su arquitectura digital». (El
+  Dominio Nulo I ya no se obtiene en este combate: dónde, por definir; su origen sigue pendiente, sección XVI.)
 
 **v1.6 — 15 de octubre de 2026** (pedido del equipo):
 
@@ -490,6 +488,14 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
 - Nombres de regiones y criaturas: provisionales salvo los aprobados. Personajes del Distrito Caché propuestos por el
   equipo (NODO-7, Nox): solo nombres, su papel sigue pendiente.
 
-**FIN — BIBLIA NARRATIVA V1.7**
+**v1.8 — 15 de octubre de 2026** (decisiones del equipo, al ampliar los capítulos 1 y 2):
+
+- **Dominio Nulo I:** provisionalmente en el **Capítulo 4** (reemplaza el Capítulo 3 de la v1.7). Queda bloqueado
+  hasta entonces; en qué nivel o misión, por definir.
+- **Bucle:** queda la versión de Ariel (su arte, su arena y su combate). Sin derrumbe ni muro de procesos después de
+  la pelea (reemplaza la salida «atrapando el error» de la v1.7): tras el puzle de la condición de salida aparece la
+  pista «arquitectura reconocida» y se abre la salida.
+
+**FIN — BIBLIA NARRATIVA V1.8**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.

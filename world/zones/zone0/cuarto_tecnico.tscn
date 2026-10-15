@@ -323,6 +323,7 @@ first_dialogue = ExtResource("14_s1jjo")
 lines = PackedStringArray("Conexión encontrada", "Entrando al sistema...")
 requires_quest = &"travesuras_en_el_sistema"
 requires_step = &"seguirlos_adentro"
+closed_flag = &"cap1_hermanos_vencidos"
 prompt_text = "E: entrar"
 prompt_offset = Vector2(-30, -40)
 

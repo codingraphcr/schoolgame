@@ -18,6 +18,8 @@ const CYAN := Color("3ef2ff")
 const VIOLET := Color("a77bff")
 const AMBER := Color("ffc24a")
 const FILL := Color("0b1830")
+## Aviso de plataforma apagada cuando el fondo la trae pintada.
+const ERROR := Color("ff4a6a")
 const THICKNESS := 12.0
 
 @export var kind := Kind.FIXED:
@@ -28,7 +30,8 @@ const THICKNESS := 12.0
 	set(value):
 		width = value
 		_rebuild()
-## false: no se dibuja (el fondo de la sala ya la tiene dibujada, como en la arena de Glitch y Chip).
+## false: no se dibuja (el fondo de la sala ya la tiene dibujada, como en las arenas de Glitch y Chip y de
+## Bucle); si se apaga (force_close), igual se marca encima del dibujo.
 @export var drawn := true:
 	set(value):
 		drawn = value
@@ -119,6 +122,25 @@ func force_close(seconds: float) -> void:
 		remove_from_group(&"unsafe_ground")
 
 
+## Si el fondo la trae pintada (drawn = false) y se apaga (force_close), igual tiene que notarse: mientras
+## parpadea, un recuadro de error encima del dibujo; apagada, franjas rojas («no se puede pisar»).
+func _draw_painted_warning() -> void:
+	if not (_closing or _closed):
+		return
+	var body := Rect2(0, -2, width, THICKNESS + 4)
+	if _closing:
+		var on := int(_blink / 0.08) % 2 == 0
+		draw_rect(body, Color(ERROR, 0.35 if on else 0.12))
+		draw_rect(body, Color(ERROR, 0.9 if on else 0.4), false, 1.5)
+		return
+	draw_rect(body, Color(0.05, 0.0, 0.03, 0.55))
+	var x := 0.0
+	while x < width:
+		draw_line(Vector2(x, body.end.y), Vector2(minf(x + 8.0, width), body.position.y), Color(ERROR, 0.7), 2.0)
+		x += 10.0
+	draw_rect(body, Color(ERROR, 0.8), false, 1.0)
+
+
 func _rebuild() -> void:
 	if not is_inside_tree():
 		return
@@ -135,6 +157,7 @@ func _rebuild() -> void:
 
 func _draw() -> void:
 	if not drawn:
+		_draw_painted_warning()
 		return
 	if _closed:
 		draw_rect(Rect2(0, 0, width, 2), Color(AMBER, 0.25))

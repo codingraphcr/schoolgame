@@ -24,7 +24,7 @@ un problema. Una región se puede visitar varias veces con aprendizajes distinto
 | **Personajes** | Prof. Alvarado | Chip, Glitch, profesor, amigos | Mamá, papá, amigos, vecinos | Profesor, compañeros, Bucle | Aegis, Fibroluz, vecino | Aegis, profesor |
 | **Mecánica** | Movimiento, Visión Digital | Persecución, terminales, combate doble | Exploración, inspección de recuerdos | Puzles de variables, condiciones y ciclos; combate de siete impactos | Contención; empalmes de fibra; reparar a Aegis con comandos | Autenticación; integración del año |
 | **Jefe / conflicto** | — | Chip y Glitch (anomalía) | — | Bucle (anomalía) | (por definir) | (por definir) |
-| **Recompensa** | Nullblade.exe, dash, Grimorio | Inmersión Digital | Resonancia Digital (evento, no habilidad) | — | **Dominio Nulo I** (nivel 5, decisión del 15 de octubre de 2026) · Aegis Pulse («Eco en la Red») | Aegis Bridge · Salto de Nexo («Los nodos olvidados») |
+| **Recompensa** | Nullblade.exe, dash, Grimorio | Inmersión Digital | Resonancia Digital (evento, no habilidad) | — | Aegis Pulse («Eco en la Red») | Aegis Bridge · Salto de Nexo («Los nodos olvidados») · **Dominio Nulo I** (provisional, Biblia v1.8) |
 | **Ruta nueva** | — | Escaleras y biblioteca | Salida del colegio a la calle | Simulador del laboratorio | Caja de fibra → Bosque de Fibra; rack del colegio → Bosque | Biblioteca → Distrito Caché (limitado); nodos de Salto de Nexo |
 | **Secundarias** | — | — | — | — | **Sin señal en el barrio** (IMPLEMENTADO) | El robot que no obedece (tarea, PROPUESTA) |
 
@@ -51,7 +51,5 @@ un problema. Una región se puede visitar varias veces con aprendizajes distinto
 
 ## Cambios de esta versión
 
-- **Dominio Nulo I** pasa del final del Capítulo 2 al **Capítulo 3, nivel 5 «Contagio digital»** (contención de
-  malware), por decisión del equipo (15 de octubre de 2026). En el Capítulo 2, Kai sale del simulador usando el
-  manejo de errores que aprendió.
+- **Dominio Nulo I** no se obtiene en el Capítulo 2: provisionalmente en el **Capítulo 4** (Biblia v1.8; antes se había decidido el Capítulo 3). Bucle sale como lo hizo Ariel: sin derrumbe después de la pelea.
 - El **Bosque de Fibra** se abre en el **Capítulo 3** desde la caja de fibra del barrio (decisión del equipo).

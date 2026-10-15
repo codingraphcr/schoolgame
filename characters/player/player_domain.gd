@@ -1,7 +1,7 @@
 class_name PlayerDomain
 extends Node
-## Expansión Digital: Dominio Nulo (la definitiva de Kai, R, acción "ultimate"). Se obtiene en el
-## Capítulo 2 (GameState.domain_stage). Valores por etapa (docs/combate.md):
+## Expansión Digital: Dominio Nulo (la definitiva de Kai, R, acción "ultimate"). Se obtiene más adelante
+## (dónde, por definir: ya no en la pelea con Bucle; GameState.domain_stage). Valores por etapa (docs/combate.md):
 ##   I: 15 s, +10 % de daño, 100 de carga · II: 20 s, +15 %, 115 · III: 30 s, +30 %, 138.
 ## Mientras dura, las amenazas digitales y los proyectiles compatibles van al 80 % (CombatClock) y la
 ## Nullblade pega más (damage_multiplier(), aplicado en un solo lugar: PlayerCombat al activar el
