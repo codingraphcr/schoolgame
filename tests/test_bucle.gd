@@ -111,6 +111,9 @@ func _test_start() -> void:
 	var bucle_character := load("res://data/characters/bucle.tres") as DialogueCharacter
 	_check(bucle_character.portrait != null and boss.get_node("Cuerpo").material is ShaderMaterial,
 		"tiene su retrato en los diálogos y el color de cada etapa (shader)")
+	var final_text: String = (load("res://data/dialogues/capitulo2/bucle_final.tres") as Dialogue).script_text
+	_check(["triste", "preocupado", "asustado"].all(func(e: String) -> bool: return bucle_character.expressions.has(e))
+		and final_text.contains("Bucle [triste]"), "sus caras en los diálogos: al perder se pone triste (y al final vuelve a estar feliz)")
 
 
 ## Sin golpes: termina el patrón, se cansa y repite el mismo ciclo.
@@ -127,7 +130,7 @@ func _test_fatigue_and_repeat() -> void:
 func _test_key_hits() -> void:
 	# Golpe mientras ataca: cuenta y es arriesgado (energía).
 	await _until(func() -> bool: return boss.state == S.EXECUTE_PATTERN)
-	await _frames(20)
+	await _until(func() -> bool: return boss.is_vulnerable())  # Llegó arriba: sin escudo.
 	var energy_before: float = room.player.energy
 	room.player.set_energy(0.0)
 	energy_before = room.player.energy
@@ -181,6 +184,11 @@ func _test_no_spam() -> void:
 	await _frames(2)
 	_check(boss.impacts == before and ignored > ignored_before and player.velocity.x < -100.0,
 		"mientras anuncia la secuencia tiene escudo: el golpe no cuenta y Kai sale despedido")
+	player.teleport_to(boss.global_position + Vector2(-20, 5))
+	await _frames(4)
+	var bursts := get_nodes_in_group(&"boss_attack").filter(func(n: Node) -> bool: return n is RepulseBurst)
+	_check(not bursts.is_empty() and not (bursts[0] as RepulseBurst).is_live(),
+		"si Kai se queda pegado mientras anuncia, Bucle suelta una repulsión (con aviso antes de dañar)")
 	await _until(func() -> bool: return boss.state == S.EXECUTE_PATTERN)
 	await _frames(40)
 	_check(boss.global_position.y <= boss.hover_y - boss.rise + 4.0, "mientras ataca sube (y=%.0f): hay que saltar para alcanzarlo" % boss.global_position.y)

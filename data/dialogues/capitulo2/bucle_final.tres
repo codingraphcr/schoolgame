@@ -7,10 +7,10 @@ script = ExtResource("1_dlg")
 script_text = "# Capítulo 2, nivel 4: después del séptimo impacto (texto de la especificación del equipo).
 (Los anillos de instrucciones se desintegran. Bucle queda agotado.)
 Kai: Ya terminaste.
-Bucle: Pero... la instrucción...
+Bucle [preocupado]: Pero... la instrucción...
 Kai: No tenés que seguir repitiéndola.
-Bucle: ¿Y qué hago ahora?
+Bucle [triste]: ¿Y qué hago ahora?
 Kai: Podés decidirlo.
 (Bucle mira a su alrededor. Las instrucciones desaparecieron.)
-Bucle: ¿Eso significa que fallé?
+Bucle [triste]: ¿Eso significa que fallé?
 Kai: No. Significa que terminaste."

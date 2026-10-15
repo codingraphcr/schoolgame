@@ -25,6 +25,8 @@ signal transformed(stage: int)
 ## Pide al controlador un Error de ejecución (apagar una plataforma un rato).
 signal execution_error(number: int)
 signal finished
+## Soltó una repulsión (Kai estaba pegado a él).
+signal repulsed
 
 enum State { INTRO, PREPARE_PATTERN, EXECUTE_PATTERN, FATIGUE, HIT_REACTION, TRANSFORMATION, DEFEATED }
 
@@ -71,6 +73,8 @@ var _anim_since := 0.0
 ## Su lugar (x) en este ciclo: cambia al transformarse (ANCHORS).
 var _anchor_x := 0.0
 var _shield_flash := 0.0
+## Espera hasta la próxima repulsión.
+var _repulse_cd := 0.0
 
 
 func _ready() -> void:
@@ -113,9 +117,12 @@ func cycle_data() -> BucleCycle:
 
 
 ## Si un golpe ahora cuenta como impacto clave: mientras ataca (arriba: hay que saltar) o cansado (abajo, en el
-## puente). Mientras anuncia la secuencia tiene escudo (los golpes rebotan y empujan a Kai).
+## puente). Mientras anuncia la secuencia y mientras sube tiene escudo (los golpes rebotan y empujan a Kai).
 func is_vulnerable() -> bool:
-	return state in [State.EXECUTE_PATTERN, State.FATIGUE] and not hit_this_cycle
+	if hit_this_cycle:
+		return false
+	# Mientras ataca, recién cuando llegó arriba (mientras sube sigue con el escudo).
+	return state == State.FATIGUE or (state == State.EXECUTE_PATTERN and position.y <= hover_y - rise * 0.85)
 
 
 ## Vuelve a empezar (Kai perdió): ciclo 1, sin impactos, en su lugar.
@@ -158,6 +165,7 @@ func _ai(delta: float) -> void:
 			if _pattern_done:
 				_enter(State.FATIGUE)
 	_float(delta)
+	_check_repulse(delta)
 
 
 ## Dónde flota: mientras ataca, arriba y yendo y viniendo sobre el puente (sin salirse de él); en lo demás,
@@ -174,6 +182,26 @@ func _float(delta: float) -> void:
 		target.x = clampf(target.x, perch.position.x + 16.0, perch.end.x - 16.0)
 	position = position.move_toward(target, speed * delta)
 
+
+
+## Repulsión: si Kai se queda pegado mientras Bucle anuncia o ataca, estalla alrededor (con aviso).
+func _check_repulse(delta: float) -> void:
+	_repulse_cd = maxf(_repulse_cd - CombatClock.scaled(delta), 0.0)
+	if _repulse_cd > 0.0 or state not in [State.PREPARE_PATTERN, State.EXECUTE_PATTERN]:
+		return
+	var kai := get_player()
+	var center := global_position + BucleArt.CENTER
+	if kai == null or (kai.global_position + Vector2(0, -20)).distance_to(center) > config.repulse_range:
+		return
+	_repulse_cd = config.repulse_cooldown / maxf(cycle_data().speed, 0.1)
+	var burst := RepulseBurst.new()
+	burst.radius = config.repulse_radius
+	burst.telegraph = maxf(config.repulse_telegraph / cycle_data().speed, config.min_telegraph)
+	burst.damage = config.attack_damage
+	burst.color = BucleArt.body_color(stage)
+	get_parent().add_child(burst)
+	burst.global_position = center
+	repulsed.emit()
 
 ## Empuja a Kai hacia el lado contrario (rebote en el escudo o al recibir un impacto).
 func _push_player() -> void:

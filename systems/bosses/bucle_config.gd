@@ -29,6 +29,12 @@ extends Resource
 @export var ring_width := 10.0
 ## Segundos que una plataforma queda apagada por un Error de ejecución.
 @export var error_time := 4.0
+## Repulsión (RepulseBurst): si Kai está a menos de repulse_range px mientras Bucle anuncia o ataca, después
+## de repulse_telegraph segundos estalla alrededor (radio repulse_radius). Una cada repulse_cooldown segundos.
+@export var repulse_range := 72.0
+@export var repulse_radius := 56.0
+@export var repulse_telegraph := 0.45
+@export var repulse_cooldown := 1.3
 
 @export_group("Recompensas")
 ## Energía que recibe Kai por un golpe arriesgado (mientras Bucle ataca): media barrita = una curación.

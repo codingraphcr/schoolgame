@@ -9,6 +9,6 @@ Bucle: ¡Hola! ¿Venís a ayudarme? Tengo que terminar mi tarea.
 Kai: ¿Qué tarea?
 Bucle: Ordenar los procesos del simulador. Uno, y otro, y otro... ¡Ya casi!
 Kai [pensativo]: El sistema está lleno de procesos repetidos... ¿Cuántas veces lo hiciste?
-Bucle: ¡No sé! La instrucción dice que siga mientras haya tarea pendiente.
+Bucle [preocupado]: ¡No sé! La instrucción dice que siga mientras haya tarea pendiente.
 Kai [serio]: Bucle, esa tarea nunca se termina. Tenés que parar.
-Bucle: ¿Parar? No, no, no. Una vez más. ¡Solo una vez más!"
+Bucle [asustado]: ¿Parar? No, no, no. Una vez más. ¡Solo una vez más!"

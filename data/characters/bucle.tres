@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" path="res://systems/dialogue/dialogue_character.gd" id="1_char"]
 [ext_resource type="Texture2D" path="res://assets/art/characters/bucle/bucle_retrato.png" id="2_portrait"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/bucle/bucle_retrato_triste.png" id="3_triste"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/bucle/bucle_retrato_preocupado.png" id="4_preocupado"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/bucle/bucle_retrato_asustado.png" id="5_asustado"]
 
 [resource]
 script = ExtResource("1_char")
@@ -9,6 +12,11 @@ display_name = "Bucle"
 aliases = PackedStringArray("BUCLE")
 title = "Anomalía digital"
 portrait = ExtResource("2_portrait")
+expressions = Dictionary[String, Texture2D]({
+"asustado": ExtResource("5_asustado"),
+"preocupado": ExtResource("4_preocupado"),
+"triste": ExtResource("3_triste")
+})
 side = 1
 portrait_scale = 0.8
 portrait_offset = Vector2(8, 90)
