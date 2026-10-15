@@ -5,7 +5,8 @@ extends Node
 ## (incluye 0,30 s de inicio); si se sigue manteniendo y queda energía, cada curación siguiente
 ## tarda 0,9 s más. Soltar la tecla antes de tiempo cancela sin gastar energía; un golpe la corta.
 ## Para volver a curarse después de terminar o de un golpe hay que soltar L y presionarla otra vez.
-## En el suelo Kai se arrodilla; en el aire se queda flotando mientras se cura.
+## En el suelo Kai se arrodilla; en el aire se queda flotando mientras se cura y, si llegó a curarse y nada lo
+## interrumpió, al terminar da un saltito (en vez de caer directo sobre lo que tenga abajo).
 
 signal started(in_air: bool)
 signal healed(amount: float)
@@ -28,6 +29,8 @@ var active := false
 var in_air := false
 ## Curaciones hechas en esta canalización.
 var heals_done := 0
+## Si la última canalización la cortó un golpe.
+var interrupted := false
 
 var _elapsed := 0.0
 var _next_heal := 0.0
@@ -40,7 +43,7 @@ var _needs_release := false
 func _ready() -> void:
 	var damage := player.get_node_or_null("Damage") as PlayerDamage
 	if damage:
-		damage.hurt.connect(func(_hit: HitData) -> void: stop())
+		damage.hurt.connect(func(_hit: HitData) -> void: stop(true))
 
 
 func _physics_process(_delta: float) -> void:
@@ -95,9 +98,11 @@ func update(delta: float, holding: bool) -> void:
 		_next_heal += next_heal_time
 
 
-func stop() -> void:
+## interrupted: la cortó un golpe (no hay saltito).
+func stop(was_interrupted := false) -> void:
 	if not active:
 		return
 	active = false
+	interrupted = was_interrupted
 	_needs_release = true
 	finished.emit(heals_done > 0)

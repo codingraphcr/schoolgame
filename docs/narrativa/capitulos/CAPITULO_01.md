@@ -92,16 +92,18 @@ recursos originales.
 
 ### Temporizador
 
-- Valor inicial sugerido: **4 minutos** (ajustar con pruebas).
-- Una respuesta incorrecta en un checkpoint descuenta **15 segundos**.
+- Valor inicial: **1:02** (v3, 14 de octubre de 2026, pedido del equipo: «mega difícil»). Un recorrido perfecto de los
+  tres tramos tarda unos 47 s; el reloj da poco margen. Al reintentar un tramo: 22, 25 y 22 s.
+- Una respuesta incorrecta en un checkpoint descuenta **20 segundos** (nunca por debajo de 20 s).
 - Si se agota, se reintenta desde el último checkpoint con tiempo suficiente: nunca un bloqueo imposible.
 - **Al entrar a la batalla contra Chip y Glitch, el temporizador desaparece. El combate no tiene límite de tiempo.**
 
 ## 8. Los tres checkpoints educativos
 
 Cada tramo termina en una **zona segura**: la barrera se detiene y aparece una pregunta. No se avanza hasta responder
-bien. Mientras se responde, Kai no recibe daño. Si responde mal: pierde 15 segundos, recibe una explicación y puede
-volver a intentarlo. Al responder bien: se guarda el progreso, se abre la puerta y se habilita el siguiente tramo. Un
+bien. Mientras se responde, Kai no recibe daño. Si responde mal: pierde 20 segundos, recibe una explicación y puede
+volver a intentarlo. Cada checkpoint tiene **tres preguntas** de casos concretos con **cuatro opciones** creíbles (v3);
+la primera es la de la tabla. Al responder bien: se guarda el progreso, se abre la puerta y se habilita el siguiente tramo. Un
 checkpoint completado no se repite al cargar la partida.
 
 | | Pregunta | Respuesta correcta |
@@ -110,7 +112,13 @@ checkpoint completado no se repite al cargar la partida.
 | 2 | ¿Qué se recomienda antes de restaurar información importante? | Verificar que la copia de respaldo sea válida. |
 | 3 | ¿Qué ayuda a proteger la confidencialidad? | Utilizar controles de acceso adecuados. |
 
-Las opciones incorrectas y sus explicaciones se redactan en la etapa 1 (sección 19).
+Las otras dos preguntas de cada checkpoint (v3): el permiso temporal de administrador y qué se puede revisar al
+arreglar una impresora (1); qué respaldo restaurar después de un virus y dónde guardar una copia (2); mínimo
+privilegio en un grupo de trabajo y una sesión ajena abierta en la biblioteca (3).
+
+**Dificultad (v3):** barrera a 130, 107 y 117 px/s (Kai camina a 130), entre el 85 % y el 97 % de lo que aguanta
+un recorrido perfecto medido en la prueba automática; tocarla quita 1,5 y empuja poco; plataformas que se mueven
+más rápido (hay que atraparlas con salto + dash), temporales que se caen antes y 12 nodos que disparan.
 
 ## 9. Los tramos
 
@@ -200,7 +208,8 @@ para delante con la espada y contraataca. Así el jugador percibe un vínculo ge
 - **Fase 3 · Protocolo Dual — Furia fraternal (barra única):** sus movimientos se vuelven más rápidos, pero no aleatorios.
   Ejecutan secuencias combinadas y su ataque definitivo (Campo Dual). Pelean juntos: nadie pelea solo.
 
-El combate termina cuando la barra llega a cero. Ninguno muere: quedan neutralizados.
+Las fases dependen de la vida de los dos juntos. Si Chip ya está neutralizado, no hay escudo: la Fase 3 empieza
+directamente. El combate termina cuando las dos barras llegan a cero. Ninguno muere: quedan neutralizados.
 
 ## 13. Desafío educativo durante el combate
 
@@ -229,8 +238,9 @@ OBSERVADOR: RECONOCIDO
 PROTOCOLO: [DATOS CORRUPTOS]
 ```
 
-Después Kai habla con el profesor. Cuando Kai se va, el profesor mira la computadora y aparece el archivo
-**`GENESIS_ARCHIVE`**. Corte. **FIN DEL CAPÍTULO 1.**
+Después Kai habla con el profesor. Cuando Kai se va, en una escena aparte («Mientras tanto...»), el profesor mira
+la computadora y aparece el archivo **`GENESIS_ARCHIVE`**. Corte. **FIN DEL CAPÍTULO 1.** Kai aparece en la entrada
+del colegio: él no vio el archivo.
 
 **No revelar todavía que Kai es un organismo artificial** (Biblia XV, reglas 1 y 11).
 
@@ -279,7 +289,7 @@ Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las 
 | 5 | **`GENESIS_ARCHIVE`** | «Proyecto Génesis» es el nombre provisional del proyecto de origen; su relación con «El Núcleo» está pendiente (XVI). El profesor es el creador (IV) y en décimo tiene «reacciones extrañas» frente a las anomalías. | Es una pista coherente (la ve el jugador, no Kai). Confirmar que el nombre del archivo queda como canon. |
 | 6 | **No repetir el tutorial** | Biblia XII. El prólogo ya enseñó `ls`, `cd`, `cat`, `ls -a` y una pelea con jefe dentro de una PC. | Nivel 1 con mecánicas nuevas: investigar **registros** (comportamientos anómalos), decisiones de acceso autorizado y persecuciones; nada de «revisar la PC del profe» otra vez. |
 | 7 | **Plataformas** | El capítulo pide optimizar para Windows y Android. La decisión oficial de usuarios (13 de octubre) fija **solo Steam para PC**; Android pospuesto. | Optimizar para Windows; mantener los controles táctiles que ya existen sin trabajo extra para Android. |
-| 8 | **Vida** | Kai empieza con 4 cristales. | Con 1,5 por caída y 1 por la barrera, conviene medir en pruebas; los valores van en datos. |
+| 8 | **Vida** | Kai empieza con 4 cristales. | Con 1,5 por caída y 1,5 por la barrera (v3); los valores van en datos. |
 | 9 | **Respaldos** | «Mantenimiento seguro y respaldos» no aparece con ese nombre en la tabla de décimo de `curriculo_mep.md`. | Ubicarlo en «Protección de la información e integridad»; validar con el programa completo. |
 
 ## 19. Implementación por etapas
@@ -290,8 +300,8 @@ Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las 
 | 2 | Inmersión Digital (solo la transición) | ✅ Hecha: `ImmersionPortal`, habilidad guardada; se coloca en el cuarto técnico en la etapa 3 |
 | 3 | Sala inicial de persecución | ✅ El cuarto técnico (2° piso, cerrado con llave hasta el permiso del profesor; la conexión en el monitor) y la red de entrenamiento (`persecucion.tscn`, 3 tramos fijos) |
 | 4 | Barrera, salud y caídas | ✅ `CorruptionBarrier` (1 por contacto, invulnerabilidad breve, se detiene en las zonas seguras, se apaga al final); caídas de 1,5 (`Room.fall_damage`) con vuelta a la última plataforma segura (nunca una que se mueve o desaparece) |
-| 5 | Checkpoints y preguntas | ✅ `EducationalCheckpoint` con `ChoiceWindow` (pausa el juego: Kai no recibe daño); incorrecta −15 s; correcta: puerta, marca `cap1_checkpoint_N` y guardado; no se repiten al cargar |
-| 6 | Temporizador | ✅ `ChaseTimer` (4:00, con la física); tiempo agotado o muerte: vuelta al último checkpoint con tiempo suficiente; desaparece después del tercer checkpoint |
+| 5 | Checkpoints y preguntas | ✅ `EducationalCheckpoint` con `ChoiceWindow` (pausa el juego: Kai no recibe daño); tres preguntas de cuatro opciones; incorrecta −20 s; correcta: puerta, marca `cap1_checkpoint_N` y guardado; no se repiten al cargar |
+| 6 | Temporizador | ✅ `ChaseTimer` (1:02, con la física); tiempo agotado o muerte: vuelta al último checkpoint con tiempo suficiente; desaparece después del tercer checkpoint |
 | 7 | Chip como enemigo | ✅ `ChipBoss` (rediseño de Ariel): Discos orbitales, Zona de control, Proyecciones y Rayo de sincronía; escudo de la fase segura y escudo para proteger a Glitch |
 | 8 | Glitch como enemigo | ✅ `GlitchBoss` (rediseño de Ariel): Corte acelerado, Salto en picada, Embestida en cadena y Lanzamiento de fragmentos; queda vulnerable después de atacar; contraataca protegiendo a Chip |
 | 9 | Coordinación de ataques | ✅ `DualBossController`: vida compartida, secuencias fijas por fase y los 10 ataques en conjunto (también a la vez); el vínculo (proteger al aturdido); fase segura del escudo con terminal (mínimo privilegio) al vencer a los dos |

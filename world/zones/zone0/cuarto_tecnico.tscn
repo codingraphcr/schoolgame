@@ -8,9 +8,7 @@
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="5_s4aes"]
 [ext_resource type="PackedScene" path="res://characters/npcs/profesor/profesor.tscn" id="6_3dpnw"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="6_d66ug"]
-[ext_resource type="Script" path="res://characters/npcs/npc.gd" id="7_kvepe"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="7_wqu8t"]
-[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_saludo.tres" id="8_megoe"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="8_tea5m"]
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="9_p2tim"]
 [ext_resource type="Script" path="res://characters/npcs/npc_conversation.gd" id="9_yy3ur"]
@@ -30,6 +28,7 @@
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_final.tres" id="18_qbbt1"]
 [ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="19_5xygr"]
 [ext_resource type="Script" path="res://world/zones/zone0/tech_room_story.gd" id="30_igjiy"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/genesis_profesor.tres" id="30_t4oqr"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/servidor_rojo.tres" id="31_6wxf3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lmghx"]
@@ -226,14 +225,9 @@ position = Vector2(490, 304)
 script = ExtResource("5_nsv5m")
 kind = 1
 
-[node name="Profesor" type="Node2D" parent="Capitulo1" unique_id=1425553402 instance=ExtResource("6_3dpnw")]
+[node name="Profesor" parent="Capitulo1" unique_id=1425553402 instance=ExtResource("6_3dpnw")]
 position = Vector2(410, 304)
-script = ExtResource("7_kvepe")
-display_name = "Prof. Alvarado"
-dialogue = ExtResource("8_megoe")
-repeat_dialogue = ExtResource("8_megoe")
 conversations = Array[ExtResource("9_yy3ur")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_trmnl"), SubResource("Resource_lltp1"), SubResource("Resource_elegir"), SubResource("Resource_invit"), SubResource("Resource_invrec1"), SubResource("Resource_invrec2"), SubResource("Resource_yi4qo"), SubResource("Resource_0b5hx"), SubResource("Resource_73d67"), SubResource("Resource_3qquy"), SubResource("Resource_rsnk6"), SubResource("Resource_mtlg1")])
-idle_extra_animation = &"notas"
 
 [node name="StoryPresence" type="Node" parent="Capitulo1/Profesor" unique_id=1234430745]
 script = ExtResource("19_5xygr")
@@ -320,3 +314,4 @@ glitch = NodePath("../Capitulo1/Glitch")
 props = NodePath("../Props")
 server_dialogue = ExtResource("31_6wxf3")
 profesor = NodePath("../Capitulo1/Profesor")
+genesis_dialogue = ExtResource("30_t4oqr")

@@ -229,13 +229,24 @@ func _test_ending() -> void:
 	await _until(func() -> bool: return box.is_playing())
 	await _advance(box)
 	var saw_genesis := [false]
-	await _until(func() -> bool:
+	var hidden_kai := [false]
+	for i in 900:
 		if story.props.genesis:
 			saw_genesis[0] = true
-		return state.is_quest_completed(Q2))
-	_check(saw_genesis[0] and state.has_flag(&"cap1_genesis_visto"), "Kai se va y el profesor ve aparecer GENESIS_ARCHIVE")
+			hidden_kai[0] = not room.player.visible
+		if state.is_quest_completed(Q2):
+			break
+		if box.is_playing():
+			await _advance(box)  # Lo que se ve del profesor, solo.
+		await _frames(1)
+	_check(saw_genesis[0] and state.has_flag(&"cap1_genesis_visto") and hidden_kai[0],
+		"escena aparte: Kai ya se fue y el profesor, solo, ve aparecer GENESIS_ARCHIVE")
 	_check(state.is_quest_completed(Q2) and state.has_flag(&"capitulo_1_completado") and titles.has("FIN DEL CAPÍTULO 1"), "«FIN DEL CAPÍTULO 1»")
-	_check(not room.player.controls_locked, "y Kai puede seguir jugando")
+	await _until(func() -> bool: return current_scene is Room and current_scene.scene_file_path == Z + "entrada.tscn" and current_scene.is_node_ready())
+	await _frames(6)
+	room = current_scene as Room
+	_check(room.scene_file_path == Z + "entrada.tscn" and room.player.visible and not room.player.controls_locked,
+		"después Kai aparece en la entrada del colegio (no vuelve al cuarto) y puede seguir jugando")
 
 
 ## --- Ayudas ---

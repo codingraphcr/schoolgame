@@ -4,33 +4,87 @@
 [ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
 [ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
 
-[sub_resource type="Resource" id="Option_1"]
+[sub_resource type="Resource" id="Q0_O0"]
 script = ExtResource("2_option")
-text = "Borrar primero todo lo que hay, para empezar limpio"
-detail = "Así no se mezcla nada"
-feedback = "Si el respaldo resulta dañado, ya no quedaría nada. Nunca se borra antes de saber que se puede restaurar."
+text = "Restaurar el respaldo más reciente: es el que tiene menos pérdidas"
+feedback = "El más reciente también puede estar dañado o infectado. Primero hay que comprobarlo."
 
-[sub_resource type="Resource" id="Option_2"]
+[sub_resource type="Resource" id="Q0_O1"]
 script = ExtResource("2_option")
-text = "Restaurar el respaldo más reciente sin revisarlo"
-detail = "Es el más actualizado"
-feedback = "El más reciente podría estar incompleto o dañado. Primero hay que comprobarlo."
+text = "Borrar primero lo que hay, para que la restauración quede limpia"
+feedback = "Si el respaldo falla, ya no quedaría nada. Nunca se borra antes de comprobar."
 
-[sub_resource type="Resource" id="Option_3"]
+[sub_resource type="Resource" id="Q0_O2"]
 script = ExtResource("2_option")
 text = "Verificar que la copia de respaldo sea válida"
-detail = "Que esté completa y se pueda leer"
 correct = true
-feedback = "¡Correcto! Un respaldo solo sirve si funciona. Verificarlo antes de restaurar evita perder la información para siempre."
+feedback = "¡Correcto! Antes de restaurar se comprueba que el respaldo esté completo y sin daños."
+
+[sub_resource type="Resource" id="Q0_O3"]
+script = ExtResource("2_option")
+text = "Restaurar en el mismo equipo para no perder tiempo"
+feedback = "Restaurar sin verificar puede repetir el problema. Ganar tiempo no justifica el riesgo."
 
 [sub_resource type="Resource" id="Question_0"]
 script = ExtResource("1_question")
 prompt = "¿Qué se recomienda antes de restaurar información importante?"
-options = Array[ExtResource("2_option")]([SubResource("Option_1"), SubResource("Option_2"), SubResource("Option_3")])
+options = Array[ExtResource("2_option")]([SubResource("Q0_O0"), SubResource("Q0_O1"), SubResource("Q0_O2"), SubResource("Q0_O3")])
+
+[sub_resource type="Resource" id="Q1_O0"]
+script = ExtResource("2_option")
+text = "El de anoche, sin revisarlo: es el más completo"
+feedback = "Si el virus entró antes de anoche, ese respaldo podría estar infectado."
+
+[sub_resource type="Resource" id="Q1_O1"]
+script = ExtResource("2_option")
+text = "El de hace un mes, por las dudas"
+feedback = "Perderías un mes de trabajo sin saber si hacía falta."
+
+[sub_resource type="Resource" id="Q1_O2"]
+script = ExtResource("2_option")
+text = "El más reciente que se compruebe limpio, después de averiguar cuándo empezó el ataque"
+correct = true
+feedback = "¡Correcto! Primero se averigua cuándo entró el virus y se usa el respaldo más reciente que esté sano."
+
+[sub_resource type="Resource" id="Q1_O3"]
+script = ExtResource("2_option")
+text = "Ninguno: es mejor rehacer los trabajos"
+feedback = "Para eso existen los respaldos. Bien elegidos, recuperan la información sin riesgo."
+
+[sub_resource type="Resource" id="Question_1"]
+script = ExtResource("1_question")
+prompt = "Un virus cifró los trabajos del laboratorio. Hay respaldos de anoche, de hace una semana y de hace un mes. ¿Cuál restauras?"
+options = Array[ExtResource("2_option")]([SubResource("Q1_O0"), SubResource("Q1_O1"), SubResource("Q1_O2"), SubResource("Q1_O3")])
+
+[sub_resource type="Resource" id="Q2_O0"]
+script = ExtResource("2_option")
+text = "En otra carpeta de la misma computadora"
+feedback = "Si la computadora falla o se infecta, se pierden el original y la copia al mismo tiempo."
+
+[sub_resource type="Resource" id="Q2_O1"]
+script = ExtResource("2_option")
+text = "En un medio separado y protegido, probando de vez en cuando que se pueda restaurar"
+correct = true
+feedback = "¡Correcto! Un respaldo útil está separado del original y se comprueba que funcione."
+
+[sub_resource type="Resource" id="Q2_O2"]
+script = ExtResource("2_option")
+text = "En un disco conectado siempre, para que se actualice solo"
+feedback = "Un disco siempre conectado puede infectarse junto con la computadora."
+
+[sub_resource type="Resource" id="Q2_O3"]
+script = ExtResource("2_option")
+text = "En una carpeta compartida con todo el grupo, para que nadie la pierda"
+feedback = "Muchas personas con acceso significa más riesgo de cambios, borrados o fugas."
+
+[sub_resource type="Resource" id="Question_2"]
+script = ExtResource("1_question")
+prompt = "¿Dónde conviene guardar una copia de respaldo?"
+options = Array[ExtResource("2_option")]([SubResource("Q2_O0"), SubResource("Q2_O1"), SubResource("Q2_O2"), SubResource("Q2_O3")])
 
 [resource]
 script = ExtResource("3_challenge")
 id = &"cap1_checkpoint_2"
 title = "Checkpoint 2 · Respaldos"
+questions = Array[ExtResource("1_question")]([SubResource("Question_0"), SubResource("Question_1"), SubResource("Question_2")])
 ecos_reward = 0
-questions = Array[ExtResource("1_question")]([SubResource("Question_0")])

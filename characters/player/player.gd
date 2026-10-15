@@ -60,6 +60,8 @@ const NULLBLADE_WEAPON := "res://data/weapons/nullblade.tres"
 @export var coyote_time := 0.1
 ## Tiempo que se recuerda una pulsación de salto antes de tocar el suelo o una pared.
 @export var jump_buffer_time := 0.12
+## Altura del saltito al terminar de curarse en el aire (para no caer directo sobre un peligro).
+@export var heal_hop_height := 22.0
 
 @export_group("Doble salto")
 @export var double_jump_height := 56.0
@@ -143,6 +145,10 @@ func _physics_process(delta: float) -> void:
 		# Curándose: quieto en el suelo o flotando en el aire.
 		heal.update(delta, _action_pressed("heal"))
 		velocity = Vector2.ZERO
+		if not heal.active and heal.in_air and heal.heals_done > 0 and not heal.interrupted:
+			# Terminó de curarse en el aire: un saltito en vez de caer.
+			velocity.y = -_velocity_for_height(heal_hop_height)
+			_is_jump_rising = false
 		move_and_slide()
 	elif is_dashing:
 		_process_dash(delta)

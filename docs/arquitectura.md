@@ -96,7 +96,7 @@ tinte de las siluetas).
 | `jump` | Espacio | A |
 | `attack` (Nullblade) | J | X |
 | `aegis_fire` | K | Y |
-| `dash` | Shift | RB |
+| `dash` | C | RB |
 | `vision` (Visión Digital) | Q | LB |
 | `interact` | E | B |
 | `ultimate` (Dominio Nulo) | R | RT |
@@ -634,7 +634,7 @@ conexión del monitor del cuarto técnico. Valores en `data/chase/persecucion_ca
 | Pieza | Responsabilidad |
 |---|---|
 | `DataPlatform` | Bloque de datos de un solo sentido: fijo, que se mueve (con la física) o temporal (al pisarlo parpadea, desaparece y vuelve). Los que se mueven o desaparecen están en el grupo `unsafe_ground` |
-| `CorruptionBarrier` | Pared que avanza detrás de Kai (`barrier_speeds`: 80, 90 y 100 px/s): quita `barrier_damage` (golpe común, con la invulnerabilidad de siempre), no pasa de la zona segura, `disable()` la apaga para siempre. Al arrancar un tramo empieza `barrier_start_gap` detrás de **Kai**; en las zonas seguras, después de un checkpoint y al reaparecer de una caída retrocede hasta quedar por lo menos `barrier_safe_gap` (260 px) detrás de él: nunca queda encima ni delante |
+| `CorruptionBarrier` | Pared que avanza detrás de Kai (`barrier_speeds`: 130, 107 y 117 px/s, calibradas con el recorrido medido en `test_persecucion`: entre el 85 % y el 97 % de lo que aguanta un recorrido perfecto): quita `barrier_damage` (golpe común, con la invulnerabilidad de siempre), no pasa de la zona segura, `disable()` la apaga para siempre. Al arrancar un tramo empieza `barrier_start_gap` detrás de **Kai**; en las zonas seguras, después de un checkpoint y al reaparecer de una caída retrocede hasta quedar por lo menos `barrier_safe_gap` (260 px) detrás de él: nunca queda encima ni delante |
 | `CorruptEmitter` | Nodo corrupto que dispara datos (`DataShot`, siempre con aviso): `SHOOT` en línea recta o `RAIN` (lluvia desde arriba en lugares que rotan). Solo dispara con el tramo corriendo y Kai a menos de `active_range` |
 | `EducationalCheckpoint` | Pilar con la pregunta del tramo (`ChoiceChallenge` en `ChoiceWindow`, que pausa el juego); con E se vuelve a abrir |
 | `DigitalChaseController` | Une todo: arranca la barrera y el reloj al cruzar el inicio de cada tramo, los detiene en la zona segura, −15 s por respuesta incorrecta, marca `cap1_checkpoint_N` y guarda en la entrada `checkpoint_N`, reintentos con tiempo suficiente (tiempo agotado o muerte), y al terminar apaga la barrera y oculta el reloj |
@@ -682,7 +682,7 @@ Doble caída, Caída y barrido). Los gemelos miden 64 px (Kai 92).
 | `CatalogScene` | Biblioteca | El archivo privado en el catálogo y el desafío «Un archivo que no es tuyo» |
 | `QuestTrigger` (`completes_step = false`, `once_flag`) | Escaleras | Kai piensa en la puerta cerrada del cuarto técnico (una vez) |
 | Profesor (`NpcConversation`) | Sala 3 | Recordatorios durante la clase y el permiso para el cuarto técnico («NIVEL 1 COMPLETADO») |
-| `TechRoomStory` | Cuarto técnico | El servidor en rojo y los hermanos que se meten en la computadora; al final, la charla con el profesor, Kai se va y aparece `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
+| `TechRoomStory` | Cuarto técnico | El servidor en rojo y los hermanos que se meten en la computadora; al final, la charla con el profesor, Kai se va y, como escena aparte (a negro, «Mientras tanto...», Kai oculto, cámara que se acerca al monitor), el profesor solo ve aparecer `GENESIS_ARCHIVE` (`genesis_dialogue`); «FIN DEL CAPÍTULO 1» sobre esa imagen y Kai aparece en la entrada del colegio (`after_scene` / `after_entry`) |
 
 `SiblingActor` es Chip o Glitch como personaje de escena (sin pelear); `SiblingArt` es su dibujo con los sprites de Ariel (lo comparten con el
 jefe). `StoryPresence` muestra u oculta a un personaje según la misión (el profesor del pasillo no está durante el
