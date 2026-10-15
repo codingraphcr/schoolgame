@@ -30,6 +30,7 @@ Economy="*res://autoload/economy.gd"
 IdentityManager="*res://autoload/identity_manager.gd"
 SaveManager="*res://autoload/save_manager.gd"
 World="*res://autoload/world.gd"
+DevMenu="*res://ui/debug/dev_menu.gd"
 
 [display]
 

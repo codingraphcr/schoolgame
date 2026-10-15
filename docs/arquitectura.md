@@ -644,6 +644,18 @@ Caídas: `Room.fall_damage` (1,5 aquí) y `PlayerDamage.fall_out_of_bounds(damag
 segura. `PlayerDamage.protected` lo protege mientras la historia lo pide. `Room.player_respawned` avisa al reaparecer
 después de morir.
 
+## Menú de pruebas (F9, solo en el editor)
+
+`DevMenu` (autoload, `ui/debug/dev_menu.gd`) existe solo al correr el juego desde el editor de Godot
+(`OS.has_feature("editor")`): en el juego exportado no hace nada. **F9** lo abre (pausa el juego):
+
+- **Saltar a un punto de la historia** (`systems/dev/dev_points.gd`, `DevPoints.POINTS`): deja `GameState` como si
+  se hubiera jugado hasta ahí (completa en orden las misiones de `DevPoints.CHAIN` hasta el paso pedido, da las
+  habilidades de ese momento y las marcas extra) y abre la sala en su entrada. **No guarda**: `active_slot = 0`.
+- **Trucos:** sin daño, energía y Dominio llenos, doble salto (se aplican al Kai de la sala, sin cambiar la partida).
+- Al agregar una parte nueva de la historia se suma un punto a `POINTS`; `test_menu_pruebas.gd` comprueba que todos
+  abran su sala con la misión y las habilidades correctas.
+
 ## Jefe: Bucle Infinito (Capítulo 2)
 
 La arena (`world/zones/simulador/arena_bucle.tscn`, zona **Simulador**, ficha `arena_bucle`, se abre en el Capítulo 2;
@@ -844,6 +856,7 @@ cuando la computadora está ocupada (por ejemplo, con el editor de Godot abierto
 | `test_persecucion.gd` | Capítulo 1, etapas 3 a 6: los tres tramos con la física real y solo salto + dash (sin doble salto), la barrera (empieza detrás de Kai, 1 por contacto, invulnerabilidad, sin daño en cada cuadro, después de cada checkpoint queda a 260 px detrás y nunca delante), los nodos que disparan (con aviso y dañan), caídas de exactamente 1,5 con vuelta a una plataforma segura, checkpoints (pausa, −15 s, puerta, guardado), tiempo agotado, muerte, cargar sin repetir checkpoints y el final (barrera apagada, reloj oculto) |
 | `test_bucle.gd` | Bucle Infinito: las 20 validaciones de su especificación (ciclos, impactos clave uno por ciclo, golpe arriesgado, fatiga y repetición, ataques con aviso y cancelados, lluvia con carriles libres, colisión del anillo, una plataforma apagada por vez, séptimo impacto sin octava transformación, recompensa única, reinicio desde el checkpoint, estados que no se traban) y un tajo real de la Nullblade |
 | `test_dominio_nulo.gd` | Dominio Nulo I: bloqueado antes de obtenerlo, el muro que no se rompe sin él (golpes reales), obtenerlo y activarlo con R, amenazas al 80 % sin tocar el tiempo global ni el HUD, +10 % de daño, 15 s, la carga por golpe y la salida |
+| `test_menu_pruebas.gd` | El menú de pruebas: cada punto abre su sala con la misión y las habilidades de ese momento sin guardar; F9 abre y cierra (pausa); los trucos |
 | `test_orden_al_azar.gd` | Las respuestas de las preguntas y las contraseñas de la terminal salen en orden al azar cada vez |
 | `test_jefe_hermanos.gd` | Capítulo 1, etapas 7 a 11 (Glitch y Chip, diseño de Ariel): checkpoint y sin temporizador, una barra para cada uno, vencer a cada uno (el vencido queda aturdido y el otro sigue solo) y una sola barra nueva en la Fase 3, los 8 ataques individuales y los 10 en conjunto con su aviso y sus animaciones cuadro por cuadro (aviso, acción y recuperación), el vínculo (el otro protege al aturdido), las tres fases (anillo y segunda melodía en la 2, fase segura con terminal al vencer a los dos, Protocolo Dual / Furia fraternal), hermanos que no se borran, recompensa única, reinicio si Kai pierde y la arena ya ganada |
 | `test_capitulo1_historia.gd` | Capítulo 1, la historia de punta a punta: el prólogo lleva al capítulo, la Sala 3 (cerrada en el prólogo; se entra y se sale por su puerta con E), la clase, el registro y su desafío, la cinemática de los hermanos (Visión, cámara, escape), la persecución corta, la biblioteca, el permiso («NIVEL 1 COMPLETADO»), el servidor y el final con `GENESIS_ARCHIVE` («FIN DEL CAPÍTULO 1») |
