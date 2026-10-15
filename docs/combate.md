@@ -111,11 +111,11 @@ Es el vínculo entre el combate y el contenido educativo.
 | H4d | 2 elecciones (contraseña y MFA) → desbloquea Q y sale de la PC: `ChoiceChallenge`, `ChoiceWindow`, `AccountSecurity` | ✅ |
 | H5 | Invitación del profesor → pasillo de las instalaciones → desafío Visión Digital + terminal → cuarto viejo: Nullblade oficial, dash y «EL DESPERTAR» | ⏳ |
 | C3 | Nullblade.exe (datos de las 4 etapas) + sensación de impacto | ⏳ |
-| C4 | `EnemyBase` + `EnemyData` + `CombatClock` + enemigo patrullero | ⏳ |
-| C5 | Energía (curación con L) + carga del Dominio | ⏳ |
+| C4 | `EnemyBase` + `EnemyData` + `CombatClock` + enemigo patrullero | 🟡 `CombatClock` hecho (`systems/combat/combat_clock.gd`: lo leen `EnemyBase` y los proyectiles compatibles) |
+| C5 | Energía (curación con L) + carga del Dominio | ✅ La carga del Dominio sube 10 por golpe de la Nullblade a un enemigo |
 | C7 | Dash-parry + torreta de llaves | ⏳ |
 | C8 | Terminal + escudo educativo | ⏳ |
-| C9 | Dominio Nulo I (si hay tiempo) | ⏳ |
+| C9 | Dominio Nulo I | ✅ `PlayerDomain` (R): 15 s, +10 %, 100 de carga, amenazas al 80 %; se obtiene después de Bucle |
 | C10 | Aegis Pulse (si hay tiempo) | ⏳ |
 | C11 | Evoluciones visuales y ataque cargado de Nullblade (si hay tiempo) | ⏳ |
 | C12 | Controles táctiles + prueba en Android | ⏳ |

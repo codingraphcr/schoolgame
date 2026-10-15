@@ -205,9 +205,10 @@ func _test_finish() -> void:
 		"el séptimo impacto termina el combate")
 	_check(transformations == 6 and boss.stage == 7, "sin octava transformación (%d transformaciones)" % transformations)
 	_check(is_instance_valid(boss) and boss.visible and state.has_flag(&"cap2_bucle_liberado"), "Bucle no muere: queda en la arena, liberado")
-	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.DONE)
-	_check(state.has_flag(&"cap2_bucle_vencido") and state.has_flag(&"cap2_condicion_corregida") and not fight.gate.active,
-		"queda guardado: jefe vencido, condición de salida corregida y la puerta abierta")
+	await _leave_simulator()
+	_check(state.has_flag(&"cap2_bucle_vencido") and state.has_flag(&"cap2_condicion_corregida") and state.has_flag(&"cap2_dominio_nulo")
+		and state.domain_stage == 1 and not fight.gate.active,
+		"queda guardado: jefe vencido, condición de salida corregida, Dominio Nulo I y la puerta abierta")
 	_check(root.get_node("Economy").ecos > ecos_before, "da su recompensa")
 	await _frames(240)
 	_check(boss.state == S.DEFEATED and get_nodes_in_group(&"boss_attack").is_empty(), "y ya no ataca: el jefe no sigue activo")
@@ -216,7 +217,7 @@ func _test_finish() -> void:
 	await _open()
 	ecos_before = root.get_node("Economy").ecos
 	await _hit_until(7)
-	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.DONE)
+	await _leave_simulator()
 	_check(root.get_node("Economy").ecos == ecos_before, "la recompensa no se cobra dos veces")
 
 
@@ -253,6 +254,15 @@ func _test_already_won() -> void:
 
 
 ## --- Ayudas ---
+
+## Después del combate el simulador se derrumba (lo prueba test_dominio_nulo): aquí se rompe el muro rápido.
+func _leave_simulator() -> void:
+	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.COLLAPSE and state.domain_stage >= 1)
+	room.player.domain.activate(true)
+	if is_instance_valid(fight.wall):
+		fight.wall.health.take_damage(99.0)
+	await _until(func() -> bool: return fight.phase == BucleArenaController.Phase.DONE)
+
 
 func _open() -> void:
 	if current_scene:

@@ -128,6 +128,8 @@ var _afterimage_timer := 0.0
 @onready var damage: PlayerDamage = $Damage
 @onready var combat: PlayerCombat = $Combat
 @onready var heal: PlayerHeal = $Heal
+## Dominio Nulo (Capítulo 2): carga, activación con R y su barra.
+var domain: PlayerDomain
 @onready var _visual: Node2D = $Visual
 @onready var _body: Node2D = $Visual/Body
 
@@ -135,6 +137,9 @@ var _afterimage_timer := 0.0
 func _ready() -> void:
 	# Así otros sistemas encuentran a Kai sin conocer la sala (p. ej. la lluvia de correos SPAM).
 	add_to_group(&"player")
+	domain = PlayerDomain.new()
+	domain.name = "Domain"
+	add_child(domain)
 
 
 func _physics_process(delta: float) -> void:

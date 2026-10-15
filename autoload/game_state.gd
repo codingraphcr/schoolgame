@@ -84,6 +84,8 @@ var nullblade_stage := 0
 var aegis_stage := 0
 ## 0 = bloqueado · 1, 2, 3 = versiones I, II, III
 var domain_stage := 0
+## Carga del Dominio Nulo (no se guarda: se mantiene entre salas durante la sesión).
+var domain_charge := 0.0
 ## Segundos jugados en esta partida (solo cuentan dentro de una sala y sin pausa: ver Room).
 var play_time := 0.0
 
@@ -327,6 +329,7 @@ func _reset_progress() -> void:
 	nullblade_stage = 0
 	aegis_stage = 0
 	domain_stage = 0
+	domain_charge = 0.0
 	play_time = 0.0
 
 

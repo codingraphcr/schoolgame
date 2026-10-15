@@ -1,36 +1,44 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_h6e3x"]
-[ext_resource type="Script" path="res://world/zones/simulador/bucle_background.gd" id="2_6stbc"]
-[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_qlcwd"]
-[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="4_2qho3"]
-[ext_resource type="Script" path="res://world/digital/arena_barrier.gd" id="5_cb1m0"]
-[ext_resource type="Script" path="res://characters/enemies/bucle/bucle_boss.gd" id="6_yjfe7"]
-[ext_resource type="Resource" path="res://data/bosses/bucle.tres" id="7_45kmw"]
-[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="8_0t1iy"]
-[ext_resource type="Script" path="res://characters/player/player.gd" id="9_lf34a"]
-[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="10_jw8xu"]
-[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="11_6toqw"]
-[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="12_y6ao3"]
-[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="13_1uboe"]
-[ext_resource type="Script" path="res://world/zones/simulador/bucle_arena.gd" id="14_e8hxi"]
-[ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_intro.tres" id="15_ga5tx"]
-[ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_final.tres" id="16_5pnbe"]
-[ext_resource type="Resource" path="res://data/challenges/cap2_condicion_salida.tres" id="17_5wpra"]
-[ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_condicion.tres" id="18_da3sk"]
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_yjfe7"]
+[ext_resource type="Script" path="res://world/zones/simulador/bucle_background.gd" id="2_45kmw"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_0t1iy"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="4_lf34a"]
+[ext_resource type="Script" path="res://world/digital/arena_barrier.gd" id="5_jw8xu"]
+[ext_resource type="Script" path="res://characters/enemies/bucle/bucle_boss.gd" id="6_6toqw"]
+[ext_resource type="Resource" path="res://data/bosses/bucle.tres" id="7_y6ao3"]
+[ext_resource type="Script" path="res://world/zones/simulador/process_wall.gd" id="8_1uboe"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="9_e8hxi"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="10_ga5tx"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="11_5pnbe"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="12_5wpra"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="13_da3sk"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="14_21f0g"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="15_k7dld"]
+[ext_resource type="Script" path="res://world/zones/simulador/bucle_arena.gd" id="16_qk0sg"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_intro.tres" id="17_50iar"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_final.tres" id="18_h33h4"]
+[ext_resource type="Resource" path="res://data/challenges/cap2_condicion_salida.tres" id="19_ruioh"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_condicion.tres" id="20_7wed5"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/bucle_colapso.tres" id="21_pi2kj"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/dominio_instinto.tres" id="22_5nx6q"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/dominio_despues.tres" id="23_hibkq"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_21f0g"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3nlxs"]
 size = Vector2(704, 80)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_k7dld"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_any3v"]
 size = Vector2(32, 400)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qk0sg"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b2w47"]
 size = Vector2(32, 400)
 
-[node name="ArenaBucle" type="Node2D" unique_id=1303330366 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wn22a"]
+size = Vector2(12, 256)
+
+[node name="ArenaBucle" type="Node2D" unique_id=1381410702 node_paths=PackedStringArray("player", "camera", "spawn_point")]
 texture_filter = 1
-script = ExtResource("1_h6e3x")
+script = ExtResource("1_yjfe7")
 player = NodePath("Player")
 camera = NodePath("GameCamera")
 spawn_point = NodePath("SpawnPoint")
@@ -40,73 +48,89 @@ fall_damage = 1.5
 footstep = &"step_digital"
 music_track = &"computadora"
 
-[node name="Background" type="Node2D" parent="." unique_id=532111625]
-script = ExtResource("2_6stbc")
+[node name="Background" type="Node2D" parent="." unique_id=592603790]
+script = ExtResource("2_45kmw")
 
-[node name="Collisions" type="StaticBody2D" parent="." unique_id=61202945]
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=1521554512]
 
-[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=393684905]
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=1110527201]
 position = Vector2(320, 344)
-shape = SubResource("RectangleShape2D_21f0g")
+shape = SubResource("RectangleShape2D_3nlxs")
 
-[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1400789272]
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1161400106]
 position = Vector2(-16, 180)
-shape = SubResource("RectangleShape2D_k7dld")
+shape = SubResource("RectangleShape2D_any3v")
 
-[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1981796635]
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=695226107]
 position = Vector2(656, 180)
-shape = SubResource("RectangleShape2D_qk0sg")
+shape = SubResource("RectangleShape2D_b2w47")
 
-[node name="Platforms" type="Node2D" parent="." unique_id=1633871936]
+[node name="Platforms" type="Node2D" parent="." unique_id=1637947373]
 
-[node name="FloorVisual" type="AnimatableBody2D" parent="Platforms" unique_id=1948074668]
+[node name="FloorVisual" type="AnimatableBody2D" parent="Platforms" unique_id=2046926746]
 position = Vector2(0, 304)
-script = ExtResource("3_qlcwd")
+script = ExtResource("3_0t1iy")
 width = 640.0
 
-[node name="PlataformaIzquierda" type="AnimatableBody2D" parent="Platforms" unique_id=1865631071]
+[node name="PlataformaIzquierda" type="AnimatableBody2D" parent="Platforms" unique_id=903643630]
 position = Vector2(60, 230)
-script = ExtResource("3_qlcwd")
+script = ExtResource("3_0t1iy")
 width = 120.0
 
-[node name="PlataformaDerecha" type="AnimatableBody2D" parent="Platforms" unique_id=423256090]
+[node name="PlataformaDerecha" type="AnimatableBody2D" parent="Platforms" unique_id=634983574]
 position = Vector2(460, 230)
-script = ExtResource("3_qlcwd")
+script = ExtResource("3_0t1iy")
 width = 120.0
 
-[node name="PlataformaCentral" type="AnimatableBody2D" parent="Platforms" unique_id=2142047664]
+[node name="PlataformaCentral" type="AnimatableBody2D" parent="Platforms" unique_id=279338243]
 position = Vector2(260, 170)
-script = ExtResource("3_qlcwd")
+script = ExtResource("3_0t1iy")
 width = 120.0
 
-[node name="Entries" type="Node2D" parent="." unique_id=2047229820]
+[node name="Entries" type="Node2D" parent="." unique_id=1835581424]
 
-[node name="Inicio" type="Marker2D" parent="Entries" unique_id=1789911862]
+[node name="Inicio" type="Marker2D" parent="Entries" unique_id=1599631033]
 position = Vector2(48, 304)
-script = ExtResource("4_2qho3")
+script = ExtResource("4_lf34a")
 id = &"inicio"
 arrival_effect = "materialize"
 
-[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1333451798]
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1370141843]
 position = Vector2(48, 304)
 
-[node name="Gate" type="StaticBody2D" parent="." unique_id=273733566]
+[node name="Gate" type="StaticBody2D" parent="." unique_id=496967580]
 position = Vector2(20, 304)
-script = ExtResource("5_cb1m0")
+script = ExtResource("5_jw8xu")
 height = 220.0
 
-[node name="Bucle" type="CharacterBody2D" parent="." unique_id=465684639]
+[node name="Bucle" type="CharacterBody2D" parent="." unique_id=901945035]
 position = Vector2(320, 296)
-script = ExtResource("6_yjfe7")
-config = ExtResource("7_45kmw")
+script = ExtResource("6_6toqw")
+config = ExtResource("7_y6ao3")
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=483504619 instance=ExtResource("8_0t1iy")]
+[node name="MuroDeProcesos" type="CharacterBody2D" parent="." unique_id=1143136787]
+position = Vector2(600, 304)
+script = ExtResource("8_1uboe")
+max_health = 4.4
+
+[node name="Exits" type="Node2D" parent="." unique_id=904449206]
+
+[node name="Salida" type="Area2D" parent="Exits" unique_id=285606364]
+position = Vector2(634, 176)
+script = ExtResource("9_e8hxi")
+target_scene = "res://world/zones/zone0/cuarto_tecnico.tscn"
+target_entry = &"desde_red"
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Exits/Salida" unique_id=1834689219]
+shape = SubResource("RectangleShape2D_wn22a")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1886901240 instance=ExtResource("10_ga5tx")]
 position = Vector2(48, 304)
 collision_layer = 2
 floor_snap_length = 4.0
-script = ExtResource("9_lf34a")
+script = ExtResource("11_5pnbe")
 
-[node name="GameCamera" type="Camera2D" parent="." unique_id=524614741 node_paths=PackedStringArray("target") instance=ExtResource("10_jw8xu")]
+[node name="GameCamera" type="Camera2D" parent="." unique_id=2012961075 node_paths=PackedStringArray("target") instance=ExtResource("12_5wpra")]
 zoom = Vector2(2, 2)
 process_callback = 0
 position_smoothing_enabled = true
@@ -114,21 +138,25 @@ position_smoothing_speed = 7.0
 drag_vertical_enabled = true
 drag_top_margin = 0.25
 drag_bottom_margin = 0.15
-script = ExtResource("11_6toqw")
+script = ExtResource("13_da3sk")
 target = NodePath("../Player")
 
-[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("12_y6ao3")]
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_21f0g")]
 layer = 40
-script = ExtResource("13_1uboe")
+script = ExtResource("15_k7dld")
 player = NodePath("../Player")
 
-[node name="Fight" type="Node" parent="." unique_id=2050236566 node_paths=PackedStringArray("boss", "gate", "platforms", "background")]
-script = ExtResource("14_e8hxi")
+[node name="Fight" type="Node" parent="." unique_id=1155115476 node_paths=PackedStringArray("boss", "gate", "platforms", "background", "wall")]
+script = ExtResource("16_qk0sg")
 boss = NodePath("../Bucle")
 gate = NodePath("../Gate")
 platforms = [NodePath("../Platforms/PlataformaIzquierda"), NodePath("../Platforms/PlataformaDerecha"), NodePath("../Platforms/PlataformaCentral")]
 background = NodePath("../Background")
-intro_dialogue = ExtResource("15_ga5tx")
-closing_dialogue = ExtResource("16_5pnbe")
-exit_challenge = ExtResource("17_5wpra")
-after_puzzle_dialogue = ExtResource("18_da3sk")
+intro_dialogue = ExtResource("17_50iar")
+closing_dialogue = ExtResource("18_h33h4")
+exit_challenge = ExtResource("19_ruioh")
+after_puzzle_dialogue = ExtResource("20_7wed5")
+wall = NodePath("../MuroDeProcesos")
+collapse_dialogue = ExtResource("21_pi2kj")
+instinct_dialogue = ExtResource("22_5nx6q")
+domain_dialogue = ExtResource("23_hibkq")

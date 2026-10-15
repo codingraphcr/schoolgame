@@ -262,8 +262,9 @@ func _attack(attack: StringName, data: BucleCycle, epoch: int) -> void:
 			await _wait(telegraph + 0.9)
 
 
+## Espera con el tiempo de las amenazas (el Dominio Nulo la alarga).
 func _wait(seconds: float) -> void:
-	await get_tree().create_timer(maxf(seconds, 0.0), false, true).timeout
+	await CombatClock.wait(self, maxf(seconds, 0.0))
 
 
 ## --- Dibujo ---

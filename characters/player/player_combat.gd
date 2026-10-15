@@ -121,6 +121,8 @@ func _physics_process(delta: float) -> void:
 		_windup -= delta
 		if _windup <= 0.0:
 			_place_hitbox()
+			# El único lugar donde se aplica la bonificación de daño (Dominio Nulo), una vez por golpe.
+			hitbox.damage = weapon.damage * (player.domain.damage_multiplier() if player.domain else 1.0)
 			hitbox.activate()
 			_active = weapon.active_time
 	elif _active > 0.0:
@@ -422,3 +424,5 @@ func _gain_energy(target: Node2D) -> void:
 		return
 	var gain := weapon.charged_energy_gain if _charged else weapon.energy_gain
 	player.add_energy(player.max_energy * gain)
+	if player.domain:
+		player.domain.add_charge(PlayerDomain.CHARGE_PER_HIT)

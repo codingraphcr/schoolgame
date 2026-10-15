@@ -36,7 +36,8 @@ func _ready() -> void:
 	hit_dealt.connect(func(_hurtbox: Node2D, _hit: HitData) -> void: queue_free())
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(real_delta: float) -> void:
+	var delta := CombatClock.scaled(real_delta)  # El Dominio Nulo lo ralentiza.
 	_time += delta
 	queue_redraw()
 	if _time < warning:

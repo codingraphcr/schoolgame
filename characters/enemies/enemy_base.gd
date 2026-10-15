@@ -82,9 +82,12 @@ func _ready() -> void:
 	contact.owner = self
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(real_delta: float) -> void:
 	if is_dead:
 		return
+	# El Dominio Nulo ralentiza a las amenazas (CombatClock): su tiempo y su movimiento.
+	var time_scale := CombatClock.threat_scale
+	var delta := real_delta * time_scale
 	velocity.y = minf(velocity.y + gravity * delta, max_fall_speed)
 	if _stun > 0.0:
 		_stun -= delta
@@ -93,7 +96,12 @@ func _physics_process(delta: float) -> void:
 		_ai(delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, 600.0 * delta)
-	move_and_slide()
+	if is_equal_approx(time_scale, 1.0):
+		move_and_slide()
+	else:
+		velocity *= time_scale
+		move_and_slide()
+		velocity /= time_scale
 
 
 ## Comportamiento propio de cada enemigo (se llama cada cuadro de física si no está aturdido).

@@ -43,7 +43,8 @@ func is_live() -> bool:
 	return _time >= telegraph
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(real_delta: float) -> void:
+	var delta := CombatClock.scaled(real_delta)  # El Dominio Nulo lo ralentiza.
 	_time += delta
 	queue_redraw()
 	if _time < telegraph:

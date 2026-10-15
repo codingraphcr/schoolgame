@@ -2,7 +2,7 @@
 
 **Capítulo:** 2 — Los primeros códigos · **Nivel:** 4 — Código fuera de control · **Recompensa:** Dominio Nulo I
 **Estado:** especificación oficial del equipo (14 de octubre de 2026) y diseño técnico (sección B). **Autorizado e
-implementado** (fases 1 a 8): `characters/enemies/bucle/`, `systems/bosses/bucle_*.gd`, `data/bosses/bucle.tres`,
+implementado** (fases 1 a 9; la 9 es Dominio Nulo I, ver B.8): `characters/enemies/bucle/`, `systems/bosses/bucle_*.gd`, `data/bosses/bucle.tres`,
 `world/zones/simulador/` y `tests/test_bucle.gd`. Decisiones tomadas (B.11): Bucle en la Biblia v1.5; la arena se
 construye sola (zona «Simulador», capítulo 2) hasta que exista el resto del capítulo; sus ataques quitan 1 cristal;
 el golpe arriesgado da media barrita de energía. Se prueba abriendo `world/zones/simulador/arena_bucle.tscn` (F6).
@@ -267,11 +267,20 @@ asustada → agotada. Etapas 5 y más: interferencias (franjas); etapa 6: el con
 opción **reducir destellos** (nueva en Ajustes) las interferencias y parpadeos se reemplazan por cambios de color
 suaves. Se cambia de etapa en `TRANSFORMATION`, cuando no hay peligros en la arena.
 
-### B.8 Dominio Nulo I (fase 9)
+### B.8 Dominio Nulo I (fase 9, hecha)
 
-Necesita piezas que todavía no existen (`docs/combate.md`, C4, C5 y C9): un **reloj de combate local** para
-ralentizar solo enemigos y proyectiles (nunca `Engine.time_scale`), la **carga del Dominio** y su barra, y una
-tecla. Se diseñará aparte, con su propia autorización.
+- `CombatClock` (`systems/combat/combat_clock.gd`): multiplicador del tiempo de las amenazas (0,8 con el Dominio).
+  Lo leen `EnemyBase` (IA y movimiento), los ataques de Bucle, `DataShot` y las esperas de Bucle. Nunca toca
+  `Engine.time_scale`, la interfaz ni a Kai.
+- `PlayerDomain` (`characters/player/player_domain.gd`, hijo de Kai): carga en `GameState.domain_charge` (10 por
+  golpe a un enemigo), activación con **R** (acción `ultimate`), 15 s, +10 % de daño (aplicado en un solo lugar:
+  `PlayerCombat` al activar el golpe), barra en el HUD y un velo violeta.
+- La lección: después del puzle, el simulador se desestabiliza y un **muro de procesos** (`ProcessWall`) bloquea la
+  salida. Se reconstruye entero 1,6 s (del tiempo de las amenazas) después del primer golpe: sin el Dominio hacen
+  falta 5 golpes (1,95 s), imposible; con el Dominio bastan 4 (1,5 s) y el bucle tarda 2 s. Kai obtiene el Dominio
+  con la carga llena y se le pide pulsar R; si se termina sin romperlo, se vuelve a cargar. Nada hace daño.
+  Después se abre la salida (provisoria: al cuarto técnico, hasta que exista el resto del capítulo 2).
+  Marca `cap2_dominio_nulo`; `test_dominio_nulo.gd` lo prueba con golpes reales.
 
 ### B.9 Cómo se prueba cada etapa (`tests/test_bucle.gd`, física determinista)
 
