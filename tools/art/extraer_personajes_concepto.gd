@@ -217,14 +217,22 @@ const CHARACTERS := {
 			"pf_quieto": { "rect": Rect2i(542, 498, 43, 135), "only_body": true },
 			"pf_caminar_2": { "rect": Rect2i(743, 498, 43, 135), "only_body": true },
 			"pf_espalda": { "rect": Rect2i(927, 498, 44, 135), "only_body": true },
-			# El conserje: clip le quita la sombra del suelo y el montoncito de polvo del trapeador.
+			# El conserje: clip le quita la sombra del suelo (la mecha del trapeador, amarilla, queda). Quieto, en la hoja
+			# lleva una carpeta gris en la cadera con la otra mano: clip le quita lo que sobresale del cuerpo y cover
+			# pinta el resto con el uniforme (solo sostiene el trapeador; el brazo de adelante queda).
 			"cj_quieto": { "rect": Rect2i(1012, 498, 100, 135), "only_body": true, "refill": true, "tolerance": 0.05,
-				"clip": [Vector2(1012, 498), Vector2(1112, 498), Vector2(1112, 617), Vector2(1071, 617), Vector2(1070, 627), Vector2(1028, 627), Vector2(1028, 621), Vector2(1012, 621)] },
+				"clip": [Vector2(1012, 498), Vector2(1112, 498), Vector2(1112, 616), Vector2(1109, 616), Vector2(1109, 625), Vector2(1074, 625), Vector2(1071, 617), Vector2(1070, 627), Vector2(1028, 627), Vector2(1028, 621), Vector2(1012, 621), Vector2(1012, 594), Vector2(1029, 594), Vector2(1029, 568), Vector2(1012, 568)],
+				"cover": [Vector2(1029, 570), Vector2(1039, 570), Vector2(1039, 579), Vector2(1048, 581), Vector2(1048, 594), Vector2(1029, 594)], "cover_color": Color("1e1d3e"),
+				# La mecha del trapeador: del beige de la hoja al lila grisáceo del otro paso (así no cambia al caminar).
+				"recolor": [Vector2(1074, 615), Vector2(1110, 615), Vector2(1110, 626), Vector2(1074, 626)], "recolor_color": Color("8f7fa8") },
 			"cj_caminar_1": { "rect": Rect2i(1193, 498, 99, 135), "only_body": true, "refill": true, "tolerance": 0.05,
 				"clip": [Vector2(1189, 498), Vector2(1296, 498), Vector2(1296, 624), Vector2(1268, 624), Vector2(1268, 627), Vector2(1249, 627), Vector2(1249, 623), Vector2(1223, 623), Vector2(1223, 627), Vector2(1205, 627), Vector2(1205, 623), Vector2(1189, 623)] },
 			# Su otro cuadro de caminar (en la hoja dice "izquierda", pero también mira a la derecha: es el otro paso).
 			"cj_caminar_2": { "rect": Rect2i(1300, 498, 101, 135), "only_body": true, "refill": true, "tolerance": 0.05,
-				"clip": [Vector2(1300, 498), Vector2(1401, 498), Vector2(1401, 617), Vector2(1365, 617), Vector2(1365, 627), Vector2(1349, 627), Vector2(1349, 621), Vector2(1324, 621), Vector2(1324, 627), Vector2(1304, 627), Vector2(1304, 623), Vector2(1300, 623)] },
+				"clip": [Vector2(1300, 498), Vector2(1401, 498), Vector2(1401, 616), Vector2(1399, 616), Vector2(1399, 625), Vector2(1366, 625), Vector2(1365, 627), Vector2(1349, 627), Vector2(1349, 621), Vector2(1324, 621), Vector2(1324, 627), Vector2(1304, 627), Vector2(1304, 623), Vector2(1300, 623)],
+				# Con la mecha, el fondo entre la pierna de adelante, el palo y la mecha queda encerrado: se borra.
+				"erase": [[Vector2(1359, 584), Vector2(1366, 584), Vector2(1385, 614), Vector2(1385, 619), Vector2(1360, 619), Vector2(1359, 604)]],
+				"recolor": [Vector2(1365, 614), Vector2(1400, 614), Vector2(1400, 626), Vector2(1365, 626)], "recolor_color": Color("8f7fa8") },
 			"x1_quieto": { "rect": Rect2i(1524, 538, 59, 124), "only_body": true },
 			# x2 (audífonos): la pierna de adelante era café, como sin pantalón; se pinta como la otra.
 			"x2_quieto": { "rect": Rect2i(1605, 538, 54, 124), "only_body": true,
