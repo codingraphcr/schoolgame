@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_0ux2t"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_qeqkh"]
+
+[sub_resource type="Resource" id="Resource_hgv60"]
+script = ExtResource("1_0ux2t")
+id = &"oeste"
+side = 0
+kind = 1
+entry_id = &"desde_escaleras"
+
+[sub_resource type="Resource" id="Resource_40vy8"]
+script = ExtResource("1_0ux2t")
+id = &"este"
+cell = Vector2i(2, 0)
+kind = 1
+entry_id = &"desde_biblioteca"
+
+[resource]
+script = ExtResource("2_qeqkh")
+id = &"pasillo_segundo"
+display_name = "Pasillo del segundo piso"
+scene_path = "res://world/zones/zone0/pasillo_segundo.tscn"
+size_cells = Vector2i(3, 1)
+doors = Array[ExtResource("1_0ux2t")]([SubResource("Resource_hgv60"), SubResource("Resource_40vy8")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 1
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray()

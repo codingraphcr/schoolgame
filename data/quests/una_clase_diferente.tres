@@ -24,7 +24,7 @@ room_id = &"sala_3"
 [sub_resource type="Resource" id="Resource_3"]
 script = ExtResource("2_step")
 id = &"seguir_criaturas"
-objective = "Sigue a las criaturas por el pasillo y las escaleras."
+objective = "Sigue a las criaturas por el pasillo, las escaleras y el pasillo del segundo piso."
 room_id = &"escaleras"
 
 [sub_resource type="Resource" id="Resource_4"]

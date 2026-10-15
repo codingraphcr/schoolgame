@@ -1,0 +1,211 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_bnlcc"]
+[ext_resource type="Script" path="res://world/zones/zone0/corridor_props.gd" id="2_psmlq"]
+[ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="3_27pmv"]
+[ext_resource type="Script" path="res://world/zones/zone0/npc_bark.gd" id="4_t7uhy"]
+[ext_resource type="Script" path="res://world/zones/zone0/falling_shelf.gd" id="5_x6xf3"]
+[ext_resource type="Script" path="res://characters/npcs/sibling_actor.gd" id="6_yfya1"]
+[ext_resource type="Script" path="res://world/zones/zone0/school_chase.gd" id="7_ewias"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="8_omkri"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="9_wenrf"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="10_86yxd"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="11_06cao"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="12_k7ag2"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="13_1ibcl"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="14_oq0td"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="15_4qbfs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f7n4n"]
+size = Vector2(1964, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kfjg8"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_50ld7"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_astdn"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x7mlk"]
+size = Vector2(12, 256)
+
+[node name="PasilloSegundo" type="Node2D" unique_id=219719943 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_bnlcc")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 1900, 360)
+music_track = &"colegio"
+
+[node name="Props" type="Node2D" parent="." unique_id=1729621962]
+script = ExtResource("2_psmlq")
+windows = Array[Rect2]([Rect2(140, 120, 90, 60), Rect2(620, 120, 90, 60), Rect2(1080, 120, 90, 60), Rect2(1560, 120, 90, 60)])
+lockers = Array[Vector2]([Vector2(300, 6), Vector2(860, 5), Vector2(1300, 6), Vector2(1700, 4)])
+doors = {
+420.0: "SALA 7",
+980.0: "SALA 8",
+1500.0: "SALA 9"
+}
+boards = Array[Rect2]([Rect2(720, 200, 70, 44), Rect2(1180, 196, 70, 44)])
+posters = {
+Vector2(560, 210): "¡Feria de ciencias!",
+Vector2(1640, 210): "Club de robótica"
+}
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=564296159]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=1268487398]
+position = Vector2(950, 344)
+shape = SubResource("RectangleShape2D_f7n4n")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=308699097]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_kfjg8")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1162627723]
+position = Vector2(1916, 180)
+shape = SubResource("RectangleShape2D_50ld7")
+
+[node name="Gente" type="Node2D" parent="." unique_id=1160238761]
+
+[node name="Estudiante_m1" type="Node2D" parent="Gente" unique_id=873939222]
+position = Vector2(690, 304)
+script = ExtResource("3_27pmv")
+mode = 2
+partner = NodePath("../Estudiante_f2")
+alt_characters = PackedStringArray()
+
+[node name="Estudiante_f2" type="Node2D" parent="Gente" unique_id=1748715217]
+position = Vector2(718, 304)
+script = ExtResource("3_27pmv")
+character = "f2"
+mode = 2
+facing = -1
+partner = NodePath("../Estudiante_m1")
+talks_first = false
+alt_characters = PackedStringArray()
+
+[node name="Estudiante_m3" type="Node2D" parent="Gente" unique_id=191443062]
+position = Vector2(1120, 304)
+script = ExtResource("3_27pmv")
+character = "m3"
+alt_characters = PackedStringArray()
+
+[node name="Estudiante_f3" type="Node2D" parent="Gente" unique_id=1543288533]
+position = Vector2(1760, 304)
+script = ExtResource("3_27pmv")
+character = "f3"
+mode = 4
+alt_characters = PackedStringArray()
+
+[node name="Comentario_Estudiante_m1" type="Area2D" parent="Gente" unique_id=1877129755 node_paths=PackedStringArray("npc")]
+position = Vector2(690, 304)
+script = ExtResource("4_t7uhy")
+npc = NodePath("../Estudiante_m1")
+lines = PackedStringArray("¿Y a ese qué le pasa?", "¡No se corre en los pasillos!")
+
+[node name="Comentario_Estudiante_m3" type="Area2D" parent="Gente" unique_id=705098726 node_paths=PackedStringArray("npc")]
+position = Vector2(1120, 304)
+script = ExtResource("4_t7uhy")
+npc = NodePath("../Estudiante_m3")
+lines = PackedStringArray("¿Viste algo? Yo no veo nada...", "Kai, ¿estás bien?")
+
+[node name="Comentario_Estudiante_f3" type="Area2D" parent="Gente" unique_id=150190501 node_paths=PackedStringArray("npc")]
+position = Vector2(1760, 304)
+script = ExtResource("4_t7uhy")
+npc = NodePath("../Estudiante_f3")
+lines = PackedStringArray("¡Cuidado con las estanterías!", "¿Quién tiró eso?")
+
+[node name="Capitulo1" type="Node2D" parent="." unique_id=162458040]
+
+[node name="Estanteria1" type="Node2D" parent="Capitulo1" unique_id=245143669]
+position = Vector2(500, 304)
+script = ExtResource("5_x6xf3")
+
+[node name="Estanteria2" type="Node2D" parent="Capitulo1" unique_id=1174052560]
+position = Vector2(1240, 304)
+script = ExtResource("5_x6xf3")
+
+[node name="Estanteria3" type="Node2D" parent="Capitulo1" unique_id=1517387010]
+position = Vector2(1460, 304)
+script = ExtResource("5_x6xf3")
+
+[node name="Chip" type="Node2D" parent="Capitulo1" unique_id=547852425]
+position = Vector2(260, 296)
+script = ExtResource("6_yfya1")
+
+[node name="Glitch" type="Node2D" parent="Capitulo1" unique_id=927111336]
+position = Vector2(234, 304)
+script = ExtResource("6_yfya1")
+kind = 1
+
+[node name="Persecucion" type="Node" parent="Capitulo1" unique_id=713085452 node_paths=PackedStringArray("chip", "glitch", "shelves")]
+script = ExtResource("7_ewias")
+chip = NodePath("../Chip")
+glitch = NodePath("../Glitch")
+points = Array[Vector2]([Vector2(260, 296), Vector2(560, 296), Vector2(800, 296), Vector2(1000, 296), Vector2(1300, 296), Vector2(1520, 296), Vector2(1720, 296), Vector2(1860, 296)])
+actions = PackedStringArray("dice:glitch:¡Todavía nos sigue!;dice:chip:Plan B: ¡obstáculos!", "estante:0", "cajas", "casi", "estante:1;caja", "dice:chip:¡Glitch, a la biblioteca!;estante:2", "casi;dice:kai:¡Esperen!", "")
+shelves = [NodePath("../Estanteria1"), NodePath("../Estanteria2"), NodePath("../Estanteria3")]
+
+[node name="Entries" type="Node2D" parent="." unique_id=1365965941]
+
+[node name="DesdeEscaleras" type="Marker2D" parent="Entries" unique_id=1402179871]
+position = Vector2(40, 304)
+script = ExtResource("8_omkri")
+id = &"desde_escaleras"
+
+[node name="DesdeBiblioteca" type="Marker2D" parent="Entries" unique_id=1187390017]
+position = Vector2(1860, 304)
+script = ExtResource("8_omkri")
+id = &"desde_biblioteca"
+facing = -1
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=408999156]
+position = Vector2(40, 304)
+
+[node name="Exits" type="Node2D" parent="." unique_id=1589850562]
+
+[node name="ToEscaleras" type="Area2D" parent="Exits" unique_id=114818138]
+position = Vector2(6, 176)
+script = ExtResource("9_wenrf")
+door_id = &"oeste"
+target_scene = "res://world/zones/zone0/escaleras.tscn"
+target_entry = &"desde_biblioteca"
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Exits/ToEscaleras" unique_id=1310708049]
+shape = SubResource("RectangleShape2D_astdn")
+
+[node name="ToBiblioteca" type="Area2D" parent="Exits" unique_id=1492398512]
+position = Vector2(1894, 176)
+script = ExtResource("9_wenrf")
+door_id = &"este"
+target_scene = "res://world/zones/zone0/biblioteca.tscn"
+target_entry = &"desde_escaleras"
+
+[node name="@CollisionShape2D@3" type="CollisionShape2D" parent="Exits/ToBiblioteca" unique_id=22106772]
+shape = SubResource("RectangleShape2D_x7mlk")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=2079599500 instance=ExtResource("10_86yxd")]
+position = Vector2(40, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("11_06cao")
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1944359124 node_paths=PackedStringArray("target") instance=ExtResource("12_k7ag2")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("13_1ibcl")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_oq0td")]
+layer = 40
+script = ExtResource("15_4qbfs")
+player = NodePath("../Player")

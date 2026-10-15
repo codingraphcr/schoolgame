@@ -38,11 +38,22 @@ archivos de práctica modificados cientos de veces en un minuto.
   traviesos y se asustan; Chip dice que **eso no estaba en el plan** (pista de la Biblia: «las amenazas reaccionan
   de manera particular a su presencia»).
 
-### Escena 1.3 · Primera persecución corta (Pasillo → Escaleras)
+### Escena 1.3 · La persecución por el colegio (Pasillo → Escaleras → Pasillo del segundo piso)
 
 Chip y Glitch salen de la Sala 3. Kai los sigue por el Pasillo y suben por las escaleras (desde el Capítulo 1 ya
-se pueden usar). Persecución corta: los hermanos van delante y esperan cuando Kai se queda atrás. Sin daño ni
-temporizador: es la presentación de la mecánica.
+se pueden usar): es la presentación de la mecánica (sin daño ni temporizador).
+
+Arriba, en el **pasillo del segundo piso** (largo, entre las escaleras y la biblioteca), la persecución se pone
+seria. Glitch: «¡Todavía nos sigue!»; Chip: «Plan B: ¡obstáculos!».
+
+- **Chip tira estanterías.** Primero tiemblan (aviso «!»), después caen hacia Kai y quedan en el piso como un
+  obstáculo que hay que saltar. Si caen encima de Kai, le quitan medio cristal.
+- **Glitch tira cajas.** Ruedan por el piso hacia Kai; hay que saltarlas (medio cristal si tocan).
+- **Dos veces «¡casi!».** Los hermanos se quedan quietos hasta que Kai está a punto de tocarlos («¡Te tengo!»),
+  y se escapan a toda velocidad («¡Ups, casi!», «¡Por un pelo!»).
+- **Los estudiantes reaccionan** al pasar: «¡No se corre en los pasillos!», «¿Quién tiró eso?».
+
+Al final del pasillo, Chip: «¡Glitch, a la biblioteca!», y Kai grita «¡Esperen!» mientras desaparecen por la puerta.
 
 ### Escena 1.4 · La biblioteca
 
