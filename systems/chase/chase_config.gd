@@ -23,6 +23,11 @@ extends Resource
 ## En las zonas seguras (y después de cada checkpoint) la barrera se queda por lo menos a esta
 ## distancia detrás de Kai: tiempo para reaccionar y moverse.
 @export var barrier_safe_gap := 260.0
+## Persecución de cerca: si Kai le saca más de barrier_chase_gap píxeles, la barrera acelera
+## barrier_catch_up px/s por cada píxel de más (hasta barrier_max_speed). Así nunca queda lejos.
+@export var barrier_chase_gap := 140.0
+@export var barrier_catch_up := 0.0
+@export var barrier_max_speed := 320.0
 ## Empujón al tocarla (hacia adelante y arriba).
 @export var barrier_knockback := Vector2(260, -160)
 

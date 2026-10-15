@@ -87,7 +87,7 @@ El mismo dibujador sirve para el mapa general (zonas), el de zona (salas) y el m
 ### Futuro: Nullblade, Aegis, Dominio Nulo y nodos
 
 - **Nullblade**: un `PlayerCombat` que lee la etapa actual (`GameState.nullblade_stage`); evolucionar = cambiar de recurso.
-- **Aegis**: hijo del jugador que lo sigue con suavizado. K dispara al enemigo válido más cercano (teledirigido, no
+- **Aegis**: hijo del jugador que lo sigue con suavizado. I dispara al enemigo válido más cercano (teledirigido, no
   dispara sin objetivos). Bridge solo en puntos de apoyo (F). Sync con coste de energía.
 - **Dominio Nulo**: la ralentización (80 %) afecta solo a los enemigos (multiplicador propio, no `Engine.time_scale`);
   el bonus de daño se aplica una vez al crear cada golpe.

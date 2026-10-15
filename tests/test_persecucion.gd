@@ -129,7 +129,8 @@ func _test_barrier() -> void:
 	await _frames(4)
 	_check(chase.running and chase.barrier.advancing and chase.barrier.position.x <= player.global_position.x - chase.config.barrier_start_gap + 1.0,
 		"al cruzar el inicio del tramo 1, la barrera arranca detrás de Kai y el reloj corre")
-	_check(chase.barrier.speed >= 105.0, "la barrera es rápida (%.0f px/s; Kai camina a 130)" % chase.barrier.speed)
+	_check(chase.barrier.speed >= 105.0 and chase.barrier.catch_up > 0.0 and chase.barrier.chase_gap <= 140.0,
+		"la barrera es rápida (%.0f px/s; Kai camina a 130) y persigue de cerca (acelera si Kai se aleja más de %.0f px)" % [chase.barrier.speed, chase.barrier.chase_gap])
 	var before: float = player.health.current
 	player.teleport_to(Vector2(chase.barrier.position.x - 10, FLOOR - 8))
 	await _frames(3)
@@ -342,34 +343,60 @@ func _hop_to(target: DataPlatform, use_dash: bool) -> bool:
 	return absf(pos.y - target.global_position.y) <= 1.0 and pos.x >= target.global_position.x - 8.0 and pos.x <= target.global_position.x + target.width + 8.0
 
 
-## Con el recorrido medido de un jugador muy bueno (este bot: sin errores, sin esquivar disparos): la barrera
-## de cada tramo es difícil pero posible (85 % a 97 % de la velocidad máxima que todavía no lo alcanza, si
-## arranca barrier_start_gap detrás) y el reloj alcanza con poco margen.
+## Con el recorrido medido de un jugador muy bueno (este bot: sin errores, sin esquivar disparos), se
+## simula la barrera con su misma regla (CorruptionBarrier.step_x): ese recorrido no la toca, pero la
+## tiene encima (pasa cerca), y el reloj alcanza con poco margen. Con la variable de entorno
+## RECORRIDO_PERSECUCION=<archivo> se guarda el recorrido (para ajustar los valores sin repetir la prueba).
 func _check_difficulty(samples: Array[Vector2]) -> void:
+	var dump := OS.get_environment("RECORRIDO_PERSECUCION")
+	if not dump.is_empty():
+		var rows := PackedStringArray()
+		for sample in samples:
+			rows.append("%.4f,%.2f" % [sample.x, sample.y])
+		var file := FileAccess.open(dump, FileAccess.WRITE)
+		file.store_string("
+".join(rows))
+		file.close()
+	var config := chase.config
 	var total := 0.0
 	for k in 3:
 		var from_x := chase.tramo_starts[k]
 		var to_x := chase.checkpoints[k].global_position.x - 110.0
-		var t0 := -1.0
-		var x0 := 0.0
-		var best := INF
+		var started := false
+		var barrier := 0.0
+		var t0 := 0.0
+		var last_t := 0.0
 		var duration := 0.0
+		var closest := INF
+		var contacts := 0
+		var touching := false
 		for sample in samples:
-			if t0 < 0.0 and sample.y >= from_x:
-				t0 = sample.x
-				x0 = sample.y
-			if t0 >= 0.0 and sample.y < to_x:
-				duration = sample.x - t0
-				if duration > 0.5:
-					best = minf(best, (sample.y - x0 + chase.config.barrier_start_gap) / duration)
+			if not started:
+				if sample.y >= from_x:
+					started = true
+					t0 = sample.x
+					last_t = sample.x
+					barrier = sample.y - config.barrier_start_gap
+				continue
+			if sample.y >= to_x:
+				break
+			barrier = CorruptionBarrier.step_x(barrier, sample.y, config.barrier_speeds[k], config.barrier_chase_gap,
+				config.barrier_catch_up, config.barrier_max_speed, sample.x - last_t)
+			last_t = sample.x
+			duration = sample.x - t0
+			var gap := sample.y - barrier
+			closest = minf(closest, gap)
+			var now_touching := gap < 10.0
+			if now_touching and not touching:
+				contacts += 1
+			touching = now_touching
 		total += duration
-		var speed := chase.config.barrier_speeds[k]
-		_check(speed <= best * 0.97 and speed >= best * 0.85,
-			"tramo %d: barrera a %.0f px/s; un recorrido perfecto aguanta hasta %.0f (difícil pero posible)" % [k + 1, speed, best])
-		_check(chase.config.retry_seconds[k] >= duration * 1.15 and chase.config.retry_seconds[k] <= duration * 1.8,
-			"tramo %d: %.1f s perfectos; al reintentar hay %.0f s (poco margen)" % [k + 1, duration, chase.config.retry_seconds[k]])
-	_check(chase.config.start_seconds >= total * 1.1 and chase.config.start_seconds <= total * 1.5,
-		"el reloj (%.0f s) alcanza para los tres tramos (%.1f s perfectos) con poco margen" % [chase.config.start_seconds, total])
+		_check(contacts == 0 and closest <= 90.0,
+			"tramo %d: un recorrido perfecto no toca la barrera, pero la tiene encima (a %.0f px como mínimo)" % [k + 1, closest])
+		_check(config.retry_seconds[k] >= duration * 1.15 and config.retry_seconds[k] <= duration * 1.8,
+			"tramo %d: %.1f s perfectos; al reintentar hay %.0f s (poco margen)" % [k + 1, duration, config.retry_seconds[k]])
+	_check(config.start_seconds >= total * 1.1 and config.start_seconds <= total * 1.5,
+		"el reloj (%.0f s) alcanza para los tres tramos (%.1f s perfectos) con poco margen" % [config.start_seconds, total])
 
 
 func _standing_on(platform: DataPlatform) -> bool:

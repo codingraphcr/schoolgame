@@ -217,7 +217,7 @@ la seguridad y la confianza del colegio. Está listo para usarse en los desafío
 ## 9. Referencia rápida
 
 **Controles:** A/D moverse · Espacio saltar · J atacar · L curar · Shift dash · Q Visión Digital · E interactuar ·
-G Grimorio · K Aegis · R Dominio Nulo · F plataforma de Aegis (las tres últimas, para más adelante). Se cambian en
+G Grimorio · I Aegis · R Dominio Nulo · F plataforma de Aegis (las tres últimas, para más adelante). Se cambian en
 Opciones.
 
 **Capas de colisión:** 1 mundo · 2 jugador · 3 enemigos · 4 ataques del jugador · 5 ataques enemigos · 6 interactuables

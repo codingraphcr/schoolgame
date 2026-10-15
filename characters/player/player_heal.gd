@@ -13,6 +13,9 @@ signal healed(amount: float)
 ## completed: si llegó a curar al menos una vez.
 signal finished(completed: bool)
 
+## La primera vez que Kai recibe daño se avisa que puede curarse (una vez por partida).
+const HINT_FLAG := &"aviso_curacion"
+
 @export var health: HealthComponent
 ## Segundos de inicio antes de que empiece a canalizar (Kai se arrodilla o se detiene en el aire).
 @export var startup_time := 0.30
@@ -44,6 +47,16 @@ func _ready() -> void:
 	var damage := player.get_node_or_null("Damage") as PlayerDamage
 	if damage:
 		damage.hurt.connect(func(_hit: HitData) -> void: stop(true))
+		damage.hurt.connect(_hint_once)
+
+
+func _hint_once(_hit: HitData) -> void:
+	var state := get_node_or_null("/root/GameState")
+	if state == null or state.has_flag(HINT_FLAG) or health.is_dead():
+		return
+	state.set_flag(HINT_FLAG)
+	var key: String = GameSettings.key_name(&"heal")
+	get_tree().call_group(&"toast", &"show_message", "Mantén %s para curarte (usa tu energía, la barra morada)." % key, 4.0)
 
 
 func _physics_process(_delta: float) -> void:

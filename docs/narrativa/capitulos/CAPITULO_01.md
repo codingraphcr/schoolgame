@@ -116,8 +116,10 @@ Las otras dos preguntas de cada checkpoint (v3): el permiso temporal de administ
 arreglar una impresora (1); qué respaldo restaurar después de un virus y dónde guardar una copia (2); mínimo
 privilegio en un grupo de trabajo y una sesión ajena abierta en la biblioteca (3).
 
-**Dificultad (v3):** barrera a 130, 107 y 117 px/s (Kai camina a 130), entre el 85 % y el 97 % de lo que aguanta
-un recorrido perfecto medido en la prueba automática; tocarla quita 1,5 y empuja poco; plataformas que se mueven
+**Dificultad (v4):** la barrera **persigue de cerca**: avanza como mínimo a 130, 80 y 105 px/s y, si Kai le saca más
+de 120 px, acelera (hasta 320 px/s) para volver a quedar encima; si Kai se detiene, lo alcanza. Simulada sobre el
+recorrido perfecto que mide la prueba automática, ese recorrido no la toca pero la tiene a 85, 21 y 27 px (en promedio
+va a 136, 110 y 119 px/s: Kai camina a 130). Tocarla quita 1,5 y empuja poco; plataformas que se mueven
 más rápido (hay que atraparlas con salto + dash), temporales que se caen antes y 12 nodos que disparan.
 
 ## 9. Los tramos

@@ -4,3 +4,6 @@ extends Resource
 
 @export var id: StringName = &""
 @export_multiline var objective := ""
+## Sala del mapa (room_id de World) a la que hay que ir para este paso: el mapa del Grimorio la marca.
+## Vacío = no se marca ninguna.
+@export var room_id: StringName = &""

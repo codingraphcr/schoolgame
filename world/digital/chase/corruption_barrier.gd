@@ -8,6 +8,9 @@ extends Area2D
 ##    la de PlayerDamage: nunca daño en cada cuadro).
 ## 3. No pasa de stop_x (el comienzo de la zona segura del tramo).
 ## 4. disable() la apaga para siempre (antes del combate final).
+## 5. Persigue de cerca: si Kai le saca más de chase_gap, acelera (catch_up px/s por cada píxel de más,
+##    hasta max_speed) y vuelve a quedar encima; si Kai se detiene, lo alcanza a speed. step_x() es la
+##    regla (la usa también la prueba para medir si un buen recorrido la aguanta).
 ## Avanza con la física (como Kai). Su borde derecho es la posición x del nodo; se dibuja hacia atrás.
 
 signal touched_player
@@ -21,6 +24,11 @@ const VIOLET := Color("8a3eff")
 ## Integridad que quita (se convierte al golpe de enemigo de PlayerDamage).
 @export var damage := 1.0
 @export var knockback := Vector2(260, -160)
+## Distancia a Kai que intenta mantener (si se aleja más, acelera).
+@export var chase_gap := 140.0
+## Aceleración por cada píxel de más (0 = velocidad fija).
+@export var catch_up := 0.0
+@export var max_speed := 320.0
 
 ## Si está avanzando.
 var advancing := false
@@ -50,12 +58,21 @@ func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint() or disabled:
 		return
 	if advancing:
-		position.x = minf(position.x + speed * delta, stop_x)
+		var player := get_tree().get_first_node_in_group(&"player") as Node2D
+		var kai_x := player.global_position.x if player else position.x
+		position.x = minf(step_x(position.x, kai_x, speed, chase_gap, catch_up, max_speed, delta), stop_x)
 		if position.x >= stop_x:
 			advancing = false
 	for body in get_overlapping_bodies():
 		if body is Player:
 			_hit(body as Player)
+
+
+## Siguiente posición del borde: speed como mínimo, más catch_up por cada píxel que Kai le saque de
+## más a chase_gap (hasta max_speed).
+static func step_x(x: float, kai_x: float, base: float, gap: float, gain: float, top: float, delta: float) -> float:
+	var extra := maxf(kai_x - x - gap, 0.0) * gain
+	return x + minf(base + extra, maxf(top, base)) * delta
 
 
 ## La pone en x, quieta, lista para el tramo.

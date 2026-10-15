@@ -7,26 +7,31 @@
 script = ExtResource("2_gafkn")
 id = &"entrar_pc"
 objective = "Revisa la cuenta del profesor en la computadora del laboratorio."
+room_id = &"laboratorio"
 
 [sub_resource type="Resource" id="Resource_gafkn"]
 script = ExtResource("2_gafkn")
 id = &"cruzar_spam"
 objective = "Atraviesa el SPAM hasta la cuenta del profesor. ¡No hagas clic en los anuncios!"
+room_id = &"pc_escritorio"
 
 [sub_resource type="Resource" id="Resource_trmnl"]
 script = ExtResource("2_gafkn")
 id = &"revisar_configuracion"
 objective = "Usa la terminal para encontrar la configuración de la cuenta del profesor."
+room_id = &"pc_escritorio"
 
 [sub_resource type="Resource" id="Resource_mltyb"]
 script = ExtResource("2_gafkn")
 id = &"cambiar_contrasena"
 objective = "Cambia la contraseña del profesor: pulsa «Cambiar contraseña» en su cuenta."
+room_id = &"pc_escritorio"
 
 [sub_resource type="Resource" id="Resource_elegir"]
 script = ExtResource("2_gafkn")
 id = &"elegir_seguridad"
 objective = "Elige la nueva contraseña del profesor y cómo proteger su cuenta."
+room_id = &"pc_escritorio"
 
 [resource]
 script = ExtResource("1_j10ej")

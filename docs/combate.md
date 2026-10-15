@@ -16,7 +16,7 @@ y **defensa** (herramientas reales de ciberseguridad).
 | Capacidad | Rol | Cuándo se obtiene | Evoluciones |
 |---|---|---|---|
 | **Nullblade** | Espada digital, cuerpo a cuerpo. Carga energía al golpear | Tutorial | .exe → .zero → .void → .max |
-| **Aegis** | Núcleo flotante: disparo teledirigido manual (K), barrera, plataformas | Capítulo 3, misión especial «Eco en la Red»: Kai lo rescata y lo repara con comandos | Pulse → Bridge → Sync |
+| **Aegis** | Núcleo flotante: disparo teledirigido manual (I), barrera, plataformas | Capítulo 3, misión especial «Eco en la Red»: Kai lo rescata y lo repara con comandos | Pulse → Bridge → Sync |
 | **Expansión Digital: Dominio Nulo** | Ultimate: enemigos al 80 % de velocidad y bonificación de daño. Barra propia | Capítulo 2 | I (15 s, +10 %, 100) · II (20 s, +15 %, 115) · III (30 s, +30 %, 138) |
 | **Dash-parry** | Un dash justo antes de recibir un golpe hace el parry (no hay botón de parry). Reemplaza al Escudo MFA | Con el primer dash | Mejora con los niveles del dash |
 

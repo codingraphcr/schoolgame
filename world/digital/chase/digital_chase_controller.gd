@@ -147,6 +147,9 @@ func _prepare_tramo() -> void:
 	# Detrás de Kai (o del inicio del tramo, lo que esté antes): nunca delante de él.
 	var behind := minf(start_x, _room.player.global_position.x) - config.barrier_safe_gap
 	barrier.place(behind, config.barrier_speeds[mini(tramo, config.barrier_speeds.size() - 1)], checkpoints[tramo].safe_from_x)
+	barrier.chase_gap = config.barrier_chase_gap
+	barrier.catch_up = config.barrier_catch_up
+	barrier.max_speed = config.barrier_max_speed
 	_timer.visible = true
 	_timer.show_seconds(time_left)
 

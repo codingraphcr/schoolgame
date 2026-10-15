@@ -58,6 +58,30 @@ func _run() -> void:
 		state.complete_step(&"prologo", step)
 	_check(state.is_quest_completed(&"prologo") and map.room_states()[&"pasillo"] == S.COMPLETED, "al terminar el prólogo, el Pasillo queda completado")
 
+	# A dónde ir por la misión: la sala del objetivo actual (aunque todavía no se conozca).
+	state.start_quest(&"cuarto_viejo")
+	_check(state.get_objective_room() == &"pasillo" and map.mission_room() == &"pasillo" and map.mission_text() == "MISIÓN: Pasillo",
+		"con una misión, el mapa marca la sala a la que hay que ir («MISIÓN: Pasillo»)")
+	state.complete_step(&"cuarto_viejo", &"hablar_profesor")
+	_check(map.mission_room() == &"pasillo_viejo", "al avanzar, la marca pasa a la sala del paso siguiente (%s)" % map.mission_room())
+	for step in [&"ir_pasillo_viejo", &"abrir_puerta", &"explorar_cuarto", &"salir_cuarto"]:
+		state.complete_step(&"cuarto_viejo", step)
+	state.complete_step(&"una_clase_diferente", &"ir_a_clase")
+	var missing: Array[String] = []
+	for quest_id: StringName in [&"prologo", &"contrasena_profesor", &"cuarto_viejo", &"una_clase_diferente", &"travesuras_en_el_sistema"]:
+		for step in QuestDB.get_quest(quest_id).steps:
+			if step.room_id == &"" or world.district_of(step.room_id) == &"":
+				missing.append("%s.%s" % [quest_id, step.id])
+	_check(missing.is_empty(), "todos los pasos de las misiones dicen a qué sala del mapa ir %s" % [missing])
+	map.zone = &"red_entrenamiento"
+	state.start_quest(&"travesuras_en_el_sistema")
+	state.complete_step(&"travesuras_en_el_sistema", &"revisar_servidor")
+	state.complete_step(&"travesuras_en_el_sistema", &"seguirlos_adentro")
+	_check(map.mission_room() == &"persecucion", "la marca también funciona en otras zonas (la red de entrenamiento)")
+	map.zone = &"colegio"
+	_check(map.mission_room() == &"" and map.mission_text() == "MISIÓN EN: Red de entrenamiento",
+		"si la misión es en otra zona, el mapa lo dice (%s)" % map.mission_text())
+
 	# Partidas anteriores al mapa: cuentan las marcas visitada_<escena>.
 	world.new_world(77)
 	state.set_flag(&"visitada_laboratorio")

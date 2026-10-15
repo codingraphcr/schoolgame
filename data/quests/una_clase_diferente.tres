@@ -7,31 +7,37 @@
 script = ExtResource("2_step")
 id = &"ir_a_clase"
 objective = "Ve a tu clase: la Sala 3, en el pasillo principal."
+room_id = &"sala_3"
 
 [sub_resource type="Resource" id="Resource_1"]
 script = ExtResource("2_step")
 id = &"ver_fallas"
 objective = "¿Quién está alterando las computadoras de práctica?"
+room_id = &"sala_3"
 
 [sub_resource type="Resource" id="Resource_2"]
 script = ExtResource("2_step")
 id = &"revisar_registro"
 objective = "Revisa el registro de eventos en la computadora de tu puesto."
+room_id = &"sala_3"
 
 [sub_resource type="Resource" id="Resource_3"]
 script = ExtResource("2_step")
 id = &"seguir_criaturas"
 objective = "Sigue a las criaturas por el pasillo y las escaleras."
+room_id = &"escaleras"
 
 [sub_resource type="Resource" id="Resource_4"]
 script = ExtResource("2_step")
 id = &"biblioteca"
 objective = "Arregla lo que hicieron en la computadora de la biblioteca."
+room_id = &"biblioteca"
 
 [sub_resource type="Resource" id="Resource_5"]
 script = ExtResource("2_step")
 id = &"pedir_permiso"
 objective = "Pídele permiso al profesor (en la Sala 3) para entrar al cuarto técnico."
+room_id = &"sala_3"
 
 [resource]
 script = ExtResource("1_quest")

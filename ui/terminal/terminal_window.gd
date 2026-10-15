@@ -33,7 +33,10 @@ var _history_index := -1
 var _hint_index := 0
 var _password_panel: VBoxContainer
 var _quick_row: HBoxContainer
+## Botón de cada contraseña, por su índice original.
 var _password_buttons: Array[Button] = []
+## Orden en pantalla de las contraseñas (índices originales): al azar cada vez que se pregunta.
+var password_order: Array[int] = []
 
 
 static func open(from: Node, terminal_challenge: TerminalChallenge) -> TerminalWindow:
@@ -75,8 +78,17 @@ func submit(line: String) -> void:
 func _ask_password() -> void:
 	_print_line(challenge.password_prompt if not challenge.password_prompt.is_empty() else "Elige la contraseña:", YELLOW)
 	_line.editable = false
+	# Al azar cada vez: la correcta no está siempre en el mismo lugar.
+	password_order.clear()
+	for i in challenge.password_options.size():
+		password_order.append(i)
+	password_order.shuffle()
+	for k in password_order.size():
+		var button := _password_buttons[password_order[k]]
+		button.text = "%d · %s" % [k + 1, challenge.password_options[password_order[k]].text]
+		_password_panel.move_child(button, k)
 	_password_panel.show()
-	_password_buttons[0].grab_focus.call_deferred()
+	_password_buttons[password_order[0]].grab_focus.call_deferred()
 
 
 ## Elige una contraseña (índice en password_options).
@@ -143,9 +155,9 @@ func _print_success() -> void:
 func _input(event: InputEvent) -> void:
 	if _password_panel.visible and event is InputEventKey and event.pressed and not event.echo:
 		var number := (event as InputEventKey).keycode - KEY_1
-		if number >= 0 and number < challenge.password_options.size():
+		if number >= 0 and number < password_order.size():
 			get_viewport().set_input_as_handled()
-			choose_password(number)
+			choose_password(password_order[number])
 			return
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause"):
 		get_viewport().set_input_as_handled()
