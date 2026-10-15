@@ -19,6 +19,8 @@ func _run() -> void:
 	_press("CreditsButton")
 	await _wait(0.2)
 	_check(current_scene.get_node("%Credits").visible and not current_scene.get_node("%Buttons").visible, "Créditos se abre")
+	var team: String = current_scene.get_node("%Team").text
+	_check(team.contains("Ariel") and team.contains("Yohann"), "los créditos nombran al equipo: Ariel y Yohann")
 	_press("CreditsBackButton")
 	await _wait(0.2)
 	_check(not current_scene.get_node("%Credits").visible and current_scene.get_node("%Buttons").visible, "Volver cierra los créditos")
