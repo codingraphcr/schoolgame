@@ -611,7 +611,7 @@ explorar: siempre se encuadra con todas las salas del distrito.
 `ImmersionPortal` (`world/digital/immersion_portal.gd`): la conexión de un monitor. Solo se ve y se usa con la Visión
 Digital activa (se dibuja en la capa digital, como `HiddenRelic`). Con E, Kai la atraviesa con el efecto de
 `DigitalDive` y entra a `target_scene` / `target_entry` (o a donde diga el mapa por `door_id`; respeta los capítulos
-con `World.lock_reason`). La primera vez reproduce `first_dialogue`, desbloquea la habilidad para siempre
+con `World.lock_reason`). A cada entorno digital de la historia se entra **una sola vez**: con `closed_flag` la conexión se cierra para siempre (no se ve ni se usa) cuando lo de adentro ya terminó: el monitor del cuarto técnico con `cap1_hermanos_vencidos` y la conexión al simulador del laboratorio con `cap2_dominio_nulo` (no con Bucle vencido: después todavía falta el derrumbe, que es adentro). La primera vez reproduce `first_dialogue`, desbloquea la habilidad para siempre
 (`GameState.immersion_unlocked`, `unlock_immersion()`; se guarda en `player`, la valida `SaveValidator` y la muestra
 «Mi perfil») y la transición dice «INMERSIÓN DIGITAL». La transición es la `LoadingScreen` de siempre: se cierra sola
 cuando Kai se materializa en la entrada de destino (`arrival_effect = "materialize"`). No es la Visión Digital: la
