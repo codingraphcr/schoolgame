@@ -1,0 +1,19 @@
+{
+	"animations": {
+		"arriba_cortar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "kai_hd_arriba_arriba_cortar.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				176
+			],
+			"frames": 1,
+			"loop": false
+		}
+	},
+	"scale": 0.5
+}

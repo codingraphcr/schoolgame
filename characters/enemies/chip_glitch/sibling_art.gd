@@ -3,13 +3,13 @@ extends RefCounted
 ## Dibujo de Glitch y Chip con los sprites en pixel art del diseño nuevo de Ariel
 ## (docs/arte/referencias/glitch_chip_v2.webp → tools/art/extraer_personajes_concepto.gd -- hermanos_juego
 ## → assets/art/characters/hermanos/hd/hermanos_px_*). Animaciones de los dos: quieto, caminar, correr, saltar,
-## aire, caer y aturdido. Las poses de ataque (Glitch guardia, corte, estocada y lanzar; Chip alerta, lanzar,
-## zona, rayo y embestida) usan esos cuadros y el de Chip lanzando el disco.
+## aire, caer y aturdido. Los ataques, cuadro por cuadro, salen de las hojas de ataques de Ariel (glitch_ataques y
+## chip_ataques → hermanos_glitch_* / hermanos_chip_*): por ataque, <ataque>_aviso, la acción y <ataque>_fin.
 ## Lo usan el jefe (GlitchBoss / ChipBoss) y los personajes de las escenas (SiblingActor). Los pies en
 ## el origen; el movimiento (inclinarse, estirarse, temblar) lo da el código.
 
-const GLITCH := Color("ff4fb4")
-const GLITCH_LIGHT := Color("ffb3df")
+const GLITCH := Color("ff454f")
+const GLITCH_LIGHT := Color("ffb3a7")
 const CHIP := Color("4fa8ff")
 const CHIP_LIGHT := Color("b8dcff")
 const ANGRY := Color(1, 0.3, 0.45)
@@ -19,7 +19,7 @@ const SCALE := 0.5
 ## Zona del cuerpo (en el mundo, con los pies en el origen).
 const BODY := Rect2(-9, -32, 18, 32)
 ## Las animaciones (salen de la hoja de sprites).
-const SHEETS: Array[String] = ["hermanos_px.json"]
+const SHEETS: Array[String] = ["hermanos_px.json", "hermanos_glitch.json", "hermanos_chip.json"]
 ## Poses dibujadas mirando a la izquierda (el resto mira a la derecha).
 const FACING_LEFT: Array[StringName] = []
 
@@ -39,8 +39,14 @@ static func pose_info(name: StringName) -> Dictionary:
 				_poses[StringName(anim)] = {
 					"texture": load(DIR + String(info.file)), "size": Vector2(info.frame_size[0], info.frame_size[1]),
 					"feet": Vector2(info.feet[0], info.feet[1]), "frames": int(info.frames), "fps": float(info.fps),
+					"loop": bool(info.get("loop", true)),
 				}
 	return _poses.get(name, {})
+
+
+## Si kind (&"glitch" / &"chip") tiene esa pose (p. ej. &"corte_aviso").
+static func has_pose(kind: StringName, pose: StringName) -> bool:
+	return not pose_info(StringName("%s_%s" % [kind, pose])).is_empty()
 
 
 ## La textura de una pose (para las pruebas y para quien la necesite).
@@ -54,7 +60,8 @@ static func texture(kind: StringName, pose := &"quieto") -> Texture2D:
 ## Dibuja a Glitch (&"glitch") o a Chip (&"chip"). face: 1 mira a la derecha, −1 a la izquierda.
 ## Opciones: pose (&"quieto", &"caminar", &"correr", &"saltar", &"aire", &"caer", &"aturdido" y las de sus
 ## ataques), lean (inclinación en radianes), squash (Vector2), dizzy (mareado: la pose aturdido), enraged
-## (furia), shielded (escudo de discos de Chip), alpha, tint, offset.
+## (furia), shielded (escudo de discos de Chip), alpha, tint, offset y anim_time (segundos desde que empezó la
+## pose; sin él, el reloj).
 static func draw_twin(ci: CanvasItem, kind: StringName, clock: float, face := 1.0, options := {}) -> Rect2:
 	var pose: StringName = options.get("pose", &"quieto")
 	# Mareado: su animación de aturdido (tirado en el piso, con estrellitas).
@@ -78,7 +85,10 @@ static func draw_twin(ci: CanvasItem, kind: StringName, clock: float, face := 1.
 		ci.draw_circle(offset + Vector2(0, -16), 20.0, Color(ANGRY, 0.12 + 0.06 * sin(clock * 8.0)))
 	if not info.is_empty():
 		var size: Vector2 = info.size
-		var frame := int(clock * float(info.fps)) % int(info.frames) if int(info.frames) > 1 else 0
+		# anim_time: segundos desde que empezó la pose (las de ataque no se repiten: quedan en el último cuadro).
+		var time: float = options.get("anim_time", clock)
+		var frame := int(time * float(info.fps))
+		frame = (frame % int(info.frames)) if info.loop else mini(frame, int(info.frames) - 1)
 		var flip := face * (-1.0 if name in FACING_LEFT else 1.0)
 		ci.draw_set_transform(offset, lean, Vector2(SCALE * flip * squash.x, SCALE * squash.y))
 		ci.draw_texture_rect_region(info.texture, Rect2(-info.feet, size), Rect2(Vector2(frame * size.x, 0), size), Color(tint, alpha))

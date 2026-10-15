@@ -7,7 +7,10 @@ extends EnemyBase
 ## - Vida compartida: share_health() hace que los dos usen la misma barra (funcionan como una unidad).
 ## - Aturdido: stagger_hits golpes seguidos lo dejan mareado stun_time segundos (incapacitated). El
 ##   controlador hace que el otro deje su ataque y lo proteja (guard_for).
-## - Nunca mueren: con la vida en cero quedan **neutralizados** (mareados en el piso) y no se borran.
+## - Vencido (Fases 1 y 2): con su vida propia en cero queda **vencido** (knock_down): mareado en el piso,
+##   sin atacar ni recibir golpes, hasta que el controlador lo levanta (get_up) para la Fase 3.
+## - Nunca mueren: con la vida compartida en cero quedan **neutralizados** (mareados en el piso) y no se
+##   borran.
 ## - Todo ataque empieza con telegraph(): una señal de aviso esquivable (un «!» de su color).
 ## - frozen: la fase segura del escudo (no hacen nada). busy: están en un ataque.
 ## - tempo / telegraph_scale: la Fase 3 (Furia fraternal) los hace más rápidos.
@@ -17,8 +20,20 @@ signal neutralized(boss: SiblingBoss)
 signal attack_started(attack: StringName)
 signal incapacitated(boss: SiblingBoss)
 signal recovered(boss: SiblingBoss)
+## Su vida propia llegó a cero antes de la Fase 3: queda vencido (aturdido en el piso).
+signal knocked_down(boss: SiblingBoss)
 
 const FLOOR_Y := 304.0
+
+## Prefijo de las animaciones de cada ataque (hojas de ataques de Ariel, cuadro por cuadro): <prefijo>_aviso
+## mientras avisa, la acción y <prefijo>_fin mientras queda vulnerable (y en la picada y la caída, _subir,
+## _arriba y _caer). Los ataques en conjunto usan las de cada uno.
+const ATTACK_ANIMS := {
+	&"corte_acelerado": "corte", &"salto_en_picada": "picada", &"embestida_en_cadena": "embestida",
+	&"lanzamiento_de_fragmentos": "fragmentos", &"barrido": "barrido", &"caida": "caida",
+	&"discos_orbitales": "discos", &"zona_de_control": "zona", &"proyecciones": "proyecciones",
+	&"rayo_de_sincronia": "rayo",
+}
 
 @export var config: DualBossConfig
 ## Límites de la arena (x mínima y máxima donde se mueven).
@@ -27,6 +42,10 @@ var arena_right := 600.0
 var enraged := false
 var busy := false
 var stunned := false
+## Si puede caer (Fase 3, con la vida compartida). Antes, al llegar a cero queda vencido (downed).
+var mortal := false
+## Vencido antes de la Fase 3: aturdido en el piso hasta que vencen también al otro.
+var downed := false
 ## Si está protegiendo a su hermano aturdido.
 var guarding: SiblingBoss
 var frozen := false:
@@ -58,12 +77,16 @@ var _squash := Vector2.ONE
 ## Pose del sprite (SiblingArt): la cambian los ataques; vuelve a «quieto» al terminar.
 var _pose: StringName = &"quieto"
 var _pose_until := 0.0
+## Cuándo empezó la pose (las animaciones de ataque arrancan desde su primer cuadro).
+var _pose_since := 0.0
 ## Altura a la que se sostiene en el aire (INF = con gravedad, en el piso).
 var _hover := INF
 ## x donde se sostiene en el aire (hold_at; INF = libre en x).
 var _hold_x := INF
 ## Dónde va a caer en la picada (INF = no está en una).
 var _dive_mark := Vector2.INF
+## Su vida propia (en la Fase 3 usa la compartida).
+var _own_health: HealthComponent
 ## Altura (pies) del barrido en curso (INF = no está barriendo; para las pruebas).
 var sweep_line := INF
 
@@ -77,13 +100,21 @@ func _ready() -> void:
 	super()
 	home = global_position
 	hurtbox.hit_blocked.connect(_on_hit_blocked)
+	_own_health = health
 
 
-## Los dos hermanos usan la misma vida (una sola barra).
+## Fase 3: los dos hermanos pasan a usar la misma vida (una sola barra).
 func share_health(shared: HealthComponent) -> void:
-	if health.died.is_connected(_die):
-		health.died.disconnect(_die)
 	health = shared
+	mortal = true
+
+
+## Vuelve a su vida propia (antes de la Fase 3 cada uno tiene su barra), llena.
+func use_own_health(maximum: float) -> void:
+	health = _own_health
+	health.max_health = maximum
+	health.restore_full()
+	mortal = false
 
 
 func _physics_process(delta: float) -> void:
@@ -96,20 +127,20 @@ func _physics_process(delta: float) -> void:
 	_lean = lerpf(_lean, clampf(velocity.x / 900.0, -0.25, 0.25), 1.0 - exp(-delta * 12.0))
 	_squash = _squash.lerp(Vector2.ONE, 1.0 - exp(-delta * 10.0))
 	queue_redraw()
-	if _hover != INF and not is_dead and not stunned:
+	if _hover != INF and not is_dead and not stunned and not downed:
 		velocity.y = (_hover - global_position.y) * 12.0
 		if _hold_x != INF:
 			velocity.x = clampf((_hold_x - global_position.x) * 12.0, -600.0, 600.0)
 			face = signf(player_position().x - global_position.x) if player_position().x != global_position.x else face
 	else:
 		velocity.y = minf(velocity.y + _gravity() * delta, max_fall_speed)
-	if is_dead or stunned or frozen:
+	if is_dead or stunned or frozen or downed:
 		velocity.x = move_toward(velocity.x, 0.0, 700.0 * delta)
 		if stunned and not is_dead:
 			_stun_left -= delta
 			if _stun_left <= 0.0:
 				_end_stun()
-		elif frozen and not is_dead:
+		elif frozen and not is_dead and not downed:
 			_frozen_move(delta)
 		move_and_slide()
 		return
@@ -139,14 +170,41 @@ func interrupt() -> void:
 
 ## Cambia la pose del sprite (si hold > 0, solo por ese tiempo; si no, hasta que termine el ataque).
 func set_pose(pose: StringName, hold := 0.0) -> void:
+	if pose != _pose:
+		_pose_since = _clock
 	_pose = pose
 	_pose_until = _clock + hold if hold > 0.0 else INF
+
+
+## La animación de una fase de un ataque ("aviso", "fin", "caer"…; "" = la acción) si este hermano la
+## tiene; si no, fallback.
+func attack_pose(attack: StringName, phase: String, fallback: StringName) -> StringName:
+	var prefix: String = ATTACK_ANIMS.get(attack, "")
+	if prefix.is_empty():
+		return fallback
+	var pose := StringName(prefix if phase.is_empty() else "%s_%s" % [prefix, phase])
+	return pose if SiblingArt.has_pose(_kind(), pose) else fallback
+
+
+## Mientras queda vulnerable después de un ataque: la animación de recuperación de ese ataque (después de
+## la pose que esté mostrando por un rato, como lanzar el disco).
+func show_recovery(seconds: float) -> void:
+	var pose := attack_pose(last_attack, "fin", &"")
+	if pose == &"":
+		return
+	var before := _pose_until - _clock if _pose_until != INF and _pose_until > _clock else 0.0
+	if before > 0.0:
+		var epoch := _epoch
+		await get_tree().create_timer(before, false, true).timeout
+		if epoch != _epoch:
+			return
+	set_pose(pose, maxf(seconds - before, 0.05))
 
 
 ## Pose del sprite: la del ataque si hay una; si no, según cómo se mueve (caminar, correr, saltar,
 ## aire, caer). Aturdido o neutralizado: tirado en el piso.
 func current_pose() -> StringName:
-	if stunned or is_dead:
+	if stunned or is_dead or downed:
 		return &"aturdido"
 	if _pose != &"quieto" and (busy or _clock < _pose_until):
 		return _pose
@@ -158,6 +216,11 @@ func current_pose() -> StringName:
 	if speed > 150.0:
 		return &"correr"
 	return &"caminar" if speed > 15.0 else &"quieto"
+
+
+## Segundos de la animación en curso: desde que empezó la pose del ataque (o el reloj, si se mueve).
+func _anim_time() -> float:
+	return _clock - _pose_since if current_pose() == _pose else _clock
 
 
 ## Pose mientras avisa un ataque.
@@ -190,7 +253,7 @@ func wait(seconds: float, epoch: int) -> bool:
 
 ## Si el ataque de esta época puede seguir.
 func still(epoch: int) -> bool:
-	return epoch == _epoch and not is_dead and not frozen and not stunned
+	return epoch == _epoch and not is_dead and not frozen and not stunned and not downed
 
 
 ## Aviso visual antes de un ataque (un «!» de su color). Devuelve false si se interrumpió.
@@ -198,7 +261,7 @@ func telegraph(kind: StringName, seconds: float, epoch: int) -> bool:
 	_telegraph_kind = kind
 	_telegraph = seconds * telegraph_scale
 	last_attack = kind
-	set_pose(_ready_pose())
+	set_pose(attack_pose(kind, "aviso", _ready_pose()))
 	_squash = Vector2(1.1, 0.9)
 	attack_started.emit(kind)
 	return await wait(seconds * telegraph_scale, epoch)
@@ -206,7 +269,7 @@ func telegraph(kind: StringName, seconds: float, epoch: int) -> bool:
 
 ## Empieza un ataque: devuelve su época (para revisar si sigue) o −1 si no puede atacar ahora.
 func begin_attack() -> int:
-	if is_dead or stunned or frozen:
+	if is_dead or stunned or frozen or downed:
 		return -1
 	busy = true
 	return _epoch
@@ -283,7 +346,7 @@ func salto_en_picada(target_x := INF) -> void:
 	var side := -signf(aim - global_position.x) if aim != global_position.x else 1.0
 	var apex_x := clampf(aim + side * 50.0, arena_left, arena_right)
 	velocity = Vector2((apex_x - global_position.x) / 0.45, -430.0)
-	set_pose(_dive_pose())
+	set_pose(attack_pose(&"salto_en_picada", "subir", _dive_pose()))
 	var elapsed := 0.0
 	while velocity.y < 0.0 and elapsed < 1.0:
 		await get_tree().physics_frame
@@ -292,8 +355,9 @@ func salto_en_picada(target_x := INF) -> void:
 			return
 		elapsed += get_physics_process_delta_time()
 	# Queda arriba un instante: la marca en el piso dice dónde va a caer.
-	_dive_mark = Vector2(aim, FLOOR_Y)
+	_dive_mark = Vector2(aim, kai_ground_y())
 	_hover = global_position.y
+	set_pose(attack_pose(&"salto_en_picada", "arriba", _dive_pose()))
 	var hang := config.glitch_dive_telegraph * telegraph_scale
 	_telegraph_kind = &"salto_en_picada"
 	_telegraph = hang
@@ -307,15 +371,10 @@ func salto_en_picada(target_x := INF) -> void:
 			return
 		elapsed += get_physics_process_delta_time()
 	_hover = INF
-	var dir := (_dive_mark - global_position).normalized()
-	elapsed = 0.0
-	while not is_on_floor() and elapsed < 1.2:
-		velocity = dir * config.glitch_dive_speed * tempo
-		await get_tree().physics_frame
-		if not still(epoch):
-			end_attack(epoch)
-			return
-		elapsed += get_physics_process_delta_time()
+	set_pose(attack_pose(&"salto_en_picada", "caer", _dive_pose()))
+	if not await fall_to(_dive_mark, config.glitch_dive_speed * tempo, epoch):
+		end_attack(epoch)
+		return
 	_dive_mark = Vector2.INF
 	velocity = Vector2.ZERO
 	_squash = Vector2(1.3, 0.75)
@@ -384,8 +443,8 @@ func barrido(from_left: bool, height := -1.0, lead := 0.0) -> void:
 		end_attack(epoch)
 		return
 	face = 1.0 if from_left else -1.0
-	set_pose(_ready_pose())
 	last_attack = &"barrido"
+	set_pose(attack_pose(&"barrido", "aviso", _ready_pose()))
 	_telegraph_kind = &"barrido"
 	attack_started.emit(&"barrido")
 	var total := config.sweep_telegraph * telegraph_scale + lead
@@ -406,7 +465,7 @@ func barrido(from_left: bool, height := -1.0, lead := 0.0) -> void:
 	sweep_line = y
 	_hold_x = INF
 	_hover = y if y < FLOOR_Y - 2.0 else INF
-	set_pose(_dash_pose())
+	set_pose(attack_pose(&"barrido", "", _dash_pose()))
 	Sfx.play(&"dash", 1.0 if _kind() == &"glitch" else 0.85)
 	var to_x := arena_right + 10.0 if from_left else arena_left - 10.0
 	elapsed = 0.0
@@ -437,8 +496,8 @@ func caida(offset := 0.0) -> void:
 	if not await appear_at(Vector2(x, top), epoch):
 		end_attack(epoch)
 		return
-	set_pose(_dive_pose())
 	last_attack = &"caida"
+	set_pose(attack_pose(&"caida", "aviso", _dive_pose()))
 	_telegraph_kind = &"caida"
 	attack_started.emit(&"caida")
 	var total := config.drop_telegraph * telegraph_scale
@@ -448,7 +507,7 @@ func caida(offset := 0.0) -> void:
 		if elapsed < total * 0.65:
 			x = clampf(player_position().x + offset, arena_left, arena_right)
 		hold_at(Vector2(x, top))
-		_dive_mark = Vector2(x, FLOOR_Y)
+		_dive_mark = Vector2(x, kai_ground_y())
 		await get_tree().physics_frame
 		if not still(epoch):
 			end_attack(epoch)
@@ -456,20 +515,48 @@ func caida(offset := 0.0) -> void:
 		elapsed += get_physics_process_delta_time()
 	_telegraph = 0.0
 	release_hold()
-	elapsed = 0.0
-	while not is_on_floor() and elapsed < 1.2:
-		velocity = Vector2(0, config.drop_speed * tempo)
-		await get_tree().physics_frame
-		if not still(epoch):
-			end_attack(epoch)
-			return
-		elapsed += get_physics_process_delta_time()
+	set_pose(attack_pose(&"caida", "caer", _dive_pose()))
+	if not await fall_to(_dive_mark, config.drop_speed * tempo, epoch):
+		end_attack(epoch)
+		return
 	_dive_mark = Vector2.INF
 	velocity = Vector2.ZERO
 	_squash = Vector2(1.3, 0.75)
 	PixelBurst.spawn(get_parent(), global_position, _colors(), 14, 110.0)
 	Sfx.play(&"boss_charge", 1.5, -4.0)
 	await _recover(epoch)
+
+
+## Dónde está parado Kai: su altura si está en el piso o en una plataforma; si está en el aire, el piso.
+func kai_ground_y() -> float:
+	var kai := get_player()
+	if kai and kai.is_on_floor():
+		return kai.global_position.y
+	return FLOOR_Y
+
+
+## Cae en línea recta hasta target atravesando las plataformas (no choca con nada mientras cae): llega
+## justo a la altura de Kai aunque esté debajo de una plataforma. Devuelve false si se interrumpió.
+func fall_to(target: Vector2, speed: float, epoch: int) -> bool:
+	var mask := collision_mask
+	collision_mask = 0
+	var dir := (target - global_position).normalized()
+	var elapsed := 0.0
+	while global_position.y < target.y - 1.0 and elapsed < 1.5:
+		var step := dir * speed * get_physics_process_delta_time()
+		if global_position.y + step.y >= target.y:
+			break
+		velocity = dir * speed
+		face = signf(dir.x) if absf(dir.x) > 0.1 else face
+		await get_tree().physics_frame
+		if not still(epoch):
+			collision_mask = mask
+			return false
+		elapsed += get_physics_process_delta_time()
+	global_position = Vector2(clampf(target.x, arena_left, arena_right), target.y)
+	velocity = Vector2.ZERO
+	collision_mask = mask
+	return true
 
 
 ## Se sostiene en el aire en target (lo usa el Remolino doble, cuadro a cuadro).
@@ -494,6 +581,7 @@ func _dash_pose() -> StringName:
 
 func _recover(epoch: int) -> void:
 	velocity.x = 0.0
+	show_recovery(0.5 / tempo)
 	await wait(0.5 / tempo, epoch)
 	end_attack(epoch)
 
@@ -502,7 +590,7 @@ func _recover(epoch: int) -> void:
 
 func _on_damaged(_hit: HitData) -> void:
 	_squash = Vector2(1.15, 0.88)
-	if stunned or is_dead or guarding:
+	if stunned or is_dead or downed or guarding:
 		return
 	var now := _clock
 	_hits.append(now)
@@ -514,7 +602,7 @@ func _on_damaged(_hit: HitData) -> void:
 
 ## Queda mareado unos segundos (deja lo que estaba haciendo).
 func incapacitate() -> void:
-	if stunned or is_dead:
+	if stunned or is_dead or downed:
 		return
 	_hits.clear()
 	interrupt()
@@ -587,9 +675,41 @@ func neutralize() -> void:
 	neutralized.emit(self)
 
 
-## La vida compartida llegó a cero: lo resuelve el controlador (neutraliza a los dos).
+## Su vida propia llegó a cero antes de la Fase 3: queda vencido. En la Fase 3 la vida es compartida y
+## la resuelve el controlador.
 func _die() -> void:
-	neutralize()
+	if mortal:
+		neutralize()
+		return
+	knock_down()
+
+
+## Vencido (antes de la Fase 3): deja lo que estaba haciendo y queda mareado en el piso, sin atacar ni
+## recibir golpes (tampoco hace daño al tocarlo), hasta que vencen también al otro.
+func knock_down() -> void:
+	if downed or is_dead:
+		return
+	interrupt()
+	downed = true
+	stunned = false
+	guarding = null
+	_hits.clear()
+	contact.deactivate()
+	hurtbox.immune = true
+	velocity = Vector2(0, -80)
+	Sfx.play(&"enemy_death", 1.4, -4.0)
+	PixelBurst.spawn(get_parent(), global_position + Vector2(0, -16), death_colors, 12, 60.0, Vector2(16, 30), 0.4)
+	knocked_down.emit(self)
+
+
+## Se levanta (para la Fase 3).
+func get_up() -> void:
+	if not downed:
+		return
+	downed = false
+	contact.activate()
+	hurtbox.immune = false
+	_squash = Vector2(0.85, 1.2)
 
 
 func enter_rage() -> void:
@@ -600,6 +720,7 @@ func enter_rage() -> void:
 func restore() -> void:
 	interrupt()
 	is_dead = false
+	downed = false
 	enraged = false
 	stunned = false
 	guarding = null
@@ -655,12 +776,12 @@ func _draw() -> void:
 	if absf(velocity.x) > 200.0 or absf(velocity.y) > 300.0:
 		for i in _trail.size():
 			var k := float(i + 1) / _trail.size()
-			SiblingArt.draw_twin(self, _kind(), _clock, face, { "pose": current_pose(), "offset": _trail[i] - global_position, "alpha": 0.18 * k, "tint": color * 2.0 })
+			SiblingArt.draw_twin(self, _kind(), _clock, face, { "pose": current_pose(), "anim_time": _anim_time(), "offset": _trail[i] - global_position, "alpha": 0.18 * k, "tint": color * 2.0 })
 	_draw_dive_mark(color)
 	_draw_effects_behind()
 	SiblingArt.draw_twin(self, _kind(), _clock, face, {
-		"pose": current_pose(),
-		"lean": _lean, "squash": _squash, "dizzy": stunned or is_dead, "enraged": enraged and not is_dead,
+		"pose": current_pose(), "anim_time": _anim_time(),
+		"lean": _lean, "squash": _squash, "dizzy": stunned or is_dead or downed, "enraged": enraged and not is_dead,
 		"shielded": _shield_visible(),
 	})
 	_draw_effects_front()

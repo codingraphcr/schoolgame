@@ -61,6 +61,7 @@ func _initialize() -> void:
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out.get_base_dir()))
 		_pixelate(_cut_out(sheet.get_region(CUTOUTS[out]), PackedVector2Array(KEEP.get(out, [])), HOLES.get(out, []))).save_png(out)
 		print(out.get_file())
+	_extract_siblings()
 	for dir: String in EXPRESSIONS:
 		var prefix := "kai_" if dir == KAI else "profesor_"
 		for expression: String in EXPRESSIONS[dir]:
@@ -228,3 +229,101 @@ func _nearest_index(palette: Array[Color], c: Color) -> int:
 			best_distance = d
 			best = i
 	return best
+
+
+## --- Glitch y Chip (hoja de diálogos de Ariel: dialogos_hermanos.webp) ---
+## Su fondo no es liso (la sala con luces): se borra lo oscuro conectado con los bordes de arriba y de
+## los costados (más oscuro que SIBLING_DARK) y se queda solo la figura más grande (el personaje con
+## los efectos pegados: las llamas de Glitch, los hologramas de Chip). Después se pixelan igual.
+const SIBLING_SHEET := "res://docs/arte/referencias/dialogos_hermanos.webp"
+const SIBLINGS := "res://assets/art/characters/hermanos/retratos/"
+const SIBLING_CUTOUTS := {
+	SIBLINGS + "glitch_retrato.png": Rect2i(0, 0, 496, 466),
+	SIBLINGS + "chip_retrato.png": Rect2i(0, 478, 496, 463),
+}
+const SIBLING_DARK := 0.4
+## Silueta de cada uno (coordenadas dentro del recorte): adentro no se borra nada (el traje negro y el
+## visor son casi del color del fondo y, sin esto, quedaban huecos transparentes).
+const SIBLING_KEEP := {
+	SIBLINGS + "glitch_retrato.png": [Vector2(30, 75), Vector2(110, 108), Vector2(150, 128), Vector2(230, 40), Vector2(290, 8),
+		Vector2(332, 60), Vector2(352, 120), Vector2(420, 112), Vector2(472, 104), Vector2(452, 190), Vector2(432, 250),
+		Vector2(442, 330), Vector2(432, 400), Vector2(486, 466), Vector2(0, 466), Vector2(0, 380), Vector2(60, 300),
+		Vector2(88, 280), Vector2(94, 200), Vector2(58, 130)],
+	SIBLINGS + "chip_retrato.png": [Vector2(175, 4), Vector2(226, 90), Vector2(290, 94), Vector2(446, 18), Vector2(432, 140),
+		Vector2(426, 210), Vector2(442, 300), Vector2(420, 332), Vector2(402, 372), Vector2(424, 463), Vector2(20, 463),
+		Vector2(20, 380), Vector2(150, 300), Vector2(114, 250), Vector2(118, 140), Vector2(150, 90)],
+}
+
+
+func _extract_siblings() -> void:
+	var sheet := Image.load_from_file(ProjectSettings.globalize_path(SIBLING_SHEET))
+	if sheet == null:
+		push_error("No se encontró la hoja: " + SIBLING_SHEET)
+		return
+	sheet.convert(Image.FORMAT_RGBA8)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(SIBLINGS))
+	for out: String in SIBLING_CUTOUTS:
+		var image := sheet.get_region(SIBLING_CUTOUTS[out])
+		_cut_out_dark(image, PackedVector2Array(SIBLING_KEEP.get(out, [])))
+		_keep_largest(image)
+		_pixelate(image).save_png(out)
+		print(out.get_file())
+
+
+func _cut_out_dark(image: Image, keep: PackedVector2Array) -> void:
+	var w := image.get_width()
+	var h := image.get_height()
+	var done := PackedByteArray()
+	done.resize(w * h)
+	var stack: Array[Vector2i] = []
+	for x in w:
+		stack.append(Vector2i(x, 0))
+	for y in h:
+		stack.append(Vector2i(0, y))
+		stack.append(Vector2i(w - 1, y))
+	while not stack.is_empty():
+		var p: Vector2i = stack.pop_back()
+		if p.x < 0 or p.y < 0 or p.x >= w or p.y >= h or done[p.y * w + p.x]:
+			continue
+		if image.get_pixelv(p).v > SIBLING_DARK or _kept(p, keep):
+			continue
+		done[p.y * w + p.x] = 1
+		image.set_pixelv(p, Color(0, 0, 0, 0))
+		stack.append_array([p + Vector2i.RIGHT, p + Vector2i.LEFT, p + Vector2i.DOWN, p + Vector2i.UP])
+
+
+## Deja solo la figura conectada más grande (borra restos sueltos del fondo).
+func _keep_largest(image: Image) -> void:
+	var w := image.get_width()
+	var h := image.get_height()
+	var label := PackedInt32Array()
+	label.resize(w * h)
+	var best: Array[Vector2i] = []
+	var current := 0
+	for y in h:
+		for x in w:
+			if label[y * w + x] != 0 or image.get_pixel(x, y).a == 0.0:
+				continue
+			current += 1
+			var component: Array[Vector2i] = []
+			var stack: Array[Vector2i] = [Vector2i(x, y)]
+			label[y * w + x] = current
+			while not stack.is_empty():
+				var p: Vector2i = stack.pop_back()
+				component.append(p)
+				for d: Vector2i in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:
+					var q := p + d
+					if q.x < 0 or q.y < 0 or q.x >= w or q.y >= h or label[q.y * w + q.x] != 0 or image.get_pixelv(q).a == 0.0:
+						continue
+					label[q.y * w + q.x] = current
+					stack.append(q)
+			if component.size() > best.size():
+				best = component
+	var keep := PackedByteArray()
+	keep.resize(w * h)
+	for p in best:
+		keep[p.y * w + p.x] = 1
+	for y in h:
+		for x in w:
+			if keep[y * w + x] == 0:
+				image.set_pixel(x, y, Color(0, 0, 0, 0))

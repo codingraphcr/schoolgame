@@ -6,9 +6,9 @@ extends SiblingBoss
 ##   2. Zona de control: un campo que ralentiza a Kai.
 ##   3. Proyecciones: copias temporales que lanzan un disco cada una (un golpe las deshace).
 ##   4. Rayo de sincronía: ataque en línea de largo alcance (línea de aviso y después el rayo).
-## Poses de su sprite (además de caminar, correr, saltar y aturdido): alerta al prepararse, lanzar (el
-## disco), zona, rayo y embestida (el dash con la hoja, en la picada y la Danza espejo). Al entrar a la
-## Fase 3 levanta un escudo ligado a una configuración insegura: el controlador abre la fase segura y la
+## Animaciones cuadro por cuadro de la hoja de Ariel (chip_ataques.webp): por ataque, el aviso, la acción
+## (lanzar el disco, zona, rayo, barrido, la picada y la caída) y la recuperación; alerta al proteger. Con los dos
+## vencidos levanta un escudo ligado a una configuración insegura: el controlador abre la fase segura y la
 ## terminal.
 ## Protegiendo a Glitch: se para delante con un escudo de discos que hace rebotar los golpes de Kai.
 
@@ -34,7 +34,7 @@ func _ready_pose() -> StringName:
 
 
 func _dive_pose() -> StringName:
-	return &"embestida"
+	return &"picada_caer"
 
 
 func _dash_pose() -> StringName:
@@ -146,6 +146,7 @@ func fire_beam() -> SyncBeam:
 
 func _recover(epoch: int) -> void:
 	velocity.x = 0.0
+	show_recovery(config.chip_recover / tempo)
 	await wait(config.chip_recover / tempo, epoch)
 	end_attack(epoch)
 

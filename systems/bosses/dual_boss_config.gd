@@ -2,15 +2,18 @@ class_name DualBossConfig
 extends Resource
 ## Valores del jefe doble Glitch y Chip (Capítulo 1), para ajustarlos con pruebas sin tocar código.
 ## Uno en data/bosses/chip_glitch.tres. Los tiempos son segundos de juego (con la física).
-## Diseño de Ariel (docs/arte/referencias/glitch_chip_concepto.webp): una sola barra de vida para los
-## dos y tres fases (Reconocimiento, Sincronización y Protocolo Dual / Furia fraternal).
+## Diseño de Ariel (docs/arte/referencias/glitch_chip_concepto.webp): una barra para cada hermano (hay
+## que vencer a los dos) y en la Fase 3 una sola; tres fases (Reconocimiento, Sincronización y
+## Protocolo Dual / Furia fraternal).
 
 @export_group("Vida compartida y fases")
+## Vida de los dos juntos en las Fases 1 y 2 (la mitad para cada uno).
 @export var shared_health := 44.0
 ## La Fase 2 (Sincronización) empieza al bajar a esta fracción de la vida.
 @export_range(0.0, 1.0) var phase2_at := 0.70
-## La Fase 3 (Protocolo Dual) empieza aquí, después de la fase segura del escudo de Chip.
-@export_range(0.0, 1.0) var phase3_at := 0.35
+## Vida de la barra única de la Fase 3 (Protocolo Dual), que empieza al vencer a los dos y después de la
+## fase segura del escudo de Chip.
+@export var phase3_health := 18.0
 ## Pausa entre un ataque y el siguiente, por fase.
 @export var pause_phase1 := 0.8
 @export var pause_phase2 := 0.55

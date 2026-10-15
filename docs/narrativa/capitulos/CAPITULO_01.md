@@ -148,8 +148,11 @@ sola unidad. **Glitch** (rosa) es el impulsivo: ataques rápidos, movimiento agr
 en conjunto. **Chip** (azul) es el estratega: ataques precisos, control del espacio, anticipa y convierte el caos de
 Glitch en un plan.
 
-Comparten **una sola barra de vida** (refuerza que funcionan como una unidad), aunque cada uno tiene sus propias
-reacciones al daño y su propio aturdimiento. Todos los ataques tienen señales de anticipación (un «!» de su color) y
+Cada uno tiene **su barra de vida** en las Fases 1 y 2 y **hay que vencer a cada uno**: el que se queda sin vida queda
+vencido (aturdido en el piso) y el otro sigue peleando solo. Con los dos vencidos se levantan (Chip: «Interesante
+enfoque. Lástima que ya lo habíamos anticipado.»), viene la fase segura del escudo y en la **Fase 3 pelean con una sola
+barra nueva** (ahí funcionan como una unidad). La Fase 2 empieza según la vida de los dos juntos (70 %).
+Todos los ataques tienen señales de anticipación (un «!» de su color) y
 una forma razonable de esquivarlos.
 
 **Ataques individuales**
@@ -192,16 +195,16 @@ para delante con la espada y contraataca. Así el jugador percibe un vínculo ge
 
 - **Fase 1 · Reconocimiento (100-70 %):** alternan ataques individuales y algunos en conjunto sencillos. El jugador
   aprende sus señales.
-- **Fase 2 · Sincronización (70-35 %):** encadenan ataques y cambian de posición. La música incorpora una segunda
+- **Fase 2 · Sincronización (desde el 70 %, hasta vencer a los dos):** encadenan ataques y cambian de posición. La música incorpora una segunda
   melodía y el anillo del fondo se activa.
-- **Fase 3 · Protocolo Dual — Furia fraternal (35-0 %):** sus movimientos se vuelven más rápidos, pero no aleatorios.
+- **Fase 3 · Protocolo Dual — Furia fraternal (barra única):** sus movimientos se vuelven más rápidos, pero no aleatorios.
   Ejecutan secuencias combinadas y su ataque definitivo (Campo Dual). Pelean juntos: nadie pelea solo.
 
 El combate termina cuando la barra llega a cero. Ninguno muere: quedan neutralizados.
 
 ## 13. Desafío educativo durante el combate
 
-Al llegar al 35 % (antes de la Fase 3), Chip activa un **escudo** ligado a una **configuración insegura**. Para desactivarlo, Kai resuelve un desafío en una
+Al vencer a los dos (antes de la Fase 3), Chip activa un **escudo** ligado a una **configuración insegura**. Para desactivarlo, Kai resuelve un desafío en una
 terminal simulada. Mientras tanto el combate entra en una **fase segura claramente delimitada**, para leer y decidir
 con calma. El desafío trabaja los conceptos del capítulo **sin repetir literalmente** las preguntas de los
 checkpoints.
@@ -253,10 +256,10 @@ recursos de datos (`data/`), separados de las escenas y de la lógica.
 - Las preguntas bloquean el avance hasta responder bien; las incorrectas restan tiempo.
 - El tiempo agotado permite reintentar.
 - El temporizador desaparece al entrar a la arena; el jefe no usa temporizador.
-- Glitch y Chip comparten una sola barra de vida.
+- Glitch y Chip tienen una barra cada uno hasta la Fase 3, donde pelean con una sola; hay que vencer a cada uno (el vencido queda aturdido).
 - Sus 8 ataques individuales y los 10 en conjunto funcionan y avisan antes.
 - Cuando uno queda aturdido, el otro deja su ataque y lo protege.
-- Las tres fases cambian al 70 % y al 35 % (con la fase segura del escudo antes de la Fase 3).
+- La Fase 2 empieza al 70 % y la Fase 3 al vencer a los dos (con la fase segura del escudo antes).
 - Los enemigos sobreviven narrativamente.
 - Las recompensas se guardan una sola vez.
 - El capítulo respeta la Biblia Narrativa.
@@ -291,7 +294,7 @@ Digital entran a la Biblia (nota 4); `GENESIS_ARCHIVE` es oficial (nota 5). Las 
 | 6 | Temporizador | ✅ `ChaseTimer` (4:00, con la física); tiempo agotado o muerte: vuelta al último checkpoint con tiempo suficiente; desaparece después del tercer checkpoint |
 | 7 | Chip como enemigo | ✅ `ChipBoss` (rediseño de Ariel): Discos orbitales, Zona de control, Proyecciones y Rayo de sincronía; escudo de la fase segura y escudo para proteger a Glitch |
 | 8 | Glitch como enemigo | ✅ `GlitchBoss` (rediseño de Ariel): Corte acelerado, Salto en picada, Embestida en cadena y Lanzamiento de fragmentos; queda vulnerable después de atacar; contraataca protegiendo a Chip |
-| 9 | Coordinación de ataques | ✅ `DualBossController`: vida compartida, secuencias fijas por fase y los 10 ataques en conjunto (también a la vez); el vínculo (proteger al aturdido); fase segura del escudo con terminal (mínimo privilegio) al 35 % |
+| 9 | Coordinación de ataques | ✅ `DualBossController`: vida compartida, secuencias fijas por fase y los 10 ataques en conjunto (también a la vez); el vínculo (proteger al aturdido); fase segura del escudo con terminal (mínimo privilegio) al vencer a los dos |
 | 10 | Furia fraternal | ✅ Es la Fase 3 (Protocolo Dual): los dos juntos, más rápidos y con avisos más cortos, y el Campo Dual |
 | 11 | Arena y transiciones | ✅ La arena (checkpoint al llegar, sin temporizador, reinicio si Kai pierde, salida al cuarto técnico); el nivel 1 en la Sala 3 (el aula de Kai, junto al pasillo), el pasillo, las escaleras y la biblioteca; el prólogo lleva al capítulo |
 | 12 | Cinemáticas y recompensas | ✅ Introducción y cierre de los hermanos, lectura del Fragmento de Datos, el profesor y `GENESIS_ARCHIVE`, «FIN DEL CAPÍTULO 1»; Ecos una sola vez, páginas del Grimorio, Inmersión Digital |

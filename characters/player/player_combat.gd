@@ -6,7 +6,7 @@ extends Node
 ## Cada golpe acertado a un enemigo recupera energía (WeaponData.energy_gain: 12,5 % de la máxima).
 ## En el aire, abajo + J ataca hacia abajo: si golpea a un enemigo o a una estructura de rebote
 ## (pinchos, PogoNode), Kai rebota hacia arriba (pogo, como en Hollow Knight). Arriba + J ataca hacia
-## arriba (en el piso o en el aire): un tajo vertical sobre la cabeza, con la pose de salto de Kai.
+## arriba (en el piso o en el aire): la Nullblade gira hasta arriba de su cabeza y deja una media luna.
 
 signal attacked
 ## Un golpe acertado (para energía, combos y efectos futuros).
@@ -42,11 +42,16 @@ var _pose_has_blade := false
 ## Hacia arriba: la zona de golpe empieza aquí (sobre la cabeza de Kai, que mide unos 46 px) y termina a
 ## la altura de la mano (no alcanza a lo que está delante a la altura del cuerpo).
 const UP_REACH_TOP := -68.0
-## Tajo hacia arriba: la mano que sostiene la Nullblade y el giro (ángulos de la punta, hacia adelante =
-## 0): empieza adelante y un poco abajo, pasa por arriba y termina detrás de la cabeza.
-const UP_PIVOT := Vector2(4, -30)
-const UP_SWING_FROM := 0.35
-const UP_SWING_TO := -2.75
+## Ataque hacia arriba: altura de las manos de Kai (de ahí sale la espada hacia arriba).
+const UP_HANDS_Y := -30.0
+## Con la pose del ataque hacia arriba (la del pogo con las manos en el mango, sin la hoja:
+## tools/art/generar_kai_corte_arriba.gd), la espada sale de sus manos (a la altura de la cintura).
+const UP_GRIP := Vector2(1.0, -13.0)
+## Hacia dónde se inclina la espada hacia arriba (radianes; positivo = hacia adelante). Como la del pogo,
+## pero al revés.
+const UP_TILT := 0.4
+## Si el ataque hacia arriba usa su pose (si no, la de salto).
+var _up_pose := false
 
 
 func _ready() -> void:
@@ -94,6 +99,7 @@ func attack(charged := false) -> bool:
 	_down = not player.is_on_floor() and Input.is_action_pressed("move_down")
 	_up = not _down and Input.is_action_pressed("move_up")
 	_bounced = false
+	_up_pose = false
 	_windup = maxf(weapon.windup, 0.001)
 	_place_hitbox()
 	var visual := player.get_node_or_null("Visual/Body/Kai")
@@ -103,9 +109,12 @@ func attack(charged := false) -> bool:
 		and visual.pogo_attack(weapon.windup, weapon.active_time)
 	if _down and not _pose_has_blade and visual and visual.has_method("play_pose"):
 		visual.play_pose(&"caer", weapon.windup + weapon.active_time + 0.15)
-	elif _up and visual and visual.has_method("play_pose"):
-		# Hacia arriba: la pose de salto (el brazo con la espada en alto).
-		visual.play_pose(&"saltar", weapon.windup + weapon.active_time + 0.15)
+	elif _up:
+		# Hacia arriba: la pose del corte de la hoja de Ariel (el puño en alto). Si la apariencia no la
+		# tiene, la de salto.
+		_up_pose = visual != null and visual.has_method("up_attack") and visual.up_attack(weapon.windup, weapon.active_time)
+		if not _up_pose and visual and visual.has_method("play_pose"):
+			visual.play_pose(&"saltar", weapon.windup + weapon.active_time + 0.15)
 	elif not _down and visual and visual.has_method("attack"):
 		visual.attack(weapon.windup)
 	_spawn_slash()
@@ -142,8 +151,7 @@ func _place_hitbox() -> void:
 		return
 	var rect := _shape.shape as RectangleShape2D
 	if _up:
-		# El arco del tajo: de adelante a atrás, sobre la cabeza.
-		rect.size = Vector2(weapon.reach.x * 1.8, weapon.reach.x + 4.0)
+		rect.size = Vector2(weapon.reach.y + 14.0, weapon.reach.x + 4.0)
 		hitbox.position = Vector2(0.0, UP_REACH_TOP + (weapon.reach.x + 4.0) * 0.5)
 	elif _down:
 		rect.size = Vector2(weapon.reach.y + 6.0, weapon.reach.x)
@@ -188,14 +196,22 @@ func _spawn_slash() -> void:
 	if _up:
 		_spawn_up_slash()
 		return
-	var slash := Node2D.new()
+	var slash := _crescent_node()
 	slash.position = Vector2(weapon.offset.x * 0.6 * player.facing, weapon.offset.y)
 	slash.scale.x = player.facing
+	player.add_child(slash)
+	var tween := slash.create_tween()
+	tween.tween_property(slash, "modulate:a", 0.0, 0.18)
+	tween.tween_callback(slash.queue_free)
+
+
+## La media luna del tajo (como el "trazo de corte" de la hoja de la Nullblade): gruesa en el medio,
+## fina en las puntas, con el borde de afuera más claro. Abre hacia adelante (+x).
+func _crescent_node() -> Node2D:
+	var slash := Node2D.new()
 	slash.z_index = 5
 	var color := weapon.slash_color
 	var radius := weapon.reach.x * 0.75
-	# Media luna (como el "trazo de corte" de la hoja de la Nullblade): gruesa en el medio, fina en
-	# las puntas, con el borde de afuera más claro.
 	var crescent := PackedVector2Array()
 	var edge := PackedVector2Array()
 	for i in 15:
@@ -210,95 +226,77 @@ func _spawn_slash() -> void:
 	slash.draw.connect(func() -> void:
 		slash.draw_colored_polygon(crescent, Color(color, 0.55))
 		slash.draw_polyline(edge, color.lightened(0.5), 2.0, true))
-	player.add_child(slash)
-	var tween := slash.create_tween()
-	tween.tween_property(slash, "modulate:a", 0.0, 0.18)
-	tween.tween_callback(slash.queue_free)
+	return slash
 
 
-## Tajo hacia arriba (inspirado en el dibujo de Ariel): la Nullblade gira en la mano de Kai desde
-## adelante, pasa por encima de su cabeza y termina atrás, dejando la estela de todo el recorrido (una
-## media luna lila y celeste que se va apagando desde el principio), imágenes fantasma de la hoja,
-## destellos que saltan de la punta y un brillo al final. En el piso, un estallido a los pies.
+## Ataque hacia arriba: como el de abajo, pero al revés. Kai sostiene el mango con las dos manos (la pose
+## del pogo) y la Nullblade (WeaponData.sprite) sale de golpe hacia arriba, un poco hacia adelante, con su
+## luz a lo largo de la hoja, una chispa en la punta y un destello (rayos, el rombo de la Nullblade y
+## píxeles). Se desvanece al terminar el ataque.
 func _spawn_up_slash() -> void:
-	var slash := Node2D.new()
-	slash.name = "UpSlash"
-	slash.z_index = 5
-	slash.scale.x = player.facing
-	slash.position = Vector2(UP_PIVOT.x * player.facing, UP_PIVOT.y)
+	var stab := Node2D.new()
+	stab.name = "UpSlash"
+	stab.z_index = 5
+	stab.scale.x = player.facing  # Se arma mirando a la derecha; a la izquierda, espejado.
 	var color := weapon.slash_color
 	var light := color.lightened(0.6)
-	var pink := Color("ff6ad5")
-	var length := weapon.reach.x + 4.0
-	# La espada: el pomo en la mano (el pivote) y la punta hacia afuera (la hoja apunta hacia abajo en
-	# el dibujo; al girar el nodo, la punta sigue el ángulo del tajo).
-	var hand := Node2D.new()
-	slash.add_child(hand)
+	var length := weapon.reach.x + 8.0
+	# La espada, girada hacia donde apunta: en su espacio, la punta va hacia arriba (y negativa).
+	var sword := Node2D.new()
+	sword.rotation = UP_TILT if _up_pose else 0.0
+	stab.add_child(sword)
+	var grip := UP_GRIP if _up_pose else Vector2(2.0, UP_HANDS_Y)
 	var blade := Sprite2D.new()
 	blade.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	if weapon.sprite:
 		blade.texture = weapon.sprite
 		blade.scale = Vector2.ONE * (length / weapon.sprite.get_height())
-	blade.position = Vector2(0.0, length * 0.5)
-	hand.add_child(blade)
-	var swing := { "t": 0.0, "fade": 1.0 }
-	var sparks: Array[Dictionary] = []
-	slash.draw.connect(func() -> void:
-		var current := lerpf(UP_SWING_FROM, UP_SWING_TO, swing.t)
-		var steps := 18
-		# Estela: del ángulo inicial al actual, más transparente cuanto más vieja.
-		for k in steps:
-			var a0 := lerpf(UP_SWING_FROM, current, float(k) / steps)
-			var a1 := lerpf(UP_SWING_FROM, current, float(k + 1) / steps)
-			var age := float(k + 1) / steps
-			var outer := length + 6.0
-			# Media luna: gruesa cerca de la punta de la espada y cada vez más fina hacia el principio.
-			var inner := outer - (2.0 + 12.0 * age * age)
-			var quad := PackedVector2Array([
-				Vector2.from_angle(a0) * inner, Vector2.from_angle(a0) * outer,
-				Vector2.from_angle(a1) * outer, Vector2.from_angle(a1) * inner])
-			slash.draw_colored_polygon(quad, Color(color.lightened(0.25).lerp(pink, 0.35 * (1.0 - age)), 0.8 * age * swing.fade))
-			slash.draw_line(Vector2.from_angle(a0) * outer, Vector2.from_angle(a1) * outer, Color(light, 0.95 * age * swing.fade), 2.0)
-			slash.draw_line(Vector2.from_angle(a0) * (outer - 4.0), Vector2.from_angle(a1) * (outer - 4.0), Color(Color.WHITE, 0.5 * age * swing.fade), 1.0)
-		# Imágenes fantasma de la hoja justo detrás de ella (se nota el movimiento).
-		for k in 2:
-			var a := current - (UP_SWING_TO - UP_SWING_FROM) * 0.06 * (k + 1)
-			slash.draw_line(Vector2.from_angle(a) * 10.0, Vector2.from_angle(a) * length, Color(color, (0.45 - k * 0.15) * swing.fade), 2.0)
-		# Destellos (cruces de luz) que saltan de la punta.
-		for spark in sparks:
-			var p: Vector2 = spark.pos
-			var s: float = spark.size * swing.fade
-			slash.draw_line(p - Vector2(s * 2.0, 0), p + Vector2(s * 2.0, 0), Color(light, 0.9 * swing.fade), 1.0)
-			slash.draw_line(p - Vector2(0, s * 3.0), p + Vector2(0, s * 3.0), Color(light, 0.9 * swing.fade), 1.0)
-			slash.draw_rect(Rect2(p - Vector2.ONE, Vector2(2, 2)), Color(Color.WHITE, swing.fade))
-		# Brillo al terminar el tajo, en la punta.
-		if swing.t >= 1.0:
-			var tip := Vector2.from_angle(UP_SWING_TO) * length
-			slash.draw_circle(tip, 7.0 * swing.fade, Color(light, 0.35 * swing.fade))
-			slash.draw_circle(tip, 3.0 * swing.fade, Color(Color.WHITE, 0.8 * swing.fade)))
-	player.add_child(slash)
+		blade.flip_v = true  # En el dibujo la punta mira hacia abajo.
+	blade.position = Vector2(0.0, -length * 0.5)
+	sword.add_child(blade)
+	var thrust := maxf(weapon.windup, 0.04)
+	var total := thrust + weapon.active_time + 0.16
+	var state := { "t": 0.0, "burst": false }
+	sword.draw.connect(func() -> void:
+		var t: float = state.t
+		var alpha := 1.0 - clampf((t - thrust - weapon.active_time) / 0.16, 0.0, 1.0)
+		var tip := -length
+		# Luz a lo largo de la hoja (como la estela del ataque hacia abajo), más clara en el centro.
+		sword.draw_rect(Rect2(-5.0, tip - 4.0, 10.0, length + 4.0), Color(color, 0.18 * alpha))
+		sword.draw_rect(Rect2(-2.0, tip - 2.0, 4.0, length + 2.0), Color(color, 0.35 * alpha))
+		if weapon.sprite == null:
+			sword.draw_colored_polygon(PackedVector2Array([Vector2(-2.0, 0.0), Vector2(2.0, 0.0), Vector2(0.0, tip)]), Color(light, alpha))
+		# Chispa en la punta: una "V" de luz hacia arriba.
+		sword.draw_line(Vector2(0.0, tip), Vector2(-6.0, tip + 6.0), Color(light, alpha), 1.5)
+		sword.draw_line(Vector2(0.0, tip), Vector2(6.0, tip + 6.0), Color(light, alpha), 1.5)
+		if t >= thrust:
+			# Destello en la punta: rayos en abanico y el rombo de la Nullblade.
+			var spark := clampf((t - thrust) / (total - thrust), 0.0, 1.0)
+			var at := Vector2(0.0, tip - 2.0)
+			for i in 5:
+				var dir := Vector2.UP.rotated(lerpf(-0.9, 0.9, i / 4.0))
+				sword.draw_line(at + dir * 3.0, at + dir * (6.0 + 12.0 * spark), Color(light, 1.0 - spark), 1.0)
+			var size := 4.0 + 2.0 * spark
+			var rhombus := PackedVector2Array([at + Vector2(0, -size), at + Vector2(size * 0.6, 0), at + Vector2(0, size), at + Vector2(-size * 0.6, 0)])
+			sword.draw_colored_polygon(rhombus, Color(color, 0.35 * alpha))
+			rhombus.append(rhombus[0])
+			sword.draw_polyline(rhombus, Color(light, alpha), 1.0))
+	player.add_child(stab)
+	# La espada sube de golpe desde las manos de Kai hasta quedar con el mango en ellas (como la de abajo).
 	var update := func(t: float) -> void:
-		swing.t = t
-		var angle := lerpf(UP_SWING_FROM, UP_SWING_TO, t)
-		hand.rotation = angle - PI / 2.0
-		if randf() < 0.6:
-			sparks.append({ "pos": Vector2.from_angle(angle) * (length + randf_range(0.0, 8.0)) + Vector2(randf_range(-3, 3), randf_range(-3, 3)), "size": randf_range(1.0, 2.0) })
-		slash.queue_redraw()
+		state.t = t
+		var push := 1.0 - clampf(t / thrust, 0.0, 1.0)
+		sword.position = grip + Vector2.UP.rotated(sword.rotation) * -10.0 * push * push
+		sword.modulate.a = 1.0 - clampf((t - thrust - weapon.active_time) / 0.16, 0.0, 1.0)
+		if t >= thrust and not state.burst:
+			state.burst = true
+			var tip := sword.to_global(Vector2(0.0, -length - 2.0))
+			PixelBurst.spawn(player.get_parent(), tip, [color, light, Color.WHITE], 10, 70.0, Vector2.ZERO, 0.35)
+		sword.queue_redraw()
 	update.call(0.0)
-	var swing_time := maxf(weapon.windup + weapon.active_time, 0.2)
-	var tween := slash.create_tween()
-	tween.tween_method(update, 0.0, 1.0, swing_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_callback(func() -> void:
-		var tip := slash.to_global(Vector2.from_angle(UP_SWING_TO) * length)
-		PixelBurst.spawn(player.get_parent(), tip, [color, light, pink, Color.WHITE], 10, 70.0, Vector2.ZERO, 0.4))
-	tween.tween_method(func(f: float) -> void:
-		swing.fade = f
-		blade.modulate.a = f
-		slash.queue_redraw(), 1.0, 0.0, 0.22)
-	tween.tween_callback(slash.queue_free)
-	# En el piso, un estallido de energía a los pies (como en el dibujo).
-	if player.is_on_floor():
-		PixelBurst.spawn(player.get_parent(), player.global_position, [color, light, pink], 14, 80.0, Vector2(30, 4), 0.35)
+	var tween := stab.create_tween()
+	tween.tween_method(update, 0.0, total, total)
+	tween.tween_callback(stab.queue_free)
 
 
 ## Ataque hacia abajo: Kai clava la espada debajo de sus pies. Con las poses del pogo la espada ya

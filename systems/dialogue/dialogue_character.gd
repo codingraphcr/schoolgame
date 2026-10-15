@@ -19,6 +19,9 @@ enum Side { LEFT, RIGHT }
 @export var side := Side.LEFT
 ## Si el retrato mira hacia el lado contrario al que debería, se voltea.
 @export var flip_portrait := false
+## Tamaño del retrato (1 = normal). Glitch y Chip van más chicos: su dibujo es casi todo cabeza y la caja
+## les tapaba la cara.
+@export var portrait_scale := 1.0
 ## Color del nombre y del borde de la placa.
 @export var accent := Color(0.243, 0.949, 1.0)
 ## Color del texto de sus líneas (transparente = el color normal de la caja).

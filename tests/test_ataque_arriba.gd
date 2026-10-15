@@ -1,7 +1,7 @@
 extends SceneTree
 ## Prueba automática: ataque hacia arriba con la Nullblade (arriba + J), en el piso y en el aire. Golpea
-## a un enemigo que está sobre la cabeza de Kai (y no a uno que está delante), usa la pose de salto, deja
-## el tajo vertical y no empuja a Kai hacia atrás. Sin arriba, el ataque sigue siendo hacia adelante.
+## a un enemigo que está sobre la cabeza de Kai (y no a uno que está delante), usa la pose del pogo con la
+## espada hacia arriba y no empuja a Kai hacia atrás. Sin arriba, el ataque sigue siendo hacia adelante.
 ## Ejecutar: godot --headless --path . --script res://tests/test_ataque_arriba.gd
 
 const ROOM := "res://tests/fixtures/combat_test_room.tscn"
@@ -37,8 +37,8 @@ func _run() -> void:
 	_check(player.combat.attack(), "arriba + J: Kai ataca")
 	_check(player.combat.is_up_attack(), "el ataque es hacia arriba")
 	var visual := player.get_node_or_null("Visual/Body/Kai")
-	_check(visual == null or visual.get("_override") == &"saltar", "usa la pose de salto (la espada en alto)")
-	_check(player.find_child("UpSlash", false, false) != null, "deja el tajo vertical sobre la cabeza")
+	_check(visual == null or visual.get("_override") == &"arriba_cortar", "usa la pose del pogo (las manos en el mango)")
+	_check(player.find_child("UpSlash", false, false) != null, "la Nullblade sale hacia arriba")
 	Input.action_release("move_up")
 	await _wait(0.3)
 	_check(above.health.current < above_health, "golpea al enemigo que está sobre la cabeza")
