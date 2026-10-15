@@ -3,10 +3,21 @@
 [ext_resource type="Script" path="res://ui/menus/main_menu/main_menu.gd" id="1_menu"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/menu_fondo.webp" id="2_bg"]
 [ext_resource type="Script" path="res://ui/menus/main_menu/main_menu_option.gd" id="3_option"]
+[ext_resource type="FontFile" path="res://assets/fonts/cinzel/Cinzel.ttf" id="4_cinzel"]
 
 [sub_resource type="FontVariation" id="FontVariation_option"]
-variation_embolden = 0.35
-spacing_glyph = 6
+base_font = ExtResource("4_cinzel")
+variation_opentype = {
+2003265652: 700
+}
+spacing_glyph = 3
+
+[sub_resource type="FontVariation" id="FontVariation_small"]
+base_font = ExtResource("4_cinzel")
+variation_opentype = {
+2003265652: 500
+}
+spacing_glyph = 1
 
 [sub_resource type="Gradient" id="Gradient_shade"]
 offsets = PackedFloat32Array(0, 0.55, 1)
@@ -163,6 +174,7 @@ horizontal_alignment = 1
 [node name="DevelopedBy" type="Label" parent="Credits/Panel/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.65, 0.92, 1)
+theme_override_fonts/font = SubResource("FontVariation_small")
 theme_override_font_sizes/font_size = 16
 text = "Desarrollado por"
 horizontal_alignment = 1
@@ -177,9 +189,28 @@ theme_override_font_sizes/font_size = 34
 text = "CODINGRAPH"
 horizontal_alignment = 1
 
+[node name="TeamTitle" type="Label" parent="Credits/Panel/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.92, 1)
+theme_override_fonts/font = SubResource("FontVariation_small")
+theme_override_font_sizes/font_size = 16
+text = "Equipo"
+horizontal_alignment = 1
+
+[node name="Team" type="Label" parent="Credits/Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.97, 0.95, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_option")
+theme_override_font_sizes/font_size = 24
+text = "Ariel
+Yohann"
+horizontal_alignment = 1
+
 [node name="Engine" type="Label" parent="Credits/Panel/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.65, 0.92, 1)
+theme_override_fonts/font = SubResource("FontVariation_small")
 theme_override_font_sizes/font_size = 16
 text = "Hecho con Godot 4.7"
 horizontal_alignment = 1
@@ -209,6 +240,7 @@ offset_bottom = -14.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.62, 0.56, 0.86, 0.8)
+theme_override_fonts/font = SubResource("FontVariation_small")
 theme_override_font_sizes/font_size = 16
 text = "v0.1.0"
 horizontal_alignment = 2
@@ -232,6 +264,7 @@ alignment = 2
 [node name="CreditsButton" type="Button" parent="Footer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_small")
 theme_override_font_sizes/font_size = 16
 text = "Créditos"
 flat = true
@@ -248,4 +281,5 @@ offset_right = 520.0
 offset_bottom = -14.0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.62, 0.56, 0.86, 0.9)
+theme_override_fonts/font = SubResource("FontVariation_small")
 theme_override_font_sizes/font_size = 16

@@ -483,12 +483,12 @@ misión, con sus opciones (`"ls -a"`). Cualquier otro comando u opción responde
 nivel, lugar). Formato v2 de `SaveSerializer` (JSON con huella de integridad), revisado por `SaveValidator` y adaptado
 por `SaveMigrator`. Escritura segura: temporal → verificación → la principal pasa a respaldo → el temporal pasa a
 principal; al cargar se elige la mejor copia (principal, temporal más nuevo o respaldo). Diseño completo en
-`arquitectura/SISTEMA_USUARIOS_STEAM.md`.
+`arquitectura/SISTEMA_USUARIOS_STEAM.md`. La pantalla para elegir ranura (`ui/menus/slots/slot_select.gd`, `SlotSelect`) sigue la maqueta de Ariel: título con Cinzel y una línea con un rombo, tarjetas oscuras con borde violeta y esquinas decoradas (`CardDecor`), el número grande («01»), los datos en mayúsculas, una miniatura (un pedazo del fondo del menú con el rombo de Nullveil), botones con contorno que brillan con el foco (con un rombo al costado) y abajo a la izquierda «NULLVEIL · BEYOND THE FIREWALL» con la versión.
 
 **Computadora segura** (`SavePoint`, un `Interactable`): monitor verde con un escudo (distinto de las terminales y de los
 nodos de Aegis). Al pasar queda como **punto de control** (si Kai muere, reaparece ahí); con **E** guarda la partida y
 llena los cristales y la energía. Por ahora hay una en la Entrada del colegio. En la PC del profesor (prólogo y combate) **no hay
-computadoras de guardado**: solo puntos de restauración (`RestorePoint`), que son puntos de control al pasar. El menú principal muestra **CONTINUAR** si hay una partida guardada.
+computadoras de guardado**: solo puntos de restauración (`RestorePoint`), que son puntos de control al pasar. El menú principal muestra **CONTINUAR** si hay una partida guardada. Sus textos usan **Cinzel** (`assets/fonts/cinzel/`, licencia OFL en `OFL.txt`; fuente variable: grosor 700 en botones y títulos, 500 en los textos chicos), con remates afilados como el logo de Nullveil; los créditos nombran al equipo (Ariel y Yohann).
 
 ## Mapa del mundo (`systems/world/`, `data/world/`)
 

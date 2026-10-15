@@ -100,11 +100,16 @@ func _open_profile() -> void:
 func _open_slots(mode: SlotSelect.Mode) -> void:
 	_buttons.visible = false
 	_footer.visible = false
+	# La pantalla de ranuras tiene su propio pie (el nombre del juego y la versión).
+	identity_label.visible = false
+	version_label.visible = false
 	var screen := SlotSelect.open(self, mode)
 	screen.chosen.connect(_on_slot_chosen.bind(mode))
 	screen.cancelled.connect(func() -> void:
 		_buttons.visible = true
 		_footer.visible = true
+		identity_label.visible = true
+		version_label.visible = true
 		continue_button.visible = SaveManager.has_save()
 		load_button.visible = continue_button.visible
 		if not DisplayServer.is_touchscreen_available():

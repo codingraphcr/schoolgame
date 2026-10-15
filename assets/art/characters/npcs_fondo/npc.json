@@ -2,13 +2,13 @@
 	"animations": {
 		"cj_caminar": {
 			"feet": [
-				52,
+				56,
 				119
 			],
 			"file": "npc_cj_caminar.png",
 			"fps": 3.0,
 			"frame_size": [
-				104,
+				112,
 				128
 			],
 			"frames": 2,
@@ -16,13 +16,13 @@
 		},
 		"cj_quieto": {
 			"feet": [
-				52,
+				56,
 				119
 			],
 			"file": "npc_cj_quieto.png",
 			"fps": 1.0,
 			"frame_size": [
-				104,
+				112,
 				128
 			],
 			"frames": 1,
