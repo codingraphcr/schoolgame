@@ -110,6 +110,21 @@ func template_of(room_id: StringName) -> RoomTemplate:
 	return district.template_of(room_id) if district else null
 
 
+## Qué copia de su plantilla es esta sala (1 = la primera, por id): el generador puede poner varias veces
+## la misma sala (p. ej. dos aulas seguidas). 0 si la sala no está en el mapa.
+func copy_number(room_id: StringName) -> int:
+	var district := graph(district_of(room_id))
+	if district == null:
+		return 0
+	var template := district.template_of(room_id)
+	var same: Array[String] = []
+	for id: StringName in district.rooms:
+		if district.template_of(id) == template:
+			same.append(String(id))
+	same.sort()
+	return same.find(String(room_id)) + 1
+
+
 ## Escena de una sala del mapa ("" si no se conoce).
 func scene_of(room_id: StringName) -> String:
 	var template := template_of(room_id)

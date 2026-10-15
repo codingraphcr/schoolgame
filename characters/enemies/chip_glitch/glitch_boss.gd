@@ -6,9 +6,9 @@ extends SiblingBoss
 ##   2. Salto en picada: sube sobre Kai, marca el piso y cae en diagonal (SiblingBoss).
 ##   3. Embestida en cadena: serie de dashes rápidos.
 ##   4. Lanzamiento de fragmentos: cuchillas de energía en abanico.
-## Poses de su sprite (además de caminar, correr, saltar y aturdido): guardia (las dos hojas) al
-## prepararse, corte (la estela rosa) al cortar, estocada al embestir y en la picada, y lanzar con las
-## cuchillas. Después de cada ataque queda un momento vulnerable (glitch_recover).
+## Animaciones cuadro por cuadro de la hoja de Ariel (glitch_ataques.webp): por ataque, el aviso, la acción
+## (corte, embestida, lanzar, barrido, la picada y la caída) y la recuperación; guardia al proteger a Chip.
+## Después de cada ataque queda un momento vulnerable (glitch_recover).
 ## Protegiendo a Chip: se para delante con la espada y contraataca si Kai se acerca.
 
 var _slashes: Array[Dictionary] = []
@@ -19,7 +19,7 @@ func _init() -> void:
 	display_name = "Glitch"
 	contact_damage = 1.0
 	threat_type = &"malware"
-	death_colors = [SiblingArt.GLITCH, SiblingArt.GLITCH_LIGHT, Color("6a1846")]
+	death_colors = [SiblingArt.GLITCH, SiblingArt.GLITCH_LIGHT, Color("7a1a24")]
 
 
 func _kind() -> StringName:
@@ -31,11 +31,11 @@ func _ready_pose() -> StringName:
 
 
 func _dive_pose() -> StringName:
-	return &"estocada"
+	return &"picada_caer"
 
 
 func _dash_pose() -> StringName:
-	return &"estocada"
+	return &"barrido"
 
 
 func _physics_process(delta: float) -> void:
@@ -100,7 +100,7 @@ func embestida_en_cadena(count := -1) -> void:
 		if not await telegraph(&"embestida_en_cadena", config.glitch_chain_telegraph, epoch):
 			end_attack(epoch)
 			return
-		set_pose(&"estocada")
+		set_pose(&"embestida")
 		var elapsed := 0.0
 		Sfx.play(&"dash", 1.3 + k * 0.1)
 		while elapsed < 0.22:
@@ -148,6 +148,7 @@ func throw_fragments(target: Vector2, count: int) -> void:
 ## Queda vulnerable un momento después de atacar.
 func _recover(epoch: int) -> void:
 	velocity.x = 0.0
+	show_recovery(config.glitch_recover / tempo)
 	await wait(config.glitch_recover / tempo, epoch)
 	end_attack(epoch)
 

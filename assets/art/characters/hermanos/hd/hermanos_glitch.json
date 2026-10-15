@@ -1,0 +1,299 @@
+{
+	"animations": {
+		"glitch_barrido": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_barrido.png",
+			"fps": 10.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"glitch_barrido_aviso": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_barrido_aviso.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": false
+		},
+		"glitch_barrido_fin": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_barrido_fin.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 3,
+			"loop": false
+		},
+		"glitch_caida_aviso": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_caida_aviso.png",
+			"fps": 9.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 5,
+			"loop": false
+		},
+		"glitch_caida_caer": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_caida_caer.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_caida_fin": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_caida_fin.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 3,
+			"loop": false
+		},
+		"glitch_corte": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_corte.png",
+			"fps": 10.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 3,
+			"loop": false
+		},
+		"glitch_corte_aviso": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_corte_aviso.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 4,
+			"loop": false
+		},
+		"glitch_corte_fin": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_corte_fin.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 3,
+			"loop": false
+		},
+		"glitch_embestida": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_embestida.png",
+			"fps": 14.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 3,
+			"loop": false
+		},
+		"glitch_embestida_aviso": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_embestida_aviso.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": false
+		},
+		"glitch_embestida_fin": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_embestida_fin.png",
+			"fps": 6.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 3,
+			"loop": false
+		},
+		"glitch_fragmentos_aviso": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_fragmentos_aviso.png",
+			"fps": 13.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 6,
+			"loop": false
+		},
+		"glitch_fragmentos_fin": {
+			"feet": [
+				64,
+				119
+			],
+			"file": "hermanos_glitch_glitch_fragmentos_fin.png",
+			"fps": 8.0,
+			"frame_size": [
+				128,
+				128
+			],
+			"frames": 4,
+			"loop": false
+		},
+		"glitch_guardia": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_guardia.png",
+			"fps": 4.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": true
+		},
+		"glitch_lanzar": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_lanzar.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_picada_arriba": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_picada_arriba.png",
+			"fps": 1.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 1,
+			"loop": true
+		},
+		"glitch_picada_aviso": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_picada_aviso.png",
+			"fps": 10.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 3,
+			"loop": false
+		},
+		"glitch_picada_caer": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_picada_caer.png",
+			"fps": 10.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": false
+		},
+		"glitch_picada_fin": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_picada_fin.png",
+			"fps": 4.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": false
+		},
+		"glitch_picada_subir": {
+			"feet": [
+				48,
+				119
+			],
+			"file": "hermanos_glitch_glitch_picada_subir.png",
+			"fps": 8.0,
+			"frame_size": [
+				96,
+				128
+			],
+			"frames": 2,
+			"loop": false
+		}
+	},
+	"scale": 0.5
+}

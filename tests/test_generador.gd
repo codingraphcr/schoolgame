@@ -197,6 +197,7 @@ func _test_in_game() -> void:
 		"de la biblioteca se pasa al aula (%s)" % classroom_id)
 	player = (current_scene as Room).player
 	_check(player.global_position.distance_to(Vector2(40, 304)) < 2.0, "Kai aparece en la puerta oeste del aula")
+	var first_people := _people()
 	await _until(func() -> bool: return not root.get_node("SceneManager").is_changing())
 	_check(saves.save_game(CLASSROOM, &"desde_oeste") and saves.slot_info(1)["meta"]["lugar"] == "Aula", "se guarda en el aula")
 	# La misma escena, otra sala del mapa: la segunda aula.
@@ -208,6 +209,9 @@ func _test_in_game() -> void:
 	var second_id: StringName = world.current_room
 	_check(second_id != classroom_id and world.template_of(second_id).id == &"aula" and current_scene.scene_file_path == CLASSROOM,
 		"la puerta este lleva a la segunda aula (%s, la misma escena)" % second_id)
+	var second_people := _people()
+	_check(not first_people.is_empty() and first_people != second_people,
+		"en la segunda aula hay otra gente (%s / %s)" % [first_people, second_people])
 	await _until(func() -> bool: return not root.get_node("SceneManager").is_changing())
 	player = (current_scene as Room).player
 	player.teleport_to(Vector2(600, 296))
@@ -267,3 +271,12 @@ func _check(condition: bool, message: String) -> void:
 	if not condition:
 		_failures += 1
 	print("%s %s" % ["OK  " if condition else "FAIL", message])
+
+
+## Los personajes de la gente de fondo de la sala actual (ordenados).
+func _people() -> Array[String]:
+	var people: Array[String] = []
+	for npc in current_scene.find_children("*", "BackgroundNpc"):
+		people.append((npc as BackgroundNpc).character)
+	people.sort()
+	return people

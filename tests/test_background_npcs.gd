@@ -1,5 +1,6 @@
 extends SceneTree
-## Prueba automática: NPC de fondo (BackgroundNpc) en la Entrada y el Pasillo: tienen sus animaciones,
+## Prueba automática: NPC de fondo (BackgroundNpc) en la Entrada, el Pasillo, la Biblioteca, el Aula, las
+## Escaleras y el Salón 3 (ninguno en el Cuarto técnico): tienen sus animaciones,
 ## no chocan con Kai, la pareja que charla se mira y se turna para hablar, el conserje camina con el
 ## trapeador sin salirse de su tramo y la profesora va y viene.
 ## Ejecutar: godot --headless --path . --script res://tests/test_background_npcs.gd
@@ -23,6 +24,9 @@ func _run() -> void:
 	change_scene_to_file(PASILLO)
 	await _frames(10)
 	await _test_pasillo()
+	await _test_otras_salas()
+	await _test_sala_3_en_clase()
+	await _test_sin_repetir()
 	print("RESULTADO: ", "TODO OK" if _failures == 0 else "%d FALLOS" % _failures)
 	quit(0 if _failures == 0 else 1)
 
@@ -82,6 +86,72 @@ func _test_pasillo() -> void:
 	var locker_sprite := _sprite(locker)
 	_check(locker_sprite.animation == &"f3_espalda", "la chica del casillero está de espaldas")
 
+
+
+## Biblioteca, Aula, Escaleras y Salón 3: cuántos hay (pocos: no hace falta llenar), parados en el suelo
+## (abajo, en un descanso o en el 2° piso de la escalera), sin chocar y con sus sprites, y sin repetir
+## la misma gente de otra sala. En el Cuarto técnico no hay (solo personal autorizado).
+func _test_otras_salas() -> void:
+	for room: Array in [["biblioteca", 5, [304.0]], ["aula", 2, [304.0]], ["escaleras", 4, [304.0, 188.0, -48.0]],
+			["sala_3", 7, [304.0]], ["cuarto_tecnico", 0, [304.0]]]:
+		change_scene_to_file("res://world/zones/zone0/%s.tscn" % room[0])
+		await _frames(10)
+		var npcs := _npcs().filter(func(n: BackgroundNpc) -> bool: return n.get_parent().name == "Gente")
+		_check(npcs.size() == room[1], "%s: %d NPC de fondo (hay %d)" % [room[0], room[1], npcs.size()])
+		for npc: BackgroundNpc in npcs:
+			var grounded: bool = (room[2] as Array).any(func(y: float) -> bool: return absf(npc.global_position.y - y) < 0.5)
+			var sprite := _sprite(npc)
+			if not grounded or not npc.find_children("*", "CollisionObject2D").is_empty() \
+					or not sprite.sprite_frames.has_animation(StringName(npc.character + "_quieto")):
+				_check(false, "%s/%s: en el suelo, sin chocar y con sus sprites" % [room[0], npc.name])
+		if room[0] == "escaleras":
+			var props := current_scene.get_node("Props")
+			_check(not props.bins.is_empty() and not props.recycling.is_empty() and not props.boards.is_empty()
+				and not props.extinguishers.is_empty() and not props.fountains.is_empty() and not props.plants.is_empty(),
+				"en las escaleras hay basureros, reciclaje, un diario mural, extintores, un bebedero y macetas")
+
+
+## En el Salón 3 los del recreo no están durante la clase ni con Chip y Glitch (vuelven al terminar).
+func _test_sala_3_en_clase() -> void:
+	var state := root.get_node("GameState")
+	state.reset()
+	state.start_quest(&"una_clase_diferente")
+	change_scene_to_file("res://world/zones/zone0/sala_3.tscn")
+	await _frames(10)
+	var gente := current_scene.get_node("Gente") as Node2D
+	_check(not gente.visible, "durante la clase no están los del recreo en el Salón 3")
+	state.reset()
+
+
+## Ninguna sala repite la gente de otra (antes la pareja de la Entrada estaba también en las Escaleras).
+func _test_sin_repetir() -> void:
+	var seen := {}
+	for room in ["entrada", "pasillo", "biblioteca", "aula", "escaleras", "sala_3"]:
+		change_scene_to_file("res://world/zones/zone0/%s.tscn" % room)
+		await _frames(6)
+		var people: Array[String] = []
+		for npc in _npcs():
+			if npc.get_parent().name != "Gente":
+				continue  # Los de la clase del Salón 3 son de la historia (solo están en la clase).
+			people.append(npc.character)
+		people.sort()
+		var key := ",".join(people)
+		_check(not seen.has(key), "%s no tiene la misma gente que %s (%s)" % [room, seen.get(key, "otra sala"), key])
+		seen[key] = room
+		var pairs := 0
+		for other in seen:
+			if other != key and _shared(other.split(","), people) >= 2:
+				pairs += 1
+		_check(pairs == 0, "%s no repite una pareja de otra sala" % room)
+
+
+## Cuántos personajes tienen en común dos salas.
+func _shared(a: PackedStringArray, b: Array[String]) -> int:
+	var count := 0
+	for character in b:
+		if character in a:
+			count += 1
+	return count
 
 func _npcs() -> Array[BackgroundNpc]:
 	var list: Array[BackgroundNpc] = []

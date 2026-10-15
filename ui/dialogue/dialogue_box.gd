@@ -204,7 +204,7 @@ func _update_portraits(character: DialogueCharacter, expression: String) -> int:
 		var changed: bool = _side_character[active_side] != character or portrait.texture != texture or not portrait.visible
 		_side_character[active_side] = character
 		if changed:
-			_place_portrait(portrait, texture, active_side, character.flip_portrait)
+			_place_portrait(portrait, texture, active_side, character.flip_portrait, character.portrait_scale)
 	for side in _portraits:
 		var portrait: TextureRect = _portraits[side]
 		var active: bool = side == active_side
@@ -220,8 +220,8 @@ func _update_portraits(character: DialogueCharacter, expression: String) -> int:
 	return active_side
 
 
-func _place_portrait(portrait: TextureRect, texture: Texture2D, side: int, flipped: bool) -> void:
-	var shown := texture.get_size() * minf(PORTRAIT_HEIGHT / texture.get_height(), MAX_UPSCALE)
+func _place_portrait(portrait: TextureRect, texture: Texture2D, side: int, flipped: bool, size_scale := 1.0) -> void:
+	var shown := texture.get_size() * minf(PORTRAIT_HEIGHT / texture.get_height(), MAX_UPSCALE) * size_scale
 	var x := 0.0 if side == DialogueCharacter.Side.LEFT else size.x - shown.x
 	portrait.texture = texture
 	portrait.flip_h = flipped

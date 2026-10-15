@@ -23,6 +23,7 @@
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/escudo_roto.tres" id="22_yt2mg"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/cierre_hermanos.tres" id="23_ekht6"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/fragmento_leido.tres" id="24_54mbs"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/ambos_vencidos.tres" id="25_ambos"]
 [ext_resource type="Script" path="res://world/zones/red_entrenamiento/convergence_chamber.gd" id="25_cham"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w7b2f"]
@@ -177,6 +178,7 @@ chamber = NodePath("../Background")
 shield_terminal = ExtResource("18_q4qw0")
 shield_challenge = ExtResource("19_74ql6")
 intro_dialogue = ExtResource("20_3xks1")
+both_down_dialogue = ExtResource("25_ambos")
 shield_dialogue = ExtResource("21_edano")
 shield_broken_dialogue = ExtResource("22_yt2mg")
 closing_dialogue = ExtResource("23_ekht6")

@@ -2,18 +2,18 @@ class_name DualBossConfig
 extends Resource
 ## Valores del jefe doble Glitch y Chip (Capítulo 1), para ajustarlos con pruebas sin tocar código.
 ## Uno en data/bosses/chip_glitch.tres. Los tiempos son segundos de juego (con la física).
-## Diseño de Ariel (docs/arte/referencias/glitch_chip_concepto.webp) con **dos barras de vida** (una por
-## hermano) y tres fases según la vida de los dos juntos (Reconocimiento, Sincronización y Protocolo Dual).
-## Si uno queda neutralizado, el otro entra en Furia fraternal (más fuerte).
+## Diseño de Ariel (docs/arte/referencias/glitch_chip_concepto.webp): una barra para cada hermano (hay
+## que vencer a los dos) y en la Fase 3 una sola; tres fases (Reconocimiento, Sincronización y
+## Protocolo Dual / Furia fraternal).
 
-@export_group("Vida y fases")
-@export var glitch_health := 22.0
-@export var chip_health := 22.0
-## La Fase 2 (Sincronización) empieza cuando la vida de los dos juntos baja a esta fracción.
+@export_group("Vida compartida y fases")
+## Vida de los dos juntos en las Fases 1 y 2 (la mitad para cada uno).
+@export var shared_health := 44.0
+## La Fase 2 (Sincronización) empieza al bajar a esta fracción de la vida.
 @export_range(0.0, 1.0) var phase2_at := 0.70
-## La Fase 3 (Protocolo Dual) empieza aquí, después de la fase segura del escudo de Chip (si Chip sigue
-## en pie; si no, empieza directamente).
-@export_range(0.0, 1.0) var phase3_at := 0.35
+## Vida de la barra única de la Fase 3 (Protocolo Dual), que empieza al vencer a los dos y después de la
+## fase segura del escudo de Chip.
+@export var phase3_health := 18.0
 ## Pausa entre un ataque y el siguiente, por fase.
 @export var pause_phase1 := 0.8
 @export var pause_phase2 := 0.55
@@ -66,17 +66,13 @@ extends Resource
 @export var field_safe_gap := 80.0
 
 @export_group("Furia fraternal (el que queda en pie)")
-## Si un hermano queda neutralizado, el otro se vuelve más fuerte: más rápido, avisos más cortos,
-## más proyectiles y recupera parte de su vida.
+## Pedido del equipo: si Kai vence a un hermano, el otro se vuelve más fuerte (y viceversa) hasta que
+## caiga también: más rápido, avisos más cortos, menos pausa entre ataques y recupera parte de su vida.
 @export var rage_speed_scale := 1.35
 @export var rage_telegraph_scale := 0.7
-@export var rage_pause := 0.35
+@export var rage_pause := 0.4
 ## Fracción de su vida máxima que recupera al enfurecerse.
 @export_range(0.0, 1.0) var rage_heal := 0.25
-@export var rage_discs := 3
-@export var rage_fragments := 5
-@export var rage_chain_dashes := 4
-@export var rage_copies := 3
 
 @export_group("Aturdimiento y protección")
 ## Golpes seguidos que aturden a un hermano (dentro de stagger_window segundos).

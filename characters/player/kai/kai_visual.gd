@@ -22,7 +22,7 @@ const RUN_STRIDE_SPEED := 100.0
 
 ## Carpeta y archivo de descripción de cada apariencia por cuadros.
 const FRAME_SETS := {
-	Apariencia.CONCEPTO: ["res://assets/art/characters/kai/hd/", "kai_hd.json", "kai_hd_curacion.json", "kai_hd_pogo.json"],
+	Apariencia.CONCEPTO: ["res://assets/art/characters/kai/hd/", "kai_hd.json", "kai_hd_curacion.json", "kai_hd_pogo.json", "kai_hd_arriba.json"],
 	Apariencia.CUADROS: ["res://assets/art/characters/kai/cuadros/", "kai_cuadros.json"],
 }
 ## Cuánto dura cada golpe del combo y el margen para encadenar el segundo.
@@ -147,6 +147,16 @@ func pogo_attack(windup: float, active: float) -> bool:
 	if _sprite == null or not _has_animation(&"pogo_clavar"):
 		return false
 	_play_override(&"pogo_clavar", windup + active + 0.15)
+	return true
+
+
+## Ataque hacia arriba: la misma pose del pogo (las dos manos en el mango) sin la hoja que baja
+## (tools/art/generar_kai_corte_arriba.gd); la Nullblade la dibuja PlayerCombat hacia arriba. Devuelve false si esta
+## apariencia no la tiene.
+func up_attack(windup: float, active: float) -> bool:
+	if _sprite == null or not _has_animation(&"arriba_cortar"):
+		return false
+	_play_override(&"arriba_cortar", windup + active + 0.15)
 	return true
 
 

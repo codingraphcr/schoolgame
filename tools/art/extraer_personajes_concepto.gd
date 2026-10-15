@@ -30,6 +30,7 @@ const OUTLINE := Color("0a0d1c")
 ##          cover + cover_color (opcional): polígono (en la hoja) que se tapa con ese color
 ##          (para quitar algo que sobra).
 ##          recolor + recolor_color (opcional): polígono donde lo café/rosado de la figura se pinta de ese color.
+##          hue_shift (opcional): gira el tono de los colores fuertes (Glitch: del rosa al rojo).
 ##          clip (opcional): contorno (en la hoja) fuera del cual se borra todo (efectos pegados).
 ##          erase (opcional): polígonos (en la hoja) donde se borra solo lo del color del fondo (huecos
 ##          encerrados, como entre las piernas).
@@ -38,6 +39,10 @@ const OUTLINE := Color("0a0d1c")
 ##          cálculo automático (centro de la cabeza) no sirve. only_body: conserva solo la figura
 ##          principal (descarta, por ejemplo, un globo de diálogo que quedó dentro de la zona).
 ##          rotate: gira la pose 90° (desplomada boca abajo, la cabeza hacia donde mira).
+##   rows (opcional): filas de cuadros numerados (hojas de animación cuadro por cuadro). Por fila: y (de dónde
+##          a dónde van los dibujos, debajo de los números) y labels (la columna del número de cada cuadro:
+##          cada cuadro va de su número al siguiente). Crea las poses "<fila>_1", "<fila>_2"… con only_body
+##          (y las opciones de la fila en "options").
 ##   animations: poses en orden, cuadros por segundo y si se repiten.
 const CHARACTERS := {
 	"kai": {
@@ -329,9 +334,10 @@ const CHARACTERS := {
 			"disco": { "poses": ["disco"], "fps": 1.0, "loop": true },
 		},
 	},
-	# Glitch y Chip en el juego (diseño nuevo de Ariel: glitch_chip_v2.webp, fondo oscuro), de la fila «Sprites
-	# base»: quieto, caminar, correr, saltar, caer y aturdido de cada uno, más una pose de ataque de Chip (lanzar
-	# el disco). Las demás poses de ataque usan estas mismas (los efectos los dibuja el juego). Se cortan a la
+	# Glitch y Chip en el juego (diseño de Ariel: glitch_chip_v2.webp, fondo oscuro; Glitch pasa al rojo de su
+	# paleta nueva, glitch_rojo.webp, con hue_shift), de la fila «Sprites
+	# base»: quieto, caminar, correr, saltar, caer y aturdido de cada uno. Las poses de ataque salen de las hojas
+	# de ataques cuadro por cuadro (glitch_ataques y chip_ataques, más abajo). Se cortan a la
 	# altura de los pies (debajo hay sombras y rayitas de movimiento).
 	"hermanos_juego": {
 		"source": "res://docs/arte/referencias/glitch_chip_v2.webp",
@@ -342,16 +348,16 @@ const CHARACTERS := {
 		"reference": "g_quieto",
 		"height": 64,
 		"poses": {
-			"g_quieto": { "rect": Rect2i(38, 620, 45, 71), "only_body": true },
-			"g_caminar1": { "rect": Rect2i(103, 620, 45, 71), "only_body": true },
-			"g_caminar2": { "rect": Rect2i(163, 620, 48, 71), "only_body": true },
-			"g_caminar3": { "rect": Rect2i(222, 620, 48, 71), "only_body": true },
-			"g_correr1": { "rect": Rect2i(311, 620, 45, 71), "only_body": true },
-			"g_correr2": { "rect": Rect2i(377, 620, 51, 71), "only_body": true },
-			"g_saltar": { "rect": Rect2i(462, 620, 46, 71), "only_body": true },
-			"g_caer": { "rect": Rect2i(536, 620, 41, 71), "only_body": true },
-			"g_aturdido1": { "rect": Rect2i(625, 620, 46, 71), "only_body": true },
-			"g_aturdido2": { "rect": Rect2i(669, 620, 70, 71), "only_body": true },
+			"g_quieto": { "rect": Rect2i(38, 620, 45, 71), "only_body": true, "hue_shift": 0.085 },
+			"g_caminar1": { "rect": Rect2i(103, 620, 45, 71), "only_body": true, "hue_shift": 0.085 },
+			"g_caminar2": { "rect": Rect2i(163, 620, 48, 71), "only_body": true, "hue_shift": 0.085 },
+			"g_caminar3": { "rect": Rect2i(222, 620, 48, 71), "only_body": true, "hue_shift": 0.085 },
+			"g_correr1": { "rect": Rect2i(311, 620, 45, 71), "only_body": true, "hue_shift": 0.085 },
+			"g_correr2": { "rect": Rect2i(377, 620, 51, 71), "only_body": true, "hue_shift": 0.085 },
+			"g_saltar": { "rect": Rect2i(462, 620, 46, 71), "only_body": true, "hue_shift": 0.085 },
+			"g_caer": { "rect": Rect2i(536, 620, 41, 71), "only_body": true, "hue_shift": 0.085 },
+			"g_aturdido1": { "rect": Rect2i(625, 620, 46, 71), "only_body": true, "hue_shift": 0.085 },
+			"g_aturdido2": { "rect": Rect2i(669, 620, 70, 71), "only_body": true, "hue_shift": 0.085 },
 			"c_quieto": { "rect": Rect2i(39, 740, 46, 70), "only_body": true },
 			"c_caminar1": { "rect": Rect2i(102, 740, 47, 70), "only_body": true },
 			"c_caminar2": { "rect": Rect2i(163, 740, 47, 70), "only_body": true },
@@ -362,7 +368,6 @@ const CHARACTERS := {
 			"c_caer": { "rect": Rect2i(537, 740, 40, 70), "only_body": true },
 			"c_aturdido1": { "rect": Rect2i(623, 740, 52, 70), "only_body": true },
 			"c_aturdido2": { "rect": Rect2i(671, 740, 68, 70), "only_body": true },
-			"c_lanzar": { "rect": Rect2i(783, 740, 39, 70), "only_body": true },
 		},
 		"animations": {
 			"glitch_quieto": { "poses": ["g_quieto"], "fps": 1.0, "loop": true },
@@ -379,16 +384,6 @@ const CHARACTERS := {
 			"chip_aire": { "poses": ["c_saltar"], "fps": 1.0, "loop": true },
 			"chip_caer": { "poses": ["c_caer"], "fps": 1.0, "loop": true },
 			"chip_aturdido": { "poses": ["c_aturdido1", "c_aturdido2"], "fps": 3.0, "loop": true },
-			# Ataques: Glitch prepara (quieto), corta y embiste (correr) y lanza (caminar); Chip lanza el disco.
-			"glitch_guardia": { "poses": ["g_quieto"], "fps": 1.0, "loop": true },
-			"glitch_corte": { "poses": ["g_correr1"], "fps": 1.0, "loop": true },
-			"glitch_estocada": { "poses": ["g_correr2"], "fps": 1.0, "loop": true },
-			"glitch_lanzar": { "poses": ["g_caminar1"], "fps": 1.0, "loop": true },
-			"chip_alerta": { "poses": ["c_quieto"], "fps": 1.0, "loop": true },
-			"chip_lanzar": { "poses": ["c_lanzar"], "fps": 1.0, "loop": true },
-			"chip_zona": { "poses": ["c_lanzar"], "fps": 1.0, "loop": true },
-			"chip_rayo": { "poses": ["c_lanzar"], "fps": 1.0, "loop": true },
-			"chip_embestida": { "poses": ["c_correr2"], "fps": 1.0, "loop": true },
 		},
 	},
 	# Poses de ataque de Glitch y Chip de la primera hoja de Ariel («Sprites in-game» de glitch_chip_concepto):
@@ -420,6 +415,98 @@ const CHARACTERS := {
 			"pogo_subir": { "poses": ["subir"], "fps": 1.0, "loop": false },
 		},
 	},
+	# Ataques de Glitch, cuadro por cuadro (hoja de Ariel glitch_ataques.webp): una fila por ataque. Los cuadros
+	# se ubican por su número (rows); los efectos que no tocan al cuerpo quedan afuera (only_body). La escala:
+	# el primer cuadro del Corte acelerado (de pie) mide lo mismo que la pose quieto del juego (64 px).
+	"glitch_ataques": {
+		"source": "res://docs/arte/referencias/glitch_ataques.webp",
+		"out": "res://assets/art/characters/hermanos/hd/",
+		"prefix": "hermanos_glitch",
+		"background": Color("040711"),
+		"tolerance": 0.03,
+		"reference": "corte_1",
+		"height": 64,
+		"rows": {
+			"corte": { "y": [214, 273], "label_y": [203, 221], "labels": [34, 99, 164, 225, 290, 353, 414, 474, 535, 599, 666, 745, 813, 871] },
+			"picada": { "y": [345, 422], "label_y": [334, 352], "labels": [34, 99, 163, 220, 280, 342, 406, 473, 535, 601, 666, 733, 792, 857] },
+			"embestida": { "y": [494, 559], "label_y": [480, 500], "labels": [34, 85, 139, 191, 243, 295, 345, 395, 447, 497, 550, 609, 662, 716, 769, 822, 874] },
+			"fragmentos": { "y": [635, 699], "label_y": [623, 641], "labels": [34, 98, 163, 219, 278, 328, 378, 431, 486, 540, 601, 653, 710, 765, 818, 872] },
+			"barrido": { "y": [775, 836], "label_y": [763, 781], "labels": [34, 94, 153, 213, 272, 329, 385, 441, 498, 562, 621, 681, 732, 789, 850] },
+			"caida": { "y": [915, 981], "label_y": [903, 921], "labels": [34, 86, 140, 195, 252, 309, 365, 422, 494, 570, 634, 691, 755, 810, 860] },
+		},
+		# Por ataque: _aviso (se prepara), la acción y _fin (queda vulnerable). Se saltean los cuadros que son
+		# solo el efecto (la marca en el piso, las cuchillas volando): esos los dibuja el juego.
+		"animations": {
+			"glitch_guardia": { "row": "corte", "frames": [1, 2], "fps": 4.0, "loop": true },
+			"glitch_corte_aviso": { "row": "corte", "frames": [1, 2, 3, 4], "fps": 8.0, "loop": false },
+			"glitch_corte": { "row": "corte", "frames": [5, 6, 11], "fps": 10.0, "loop": false },
+			"glitch_corte_fin": { "row": "corte", "frames": [12, 13, 14], "fps": 6.0, "loop": false },
+			"glitch_picada_aviso": { "row": "picada", "frames": [1, 2, 3], "fps": 10.0, "loop": false },
+			"glitch_picada_subir": { "row": "picada", "frames": [4, 5], "fps": 8.0, "loop": false },
+			"glitch_picada_arriba": { "row": "picada", "frames": [8], "fps": 1.0, "loop": true },
+			"glitch_picada_caer": { "row": "picada", "frames": [9, 11], "fps": 10.0, "loop": false },
+			"glitch_picada_fin": { "row": "picada", "frames": [12, 14], "fps": 4.0, "loop": false },
+			"glitch_embestida_aviso": { "row": "embestida", "frames": [1, 2], "fps": 8.0, "loop": false },
+			"glitch_embestida": { "row": "embestida", "frames": [3, 4, 5], "fps": 14.0, "loop": false },
+			"glitch_embestida_fin": { "row": "embestida", "frames": [15, 16, 17], "fps": 6.0, "loop": false },
+			"glitch_fragmentos_aviso": { "row": "fragmentos", "frames": [1, 2, 3, 4, 5, 6], "fps": 13.0, "loop": false },
+			"glitch_lanzar": { "row": "fragmentos", "frames": [12], "fps": 1.0, "loop": true },
+			"glitch_fragmentos_fin": { "row": "fragmentos", "frames": [13, 14, 15, 16], "fps": 8.0, "loop": false },
+			"glitch_barrido_aviso": { "row": "barrido", "frames": [2, 4], "fps": 6.0, "loop": false },
+			"glitch_barrido": { "row": "barrido", "frames": [5, 7], "fps": 10.0, "loop": true },
+			"glitch_barrido_fin": { "row": "barrido", "frames": [13, 14, 15], "fps": 6.0, "loop": false },
+			"glitch_caida_aviso": { "row": "caida", "frames": [1, 2, 5, 6, 7], "fps": 9.0, "loop": false },
+			"glitch_caida_caer": { "row": "caida", "frames": [8], "fps": 1.0, "loop": true },
+			"glitch_caida_fin": { "row": "caida", "frames": [13, 14, 15], "fps": 6.0, "loop": false },
+		},
+	},
+	# Ataques de Chip, cuadro por cuadro (hoja de Ariel chip_ataques.webp). Igual que los de Glitch.
+	"chip_ataques": {
+		"source": "res://docs/arte/referencias/chip_ataques.webp",
+		"out": "res://assets/art/characters/hermanos/hd/",
+		"prefix": "hermanos_chip",
+		"background": Color("000d1d"),
+		"tolerance": 0.03,
+		"reference": "discos_1",
+		"height": 64,
+		"rows": {
+			"discos": { "y": [206, 260], "label_y": [199, 213], "labels": [30, 94, 167, 234, 309, 371, 429, 493, 559, 628, 699, 771, 837] },
+			"zona": { "y": [330, 389], "label_y": [323, 337], "labels": [30, 96, 167, 236, 309, 372, 426, 484, 552, 621, 699, 770, 835] },
+			"proyecciones": { "y": [462, 520], "label_y": [455, 469], "labels": [30, 90, 162, 225, 294, 363, 420, 484, 550, 619, 686, 756, 825] },
+			"rayo": { "y": [592, 648], "label_y": [585, 599], "labels": [30, 90, 160, 229, 299, 360, 430, 506, 564, 633, 700, 767, 831] },
+			"barrido": { "y": [715, 769], "label_y": [708, 722], "labels": [30, 98, 167, 232, 301, 360, 427, 494, 563, 628, 697, 764, 831] },
+			"caida": { "y": [835, 878], "label_y": [828, 842], "labels": [31, 98, 168, 233, 298, 360, 411, 474, 534, 602, 679, 753] },
+			"picada": { "y": [945, 988], "label_y": [938, 952], "labels": [30, 94, 168, 245, 321, 396, 472, 542, 620, 708, 767, 831] },
+		},
+		# Igual que los de Glitch. Los discos, el campo, las copias y el rayo los dibuja el juego: se usan los
+		# cuadros de Chip sin esos efectos grandes.
+		"animations": {
+			"chip_alerta": { "row": "discos", "frames": [1, 2], "fps": 4.0, "loop": true },
+			"chip_discos_aviso": { "row": "discos", "frames": [1, 2, 3, 4], "fps": 8.0, "loop": false },
+			"chip_lanzar": { "row": "discos", "frames": [5], "fps": 1.0, "loop": true },
+			"chip_discos_fin": { "row": "discos", "frames": [4, 2], "fps": 5.0, "loop": false },
+			"chip_zona_aviso": { "row": "zona", "frames": [1, 2], "fps": 8.0, "loop": false },
+			"chip_zona": { "row": "zona", "frames": [4, 5], "fps": 6.0, "loop": false },
+			"chip_zona_fin": { "row": "zona", "frames": [13], "fps": 1.0, "loop": true },
+			"chip_proyecciones_aviso": { "row": "proyecciones", "frames": [1, 2, 3], "fps": 7.0, "loop": false },
+			"chip_proyecciones_fin": { "row": "proyecciones", "frames": [5, 13], "fps": 4.0, "loop": false },
+			"chip_rayo_aviso": { "row": "rayo", "frames": [1, 2, 3], "fps": 15.0, "loop": false },
+			"chip_rayo": { "row": "rayo", "frames": [4, 7, 8], "fps": 4.0, "loop": false },
+			"chip_rayo_fin": { "row": "rayo", "frames": [1], "fps": 1.0, "loop": true },
+			"chip_barrido_aviso": { "row": "barrido", "frames": [1, 2, 3], "fps": 7.0, "loop": false },
+			"chip_barrido": { "row": "barrido", "frames": [5], "fps": 1.0, "loop": true },
+			"chip_barrido_fin": { "row": "barrido", "frames": [10, 12, 13], "fps": 7.0, "loop": false },
+			"chip_embestida": { "row": "barrido", "frames": [5], "fps": 1.0, "loop": true },
+			"chip_caida_aviso": { "row": "caida", "frames": [1, 2, 3, 4, 5], "fps": 8.0, "loop": false },
+			"chip_caida_caer": { "poses": ["picada_9"], "fps": 1.0, "loop": true },
+			"chip_caida_fin": { "row": "caida", "frames": [4, 1], "fps": 4.0, "loop": false },
+			"chip_picada_aviso": { "row": "picada", "frames": [1, 2, 3], "fps": 10.0, "loop": false },
+			"chip_picada_subir": { "row": "picada", "frames": [5], "fps": 1.0, "loop": true },
+			"chip_picada_arriba": { "row": "picada", "frames": [5], "fps": 1.0, "loop": true },
+			"chip_picada_caer": { "row": "picada", "frames": [9], "fps": 1.0, "loop": true },
+			"chip_picada_fin": { "row": "picada", "frames": [12], "fps": 1.0, "loop": true },
+		},
+	},
 }
 
 var _config: Dictionary
@@ -445,9 +532,11 @@ func _extract_character(character: String) -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out))
 
 	# 1. Recorta cada pose y calcula la escala común a partir de la pose de referencia.
+	var poses: Dictionary = _config.get("poses", {}).duplicate()
+	poses.merge(_row_poses())
 	var cutouts := {}
-	for pose_name: String in _config.poses:
-		cutouts[pose_name] = _cutout(sheet, _config.poses[pose_name])
+	for pose_name: String in poses:
+		cutouts[pose_name] = _cutout(sheet, poses[pose_name])
 	_scale = float(_config.height) / cutouts[_config.reference].image.get_height()
 
 	# 2. Reduce cada pose y la ubica con los pies en el centro inferior.
@@ -459,14 +548,15 @@ func _extract_character(character: String) -> void:
 	var info := {}
 	for anim_name: String in _config.animations:
 		var anim: Dictionary = _config.animations[anim_name]
+		var pose_list: Array = _animation_poses(anim, poses)
 		var half := 0
-		for pose_name: String in anim.poses:
+		for pose_name: String in pose_list:
 			half = maxi(half, frames[pose_name].half_width)
 		var width := maxi(MIN_FRAME_WIDTH, ceili(half * 2 / 8.0) * 8)
 		var height: int = _config.get("frame_height", FRAME_HEIGHT)
-		var strip := Image.create_empty(width * anim.poses.size(), height, false, Image.FORMAT_RGBA8)
-		for i in anim.poses.size():
-			var frame: Dictionary = frames[anim.poses[i]]
+		var strip := Image.create_empty(width * pose_list.size(), height, false, Image.FORMAT_RGBA8)
+		for i in pose_list.size():
+			var frame: Dictionary = frames[pose_list[i]]
 			var image: Image = frame.image
 			var at := Vector2i(i * width + width / 2 - frame.anchor_x, FEET_Y + 1 - frame.bottom)
 			strip.blend_rect(image, Rect2i(Vector2i.ZERO, image.get_size()), at)
@@ -474,12 +564,49 @@ func _extract_character(character: String) -> void:
 		strip.save_png(out + file_name)
 		info[anim_name] = {
 			"file": file_name, "frame_size": [width, height], "feet": [width / 2, FEET_Y],
-			"frames": anim.poses.size(), "fps": anim.fps, "loop": anim.loop,
+			"frames": pose_list.size(), "fps": anim.fps, "loop": anim.loop,
 		}
-		print("%s: %d cuadro(s) de %d×%d" % [file_name, anim.poses.size(), width, height])
+		print("%s: %d cuadro(s) de %d×%d" % [file_name, pose_list.size(), width, height])
 	var json := FileAccess.open(out + "%s.json" % _config.prefix, FileAccess.WRITE)
 	json.store_string(JSON.stringify({ "scale": WORLD_SCALE, "animations": info }, "\t"))
 	json.close()
+
+
+## Los cuadros de una animación: "poses" (por nombre) o, en las filas de cuadros numerados, "row" y
+## "frames" (los números de cuadro, desde 1; sin "frames", la fila entera).
+func _animation_poses(anim: Dictionary, poses: Dictionary) -> Array:
+	if anim.has("poses"):
+		return anim.poses
+	var list := []
+	if anim.has("frames"):
+		for number: int in anim.frames:
+			list.append("%s_%d" % [anim.row, number])
+	else:
+		var number := 1
+		while poses.has("%s_%d" % [anim.row, number]):
+			list.append("%s_%d" % [anim.row, number])
+			number += 1
+	return list
+
+
+## Las poses de las filas de cuadros numerados ("rows"): cada cuadro va desde su número hasta el
+## siguiente (el último, tan ancho como el anterior).
+func _row_poses() -> Dictionary:
+	var poses := {}
+	var rows: Dictionary = _config.get("rows", {})
+	for row_name: String in rows:
+		var row: Dictionary = rows[row_name]
+		var labels: Array = row.labels
+		for i in labels.size():
+			# Un poco adentro de la celda: sin sus bordes (en la hoja de Chip son líneas celestes).
+			var left: int = labels[i] - 6
+			var width: int = (labels[i + 1] - labels[i]) if i + 1 < labels.size() else (labels[i] - labels[i - 1])
+			var pose := { "rect": Rect2i(left, row.y[0], width - 6, row.y[1] - row.y[0]), "only_body": true, "soft_glow": true, "strip_effects": 3, "close": 2 }
+			pose.merge(row.get("options", {}))
+			if row.has("label_y"):
+				pose["blank"] = Rect2i(labels[i] - 14, row.label_y[0] - 4, 30, row.label_y[1] - row.label_y[0] + 14)
+			poses["%s_%d" % [row_name, i + 1]] = pose
+	return poses
 
 
 ## Polígono de la pose (en la hoja), pasado a coordenadas de su zona.
@@ -524,6 +651,24 @@ func _recolor(region: Image, pose: Dictionary) -> void:
 			region.set_pixel(x, y, color.lightened(clampf((c.v - 0.3) * 0.5, 0.0, 0.15)))
 
 
+## Cambia el tono de los colores fuertes de la pose (hue_shift: cuánto se gira el tono, 0 a 1). Para
+## pasar a Glitch del rosa al rojo de su paleta nueva: la armadura blanca y lo oscuro no cambian.
+func _hue_shift(region: Image, pose: Dictionary) -> void:
+	var shift: float = pose.get("hue_shift", 0.0)
+	if shift == 0.0:
+		return
+	for y in region.get_height():
+		for x in region.get_width():
+			var c := region.get_pixel(x, y)
+			if c.a == 0.0 or c.s < 0.15:
+				continue
+			# Los tonos rosas y violetas se juntan cerca del rojo (centro en el rosa 0,905 + shift) y se
+			# saturan un poco: el rojo de Glitch es más intenso que su rosa.
+			var h := c.h if c.h > 0.5 else c.h + 1.0
+			var target := 0.905 + shift + (h - 0.905) * 0.35
+			region.set_pixel(x, y, Color.from_hsv(fposmod(target, 1.0), minf(c.s * 1.45, 1.0), c.v, c.a))
+
+
 ## Borra el fondo que quedó encerrado dentro de los polígonos "erase" (en la hoja): entre las piernas o
 ## entre un arma y el cuerpo. Solo lo del color del fondo; el resto de la figura no se toca.
 func _erase(region: Image, pose: Dictionary) -> void:
@@ -544,6 +689,153 @@ func _erase(region: Image, pose: Dictionary) -> void:
 
 
 ## Borra todo lo que queda fuera del contorno "clip" de la pose (aura y efectos pegados a la figura).
+## Resplandor semitransparente (soft_glow, en las hojas de ataques): en la hoja los efectos tienen un halo
+## oscuro de su color que, recortado, quedaba como un bloque opaco. Lo de color fuerte y muy oscuro que
+## está fuera del cuerpo pasa a ser transparente según su brillo (los trazos brillantes de los efectos
+## quedan). El cuerpo es la parte clara más grande (la carcasa blanca), con sus huecos rellenos (el visor
+## oscuro) y un poco de margen (el contorno).
+func _soften_glow(region: Image) -> void:
+	var w := region.get_width()
+	var h := region.get_height()
+	var light := Image.create_empty(w, h, false, Image.FORMAT_RGBA8)
+	for y in h:
+		for x in w:
+			var c := region.get_pixel(x, y)
+			if c.a > 0.0 and c.s < 0.4 and c.v > 0.55:
+				light.set_pixel(x, y, Color.WHITE)
+	var body := PackedByteArray()
+	body.resize(w * h)
+	for p: Vector2i in _largest_component(light):
+		body[p.y * w + p.x] = 1
+	# Huecos: lo que no se alcanza desde el borde sin pasar por el cuerpo.
+	var outside := PackedByteArray()
+	outside.resize(w * h)
+	var stack: Array[Vector2i] = []
+	for x in w:
+		stack.append(Vector2i(x, 0))
+		stack.append(Vector2i(x, h - 1))
+	for y in h:
+		stack.append(Vector2i(0, y))
+		stack.append(Vector2i(w - 1, y))
+	while not stack.is_empty():
+		var p: Vector2i = stack.pop_back()
+		if p.x < 0 or p.y < 0 or p.x >= w or p.y >= h:
+			continue
+		var i := p.y * w + p.x
+		if outside[i] == 1 or body[i] == 1:
+			continue
+		outside[i] = 1
+		stack.append(p + Vector2i.LEFT)
+		stack.append(p + Vector2i.RIGHT)
+		stack.append(p + Vector2i.UP)
+		stack.append(p + Vector2i.DOWN)
+	const MARGIN := 4
+	for y in h:
+		for x in w:
+			var c := region.get_pixel(x, y)
+			if c.a == 0.0 or c.s < 0.5 or c.v >= 0.42:
+				continue
+			var near_body := false
+			for dy in range(-MARGIN, MARGIN + 1):
+				for dx in range(-MARGIN, MARGIN + 1):
+					var q := Vector2i(x + dx, y + dy)
+					if q.x >= 0 and q.y >= 0 and q.x < w and q.y < h and outside[q.y * w + q.x] == 0:
+						near_body = true
+						break
+				if near_body:
+					break
+			if near_body:
+				continue
+			var alpha := clampf((c.v - 0.1) / 0.32, 0.0, 1.0)
+			var bright := Color.from_hsv(c.h, c.s, minf(c.v / maxf(alpha, 0.01), 1.0) if alpha > 0.0 else c.v)
+			region.set_pixel(x, y, Color(bright, alpha * alpha))
+
+
+## Cierra la silueta (close, en las hojas de ataques): el traje de los gemelos es negro como el fondo y sin
+## contorno, así que al quitar el fondo se iba con él y quedaban solo las partes claras sueltas. Lo que
+## queda entre esas partes (a menos de radius px de lo que hay a los dos lados) y los huecos encerrados
+## vuelven a tener su color de la hoja.
+func _close_gaps(region: Image, original: Image, radius: int) -> void:
+	var w := region.get_width()
+	var h := region.get_height()
+	var solid := PackedByteArray()
+	solid.resize(w * h)
+	for y in h:
+		for x in w:
+			solid[y * w + x] = 1 if region.get_pixel(x, y).a >= 0.5 else 0
+	# Cierre: se engorda la figura radius px y se vuelve a adelgazar lo mismo.
+	var grown := _morph(solid, w, h, radius, true)
+	var closed := _morph(grown, w, h, radius, false)
+	# Huecos encerrados (lo que no se alcanza desde el borde sin pasar por la figura).
+	var outside := PackedByteArray()
+	outside.resize(w * h)
+	var stack: Array[Vector2i] = []
+	for x in w:
+		stack.append(Vector2i(x, 0))
+		stack.append(Vector2i(x, h - 1))
+	for y in h:
+		stack.append(Vector2i(0, y))
+		stack.append(Vector2i(w - 1, y))
+	while not stack.is_empty():
+		var p: Vector2i = stack.pop_back()
+		if p.x < 0 or p.y < 0 or p.x >= w or p.y >= h:
+			continue
+		var i := p.y * w + p.x
+		if outside[i] == 1 or closed[i] == 1:
+			continue
+		outside[i] = 1
+		stack.append(p + Vector2i.LEFT)
+		stack.append(p + Vector2i.RIGHT)
+		stack.append(p + Vector2i.UP)
+		stack.append(p + Vector2i.DOWN)
+	for y in h:
+		for x in w:
+			var i := y * w + x
+			if outside[i] == 0 and solid[i] == 0:
+				region.set_pixel(x, y, original.get_pixel(x, y))
+
+
+## Quita los efectos (strip_effects, en las hojas de ataques): en la hoja van en su propia capa y el juego
+## dibuja los suyos; pegados al dibujo quedaban cortados en línea recta por el borde de la celda. Queda lo
+## que está a menos de radius px de lo claro del cuerpo (la carcasa blanca, manos y pies); el visor y el
+## traje (oscuros) siempre quedan: solo se borra lo de color o brillante que está lejos.
+func _strip_effects(region: Image, radius: int) -> void:
+	var w := region.get_width()
+	var h := region.get_height()
+	var core := PackedByteArray()
+	core.resize(w * h)
+	for y in h:
+		for x in w:
+			var c := region.get_pixel(x, y)
+			if c.a > 0.0 and c.s < 0.28 and c.v > 0.6:
+				core[y * w + x] = 1
+	var keep := _morph(core, w, h, radius, true)
+	for y in h:
+		for x in w:
+			if keep[y * w + x] == 0 and region.get_pixel(x, y).v >= 0.3:
+				region.set_pixel(x, y, Color(0, 0, 0, 0))
+
+
+## Engorda (grow) o adelgaza una máscara radius px (en cuadrado).
+func _morph(mask: PackedByteArray, w: int, h: int, radius: int, grow: bool) -> PackedByteArray:
+	var out := PackedByteArray()
+	out.resize(w * h)
+	for y in h:
+		for x in w:
+			var hit := not grow
+			for dy in range(-radius, radius + 1):
+				for dx in range(-radius, radius + 1):
+					var qx := x + dx
+					var qy := y + dy
+					var value := mask[qy * w + qx] if qx >= 0 and qy >= 0 and qx < w and qy < h else 0
+					if grow and value == 1:
+						hit = true
+					elif not grow and value == 0:
+						hit = false
+			out[y * w + x] = 1 if hit else 0
+	return out
+
+
 func _clip(region: Image, pose: Dictionary) -> void:
 	var polygon := _local_polygon(pose, "clip")
 	if polygon.is_empty():
@@ -558,10 +850,21 @@ func _clip(region: Image, pose: Dictionary) -> void:
 func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 	var rect: Rect2i = pose.rect
 	var region := sheet.get_region(rect)
+	if pose.has("blank"):
+		# El recuadro del número de cuadro (filas numeradas): se tapa con el fondo.
+		var box: Rect2i = pose.blank
+		region.fill_rect(Rect2i(box.position - rect.position, box.size), _config.background)
 	_remove_background(region, pose.get("tolerance", _config.tolerance))
 	_remove_glow(region, pose)
 	_cover(region, pose)
 	_recolor(region, pose)
+	_hue_shift(region, pose)
+	if pose.get("soft_glow", false):
+		_soften_glow(region)
+	if pose.has("strip_effects"):
+		_strip_effects(region, pose.strip_effects)
+	if pose.has("close"):
+		_close_gaps(region, sheet.get_region(rect), pose.close)
 	_clip(region, pose)
 	_erase(region, pose)
 	if pose.get("refill", false):
@@ -574,6 +877,9 @@ func _cutout(sheet: Image, pose: Dictionary) -> Dictionary:
 			kept.set_pixelv(p, region.get_pixelv(p))
 		region = kept
 	var box := region.get_used_rect()
+	if box.size == Vector2i.ZERO:
+		# Un cuadro que era solo efecto (no lo usa ninguna animación): queda vacío.
+		box = Rect2i(0, 0, 1, 1)
 	var image := region.get_region(box)
 	if pose.get("rotate", false):
 		# Desplomado boca abajo: centrado en el cuadro y apoyado sobre el borde de abajo.
