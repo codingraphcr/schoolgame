@@ -18,6 +18,12 @@ enum Kind { NULLBLADE, GRIMORIO }
 @export var label := "la Nullblade"
 ## Marca que queda al tomarlo (el objeto ya no aparece).
 @export var taken_flag: StringName = &""
+## Cuánto más arriba se dibuja (apoyado en un mueble del fondo); el área para tomarlo sigue en el suelo.
+@export var lift := 0.0:
+	set(value):
+		lift = value
+		if _canvas:
+			_canvas.queue_redraw()
 
 var _canvas: VectorCanvas
 var _taking := false
@@ -29,6 +35,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	prompt_text = "E: tomar %s" % label
+	prompt_offset.y -= lift
 	_canvas = VectorCanvas.new()
 	_canvas.painter = _paint
 	_canvas.animated = true
@@ -92,7 +99,7 @@ func _paint(c: VectorCanvas, t: float) -> void:
 		return
 	var color := VIOLET if kind == Kind.NULLBLADE else CYAN
 	var pulse := 0.5 + 0.5 * sin(t * 2.5)
-	var center := Vector2(0, -26)
+	var center := Vector2(0, -26 - lift)
 	c.glow(center, 34.0 + 4.0 * pulse, Color(color, 0.25 + 0.15 * pulse))
 	if kind == Kind.NULLBLADE:
 		_paint_blade(c, center, color, t)
@@ -117,13 +124,10 @@ func _paint_blade(c: VectorCanvas, center: Vector2, color: Color, t: float) -> v
 		c.draw_rect(Rect2(center + Vector2(-12 + k * 7, 24 - y), Vector2(1, 3)), Color(color, 0.6 * (1.0 - y / 36.0)))
 
 
-## Libro cerrado con circuitos en la tapa, flotando apenas.
-func _paint_book(c: VectorCanvas, center: Vector2, color: Color, t: float) -> void:
+## El Grimorio del diseño de Ariel (el mismo libro de la cinemática), flotando apenas.
+func _paint_book(c: VectorCanvas, center: Vector2, _color: Color, t: float) -> void:
 	var float_y := sin(t * 1.8) * 2.0
-	var cover := Rect2(center + Vector2(-11, -14 + float_y), Vector2(22, 28))
-	c.gradient_box(cover, 2.0, Color(0.08, 0.2, 0.3), Color(0.03, 0.08, 0.14), color, 1.0)
-	c.draw_rect(Rect2(cover.position + Vector2(-2, 0), Vector2(3, cover.size.y)), Color(color, 0.7))
-	var mid := cover.get_center()
-	c.draw_polyline(PackedVector2Array([mid + Vector2(-6, -8), mid + Vector2(0, -8), mid + Vector2(0, 0), mid + Vector2(6, 0)]), color, 1.0)
-	c.draw_polyline(PackedVector2Array([mid + Vector2(-6, 6), mid + Vector2(-2, 6), mid + Vector2(-2, 10)]), color, 1.0)
-	c.draw_circle(mid, 2.0, Color.WHITE)
+	var book := LegacyCinematic.BOOK
+	c.draw_set_transform(center + Vector2(0, float_y), 0.0, Vector2.ONE * LegacyCinematic.BOOK_SCALE)
+	c.draw_texture(book, -book.get_size() / 2.0)
+	c.draw_set_transform(Vector2.ZERO)

@@ -26,6 +26,17 @@ enum Kind { ROBOT, BRAZO, MENSAJE, PUERTA }
 ## Lo que dice el mensaje repetido (solo MENSAJE).
 @export var message := "TAREA 7: REPETIR"
 
+@export_group("Dibujo del fondo")
+## El fondo del cuarto ya trae el objeto (el taller de Ariel): no se dibuja por código. El robot y el brazo vienen
+## recortados del fondo (art, al doble; art_offset: su esquina desde el origen) y se mueven; la puerta también
+## (solo se dibuja al abrirse); el mensaje se escribe en la pantalla dibujada (screen).
+@export var painted := false
+@export var art: Texture2D
+@export var art_offset := Vector2.ZERO
+## Brazo: el punto sobre el que gira (desde el origen).
+@export var art_pivot := Vector2.ZERO
+@export var screen := Rect2()
+
 var _clock := 0.0
 var _canvas: VectorCanvas
 
@@ -125,6 +136,9 @@ func _digital_layer() -> Node:
 func _draw() -> void:
 	var running := Engine.is_editor_hint() or is_active()
 	var t := _clock if running else 0.0
+	if painted:
+		_draw_painted(running, t)
+		return
 	match kind:
 		Kind.ROBOT:
 			# Un robot de cuatro ruedas lleva una caja de ida y vuelta, de ida y vuelta...
@@ -163,6 +177,35 @@ func _draw() -> void:
 			draw_rect(Rect2(-22, -96, 44 * (1.0 - open * 0.85), 96), Color("5a6474"))
 			draw_rect(Rect2(-22, -96, 44, 96), Color("2a2e38"), false, 2.0)
 			draw_string(ThemeDB.fallback_font, Vector2(-30, -102), "BODEGA", HORIZONTAL_ALIGNMENT_CENTER, 60, 8, Color("8a94a8"))
+
+
+## Con el fondo de Ariel: el objeto recortado se mueve (y la puerta se abre) solo mientras la anomalía está activa.
+func _draw_painted(running: bool, t: float) -> void:
+	match kind:
+		Kind.ROBOT:
+			if art:
+				draw_set_transform(art_offset + Vector2(sin(t * 2.4) * 22.0 if running else 0.0, 0.0), 0.0, Vector2.ONE * 0.5)
+				draw_texture(art, Vector2.ZERO)
+		Kind.BRAZO:
+			if art:
+				draw_set_transform(art_pivot, sin(t * 3.0) * 0.35 if running else 0.0, Vector2.ONE * 0.5)
+				draw_texture(art, (art_offset - art_pivot) * 2.0)
+		Kind.PUERTA:
+			if art and running:
+				var open := 0.5 + 0.5 * sin(t * 3.4)
+				draw_rect(Rect2(art_offset, art.get_size() * 0.5), Color("0c0f1a"))
+				draw_set_transform(art_offset, 0.0, Vector2(0.5 * (1.0 - open * 0.85), 0.5))
+				draw_texture(art, Vector2.ZERO)
+		Kind.MENSAJE:
+			var font := ThemeDB.fallback_font
+			if not running:
+				draw_string(font, screen.position + Vector2(3, 10), "TALLER · LISTO", HORIZONTAL_ALIGNMENT_LEFT, screen.size.x - 4, 6, Color("5fd6c8"))
+				draw_string(font, screen.position + Vector2(3, 19), ">_", HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("5fd6c8"))
+			elif fmod(t, 1.4) < 1.0:
+				var lines := 1 + int(fmod(t, 4.2) / 1.4)
+				for k in lines:
+					draw_string(font, screen.position + Vector2(3, 10 + k * 8), message, HORIZONTAL_ALIGNMENT_LEFT, screen.size.x - 4, 6, Color("7ee08a"))
+	draw_set_transform(Vector2.ZERO)
 
 
 ## Lo que se ve con la Visión: el ↻ que gira sobre la falla y un hilo de datos hacia el laboratorio (izquierda).

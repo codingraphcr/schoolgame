@@ -11,6 +11,14 @@ extends HitboxComponent
 		width = maxf(value, 8.0)
 		_rebuild()
 @export var spike_color := Color(0.85, 0.32, 0.45)
+## Dibujo en vez de los pinchos de código (el piso corrupto del cuarto viejo): dónde va su esquina de arriba a
+## la izquierda (desde el origen) y a qué escala (los dibujos vienen al doble: 0,5).
+@export var texture: Texture2D:
+	set(value):
+		texture = value
+		queue_redraw()
+@export var texture_offset := Vector2.ZERO
+@export var texture_scale := 0.5
 
 const SPIKE_WIDTH := 8.0
 const SPIKE_HEIGHT := 8.0
@@ -64,6 +72,11 @@ func _rebuild() -> void:
 
 
 func _draw() -> void:
+	if texture:
+		draw_set_transform(texture_offset, 0.0, Vector2.ONE * texture_scale)
+		draw_texture(texture, Vector2.ZERO)
+		draw_set_transform(Vector2.ZERO)
+		return
 	var count := int(width / SPIKE_WIDTH)
 	for i in count:
 		var x := i * SPIKE_WIDTH

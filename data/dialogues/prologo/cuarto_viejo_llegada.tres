@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_cvlleg")
 script_text = "# H5: Kai entra al cuarto viejo (todo oscuro).
-(Adentro no se ve casi nada. Huele a polvo y algo zumba al fondo.)
-Kai [pensativo]: No veo nada... pero ese zumbido viene de algún lado.
+(Un laboratorio viejo del club de ciencias, casi a oscuras. Huele a polvo y algo zumba al fondo.)
+Kai [pensativo]: Está muy oscuro... pero ese zumbido viene de algún lado.
 Kai: Si la Visión me mostró lo que había dentro de la PC... tal vez aquí también."

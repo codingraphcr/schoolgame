@@ -222,12 +222,12 @@ func _test_old_room() -> void:
 	var player := room.player
 	var box := room.get_node("CombatHUD/DialogueBox") as DialogueBox
 	await _until(func() -> bool: return box.is_playing())
-	_check(box.is_playing(), "al entrar, Kai comenta que no se ve nada")
+	_check(box.is_playing(), "al entrar, Kai comenta que está muy oscuro")
 	await _advance(box)
 	var vision := root.get_node("DigitalVision")
 	await _vision_off(vision)
 	var grimorio := room.get_node("Grimorio") as HiddenRelic
-	var blade := room.get_node("Nullblade") as HiddenRelic
+	var point := room.get_node("NullbladePoint") as Node2D
 	player.teleport_to(grimorio.global_position + Vector2(-8, 0))
 	await _frames(6)
 	_check(not grimorio._can_interact(), "a oscuras no se puede tomar nada: no se ve")
@@ -237,25 +237,20 @@ func _test_old_room() -> void:
 	await _vision_on(vision)
 	_check(grimorio._can_interact() and grimorio._canvas.visible, "con la Visión Digital aparece el libro y se puede tomar")
 	_action("interact")
-	await _until(func() -> bool: return box.is_playing())
-	_check(state.has_grimorio(), "Kai toma el Grimorio")
-	await _advance(box)
-	await _frames(4)
-	_check(state.get_current_step(QUEST) == &"explorar_cuarto", "falta la espada: la misión no avanza")
-	await _vision_on(vision)
-	player.teleport_to(blade.global_position + Vector2(-8, 0))
-	await _frames(6)
-	_check(blade._can_interact(), "con la Visión se distingue la espada")
-	_action("interact")
+	# La cinemática «El legado olvidado»: el libro despierta y aparece el cartel del Grimorio.
 	await _until(func() -> bool: return root.get_node_or_null("EquipmentCardLayer") != null)
-	_check(root.get_node_or_null("EquipmentCardLayer") != null, "la Nullblade oficial se materializa y aparece su tarjeta")
-	for i in 30:
-		if root.get_node_or_null("EquipmentCardLayer") == null:
-			break
-		await _wait(0.3)
-		_action("interact")
+	var cinematic := room.find_children("*", "Node2D", true, false).filter(func(n: Node) -> bool: return n is LegacyCinematic)
+	_check(state.has_grimorio() and not cinematic.is_empty() and player.controls_locked and cinematic[0].book_open > 0.9,
+		"Kai toma el Grimorio: empieza la cinemática, el libro flota, se abre y aparece la tarjeta del Grimorio")
+	await _close_notice()
+	# Detecta la Nullblade: Kai camina solo hacia la luz y la espada se forma ahí.
+	await _until(func() -> bool: return root.get_node_or_null("EquipmentCardLayer") != null)
+	_check(absf(player.global_position.x - point.global_position.x) < 70.0 and player.global_position.x < point.global_position.x,
+		"el Grimorio detecta la espada: Kai camina hasta la luz violeta y aparece la tarjeta de la Nullblade")
+	await _close_notice()
 	await _until(func() -> bool: return box.is_playing())
-	_check(state.nullblade_stage == 1 and player.combat.weapon != null, "la Nullblade queda equipada para siempre")
+	_check(state.nullblade_stage == 1 and player.combat.weapon != null and player.scripted_axis == 0.0,
+		"la Nullblade queda equipada para siempre (y Kai deja de caminar solo)")
 	_check(state.dash_level >= 1 and player.dash_level >= 1 and not state.can_double_jump and not player.can_double_jump,
 		"con ella, Kai obtiene el dash (el doble salto se consigue más adelante)")
 	await _advance(box)
@@ -268,7 +263,7 @@ func _test_old_room() -> void:
 	var cabinet := room.get_node("FallenCabinet") as StaticBody2D
 	_check(spikes.visible and spikes.monitorable and cabinet.visible and not (cabinet.get_node("Shape") as CollisionShape2D).disabled,
 		"aparecen el piso corrupto y el armario caído")
-	# El armario caído (52 px) se salta con un salto simple.
+	# El armario caído (38 px de alto) se salta con un salto simple.
 	player.teleport_to(Vector2(400, FLOOR_Y))
 	await _frames(6)
 	Input.action_press("move_left")
@@ -394,3 +389,12 @@ func _check(condition: bool, message: String) -> void:
 	if not condition:
 		_failures += 1
 	print("%s %s" % ["OK  " if condition else "FAIL", message])
+
+
+## Cierra la tarjeta de equipamiento (como el jugador: con E).
+func _close_notice() -> void:
+	for i in 30:
+		if root.get_node_or_null("EquipmentCardLayer") == null:
+			return
+		await _wait(0.3)
+		_action("interact")

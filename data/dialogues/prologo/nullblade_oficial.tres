@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="Dialogue" format=3]
-
-[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_nbofi"]
-
-[resource]
-script = ExtResource("1_nbofi")
-script_text = "# H5: después de obtener la Nullblade oficial en el cuarto viejo. No se explica su origen (pendiente en la Biblia).
-Kai [sorprendido]: Es la misma espada de la PC... pero esta vez no se apaga.
-Kai [pensativo]: Y me siento distinto. Más rápido... más ligero."

@@ -10,7 +10,7 @@ extends Node2D
 ##   5. Empuñadura: Kai extiende la mano y la espada vuela hacia ella dejando una estela.
 ##   6. Lista: Kai la prueba con un tajo, y la escena vuelve a la normalidad.
 ## Después muestra la tarjeta "NUEVO EQUIPAMIENTO DESBLOQUEADO".
-## Uso: await NullbladeReveal.play(jugador)
+## Uso: await NullbladeReveal.play(jugador) (con at, la espada se forma en ese punto del mundo)
 
 signal done
 
@@ -63,11 +63,12 @@ var _fx: Node2D
 
 
 ## Reproduce la animación y la tarjeta; termina cuando el jugador cierra la tarjeta.
-static func play(target: Player, show_card := true) -> void:
+static func play(target: Player, show_card := true, at := Vector2.INF) -> void:
 	var reveal := NullbladeReveal.new()
 	reveal.player = target
 	target.get_parent().add_child(reveal)
-	reveal.global_position = target.global_position + Vector2(22 * target.facing, -24)
+	# Donde se forma: al lado de Kai o, con at, en otro punto (vuela hasta su mano desde ahí).
+	reveal.global_position = target.global_position + Vector2(22 * target.facing, -24) if at == Vector2.INF else at
 	await reveal.done
 	reveal.queue_free()
 	if show_card:
@@ -286,7 +287,9 @@ func _update_cinematic(reduced: bool) -> void:
 	var kai := to_local(player.global_position + Vector2(0, -16))
 	var material := _shade.material as ShaderMaterial
 	material.set_shader_parameter(&"center", _fx.transform * (kai * 0.5))
-	material.set_shader_parameter(&"radius", 46.0 * zoom)
+	# Si la espada se forma lejos de Kai, el foco se agranda para que se vean los dos.
+	var extra := maxf(kai.length() - 40.0, 0.0) * 0.6
+	material.set_shader_parameter(&"radius", (46.0 + extra) * zoom)
 	material.set_shader_parameter(&"softness", 120.0 * zoom)
 	var deeper := 0.1 * smoothstep(MANIFEST, CONDENSE, _time) * (1.0 - smoothstep(CONDENSE, MATERIALIZE, _time))
 	material.set_shader_parameter(&"strength", (DARKNESS + deeper) * amount)

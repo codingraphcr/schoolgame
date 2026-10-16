@@ -19,6 +19,9 @@ const OUTLINE := Color("2a1a10")
 @export var width := 1500.0
 @export var floor_y := 304.0
 @export var preview_phase := DayPhase.Phase.DIA
+## Solo el cielo (según el momento del día): el resto lo trae el fondo dibujado (assets/art/backgrounds/patio.png,
+## con el cielo transparente).
+@export var sky_only := false
 
 var _canvas: VectorCanvas
 var _phase := DayPhase.Phase.DIA
@@ -41,6 +44,8 @@ func _process(_delta: float) -> void:
 func _paint(c: VectorCanvas, t: float) -> void:
 	var f := floor_y
 	c.gradient_rect(Rect2(0, 0, width, f), DayPhase.sky_top(_phase), DayPhase.sky_bottom(_phase))
+	if sky_only:
+		return
 	# La fachada del colegio al fondo (dos pisos).
 	c.draw_rect(Rect2(0, 60, width, f - 60), WALL)
 	c.draw_rect(Rect2(0, 60, width, 8), WALL_DARK)

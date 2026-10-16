@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://world/camera/game_camera.gd" id="13_1ibcl"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="14_oq0td"]
 [ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="15_4qbfs"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/pasillo_segundo.png" id="16_fondo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f7n4n"]
 size = Vector2(1964, 80)
@@ -40,7 +41,12 @@ spawn_point = NodePath("SpawnPoint")
 room_size = Rect2(0, 0, 1900, 360)
 music_track = &"colegio"
 
+[node name="Picture" type="Sprite2D" parent="."]
+texture = ExtResource("16_fondo")
+centered = false
+
 [node name="Props" type="Node2D" parent="." unique_id=1729621962]
+visible = false
 script = ExtResource("2_psmlq")
 windows = Array[Rect2]([Rect2(140, 120, 90, 60), Rect2(620, 120, 90, 60), Rect2(1080, 120, 90, 60), Rect2(1560, 120, 90, 60)])
 lockers = Array[Vector2]([Vector2(300, 6), Vector2(860, 5), Vector2(1300, 6), Vector2(1700, 4)])

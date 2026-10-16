@@ -34,6 +34,7 @@
 [ext_resource type="Resource" path="res://data/dialogues/colegio/recreo_repite.tres" id="22_f5ree"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="24_wii31"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="26_c5bqh"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/soda.png" id="27_fondo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n0q4t"]
 size = Vector2(704, 80)
@@ -110,7 +111,12 @@ music_track = &"colegio"
 
 [node name="Ambient" type="CanvasModulate" parent="." unique_id=1215494208]
 
+[node name="Picture" type="Sprite2D" parent="."]
+texture = ExtResource("27_fondo")
+centered = false
+
 [node name="Props" type="Node2D" parent="." unique_id=1805662690]
+visible = false
 script = ExtResource("2_c5bqh")
 
 [node name="Collisions" type="StaticBody2D" parent="." unique_id=1902010113]

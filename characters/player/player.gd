@@ -98,6 +98,8 @@ var is_wall_sliding := false
 var dash_cooldown_timer := 0.0
 ## Bloquea los controles (reaparición, cinemáticas). La gravedad sigue actuando.
 var controls_locked := false
+## En una cinemática (con los controles bloqueados), Kai camina hacia este lado (-1 izquierda, 1 derecha).
+var scripted_axis := 0.0
 ## Energía para habilidades, en barritas (la curación gasta media). El máximo sale de GameState.
 var energy := 2.0
 var max_energy := 2.0
@@ -532,7 +534,7 @@ func _spawn_afterimage() -> void:
 # --- Controles (respetan controls_locked) --------------------------------------
 
 func _input_axis() -> float:
-	return 0.0 if controls_locked else Input.get_axis("move_left", "move_right")
+	return scripted_axis if controls_locked else Input.get_axis("move_left", "move_right")
 
 
 func _action_pressed(action: StringName) -> bool:

@@ -28,6 +28,7 @@
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="25_1jogs"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="27_g58i1"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="28_6ttlu"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/patio.png" id="29_fondo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xet3r"]
 size = Vector2(1564, 80)
@@ -55,6 +56,11 @@ script = ExtResource("2_h68e3")
 
 [node name="Props" type="Node2D" parent="." unique_id=540090638]
 script = ExtResource("3_irfom")
+sky_only = true
+
+[node name="Picture" type="Sprite2D" parent="."]
+texture = ExtResource("29_fondo")
+centered = false
 
 [node name="Collisions" type="StaticBody2D" parent="." unique_id=172874962]
 
@@ -203,6 +209,7 @@ door_id = &"entrada"
 target_scene = "res://world/zones/zone0/entrada.tscn"
 target_entry = &"desde_patio"
 sign_text = "ENTRADA"
+show_art = false
 prompt_text = "E: subir a la entrada"
 prompt_offset = Vector2(-50, -90)
 

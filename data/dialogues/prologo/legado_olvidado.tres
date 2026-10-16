@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_nbofi"]
+
+[resource]
+script = ExtResource("1_nbofi")
+script_text = "# H5: después de la cinemática «El legado olvidado» (el Grimorio y la Nullblade). No se explica su origen (pendiente en la Biblia).
+Kai [sorprendido]: ¿Un libro con circuitos...? Tiene escrito lo que aprendí hoy.
+Kai [sorprendido]: Y la espada... es la misma de la PC, pero esta vez no se apaga.
+Kai [pensativo]: Me siento distinto. Más rápido... más ligero.
+Kai [pensativo]: ¿Quién habrá dejado todo esto aquí?"

@@ -47,6 +47,10 @@
 [ext_resource type="Script" path="res://world/camera/game_camera.gd" id="45_vlig7"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="46_1a4wr"]
 [ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="47_egl86"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/taller.png" id="48_fondo"]
+[ext_resource type="Texture2D" path="res://assets/art/props/taller/robot.png" id="49_robot"]
+[ext_resource type="Texture2D" path="res://assets/art/props/taller/brazo.png" id="50_brazo"]
+[ext_resource type="Texture2D" path="res://assets/art/props/taller/puerta_bodega.png" id="51_puerta"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_73eyu"]
 size = Vector2(1184, 80)
@@ -201,7 +205,12 @@ music_track = &"colegio"
 [node name="Ambient" type="CanvasModulate" parent="." unique_id=1687672073]
 color = Color(0.94, 0.95, 1, 1)
 
+[node name="Picture" type="Sprite2D" parent="."]
+texture = ExtResource("48_fondo")
+centered = false
+
 [node name="Props" type="Node2D" parent="." unique_id=566840688]
+visible = false
 script = ExtResource("2_tfdja")
 width = 1120.0
 
@@ -239,6 +248,7 @@ script = ExtResource("4_6i8d6")
 challenge = ExtResource("5_yik6k")
 preparing_dialogue = ExtResource("6_hysxe")
 sign_text = "CONDICIONALES"
+painted = true
 prompt_offset = Vector2(-50, -96)
 
 [node name="Cinta" type="Area2D" parent="Estaciones" unique_id=424110802]
@@ -247,51 +257,65 @@ script = ExtResource("4_6i8d6")
 challenge = ExtResource("7_eeean")
 preparing_dialogue = ExtResource("6_hysxe")
 sign_text = "CICLOS"
+painted = true
 prompt_offset = Vector2(-50, -96)
 
 [node name="Asistente" type="Area2D" parent="Estaciones" unique_id=1018361743]
-position = Vector2(820, 304)
+position = Vector2(837, 304)
 script = ExtResource("4_6i8d6")
 challenge = ExtResource("8_ly34s")
 preparing_dialogue = ExtResource("6_hysxe")
 sign_text = "FUNCIONES"
+painted = true
 prompt_offset = Vector2(-50, -96)
 
 [node name="Anomalias" type="Node2D" parent="." unique_id=874933133]
 
 [node name="Robot" type="Area2D" parent="Anomalias" unique_id=904344461]
-position = Vector2(740, 304)
+position = Vector2(717, 304)
 script = ExtResource("9_pptso")
 id = &"robot"
 normal_dialogue = ExtResource("10_3uonv")
 vision_dialogue = ExtResource("11_qc2mw")
+painted = true
+art = ExtResource("49_robot")
+art_offset = Vector2(-13, -26)
 prompt_offset = Vector2(-50, -100)
 
 [node name="Brazo" type="Area2D" parent="Anomalias" unique_id=1661477942]
-position = Vector2(580, 304)
+position = Vector2(583, 304)
 script = ExtResource("9_pptso")
 id = &"brazo"
 kind = 1
 normal_dialogue = ExtResource("12_6y5nd")
 vision_dialogue = ExtResource("13_ux221")
+painted = true
+art = ExtResource("50_brazo")
+art_offset = Vector2(-12, -68)
+art_pivot = Vector2(0, -44)
 prompt_offset = Vector2(-50, -100)
 
 [node name="Mensaje" type="Area2D" parent="Anomalias" unique_id=1862496645]
-position = Vector2(320, 304)
+position = Vector2(753, 304)
 script = ExtResource("9_pptso")
 id = &"mensaje"
 kind = 2
 normal_dialogue = ExtResource("14_1rwfy")
 vision_dialogue = ExtResource("15_77gg7")
+painted = true
+screen = Rect2(-27, -90, 54, 30)
 prompt_offset = Vector2(-50, -100)
 
 [node name="Puerta" type="Area2D" parent="Anomalias" unique_id=1499090976]
-position = Vector2(1020, 304)
+position = Vector2(990, 304)
 script = ExtResource("9_pptso")
 id = &"puerta"
 kind = 3
 normal_dialogue = ExtResource("16_b007j")
 vision_dialogue = ExtResource("17_imbtg")
+painted = true
+art = ExtResource("51_puerta")
+art_offset = Vector2(-23, -88)
 prompt_offset = Vector2(-50, -100)
 
 [node name="Gente" type="Node2D" parent="." unique_id=1679026132]

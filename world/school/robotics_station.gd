@@ -21,6 +21,11 @@ const WOOD := Color("6a4a32")
 @export var preparing_dialogue: Dialogue
 ## Cartel sobre la mesa.
 @export var sign_text := "ESTACIÓN"
+## El fondo del cuarto ya trae la mesa, la máquina y el cartel (el taller de Ariel): solo se escribe el cartel
+## (sign_rect), se marca al abrirse y se tapa la máquina mientras la arman (cover_rect).
+@export var painted := false
+@export var sign_rect := Rect2(-41, -80, 82, 13)
+@export var cover_rect := Rect2(-31, -64, 62, 28)
 
 var _clock := 0.0
 
@@ -102,6 +107,9 @@ func _on_interacted(player: Player) -> void:
 func _draw() -> void:
 	var done := not Engine.is_editor_hint() and is_done()
 	var open := Engine.is_editor_hint() or is_open()
+	if painted:
+		_draw_painted(open, done)
+		return
 	# Mesa con el cartel.
 	draw_rect(Rect2(-34, -30, 68, 6), WOOD)
 	draw_rect(Rect2(-30, -24, 4, 24), WOOD.darkened(0.2))
@@ -141,3 +149,17 @@ func _draw() -> void:
 	if not open:
 		# Cubierta: todavía la están armando.
 		draw_rect(Rect2(-32, -60, 64, 28), Color(0.85, 0.85, 0.9, 0.35))
+
+
+## Con el fondo de Ariel: el texto del cartel dibujado (celeste al abrirse), el ✓ y la cubierta mientras la arman.
+func _draw_painted(open: bool, done: bool) -> void:
+	if open:
+		draw_rect(sign_rect.grow(1.0), Color(CYAN, 0.8), false, 1.0)
+	draw_string(ThemeDB.fallback_font, sign_rect.position + Vector2(0, sign_rect.size.y - 3.0), sign_text, HORIZONTAL_ALIGNMENT_CENTER,
+		sign_rect.size.x, 8, CYAN if open else Color("a9b4cc"))
+	if done:
+		draw_string(ThemeDB.fallback_font, Vector2(sign_rect.end.x - 4.0, sign_rect.position.y - 2.0), "✓", HORIZONTAL_ALIGNMENT_LEFT, -1, 14,
+			Color("7ee08a"))
+	if not open:
+		# Cubierta: todavía la están armando.
+		draw_rect(cover_rect, Color(0.85, 0.85, 0.9, 0.35))
