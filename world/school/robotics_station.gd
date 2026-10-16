@@ -5,6 +5,8 @@ extends Interactable
 ## un comentario: se anuncia la actividad). Desde el paso STEP de QUEST (Capítulo 2) abre su desafío
 ## (RoboticsWindow). Resolverla deja la marca «robotica_<id>» y paga Ecos una sola vez; con las tres resueltas se
 ## completa el paso. Se puede volver a jugar cuando se quiera (sin pagar de nuevo).
+## Con task_quest / task_step es la estación de un encargo aparte (p. ej. la tarea «El robot que no obedece»): se usa
+## solo en ese paso (y después, para volver a jugarla) y al resolverla completa ese paso.
 ## El origen es el piso, frente a la mesa. Se ve también en el editor.
 
 signal station_solved(id: StringName)
@@ -26,6 +28,9 @@ const WOOD := Color("6a4a32")
 @export var painted := false
 @export var sign_rect := Rect2(-41, -80, 82, 13)
 @export var cover_rect := Rect2(-31, -64, 62, 28)
+## Encargo propio (vacío = la actividad de robótica del Capítulo 2).
+@export var task_quest: StringName = &""
+@export var task_step: StringName = &""
 
 var _clock := 0.0
 
@@ -56,9 +61,14 @@ func _process(delta: float) -> void:
 	super(delta)
 
 
-## Si la actividad ya empezó (desde el paso STEP, y para siempre después).
+## Si la actividad ya empezó (desde el paso STEP, y para siempre después; o desde el paso del encargo).
 func is_open() -> bool:
-	return challenge != null and get_node("/root/GameState").has_reached_step(QUEST, STEP)
+	if challenge == null:
+		return false
+	var state := get_node("/root/GameState")
+	if task_quest != &"":
+		return state.has_reached_step(task_quest, task_step)
+	return state.has_reached_step(QUEST, STEP)
 
 
 func is_done() -> bool:
@@ -97,7 +107,12 @@ func _on_interacted(player: Player) -> void:
 	var window := RoboticsWindow.open(self, challenge)
 	var solved: bool = await window.closed
 	player.controls_locked = false
-	if solved:
+	if solved and task_quest != &"":
+		var economy := get_node("/root/Economy")
+		economy.claim_reward(StringName("robotica:%s" % challenge.id), economy.reward_for(EconomyConfig.Source.CHALLENGE, challenge.ecos_reward))
+		get_node("/root/GameState").set_flag(flag_of(challenge.id))
+		get_node("/root/GameState").complete_step(task_quest, task_step)
+	elif solved:
 		register(get_node("/root/GameState"), get_node("/root/Economy"), challenge)
 		station_solved.emit(challenge.id)
 	await get_tree().process_frame

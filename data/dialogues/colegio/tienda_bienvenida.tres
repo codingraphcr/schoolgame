@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Señora de la soda: ¡Bienvenido a mi tiendita! Aquí tengo de todo un poco: cosas que no se consiguen en cualquier lado.
+Señora de la soda: No me pregunte de dónde salen. Llegan en cajas, y yo las vendo. Vea con calma."

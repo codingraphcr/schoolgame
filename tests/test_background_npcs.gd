@@ -33,9 +33,10 @@ func _run() -> void:
 
 func _test_entrada() -> void:
 	var npcs := _npcs()
-	var always := npcs.filter(func(npc: Node) -> bool: return not npc.has_node("StoryPresence"))
-	_check(always.size() == 3 and npcs.size() == 5,
-		"la Entrada tiene 3 NPC de fondo, más los 2 amigos de «Camino a casa» (hay %d y %d)" % [always.size(), npcs.size()])
+	# Los que aparecen según la historia tienen StoryPresence propia o están en un grupo que la tiene.
+	var always := npcs.filter(func(npc: Node) -> bool: return not npc.has_node("StoryPresence") and not npc.get_parent().has_node("StoryPresence"))
+	_check(always.size() == 3 and npcs.size() == 7,
+		"la Entrada tiene 3 NPC de fondo, más los 2 amigos de «Camino a casa» y los 2 del Capítulo 3 (hay %d y %d)" % [always.size(), npcs.size()])
 	for npc in npcs:
 		_check(absf(npc.global_position.y - FLOOR_Y) < 0.5, "%s está parado en el suelo" % npc.name)
 		_check(npc.find_children("*", "CollisionObject2D").is_empty(), "%s no choca con nada" % npc.name)

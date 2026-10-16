@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 3: la clase de la Sala 3 y las computadoras que fallan.
+Prof. Alvarado: Buenos días. Hoy repasamos redes: cómo se conectan los equipos y qué comparten.
+(Una computadora pita. Después otra. Una pantalla se pone roja: «Error: archivo dañado».)
+Estudiante: ¡Profe, se me fue el internet!
+Estudiante: ¡A mí no me abre nada!
+Prof. Alvarado [serio]: Nadie toque nada. Ni reiniciar, ni borrar, ni abrir más archivos.
+Prof. Alvarado: Kai, ayudame: revisemos tres equipos, el 2, el 7 y el 11. Solo mirar y anotar. Después comparamos en mi consola.
+Kai: Diagnóstico sin tocar nada. Entendido."

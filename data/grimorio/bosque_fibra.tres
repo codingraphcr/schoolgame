@@ -9,5 +9,4 @@ order = 3
 title = "Bosque de Fibra"
 subtitle = "Mapa"
 text = "Naturaleza digital: árboles de fibra óptica y raíces de cables."
-unlock_quest = &"senal_del_barrio"
-unlock_step = &"seguir_fibroluz"
+unlock_flag = &"bosque_descubierto"

@@ -35,14 +35,15 @@ func _test_config() -> void:
 	var config: EconomyConfig = economy.config
 	_check(config != null and config.resource_path == "res://data/economy/economia.tres", "los valores salen de data/economy/economia.tres")
 	var expected := {
-		EconomyConfig.Source.ENEMY_COMMON: Vector2i(5, 10), EconomyConfig.Source.ENEMY_SPECIAL: Vector2i(20, 40),
-		EconomyConfig.Source.BOSS: Vector2i(150, 250), EconomyConfig.Source.TERMINAL: Vector2i(30, 60),
-		EconomyConfig.Source.SIDE_QUEST: Vector2i(75, 150), EconomyConfig.Source.HIDDEN_DEPOSIT: Vector2i(15, 40),
+		EconomyConfig.Source.ENEMY_COMMON: Vector2i(1, 3), EconomyConfig.Source.ENEMY_SPECIAL: Vector2i(4, 8),
+		EconomyConfig.Source.BOSS: Vector2i(60, 90), EconomyConfig.Source.TERMINAL: Vector2i(10, 20),
+		EconomyConfig.Source.CHALLENGE: Vector2i(8, 15),
+		EconomyConfig.Source.SIDE_QUEST: Vector2i(30, 50), EconomyConfig.Source.HIDDEN_DEPOSIT: Vector2i(10, 25),
 	}
 	var ok := true
 	for source in expected:
 		ok = ok and config.range_for(source) == expected[source]
-	_check(ok, "rangos iniciales: común 5–10, especial 20–40, jefe 150–250, terminal 30–60, misión 75–150, depósito 15–40")
+	_check(ok, "rangos (equilibrados para el tope de 999): común 1–3, especial 4–8, jefe 60–90, terminal 10–20, desafío 8–15, misión 30–50, depósito 10–25")
 	var inside := true
 	for source in expected:
 		for i in 40:
@@ -51,6 +52,11 @@ func _test_config() -> void:
 	_check(inside, "los valores sorteados quedan dentro de su rango")
 	_check(economy.reward_for(EconomyConfig.Source.TERMINAL, 45) == 45, "una cantidad fija tiene prioridad sobre el sorteo")
 	_check(config.death_penalty == 0.10 and config.death_penalty_max == 100, "la penalización (10 %, máximo 100) también es configurable")
+	state.reset()
+	economy.add_ecos(990)
+	economy.add_ecos(50)
+	_check(economy.ecos == Economy.MAX_ECOS and Economy.MAX_ECOS == 999, "la bolsa llega como máximo a 999 Ecos (lo que sobra se pierde)")
+	state.reset()
 
 
 func _test_unique_rewards() -> void:
@@ -71,14 +77,14 @@ func _test_unique_rewards() -> void:
 	state.start_quest(&"prologo")
 	for step in [&"hablar_profesor", &"revisar_computadora", &"volver_profesor"]:
 		state.complete_step(&"prologo", step)
-	_check(economy.ecos == 25 and economy.is_claimed(&"mision:prologo"), "completar una misión paga su recompensa (prólogo: 25) y queda registrada")
+	_check(economy.ecos == 15 and economy.is_claimed(&"mision:prologo"), "completar una misión paga su recompensa (prólogo: 15) y queda registrada")
 
 
 func _test_enemies() -> void:
 	var room := current_scene as Room
 	var player := room.player
 	state.reset()
-	var ranges := [[EnemyBase.Rank.COMUN, 5, 10], [EnemyBase.Rank.ESPECIAL, 20, 40], [EnemyBase.Rank.JEFE, 150, 250]]
+	var ranges := [[EnemyBase.Rank.COMUN, 1, 3], [EnemyBase.Rank.ESPECIAL, 4, 8], [EnemyBase.Rank.JEFE, 60, 90]]
 	for entry in ranges:
 		var enemy := _enemy(room, Vector2(-500, 0))
 		enemy.rank = entry[0]

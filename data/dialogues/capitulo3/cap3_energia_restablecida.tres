@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(La estación se enciende a medias. Las líneas azules de las paredes vuelven a correr.)
+Aegis: Suministro energético... restablecido parcialmente.
+Kai: ¡Eso! ¡Todavía me acuerdo de algo de las clases de circuitos!
+Aegis: Módulos requeridos: procesamiento, comunicación, protección. Ubicación: sector superior, sector exterior, sector de mantenimiento.
+Kai: Arriba, afuera y abajo. Clásico."

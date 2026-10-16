@@ -36,6 +36,8 @@
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="27_ligia"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="28_6effe"]
 [ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="29_bgnpc"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="37_gqfwg"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_pasillo_aegis.tres" id="38_fs1qs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_730qw"]
 size = Vector2(752, 80)
@@ -582,3 +584,11 @@ target_entry = &"desde_pasillo"
 
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToLaboratorio" unique_id=1971410239]
 shape = SubResource("RectangleShape2D_fdwya")
+
+[node name="AegisObserva" type="Area2D" parent="." unique_id=1377139502]
+script = ExtResource("37_gqfwg")
+dialogue = ExtResource("38_fs1qs")
+on_ready = true
+completes_step = false
+once_flag = &"cap3_pasillo_visto"
+requires_flag = &"capitulo_3_completado"

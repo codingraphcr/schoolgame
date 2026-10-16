@@ -6,7 +6,7 @@ extends Resource
 ## Nunca se ejecuta código real: todo es una simulación controlada (un ciclo sin salida se detiene solo).
 ## Un .tres por estación en data/robotics/.
 
-enum Kind { CONDICIONAL, CICLO, FUNCION }
+enum Kind { CONDICIONAL, CICLO, FUNCION, SECUENCIA }
 
 ## Id estable (para la marca «robotica_<id>», la recompensa y el guardado).
 @export var id: StringName = &""
@@ -31,6 +31,8 @@ func create_sim() -> RoboticsSim:
 			return ConveyorSim.new()
 		Kind.FUNCION:
 			return AssistantSim.new()
+		Kind.SECUENCIA:
+			return SequenceSim.new()
 	return SorterSim.new()
 
 

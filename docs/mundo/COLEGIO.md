@@ -63,8 +63,36 @@ con `chapter_requirement` se abren al llegar a ese capítulo (`World.lock_reason
   (`intro_first`, marca `soda_presentada`); después dice lo del momento: antes de clase manda a Kai a la Sala 3;
   durante el Cap. 1 comenta lo de las computadoras; en el Cap. 2, la actividad de robótica.
 - **Se examinan:** el menú, la radio y la refri.
-- Es una zona **social**: no hay hambre ni economía de comida. *Pendiente de decisión (Biblia, sección XVI):* la
-  propuesta de comprar el doble salto con Ecos en la soda del colegio.
+- La soda es una zona **social** (no hay hambre ni economía de comida); **al lado está la tienda**.
+
+## La tienda de la soda (la tienda oficial del juego)
+
+- **Dónde:** una puerta «TIENDA» en el patio, al lado de la puerta de la soda (`world/school/shop_door.gd`), que lleva
+  a un cuartito con estantes y mostrador (`zone0/tienda.tscn`, arte `world/school/tienda_props.gd`).
+- **Cuándo se abre:** desde el Capítulo 1, **después de hablar con la señora de la soda** (marca `soda_presentada`; en
+  su primera charla ella misma la ofrece). Antes, la puerta tiene un rótulo «CERRADO · Pregunte en la soda».
+- **Quién atiende:** la misma señora de la soda (`ShopKeeper`): saluda y abre la tienda (`ShopWindow`).
+- **El catálogo** (`data/shop/articulos/`, un `ShopItem` por artículo; crece con los capítulos):
+
+| Artículo | Precio | Desde | Qué hace |
+|---|---|---|---|
+| Fragmento de vida | 120 | Cap. 1 | Un fragmento (4 = una máscara más) |
+| Fragmento de energía | 100 | Cap. 1 | Un fragmento (4 = una barrita más) |
+| Mapa del colegio | 30 | Cap. 1 | El mapa del Grimorio muestra todas las salas del colegio |
+| Pistas del colegio | 40 | Cap. 1 | Abre la página «Pistas del colegio» en el Grimorio (Registros) |
+| Otro fragmento de vida | 150 | Cap. 2 | Igual que el primero |
+| Otro fragmento de energía | 130 | Cap. 2 | Igual que el primero |
+| Dash Fantasma | 250 | Cap. 2 | Dash nivel 2: atraviesa enemigos y ataques (pide el dash 1) |
+| Nullblade afilada | 220 | Cap. 2 | +25 % de daño (`GameState.sword_level` 1) |
+| **Doble salto** | **800** | Cap. 2 | Desbloquea el doble salto (decisión del equipo; caro a propósito) |
+| Nullblade templada | 450 | Cap. 3 | Otro +25 % de daño (pide la anterior) |
+| Aegis: núcleo pulido | 300 | Cap. 3 | Mejora secundaria de Aegis: se ve desde el Cap. 3 pero se compra cuando Kai tenga a Aegis. Aegis Pulse espera menos entre disparos (0,45 s en vez de 0,7 s; marca `aegis_mejora_1`) |
+| Mapa del Bosque de Fibra | 30 | Cap. 3 | El mapa del Grimorio muestra todo el bosque |
+
+- **Reglas:** cada artículo se compra **una sola vez** (marca `compra_<id>`, por ranura); antes de comprar se pregunta;
+  nunca se cobra sin entregar. Las formas de la Nullblade y las evoluciones de Aegis **no se venden** (son de la
+  historia, Biblia); la tienda vende mejoras secundarias. **Esquiva Perfecta** (dash nivel 3) no se vende todavía:
+  el parry que mejora no está implementado.
 
 ## La biblioteca
 

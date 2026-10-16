@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://systems/shop/shop_item.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 1
+
+[resource]
+script = ExtResource("1_item")
+id = &"pista_colegio"
+title = "Pistas del colegio"
+kind = 6
+description = "Una libreta con secretos del colegio. Abre una página nueva en el Grimorio (Registros)."
+note = "Los estudiantes me cuentan todo. Y yo anoto."
+price = 40
+value = 1
+reveal_flag = &"pista_colegio"
+requirement = SubResource("Req")
+order = 61

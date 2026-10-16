@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Kai: Tus instrucciones estaban bien... pero en otro orden. El robot hace exactamente lo que le decís, paso por paso.
+Compañera: ¿Solo era el orden? Qué vergüenza.
+Kai: Nah. A mí me pasa con las recetas de mi mamá.
+Compañera: Gracias, Kai. Te debo una empanada."

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Guardián: ALTO, VISITANTE. ESTE SECTOR CUSTODIA EL MÓDULO DE PROCESAMIENTO.
+Guardián: SOLO PASA QUIEN SABE CONTENER UN PROBLEMA ANTES DE QUE CREZCA.
+Kai: ¿Un examen? ¿Aquí también?"

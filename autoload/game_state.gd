@@ -31,6 +31,10 @@ const ENERGY_FRAGMENTS_PER_CELL := 4
 const START_ENERGY_CELLS := 2
 const MAX_ENERGY_CELLS := 8
 const MAX_DASH_LEVEL := 3
+## Mejoras de la Nullblade que se compran en la tienda (daño); las formas siguen siendo de la historia.
+const MAX_SWORD_LEVEL := 2
+## Cuánto daño suma cada mejora de la espada (+25 %).
+const SWORD_BONUS := 0.25
 const MAX_NULLBLADE_STAGE := 4
 const MAX_AEGIS_STAGE := 3
 const MAX_DOMAIN_STAGE := 3
@@ -72,6 +76,8 @@ var max_energy_cells := START_ENERGY_CELLS
 var current_energy := -1.0
 ## 0 = sin dash · 1 Dash · 2 Dash Fantasma · 3 Esquiva Perfecta.
 var dash_level := 0
+## Mejora de la espada comprada (0 = ninguna).
+var sword_level := 0
 var can_double_jump := false
 var can_wall_jump := false
 var vision_unlocked := false
@@ -242,6 +248,16 @@ func set_dash_level(level: int) -> void:
 	progress_changed.emit()
 
 
+func set_sword_level(level: int) -> void:
+	sword_level = clampi(level, 0, MAX_SWORD_LEVEL)
+	progress_changed.emit()
+
+
+## Multiplicador de daño de la Nullblade por las mejoras compradas.
+func sword_damage_multiplier() -> float:
+	return 1.0 + SWORD_BONUS * sword_level
+
+
 func set_nullblade_stage(stage: int) -> void:
 	nullblade_stage = clampi(stage, 0, MAX_NULLBLADE_STAGE)
 	progress_changed.emit()
@@ -322,6 +338,7 @@ func _reset_progress() -> void:
 	current_energy = -1.0
 	current_masks = -1.0
 	dash_level = 0
+	sword_level = 0
 	can_double_jump = false
 	can_wall_jump = false
 	vision_unlocked = false
@@ -546,6 +563,7 @@ func to_dict() -> Dictionary:
 			"max_energy_cells": max_energy_cells,
 			"current_energy": current_energy,
 			"dash_level": dash_level,
+			"sword_level": sword_level,
 			"can_double_jump": can_double_jump,
 			"can_wall_jump": can_wall_jump,
 			"vision_unlocked": vision_unlocked,
@@ -593,6 +611,7 @@ func from_dict(data: Dictionary) -> void:
 	max_energy_cells = clampi(int(player.get("max_energy_cells", START_ENERGY_CELLS)), 1, MAX_ENERGY_CELLS)
 	current_energy = float(player.get("current_energy", -1.0))
 	dash_level = clampi(int(player.get("dash_level", 0)), 0, MAX_DASH_LEVEL)
+	sword_level = clampi(int(player.get("sword_level", 0)), 0, MAX_SWORD_LEVEL)
 	can_double_jump = bool(player.get("can_double_jump", false))
 	can_wall_jump = bool(player.get("can_wall_jump", false))
 	vision_unlocked = bool(player.get("vision_unlocked", false))

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 5
+order = 6
+title = "Aegis Pulse"
+subtitle = "Habilidad · Aegis"
+text = "Aegis dispara un pulso de energía al objetivo válido más cercano que pueda alcanzar (enemigos o interruptores fuera del alcance de Kai). Solo dispara cuando Kai se lo pide, y necesita un momento entre disparos."
+facts = Dictionary[String, String]({"Compañero": "Aegis", "Objetivo": "El más cercano"})
+action = &"aegis_fire"
+inventory_kind = 2
+unlock_property = &"aegis_stage"

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 3: Kai entra a la conexión del equipo 7.
+(Adentro de la conexión todo está oscuro. Por los conductos corren rastros negros con bordes rojos.)
+Kai [pensativo]: Mirar, anotar y volver. Mirar, anotar y volver..."

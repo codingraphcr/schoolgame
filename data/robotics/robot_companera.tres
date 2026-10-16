@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="RoboticsChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/robotics/robotics_challenge.gd" id="1_rob"]
+[ext_resource type="Script" path="res://systems/robotics/robotics_slot.gd" id="2_slot"]
+
+[sub_resource type="Resource" id="Slot_0"]
+script = ExtResource("2_slot")
+label = "1."
+options = PackedStringArray("avanzar 2", "girar a la izquierda", "girar a la derecha", "soltar la pieza")
+start = 3
+
+[sub_resource type="Resource" id="Slot_1"]
+script = ExtResource("2_slot")
+label = "2."
+options = PackedStringArray("avanzar 2", "girar a la izquierda", "girar a la derecha", "soltar la pieza")
+start = 0
+
+[sub_resource type="Resource" id="Slot_2"]
+script = ExtResource("2_slot")
+label = "3."
+options = PackedStringArray("avanzar 2", "girar a la izquierda", "girar a la derecha", "soltar la pieza")
+start = 1
+
+[sub_resource type="Resource" id="Slot_3"]
+script = ExtResource("2_slot")
+label = "4."
+options = PackedStringArray("avanzar 2", "girar a la izquierda", "girar a la derecha", "soltar la pieza")
+start = 0
+
+[resource]
+script = ExtResource("1_rob")
+id = &"robot_companera"
+kind = 3
+title = "El robot de la Compañera"
+goal = "El robot empieza abajo a la izquierda, mirando a la derecha, con una pieza. Tiene que dejarla en la caja de arriba a la derecha. Ordena las instrucciones."
+slots = Array[ExtResource("2_slot")]([SubResource("Slot_0"), SubResource("Slot_1"), SubResource("Slot_2"), SubResource("Slot_3")])
+hints = PackedStringArray("Ejecútalo como está y mira en qué paso se equivoca.", "Soltar la pieza tiene que ser lo último.", "avanzar 2 · girar a la izquierda · avanzar 2 · soltar la pieza.")
+success_text = "Una secuencia es una lista de instrucciones en orden. La computadora no adivina: hace exactamente lo que se le dice, paso por paso."
+ecos_reward = -1

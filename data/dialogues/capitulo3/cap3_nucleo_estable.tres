@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(Las Bitcucarachas huyen. El núcleo recupera su luz azul y la esferita se eleva del piso, despacio.)
+Aegis: Sistemas principales restaurados. Integridad operativa... aceptable.
+Kai: ¡LO LOGRAMOS!
+Aegis: Confirmación. Aunque recomiendo una inspección de plagas.
+Kai: Mae, ni que fuera mi casa."

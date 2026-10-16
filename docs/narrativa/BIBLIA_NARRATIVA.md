@@ -1,6 +1,6 @@
 # BIBLIA NARRATIVA DEL VIDEOJUEGO
 
-**Versión:** 1.9 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
+**Versión:** 1.11 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
 **Estado:** Base narrativa de referencia; algunas decisiones siguen abiertas.  
 **Nombre oficial del videojuego:** Nullveil: Beyond the Firewall.  
 **Nombre provisional del proyecto de origen:** Proyecto Génesis.  
@@ -52,7 +52,7 @@ Después del fracaso, el profesor desarrolla un organismo de biomateria capaz de
 
 El profesor entrega al protagonista, cuando aún es pequeño, a una familia adoptiva común, sin vínculos con el proyecto. **Sus padres adoptivos conocen parte de su verdadero origen** (v1.6; reemplaza la versión anterior, que decía que lo desconocían por completo). Sin embargo, no conocen necesariamente todas sus capacidades, no saben cómo evolucionarán sus poderes y no tienen todas las respuestas sobre el Proyecto Génesis. No desean manipular sus decisiones ni lo consideran un experimento: lo aman y lo reconocen como su hijo, y quieren protegerlo sin impedirle construir su propia identidad. No siguen órdenes secretas ni lo vigilan. Su infancia, recuerdos, afectos y vínculos son reales.
 
-**Kai desconoce su origen** y no lo descubre en décimo. El misterio se construye despacio: los padres pueden mostrar preocupación, intercambiar miradas o usar frases con doble sentido, sin explicaciones directas (la primera vez, en «Camino a casa», al cerrar el Capítulo 1). Qué parte saben exactamente, cómo lo supieron y la forma legal y logística de la adopción siguen **pendientes de definir**.
+**Kai desconoce su origen** y no lo descubre en décimo. El misterio se construye despacio: los padres pueden mostrar preocupación, intercambiar miradas o usar frases con doble sentido, sin explicaciones directas (la primera vez, una mirada breve y en silencio en la cinemática inicial, cuando Kai sale para el colegio, v1.11; la primera conversación, en «Camino a casa», al cerrar el Capítulo 1). Qué parte saben exactamente, cómo lo supieron y la forma legal y logística de la adopción siguen **pendientes de definir**.
 
 ### 6. Los años de silencio
 
@@ -98,6 +98,8 @@ Durante décimo se presenta como un docente amable, con reacciones extrañas fre
 Durante la ruptura intentó contener al antagonista, quedó dañado y aislado dentro de una instalación bajo influencia enemiga. En **décimo, capítulo 3**, el protagonista sigue una señal de auxilio y lo rescata en la misión **«Eco en la Red»**.
 
 Para repararlo debe consultar el Grimorio, analizar registros en terminales simuladas, ejecutar comandos educativos y proteger puntos vulnerables. Aegis reconoce rasgos extraordinarios en el protagonista, pero sus recuerdos son incompletos y no puede revelarle de inmediato toda la historia.
+
+**Cómo se juega en el Capítulo 3 (v1.10):** la instalación es la **Estación Lázaro**, en lo profundo del Bosque de Fibra (una instalación digital de protección y recuperación de sistemas, abandonada). Antes de conocerlo, Aegis ayuda a Kai como una **señal azul desconocida** (el puente, el nodo, la compuerta). Su registro dice «ESTADO: AISLADA · RESULTADO: CONTENCIÓN INCOMPLETA · ORIGEN DEL INCIDENTE: [DATOS NO DISPONIBLES]». La reparación tiene tres etapas: un tablero eléctrico, tres módulos custodiados por guardianes holográficos de conocimiento (una pregunta cada uno, sin castigos) y la estabilización del núcleo frente a las **Bitcucarachas** (carroñeros digitales). Aegis **elige** acompañar a Kai: es una invitación, no una orden. Su primera lección del arco emocional llega en el escape («¡Aegis, la tuya también importa!»). Por ahora no revela nada del origen de Kai.
 
 **Evoluciones:**
 
@@ -236,10 +238,13 @@ El estudiante llega al colegio, aprende movimiento, diálogo e interacción. Un 
 **Capítulo 3 — Amenazas invisibles**
 
 - **Nivel 5 — Contagio digital:** Investiga software malicioso y protege equipos.
-- **Bosque de Fibra (v1.7):** desde la caja de fibra óptica del barrio, Kai entra por primera vez a la red de biomas
-  (misión secundaria «Sin señal en el barrio»; ver `docs/mundo/`).
-- **Nivel 6 — La señal perdida:** Sigue una señal hacia una instalación restringida.
-- **Misión especial — Eco en la Red:** Encuentra a Aegis dañado; lo rescata y repara con comandos y desafíos defensivos.
+- **Bosque de Fibra (v1.10, reemplaza la v1.7):** Kai lo descubre **cayendo** por accidente desde la conexión del
+  equipo 7 durante el diagnóstico (es la única forma de descubrirlo). La secundaria «El bosque que dejó de brillar»
+  (fusiona «Sin señal en el barrio») empieza allí; al reconectar el claro vuelve la señal del barrio y la caja de fibra
+  queda como atajo. Ver `docs/narrativa/capitulos/CAPITULO_03.md`.
+- **Nivel 6 — La señal perdida:** Sigue una señal hacia una instalación restringida (la **Estación Lázaro**).
+- **Misión especial — Eco en la Red:** Encuentra a Aegis dañado; lo rescata y repara (tablero eléctrico, guardianes de
+  conocimiento, defensa del núcleo).
 - **Recompensa:** Aegis Pulse.
 - **Pista:** Aegis parece conocer algo de su origen.
 
@@ -394,7 +399,6 @@ El libro se cierra. Comienzan los créditos.
 - Cómo se materializa el enfrentamiento final en gameplay.
 - Destino del antagonista después del desenlace.
 - Contenido concreto de los secretos y Fragmentos de Datos.
-- Dónde y cómo se consigue el **doble salto** (propuesta del equipo: comprarlo con Ecos en la soda del colegio).
 - Dónde se mueve la entrada a la computadora del profesor que hoy está en el prólogo (la Contraseña débil y el nivel del SPAM): el equipo decidió sacarla del prólogo; el lugar está por definir.
 - Validación de temas y resultados educativos contra los programas completos del MEP.
 
@@ -517,6 +521,39 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
   que repiten algo; con la Visión, Kai descubre que vienen del simulador. Bucle no se revela antes de tiempo y el
   Dominio Nulo sigue reservado para el Capítulo 4.
 
-**FIN — BIBLIA NARRATIVA V1.9**
+- **La tienda de la soda** (decisión del equipo, 16 de octubre de 2026): la tienda oficial del juego está al lado de la
+  soda del colegio y la atiende la señora de la soda; se abre después de hablar con ella (Capítulo 1). Vende mejoras
+  secundarias (fragmentos de vida y energía, mejoras del dash, de la espada y de Aegis, mapas y pistas) y el **doble
+  salto** (resuelve el pendiente de la sección XVI: se compra, caro, desde el Capítulo 2). Las formas de la Nullblade y
+  las evoluciones de Aegis siguen siendo de la historia. Nadie explica de dónde salen los artículos («llegan en cajas»).
+- **Economía:** la bolsa de Ecos llega como máximo a 999 y las recompensas se equilibraron para ese tope.
+
+**v1.10 — 16 de octubre de 2026** (Capítulo 3, «Amenazas invisibles: el último guardián»):
+
+- **Requisito del Capítulo 3:** se empieza durmiendo en la cama de Kai, con las historias de los capítulos 1 y 2 y
+  todas sus secundarias y tareas terminadas (el Grimorio muestra «Asuntos pendientes»). Se creó una tarea del
+  Capítulo 2: «El robot desobediente» (taller de robótica).
+- **Bosque de Fibra:** se descubre cayendo desde la conexión del equipo 7 (reemplaza la entrada por la caja de fibra
+  de la v1.7; la caja queda como atajo después de reconectar el claro). «Sin señal en el barrio» se fusiona en
+  «El bosque que dejó de brillar».
+- **Estación Lázaro** (nombre de la instalación de Aegis), **Bitcucarachas** (carroñeros digitales, no aliados del
+  antagonista) y los **guardianes de conocimiento** (proyecciones de seguridad de la estación, diseño original).
+- **Aegis:** primero como señal azul desconocida; elige acompañar a Kai. Aegis Pulse se obtiene al final del Nivel 6.
+  El profesor parece ver a Aegis por un instante y aparta la vista (pista sutil; no se explica).
+- **Pendiente de la historia:** la «Pista» del Capítulo 3 («Aegis parece conocer algo de su origen») no se incluyó
+  todavía: el documento del capítulo pedía no revelar el origen de Kai. Queda para decidir en qué momento y cómo.
+
+**v1.11 — 16 de octubre de 2026** (cinemática inicial, `capitulos/CINEMATICA_INICIAL.md`):
+
+- **Antes del prólogo**, al empezar una partida nueva: Kai se despierta tarde, desayuna con sus papás, cruza el Barrio
+  de los Almendros y llega al colegio. Sin poderes, sin Aegis ni Axiom, sin el Grimorio ni la Nullblade.
+- **La primera pista de los papás** pasa a ser una mirada breve y en silencio cuando Kai sale de la casa (no se explica
+  nada). El consejo del papá («cuanto más grande sea tu capacidad de cambiar las cosas, mayor será tu responsabilidad
+  de hacer lo correcto») queda como frase de la familia.
+- **Personaje nuevo:** **don Carlos**, el pulpero del barrio (solo saluda a Kai; sin historia propia por ahora).
+- El primer objetivo del prólogo se llama «Habla con el profesor Alvarado». El resto del prólogo no cambia (la
+  pantalla sigue diciendo «Por fin alguien está mirando»).
+
+**FIN — BIBLIA NARRATIVA V1.11**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.

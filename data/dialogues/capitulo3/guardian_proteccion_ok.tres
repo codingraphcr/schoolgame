@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Guardián: CORRECTO. SOLO QUIEN ESTÁ AUTORIZADO.
+Guardián: AEGIS PROTEGÍA ESTA ESTACIÓN. AHORA ALGUIEN LO PROTEGE A ÉL.
+(La proyección se inclina, como en una reverencia, y desaparece.)"

@@ -3,8 +3,8 @@ extends SceneTree
 ## El amigo de Kai está en la soda solo mientras el profesor prepara el acceso; con E charlan; Kai elige qué decirle
 ## (tres opciones, ninguna incorrecta; la ventana pausa el juego y Esc no la cierra); cada opción tiene su respuesta;
 ## al terminar se completa la misión secundaria sin cambiar el objetivo de la historia y queda marcada la opción;
-## después el amigo solo se despide; guardar y cargar conserva la elección; otra ranura no; ya en el cuarto técnico
-## el amigo no está.
+## después el amigo solo se despide; guardar y cargar conserva la elección; otra ranura no; el amigo espera en la
+## soda hasta el Capítulo 3.
 ## Ejecutar: godot --headless --path . --script res://tests/test_recreo.gd
 
 const Z := "res://world/zones/zone0/"
@@ -98,7 +98,10 @@ func _test_saved() -> void:
 func _test_later() -> void:
 	DevPoints._advance(state, &"travesuras_en_el_sistema", &"revisar_servidor")
 	await _open(Z + "soda.tscn")
-	_check(not _friend().visible, "cuando Kai ya va al cuarto técnico, el amigo volvió a clases")
+	_check(_friend().visible, "el amigo sigue en la soda después (la charla se puede hacer hasta el Capítulo 3)")
+	state.set_flag(&"capitulo_3")
+	await _open(Z + "soda.tscn")
+	_check(not _friend().visible, "en el Capítulo 3 ya no está (pasaron unas semanas)")
 	root.get_node("SaveManager").new_game(2)
 	_check(not state.is_quest_completed(Q) and not state.has_flag(&"recreo_eleccion_2"), "otra ranura no comparte la charla")
 

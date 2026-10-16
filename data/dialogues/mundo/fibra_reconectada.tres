@@ -5,5 +5,6 @@
 [resource]
 script = ExtResource("1_dlg")
 script_text = "(La luz corre por el cable. Los árboles de fibra se encienden uno por uno.)
-(El Fibroluz recoge un paquete de luz nuevo y sale corriendo por la fibra, hacia el barrio.)
-Kai: ¡Eso es! Ahora la señal tiene un camino completo."
+(Los Fibroluz recogen paquetes de luz nuevos y salen corriendo por las fibras: unos hacia el bosque profundo, otros hacia una caja de fibra lejana.)
+Kai: ¡Eso es! Ahora la señal tiene un camino completo.
+Kai [pensativo]: Esa fibra va hacia el barrio... Cuando salga de aquí, por ahí voy a poder volver."

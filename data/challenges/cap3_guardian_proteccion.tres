@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Option_0"]
+script = ExtResource("2_option")
+text = "Acceso sin restricciones"
+feedback = "Pista: «únicamente autorizadas» es justo lo contrario. ¿Cómo se llama decidir quién entra?"
+
+[sub_resource type="Resource" id="Option_1"]
+script = ExtResource("2_option")
+text = "Repetición automática"
+feedback = "Pista: eso es un ciclo, no una regla de quién puede entrar."
+
+[sub_resource type="Resource" id="Option_2"]
+script = ExtResource("2_option")
+text = "Control de acceso"
+correct = true
+feedback = "Correcto: el control de acceso decide quién puede entrar y qué puede hacer."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "Un sistema permite el acceso únicamente a personas autorizadas. ¿Qué principio aplica?"
+options = Array[ExtResource("2_option")]([SubResource("Option_0"), SubResource("Option_1"), SubResource("Option_2")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap3_guardian_proteccion"
+title = "Guardián de protección"
+ecos_reward = -1
+questions = Array[ExtResource("1_question")]([SubResource("Question_0")])

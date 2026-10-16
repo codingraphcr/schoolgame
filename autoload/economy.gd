@@ -17,8 +17,9 @@ signal reward_claimed(id: StringName)
 const CONFIG_PATH := "res://data/economy/economia.tres"
 ## Marca de GameState que termina el tutorial (al final del prólogo, «EL DESPERTAR»).
 const TUTORIAL_DONE_FLAG := &"tutorial_terminado"
-## Tope de seguridad del saldo.
-const MAX_ECOS := 999_999
+## Lo máximo que cabe en la bolsa de Ecos (decisión del equipo: precios y recompensas se equilibran con este tope).
+## Lo que pase del tope se pierde (avisa «Bolsa de Ecos llena»).
+const MAX_ECOS := 999
 
 var ecos := 0
 ## Valores para equilibrar (rangos de recompensa y penalización).
@@ -49,6 +50,8 @@ func add_ecos(amount: int) -> bool:
 	var before := ecos
 	ecos = mini(ecos + amount, MAX_ECOS)
 	ecos_changed.emit(ecos, ecos - before)
+	if before + amount > MAX_ECOS and is_inside_tree():
+		get_tree().call_group(&"toast", &"show_message", "Bolsa de Ecos llena: el máximo es %d." % MAX_ECOS, 3.0)
 	return true
 
 

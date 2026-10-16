@@ -1,0 +1,215 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_mnohc"]
+[ext_resource type="Script" path="res://world/digital/fiber/fiber_forest_props.gd" id="2_8s1qe"]
+[ext_resource type="Script" path="res://world/zones/bosque_fibra/contagion_node.gd" id="3_ybpwm"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_nodo_mal.tres" id="4_dseka"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_nodo_contenido.tres" id="5_mfjhd"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_rescate.tres" id="6_ilpdf"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="7_71jug"]
+[ext_resource type="Script" path="res://world/hazards/spikes.gd" id="8_ha234"]
+[ext_resource type="Script" path="res://world/zones/bosque_fibra/flow_valve.gd" id="9_a8wwf"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="10_7qote"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_nodo_llegada.tres" id="11_7l8ll"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="12_svwkt"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="13_wghat"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="14_3ji3b"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="15_t7373"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="16_ihncg"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="17_r11vi"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k3s0e"]
+size = Vector2(1024, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5fhwo"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_75wto"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k3xfv"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qnkio"]
+size = Vector2(12, 256)
+
+[node name="BosqueNodo" type="Node2D" unique_id=867851645 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_mnohc")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 960, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=332478587]
+
+[node name="Props" type="Node2D" parent="." unique_id=276552696]
+script = ExtResource("2_8s1qe")
+trees = PackedFloat32Array(60, 900)
+plants = PackedFloat32Array(380, 580)
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=859521302]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=2000745641]
+position = Vector2(480, 344)
+shape = SubResource("RectangleShape2D_k3s0e")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=538074508]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_5fhwo")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=831781277]
+position = Vector2(976, 180)
+shape = SubResource("RectangleShape2D_75wto")
+
+[node name="Mundo" type="Node2D" parent="." unique_id=1227818916]
+
+[node name="Nodo" type="Node2D" parent="Mundo" unique_id=92596317]
+position = Vector2(470, 304)
+script = ExtResource("3_ybpwm")
+valves = Array[NodePath]([NodePath("../HaciaColegio"), NodePath("../HaciaBarrio"), NodePath("../Reenvio"), NodePath("../HaciaEstacion"), NodePath("../HaciaTroncal")])
+wrong_dialogue = ExtResource("4_dseka")
+contained_dialogue = ExtResource("5_mfjhd")
+rescue_dialogue = ExtResource("6_ilpdf")
+weak_lines = PackedStringArray("SEÑAL PROTECTORA", "ENERGÍA: 18 %", "PROTEGIENDO LAS CONEXIONES SANAS...")
+
+[node name="RepisaBarrio" type="AnimatableBody2D" parent="Mundo" unique_id=1588754404]
+position = Vector2(256, 236)
+script = ExtResource("7_71jug")
+width = 88.0
+
+[node name="RepisaReenvio" type="AnimatableBody2D" parent="Mundo" unique_id=1753581974]
+position = Vector2(600, 206)
+script = ExtResource("7_71jug")
+width = 88.0
+
+[node name="RepisaEstacion" type="AnimatableBody2D" parent="Mundo" unique_id=42927180]
+position = Vector2(760, 236)
+script = ExtResource("7_71jug")
+width = 88.0
+
+[node name="Residuo1" type="Area2D" parent="Mundo" unique_id=1919994505]
+position = Vector2(196, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("8_ha234")
+width = 40.0
+spike_color = Color(0.45, 0.08, 0.2, 1)
+damage = 0.5
+is_hazard = true
+
+[node name="Residuo2" type="Area2D" parent="Mundo" unique_id=1778952247]
+position = Vector2(696, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("8_ha234")
+width = 40.0
+spike_color = Color(0.45, 0.08, 0.2, 1)
+damage = 0.5
+is_hazard = true
+
+[node name="HaciaColegio" type="Area2D" parent="Mundo" unique_id=229201433]
+position = Vector2(110, 304)
+script = ExtResource("9_a8wwf")
+label = "HACIA EL COLEGIO"
+damaged = true
+prompt_offset = Vector2(-50, -96)
+
+[node name="HaciaBarrio" type="Area2D" parent="Mundo" unique_id=717741221]
+position = Vector2(300, 236)
+script = ExtResource("9_a8wwf")
+label = "HACIA EL BARRIO"
+prompt_offset = Vector2(-50, -96)
+
+[node name="Reenvio" type="Area2D" parent="Mundo" unique_id=1493418237]
+position = Vector2(644, 206)
+script = ExtResource("9_a8wwf")
+label = "BUCLE DE REENVÍO"
+damaged = true
+prompt_offset = Vector2(-50, -96)
+
+[node name="HaciaEstacion" type="Area2D" parent="Mundo" unique_id=1747096972]
+position = Vector2(804, 236)
+script = ExtResource("9_a8wwf")
+label = "HACIA LA ESTACIÓN"
+prompt_offset = Vector2(-50, -96)
+
+[node name="HaciaTroncal" type="Area2D" parent="Mundo" unique_id=629054938]
+position = Vector2(900, 304)
+script = ExtResource("9_a8wwf")
+label = "HACIA LA TRONCAL"
+damaged = true
+prompt_offset = Vector2(-50, -96)
+
+[node name="DigitalLayer" type="Node2D" parent="." unique_id=53337675]
+
+[node name="Historia" type="Node2D" parent="." unique_id=400581130]
+
+[node name="Llegada" type="Area2D" parent="Historia" unique_id=1935975365]
+script = ExtResource("10_7qote")
+quest_id = &"contagio_digital"
+step_id = &"contener_contagio"
+dialogue = ExtResource("11_7l8ll")
+on_ready = true
+completes_step = false
+once_flag = &"cap3_nodo_visto"
+
+[node name="Entries" type="Node2D" parent="." unique_id=961522303]
+
+[node name="DesdePuente" type="Marker2D" parent="Entries" unique_id=1860084034]
+position = Vector2(40, 304)
+script = ExtResource("12_svwkt")
+id = &"desde_puente"
+
+[node name="DesdeEstacion" type="Marker2D" parent="Entries" unique_id=2135131985]
+position = Vector2(920, 304)
+script = ExtResource("12_svwkt")
+id = &"desde_estacion"
+facing = -1
+
+[node name="Exits" type="Node2D" parent="." unique_id=688624998]
+
+[node name="ToPuente" type="Area2D" parent="Exits" unique_id=1310944781]
+position = Vector2(6, 176)
+script = ExtResource("13_wghat")
+door_id = &"oeste"
+target_scene = "res://world/zones/bosque_fibra/bosque_puente.tscn"
+target_entry = &"desde_nodo"
+
+[node name="@CollisionShape2D@3" type="CollisionShape2D" parent="Exits/ToPuente" unique_id=826514781]
+shape = SubResource("RectangleShape2D_k3xfv")
+
+[node name="ToEstacion" type="Area2D" parent="Exits" unique_id=1656746115]
+position = Vector2(954, 176)
+script = ExtResource("13_wghat")
+door_id = &"este"
+target_scene = "res://world/zones/bosque_fibra/bosque_estacion.tscn"
+target_entry = &"desde_nodo"
+requires_quest = &"contagio_digital"
+requires_step = &"llegar_estacion"
+
+[node name="@CollisionShape2D@4" type="CollisionShape2D" parent="Exits/ToEstacion" unique_id=1479830957]
+shape = SubResource("RectangleShape2D_qnkio")
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1251590607]
+position = Vector2(40, 304)
+
+[node name="Player" parent="." unique_id=299383722 instance=ExtResource("14_3ji3b")]
+position = Vector2(40, 304)
+
+[node name="GameCamera" parent="." unique_id=1094914482 node_paths=PackedStringArray("target") instance=ExtResource("15_t7373")]
+target = NodePath("../Player")
+
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("16_ihncg")]
+player = NodePath("../Player")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=2005256569 node_paths=PackedStringArray("player", "ambient", "digital_layer")]
+script = ExtResource("17_r11vi")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(1, 1, 1, 1)
+digital_ambient = Color(0.72, 0.82, 1, 1)
+digital_layer = NodePath("../DigitalLayer")

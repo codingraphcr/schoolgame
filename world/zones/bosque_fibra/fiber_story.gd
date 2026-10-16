@@ -1,7 +1,7 @@
 class_name FiberStory
 extends Node
-## La misión «Sin señal en el barrio» dentro del Bosque de Fibra (una por sala, hija de la sala):
-## - Raíces del barrio: durante seguir_fibroluz, cuando Kai se acerca al Fibroluz, le habla (guide_dialogue) y
+## La misión «El bosque que dejó de brillar» (antes «Sin señal en el barrio») dentro del Bosque de Fibra (una por sala, hija de la sala):
+## - Raíces del barrio: durante ayudar_fibroluz, cuando Kai se acerca al Fibroluz, le habla (guide_dialogue) y
 ##   el Fibroluz lo guía hacia el claro (guide_points).
 ## - El claro: el Fibroluz espera junto al corte, apagado. Al reconectar (circuit.solved), queda la marca
 ##   RESTORED_FLAG (el bosque y la caja del barrio se encienden), se oye fibra_reconectada y el Fibroluz se
@@ -37,7 +37,7 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	if _guiding or circuit or fibroluz == null:
 		return
-	if _state().get_current_step(QUEST) != &"seguir_fibroluz":
+	if _state().get_current_step(QUEST) != &"ayudar_fibroluz":
 		return
 	var player := StoryHelper.room_player(self)
 	if player and not player.controls_locked and player.global_position.distance_to(fibroluz.global_position) < guide_distance:

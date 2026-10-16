@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(El núcleo del nodo deja de latir en rojo. Los conductos oscuros se apagan.)
+Kai: ¡Listo! Lo dañado ya no sale de aquí. El colegio debería dejar de fallar.
+(El piso del nodo cruje bajo los pies de Kai.)
+Kai: ...¿Y eso?"

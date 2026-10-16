@@ -69,6 +69,22 @@ func jump(index: int) -> void:
 	print("Menú de pruebas: ", point["grupo"], " · ", point["nombre"])
 
 
+## Vuelve a ver la cinemática inicial como en una partida nueva (sin ranura: no se guarda nada).
+func play_intro() -> void:
+	if is_open():
+		close()
+	get_tree().paused = false
+	get_node("/root/SaveManager").active_slot = 0
+	get_node("/root/DigitalVision").reset()
+	get_node("/root/World").new_world()
+	var state := get_node("/root/GameState")
+	state.reset()
+	state.set_flag(&"menu_pruebas")
+	state.start_quest(&"prologo")
+	CombatClock.reset()
+	get_node("/root/SceneManager").change_scene(SceneManager.INTRO)
+
+
 func _input(event: InputEvent) -> void:
 	var key := event as InputEventKey
 	if key and key.pressed and not key.echo and key.physical_keycode == KEY_F9:
@@ -149,6 +165,11 @@ func _build() -> void:
 		if i == 0:
 			button.name = "Primero"
 		list.add_child(button)
+	var intro_button := Button.new()
+	intro_button.name = "Cinematica"
+	intro_button.text = "Ver la cinemática inicial (partida nueva, sin guardar)"
+	intro_button.pressed.connect(play_intro)
+	column.add_child(intro_button)
 	var close_button := Button.new()
 	close_button.text = "Cerrar (F9 o Esc)"
 	close_button.pressed.connect(close)

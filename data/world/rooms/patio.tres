@@ -17,6 +17,12 @@ side = 0
 kind = 1
 entry_id = &"desde_soda"
 
+[sub_resource type="Resource" id="Resource_bkwqh"]
+script = ExtResource("1_bkwqh")
+id = &"tienda"
+side = 2
+entry_id = &"desde_tienda"
+
 [resource]
 script = ExtResource("2_tix8v")
 id = &"patio"
@@ -24,7 +30,7 @@ display_name = "Patio"
 scene_path = "res://world/zones/zone0/patio.tscn"
 room_type = &"courtyard"
 size_cells = Vector2i(3, 1)
-doors = Array[ExtResource("1_bkwqh")]([SubResource("Resource_e324b"), SubResource("Resource_xctkm")])
+doors = Array[ExtResource("1_bkwqh")]([SubResource("Resource_e324b"), SubResource("Resource_xctkm"), SubResource("Resource_bkwqh")])
 fixed = true
 minimum_player_abilities = PackedStringArray()
 chapter_requirement = 1

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(En el centro del núcleo, sobre el piso, hay una esferita blanca y azul. Su único ojo titila, muy débil.)
+Kai: ...¿Vos?
+Kai: Vos eras la luz azul. El puente, el nodo, la compuerta... Eras vos.
+Aegis: Unidad... AEGIS. Función principal... proteger.
+Kai: Entonces, ¿por qué seguiste ayudándome?
+Aegis: Función principal... proteger.
+Kai: Bueno, ahora me toca a mí.
+Aegis: Acción no recomendada. Riesgo elevado.
+Kai: Mae, si hubiera hecho caso a todas las advertencias, ni siquiera estaría aquí.
+Aegis: Evaluación... correcta.
+Aegis: Energía insuficiente. Reparación requerida: restablecer el suministro... recuperar tres módulos... estabilizar el núcleo.
+Kai: Tres cosas. Puedo con tres cosas."

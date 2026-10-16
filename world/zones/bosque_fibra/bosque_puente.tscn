@@ -1,0 +1,185 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_s2ei7"]
+[ext_resource type="Script" path="res://world/digital/fiber/fiber_forest_props.gd" id="2_qgvf7"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_onayp"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="4_vvcq7"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="5_jw11u"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="6_2dogu"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="7_skt14"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="8_nhjnd"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="9_77heu"]
+[ext_resource type="Script" path="res://world/zones/bosque_fibra/signal_bridge.gd" id="10_j3pfc"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_puente_pregunta.tres" id="11_3pk1w"]
+[ext_resource type="Script" path="res://world/rooms/stairway.gd" id="12_v3o7u"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_juqbu"]
+size = Vector2(292, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5fhwo"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_75wto"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w0inh"]
+size = Vector2(292, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_232x1"]
+size = Vector2(12, 256)
+
+[node name="BosquePuente" type="Node2D" unique_id=867851645 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_s2ei7")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 1280, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=332478587]
+
+[node name="Props" type="Node2D" parent="." unique_id=276552696]
+script = ExtResource("2_qgvf7")
+width = 1280.0
+trees = PackedFloat32Array(90, 1180)
+plants = PackedFloat32Array(200, 1100)
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=859521302]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=2000745641]
+position = Vector2(114, 344)
+shape = SubResource("RectangleShape2D_juqbu")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=538074508]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_5fhwo")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=831781277]
+position = Vector2(1296, 180)
+shape = SubResource("RectangleShape2D_75wto")
+
+[node name="FloorRight" type="CollisionShape2D" parent="Collisions" unique_id=1924068692]
+position = Vector2(1166, 344)
+shape = SubResource("RectangleShape2D_w0inh")
+
+[node name="Mundo" type="Node2D" parent="." unique_id=1227818916]
+
+[node name="Tramo1" type="AnimatableBody2D" parent="Mundo" unique_id=1848245767]
+position = Vector2(296, 292)
+script = ExtResource("3_onayp")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="Tramo2" type="AnimatableBody2D" parent="Mundo" unique_id=1729333860]
+position = Vector2(418, 274)
+script = ExtResource("3_onayp")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="Tramo3" type="AnimatableBody2D" parent="Mundo" unique_id=810792867]
+position = Vector2(540, 292)
+script = ExtResource("3_onayp")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="Tramo4" type="AnimatableBody2D" parent="Mundo" unique_id=1437663188]
+position = Vector2(662, 274)
+script = ExtResource("3_onayp")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="Tramo5" type="AnimatableBody2D" parent="Mundo" unique_id=2132900311]
+position = Vector2(784, 292)
+script = ExtResource("3_onayp")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="Tramo6" type="AnimatableBody2D" parent="Mundo" unique_id=1959965736]
+position = Vector2(906, 274)
+script = ExtResource("3_onayp")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="DigitalLayer" type="Node2D" parent="." unique_id=53337675]
+
+[node name="Historia" type="Node2D" parent="." unique_id=400581130]
+
+[node name="Entries" type="Node2D" parent="." unique_id=961522303]
+
+[node name="DesdeClaro" type="Marker2D" parent="Entries" unique_id=250673620]
+position = Vector2(110, 304)
+script = ExtResource("4_vvcq7")
+id = &"desde_claro"
+
+[node name="DesdeNodo" type="Marker2D" parent="Entries" unique_id=1562438472]
+position = Vector2(1230, 304)
+script = ExtResource("4_vvcq7")
+id = &"desde_nodo"
+facing = -1
+
+[node name="Exits" type="Node2D" parent="." unique_id=688624998]
+
+[node name="ToNodo" type="Area2D" parent="Exits" unique_id=1620499450]
+position = Vector2(1274, 176)
+script = ExtResource("5_jw11u")
+door_id = &"este"
+target_scene = "res://world/zones/bosque_fibra/bosque_nodo.tscn"
+target_entry = &"desde_puente"
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Exits/ToNodo" unique_id=1133450151]
+shape = SubResource("RectangleShape2D_232x1")
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1251590607]
+position = Vector2(110, 304)
+
+[node name="Player" parent="." unique_id=299383722 instance=ExtResource("6_2dogu")]
+position = Vector2(110, 304)
+
+[node name="GameCamera" parent="." unique_id=1094914482 node_paths=PackedStringArray("target") instance=ExtResource("7_skt14")]
+target = NodePath("../Player")
+
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("8_nhjnd")]
+player = NodePath("../Player")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=2005256569 node_paths=PackedStringArray("player", "ambient", "digital_layer")]
+script = ExtResource("9_77heu")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(1, 1, 1, 1)
+digital_ambient = Color(0.72, 0.82, 1, 1)
+digital_layer = NodePath("../DigitalLayer")
+
+[node name="SignalBridge" type="Node2D" parent="." unique_id=1572550431]
+script = ExtResource("10_j3pfc")
+platforms = Array[NodePath]([NodePath("../Mundo/Tramo1"), NodePath("../Mundo/Tramo2"), NodePath("../Mundo/Tramo3"), NodePath("../Mundo/Tramo4"), NodePath("../Mundo/Tramo5"), NodePath("../Mundo/Tramo6")])
+trigger_x = 210.0
+exit_x = 1060.0
+alert_lines = PackedStringArray("RUTA ALTERNATIVA DISPONIBLE", "RIESGO DE CAÍDA: ELEVADO", "POR FAVOR, TEN CUIDADO")
+ask_dialogue = ExtResource("11_3pk1w")
+
+[node name="BajarAlClaro" type="Area2D" parent="." unique_id=119031181]
+position = Vector2(70, 304)
+script = ExtResource("12_v3o7u")
+door_id = &"abajo"
+target_scene = "res://world/zones/bosque_fibra/fibra_claro.tscn"
+target_entry = &"desde_puente"
+going_up = false
+sign_text = "AL CLARO"
+show_art = false
+prompt_text = "E: bajar al claro"
+prompt_offset = Vector2(-60, -110)

@@ -4,9 +4,10 @@ extends Node
 ## Busca assets/audio/music/<pista>.ogg (o .mp3 / .wav) y la reproduce en bucle por el bus "Music"
 ## (volumen de Música en Opciones), con un fundido entre pistas. Si el archivo no existe, la
 ## música se apaga (todavía no hay pistas: basta con dejar los archivos con estos nombres).
-## Pistas que usa el juego: menu, colegio, computadora, pelea, hermanos. Mientras no haya archivo,
-## "computadora" (la parte del ojo de la entidad) y "hermanos" (la pelea contra Glitch y Chip) tienen
-## una música provisional generada por código.
+## Pistas que usa el juego: menu, colegio, computadora, pelea, hermanos, intro_manana, intro_prisa. Mientras no
+## haya archivo, "computadora" (la parte del ojo de la entidad), "hermanos" (la pelea contra Glitch y Chip) y las dos
+## de la cinemática inicial ("intro_manana": la mañana y el desayuno; "intro_prisa": las carreras) tienen una música
+## provisional generada por código.
 ## Capa extra: si existe <pista>_capa2, suena junto con la pista, en silencio hasta Music.set_layer(true)
 ## (en la pelea contra los gemelos, la segunda melodía entra en la Fase 2).
 
@@ -66,7 +67,7 @@ static func stream_for(track: StringName) -> AudioStream:
 		var path := FOLDER + String(track) + ext
 		if ResourceLoader.exists(path):
 			return load(path)
-	if track in [&"computadora", &"hermanos", &"hermanos_capa2"]:
+	if track in [&"computadora", &"hermanos", &"hermanos_capa2", &"intro_manana", &"intro_prisa"]:
 		if not _generated.has(track):
 			match track:
 				&"computadora":
@@ -75,6 +76,10 @@ static func stream_for(track: StringName) -> AudioStream:
 					_generated[track] = _twins_track(false)
 				&"hermanos_capa2":
 					_generated[track] = _twins_track(true)
+				&"intro_manana":
+					_generated[track] = _morning_track(false)
+				&"intro_prisa":
+					_generated[track] = _morning_track(true)
 		return _generated[track]
 	return null
 
@@ -227,6 +232,67 @@ static func _twins_track(layer: bool) -> AudioStreamWAV:
 				sample += 0.09 * (1.0 - 4.0 * absf(phase - 0.5)) * minf(long / 0.05, 1.0) * exp(-long * 1.4)
 		lp += 0.5 * (sample - lp)
 		var edge := minf(t / 0.01, 1.0) * minf((LENGTH - t) / 0.01, 1.0)
+		data.encode_s16(i * 2, clampi(int(lp * edge * 0.8 * 32767.0), -32768, 32767))
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = RATE
+	stream.data = data
+	stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	stream.loop_begin = 0
+	stream.loop_end = count
+	return stream
+
+
+## Música provisional de la cinemática inicial, alegre y en Do mayor (Do · Sol · Lam · Fa). Sin prisa (rush false):
+## 100 bpm, un bajo suave y una melodía de marimba (la mañana, el desayuno, el barrio). Con prisa: 150 bpm, bajo en
+## corcheas, platillo y la misma melodía más aguda y picada (prepararse contra reloj, correr al colegio). Un bucle de
+## cuatro compases sin cortes.
+static func _morning_track(rush: bool) -> AudioStreamWAV:
+	const RATE := 11025
+	var bpm := 150.0 if rush else 100.0
+	var beat := 60.0 / bpm
+	var bar := beat * 4.0
+	var length := bar * 4.0
+	var roots: Array[float] = [65.41, 49.0, 55.0, 43.65]
+	var chords := [[261.63, 329.63, 392.0], [246.94, 293.66, 392.0], [220.0, 261.63, 329.63], [220.0, 261.63, 349.23]]
+	# Melodía: una nota por corchea (índice del acorde; -1 = silencio), igual en los cuatro compases salvo el último.
+	var melody := [0, 1, 2, 1, 0, -1, 2, 1]
+	var last := [2, 1, 0, -1, 0, -1, -1, -1]
+	var count := int(RATE * length)
+	var data := PackedByteArray()
+	data.resize(count * 2)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 635
+	var lp := 0.0
+	for i in count:
+		var t := float(i) / RATE
+		var bar_index := int(t / bar) % 4
+		var in_bar := fmod(t, bar)
+		var sample := 0.0
+		# Bajo: la raíz en negras (con prisa, en corcheas).
+		var bass_step := beat / (2.0 if rush else 1.0)
+		var since_bass := fmod(in_bar, bass_step)
+		var bass_freq := roots[bar_index] * (2.0 if int(in_bar / bass_step) % 2 == 1 and rush else 1.0)
+		sample += 0.2 * sin(TAU * bass_freq * since_bass) * exp(-since_bass * (9.0 if rush else 4.0))
+		# Marimba: la melodía en corcheas, con un decaimiento rápido.
+		var eighth := beat / 2.0
+		var step := int(in_bar / eighth)
+		var since := fmod(in_bar, eighth)
+		var notes: Array = chords[bar_index]
+		var pattern: Array = last if bar_index == 3 else melody
+		var index: int = pattern[step % 8]
+		if index >= 0:
+			var freq: float = notes[index] * (2.0 if rush else 1.0)
+			var env := exp(-since * (16.0 if rush else 10.0))
+			sample += 0.16 * env * (sin(TAU * freq * since) + 0.35 * sin(TAU * freq * 4.0 * since) * exp(-since * 30.0))
+		# Acorde de fondo, muy suave.
+		for note: float in notes:
+			sample += 0.025 * sin(TAU * note * t)
+		# Con prisa: platillo en cada corchea.
+		if rush and since < 0.03:
+			sample += rng.randf_range(-0.08, 0.08) * (1.0 - since / 0.03)
+		lp += 0.45 * (sample - lp)
+		var edge := minf(t / 0.02, 1.0) * minf((length - t) / 0.02, 1.0)
 		data.encode_s16(i * 2, clampi(int(lp * edge * 0.8 * 32767.0), -32768, 32767))
 	var stream := AudioStreamWAV.new()
 	stream.format = AudioStreamWAV.FORMAT_16_BITS

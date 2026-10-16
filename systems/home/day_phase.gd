@@ -15,6 +15,8 @@ const NAMES: Array[String] = ["Día", "Tarde", "Noche", "Mañana"]
 
 ## [misión, paso actual, momento, marca (opcional)]
 const RULES: Array = [
+	# La cinemática inicial: Kai se despierta y va al colegio (el prólogo empieza antes de hablar con el profesor).
+	[&"prologo", &"hablar_profesor", Phase.MANANA],
 	[&"camino_a_casa", &"charla_amigos", Phase.TARDE],
 	[&"camino_a_casa", &"volver_a_casa", Phase.TARDE],
 	[&"camino_a_casa", &"hablar_familia", Phase.TARDE],

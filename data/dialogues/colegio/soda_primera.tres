@@ -4,9 +4,11 @@
 
 [resource]
 script = ExtResource("1_dlg")
-script_text = "# La primera vez en la soda.
+script_text = "# La primera vez en la soda. Al terminar queda la marca soda_presentada: se abre la tienda de al lado.
 Señora de la soda: ¡Buenas, mi amor! ¿Qué le sirvo?
 Kai: Un fresco de cas, por favor.
 Señora de la soda: Aquí tiene. Y llévese una empanadita, que está recién salida.
 Kai: ¡Gracias!
-(La empanada está deliciosa. Kai entiende por qué la fila llega hasta el patio.)"
+(La empanada está deliciosa. Kai entiende por qué la fila llega hasta el patio.)
+Señora de la soda: Ah, y si ocupa algo más, al lado de la soda tengo mi tiendita. Ahí vendo cosas más... especiales.
+Señora de la soda: Ya le dejé abierto. Pase cuando quiera."

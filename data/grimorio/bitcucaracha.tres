@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 6
+order = 0
+title = "Bitcucaracha"
+subtitle = "Bestiario · Estación Lázaro"
+text = "Organismos digitales carroñeros, pequeños y metálicos. Los atraen los residuos de energía: cuando un sistema se repara, corren hacia él.
+
+Aegis: «Recomiendo una inspección de plagas»."
+facts = Dictionary[String, String]({"Peligro": "Bajo", "Debilidad": "Nullblade, Aegis Pulse"})
+unlock_flag = &"aegis_nucleo_estable"

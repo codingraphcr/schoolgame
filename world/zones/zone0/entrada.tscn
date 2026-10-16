@@ -24,6 +24,7 @@
 [ext_resource type="Script" path="res://world/rooms/stairway.gd" id="19_r0gc5"]
 [ext_resource type="Script" path="res://world/digital/save_point.gd" id="19_savep"]
 [ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="20_bgnpc"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_amigos.tres" id="20_dlrsl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_stp1f"]
 size = Vector2(864, 80)
@@ -45,6 +46,9 @@ size = Vector2(12, 256)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jo5h4"]
 size = Vector2(90, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dlrsl"]
+size = Vector2(80, 80)
 
 [node name="Entrada" type="Node2D" unique_id=476933876 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
@@ -441,6 +445,45 @@ prompt_offset = Vector2(-50, -90)
 [node name="StoryPresence" type="Node" parent="APatio" unique_id=653202938]
 script = ExtResource("12_ailnp")
 show_quest = &"una_clase_diferente"
+
+[node name="Capitulo3" type="Node2D" parent="." unique_id=834892939]
+
+[node name="StoryPresence" type="Node" parent="Capitulo3" unique_id=1602785117]
+script = ExtResource("12_ailnp")
+show_quest = &"contagio_digital"
+show_step = &"dia_normal"
+hide_quest = &"contagio_digital"
+hide_step = &"diagnostico"
+
+[node name="Amiga" type="Node2D" parent="Capitulo3" unique_id=858659385]
+position = Vector2(470, 304)
+script = ExtResource("20_bgnpc")
+character = "f1"
+mode = 2
+partner = NodePath("../Amigo")
+alt_characters = PackedStringArray()
+
+[node name="Amigo" type="Node2D" parent="Capitulo3" unique_id=2107610922]
+position = Vector2(498, 304)
+script = ExtResource("20_bgnpc")
+character = "m2"
+mode = 2
+facing = -1
+partner = NodePath("../Amiga")
+alt_characters = PackedStringArray()
+
+[node name="Charla" type="Area2D" parent="Capitulo3" unique_id=701070612]
+position = Vector2(400, 304)
+script = ExtResource("17_r0gc5")
+quest_id = &"contagio_digital"
+step_id = &"dia_normal"
+dialogue = ExtResource("20_dlrsl")
+completes_step = false
+once_flag = &"cap3_amigos_hablaron"
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Capitulo3/Charla" unique_id=1515922584]
+position = Vector2(0, -40)
+shape = SubResource("RectangleShape2D_dlrsl")
 
 [node name="Player" parent="." unique_id=1231409875 instance=ExtResource("14_dhj2v")]
 position = Vector2(72, 304)

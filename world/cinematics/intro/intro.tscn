@@ -1,0 +1,392 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/cinematics/intro/intro_cinematic.gd" id="1_lca31"]
+[ext_resource type="Script" path="res://world/home/bedroom_props.gd" id="2_j1ppm"]
+[ext_resource type="Script" path="res://world/home/keepsake_shelf.gd" id="3_xowph"]
+[ext_resource type="Script" path="res://world/home/kai_computer.gd" id="4_5jbgd"]
+[ext_resource type="Script" path="res://world/home/kai_bed.gd" id="5_xhans"]
+[ext_resource type="Script" path="res://world/cinematics/intro/intro_prop.gd" id="6_pgs73"]
+[ext_resource type="Script" path="res://world/home/house_props.gd" id="7_6qvvx"]
+[ext_resource type="Script" path="res://characters/npcs/familia/family_member.gd" id="8_od6q3"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_mama_dia.tres" id="9_6a4xc"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_pf_quieto.png" id="10_p10f2"]
+[ext_resource type="Script" path="res://components/interaction/interactable.gd" id="11_iludj"]
+[ext_resource type="Resource" path="res://data/dialogues/hogar/hogar_papa_dia.tres" id="12_4t8he"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_pm_quieto.png" id="13_826cb"]
+[ext_resource type="Script" path="res://world/home/street_props.gd" id="14_mtuve"]
+[ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="15_ips5b"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="16_8jfwk"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="17_u2ps3"]
+[ext_resource type="PackedScene" path="res://ui/dialogue/dialogue_box.tscn" id="18_xwdqp"]
+[ext_resource type="Script" path="res://ui/dialogue/dialogue_box.gd" id="19_hmmt5"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/logo_shield.svg" id="20_gxamk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fqm65"]
+atlas = ExtResource("10_p10f2")
+region = Rect2(0, 0, 96, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6kw4o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fqm65")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fqm65")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y0fup"]
+size = Vector2(48, 56)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ysvph"]
+atlas = ExtResource("13_826cb")
+region = Rect2(0, 0, 96, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v3okw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ysvph")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ysvph")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7y1su"]
+size = Vector2(48, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2yvvp"]
+size = Vector2(7000, 80)
+
+[node name="IntroCinematic" type="Node2D" unique_id=59261263 node_paths=PackedStringArray("kai", "camera", "ambient", "bed", "alarm", "backpack", "notebook_a", "notebook_b", "breakfast", "lunchbox", "mom", "dad", "dog", "bus", "pulpero", "friend")]
+script = ExtResource("1_lca31")
+kai = NodePath("Kai")
+camera = NodePath("Camara")
+ambient = NodePath("Luz")
+bed = NodePath("Cuarto/Cama")
+alarm = NodePath("Cuarto/Despertador")
+backpack = NodePath("Cuarto/Mochila")
+notebook_a = NodePath("Cuarto/CuadernoA")
+notebook_b = NodePath("Cuarto/CuadernoB")
+breakfast = NodePath("Casa/Desayuno")
+lunchbox = NodePath("Casa/Lonchera")
+mom = NodePath("Casa/Mama")
+dad = NodePath("Casa/Papa")
+dog = NodePath("Calle/VerjaPerro")
+bus = NodePath("Calle/Bus")
+pulpero = NodePath("Calle/DonCarlos")
+friend = NodePath("Calle/Amigo")
+
+[node name="Luz" type="CanvasModulate" parent="." unique_id=353181991]
+
+[node name="Franja" type="ColorRect" parent="." unique_id=238342650]
+offset_left = -400.0
+offset_top = 364.0
+offset_right = 6600.0
+offset_bottom = 764.0
+mouse_filter = 2
+color = Color(0.039, 0.067, 0.141, 1)
+
+[node name="Cuarto" type="Node2D" parent="." unique_id=1104220529]
+
+[node name="Props" type="Node2D" parent="Cuarto" unique_id=145748428]
+script = ExtResource("2_j1ppm")
+
+[node name="EstanteriaRecuerdos" type="Node2D" parent="Cuarto" unique_id=1110391925]
+position = Vector2(300, 304)
+script = ExtResource("3_xowph")
+rows = 3
+
+[node name="VitrinaFragmentos" type="Node2D" parent="Cuarto" unique_id=1732936216]
+position = Vector2(390, 304)
+script = ExtResource("3_xowph")
+title = "COLECCIÓN · FRAGMENTOS DE DATOS"
+prompt_text = "E: mirar los fragmentos"
+show_memories = false
+show_fragments = true
+show_gifts = false
+list_locked = true
+columns = 2
+empty_text = "Todavía no encontré ningún Fragmento de Datos."
+
+[node name="Computadora" type="Node2D" parent="Cuarto" unique_id=1655822288]
+position = Vector2(205, 262)
+script = ExtResource("4_5jbgd")
+
+[node name="Cama" type="Node2D" parent="Cuarto" unique_id=1412193382]
+position = Vector2(560, 304)
+script = ExtResource("5_xhans")
+not_now_lines = PackedStringArray("Todavía es temprano para dormir.", "Ahora no tengo sueño.")
+
+[node name="Despertador" type="Node2D" parent="Cuarto" unique_id=234189641]
+position = Vector2(492, 304)
+script = ExtResource("6_pgs73")
+
+[node name="Mochila" type="Node2D" parent="Cuarto" unique_id=427841459]
+position = Vector2(420, 304)
+script = ExtResource("6_pgs73")
+kind = 1
+
+[node name="Espejo" type="Node2D" parent="Cuarto" unique_id=464630110]
+position = Vector2(344, 304)
+script = ExtResource("6_pgs73")
+kind = 2
+
+[node name="CuadernoA" type="Node2D" parent="Cuarto" unique_id=1341203563]
+position = Vector2(232, 262)
+script = ExtResource("6_pgs73")
+kind = 3
+
+[node name="CuadernoB" type="Node2D" parent="Cuarto" unique_id=1275590623]
+position = Vector2(246, 258)
+script = ExtResource("6_pgs73")
+kind = 3
+color = Color(0.2901961, 0.5411765, 0.84705883, 1)
+
+[node name="Casa" type="Node2D" parent="." unique_id=1821748775]
+position = Vector2(2000, 0)
+
+[node name="Props" type="Node2D" parent="Casa" unique_id=446133105]
+script = ExtResource("7_6qvvx")
+
+[node name="Mama" type="Node2D" parent="Casa" unique_id=1367546736]
+position = Vector2(830, 304)
+script = ExtResource("8_od6q3")
+chore = &"cocinar"
+shirt_color = Color(0.84705883, 0.4627451, 0.41568628, 1)
+pants_color = Color(0.2901961, 0.2901961, 0.41568628, 1)
+display_name = "Mamá"
+dialogue = ExtResource("9_6a4xc")
+repeat_dialogue = ExtResource("9_6a4xc")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Casa/Mama" unique_id=280978163]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_6kw4o")
+animation = &"idle"
+offset = Vector2(0, -55)
+
+[node name="Interactable" type="Area2D" parent="Casa/Mama" unique_id=341065302]
+script = ExtResource("11_iludj")
+prompt_text = "E: hablar"
+prompt_offset = Vector2(-20, -74)
+
+[node name="Shape" type="CollisionShape2D" parent="Casa/Mama/Interactable" unique_id=879734142]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_y0fup")
+
+[node name="Papa" type="Node2D" parent="Casa" unique_id=19774240]
+position = Vector2(712, 304)
+script = ExtResource("8_od6q3")
+chore = &"leer"
+shirt_color = Color(0.2901961, 0.47843137, 0.3529412, 1)
+pants_color = Color(0.41568628, 0.3529412, 0.2509804, 1)
+display_name = "Papá"
+dialogue = ExtResource("12_4t8he")
+repeat_dialogue = ExtResource("12_4t8he")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Casa/Papa" unique_id=710621678]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_v3okw")
+animation = &"idle"
+offset = Vector2(0, -55)
+
+[node name="Interactable" type="Area2D" parent="Casa/Papa" unique_id=780182979]
+script = ExtResource("11_iludj")
+prompt_text = "E: hablar"
+prompt_offset = Vector2(-20, -74)
+
+[node name="Shape" type="CollisionShape2D" parent="Casa/Papa/Interactable" unique_id=568004585]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_7y1su")
+
+[node name="Desayuno" type="Node2D" parent="Casa" unique_id=1820521724]
+position = Vector2(616, 260)
+script = ExtResource("6_pgs73")
+kind = 4
+
+[node name="Lonchera" type="Node2D" parent="Casa" unique_id=639791218]
+position = Vector2(770, 258)
+script = ExtResource("6_pgs73")
+kind = 5
+
+[node name="Calle" type="Node2D" parent="." unique_id=1198223702]
+position = Vector2(4000, 0)
+
+[node name="Props" type="Node2D" parent="Calle" unique_id=1401507290]
+script = ExtResource("14_mtuve")
+houses = {
+250.0: [150.0, 120.0, Color(0.8784314, 0.58431375, 0.47843137, 1)],
+940.0: [160.0, 130.0, Color(0.41568628, 0.72156864, 0.65882355, 1)],
+1130.0: [140.0, 110.0, Color(0.9098039, 0.78431374, 0.41568628, 1)],
+1310.0: [150.0, 125.0, Color(0.65882355, 0.5411765, 0.78431374, 1)]
+}
+trees = PackedFloat32Array(232, 610, 1112, 1490)
+poles = PackedFloat32Array(80, 500, 920, 1300, 1700)
+
+[node name="MuroGato" type="Node2D" parent="Calle" unique_id=215151994]
+position = Vector2(1040, 304)
+script = ExtResource("6_pgs73")
+kind = 7
+
+[node name="VerjaPerro" type="Node2D" parent="Calle" unique_id=82734749]
+position = Vector2(420, 304)
+script = ExtResource("6_pgs73")
+kind = 6
+
+[node name="Bus" type="Node2D" parent="Calle" unique_id=109778154]
+visible = false
+position = Vector2(1900, 300)
+script = ExtResource("6_pgs73")
+kind = 8
+color = Color(0.22745098, 0.6039216, 0.41568628, 1)
+
+[node name="DonCarlos" type="Node2D" parent="Calle" unique_id=174836089]
+position = Vector2(792, 304)
+script = ExtResource("15_ips5b")
+character = "pm"
+alt_characters = PackedStringArray()
+
+[node name="Amigo" type="Node2D" parent="Calle" unique_id=1177149397]
+position = Vector2(310, 304)
+script = ExtResource("15_ips5b")
+character = "m2"
+facing = -1
+alt_characters = PackedStringArray()
+
+[node name="Estudiante1" type="Node2D" parent="Calle" unique_id=1473020222]
+position = Vector2(560, 304)
+script = ExtResource("15_ips5b")
+character = "f1"
+mode = 1
+facing = -1
+walk_left = -60.0
+walk_right = 60.0
+alt_characters = PackedStringArray()
+
+[node name="Estudiante2" type="Node2D" parent="Calle" unique_id=2047776734]
+position = Vector2(980, 304)
+script = ExtResource("15_ips5b")
+mode = 1
+walk_left = -70.0
+walk_right = 90.0
+alt_characters = PackedStringArray()
+
+[node name="Estudiante3" type="Node2D" parent="Calle" unique_id=818409949]
+position = Vector2(90, 304)
+script = ExtResource("15_ips5b")
+character = "f3"
+alt_characters = PackedStringArray()
+
+[node name="Vecina" type="Node2D" parent="Calle" unique_id=172449335]
+position = Vector2(1180, 304)
+script = ExtResource("15_ips5b")
+character = "pf"
+mode = 3
+facing = -1
+alt_characters = PackedStringArray()
+
+[node name="Piso" type="StaticBody2D" parent="." unique_id=876409504]
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Piso" unique_id=1833390791]
+position = Vector2(3000, 344)
+shape = SubResource("RectangleShape2D_2yvvp")
+
+[node name="Kai" type="CharacterBody2D" parent="." unique_id=1455029556 instance=ExtResource("16_8jfwk")]
+position = Vector2(520, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("17_u2ps3")
+
+[node name="Camara" type="Camera2D" parent="." unique_id=878942110]
+position = Vector2(330, 200)
+zoom = Vector2(2, 2)
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1059589695]
+layer = 20
+
+[node name="DialogueBox" type="Control" parent="UI" unique_id=1603739334 instance=ExtResource("18_xwdqp")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("19_hmmt5")
+
+[node name="Caption" type="Label" parent="UI" unique_id=1060885722]
+modulate = Color(1, 1, 1, 0)
+offset_left = 28.0
+offset_top = 24.0
+offset_right = 28.0
+offset_bottom = 24.0
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.95, 0.85, 1)
+theme_override_colors/font_outline_color = Color(0.04, 0.06, 0.12, 1)
+theme_override_constants/outline_size = 6
+
+[node name="SkipHint" type="Label" parent="UI" unique_id=80295721]
+modulate = Color(1, 1, 1, 0.6)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -360.0
+offset_top = -40.0
+offset_right = -24.0
+offset_bottom = -14.0
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_outline_color = Color(0.04, 0.06, 0.12, 1)
+theme_override_constants/outline_size = 4
+text = "Esc: omitir"
+horizontal_alignment = 2
+
+[node name="Fade" type="ColorRect" parent="UI" unique_id=2030659826]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.039, 0.067, 0.141, 1)
+
+[node name="Title" type="VBoxContainer" parent="UI" unique_id=684486540]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+alignment = 1
+
+[node name="Logo" type="TextureRect" parent="UI/Title" unique_id=1448433786]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+texture = ExtResource("20_gxamk")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Nombre" type="Label" parent="UI/Title" unique_id=1484674249]
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+theme_override_colors/font_color = Color(0.24313726, 0.9490196, 1, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.04, 0.1, 1)
+theme_override_constants/outline_size = 8
+text = "Nullveil: Beyond the Firewall"
+horizontal_alignment = 1

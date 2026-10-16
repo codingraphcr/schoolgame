@@ -4,15 +4,19 @@ extends Resource
 ## completan los pasos con GameState.complete_step(id_mision, id_paso).
 ## Se edita en el Inspector; cada misión nueva se registra en QuestDB.
 
-## Principal (la historia), secundaria (historia opcional), tarea (encargo breve) o descubrimiento (lugar,
-## documento o ruta oculta). Ver docs/misiones/SISTEMA_DE_MISIONES.md.
-enum Category { PRINCIPAL, SECUNDARIA, TAREA, DESCUBRIMIENTO }
+## Principal (la historia), secundaria (historia opcional), tarea (encargo breve), descubrimiento (lugar,
+## documento o ruta oculta) o especial (una parte de la historia con nombre propio dentro de un nivel, p. ej. «Eco en
+## la Red»). Ver docs/misiones/SISTEMA_DE_MISIONES.md.
+enum Category { PRINCIPAL, SECUNDARIA, TAREA, DESCUBRIMIENTO, ESPECIAL }
 
-const CATEGORY_NAMES: Array[String] = ["Misión principal", "Misión secundaria", "Tarea", "Descubrimiento"]
+const CATEGORY_NAMES: Array[String] = ["Misión principal", "Misión secundaria", "Tarea", "Descubrimiento", "Misión especial"]
 
 @export var id: StringName = &""
 @export var title := ""
 @export var category := Category.PRINCIPAL
+## Capítulo al que pertenece (0 = sin capítulo). Las secundarias y tareas de un capítulo tienen que estar terminadas
+## para empezar el Capítulo 3 (ChapterGate): son de antes de que Kai conozca a Aegis.
+@export var chapter := 0
 @export var steps: Array[QuestStep] = []
 ## Título grande que aparece al completarla (p. ej. "EL DESPERTAR"). Vacío = ninguno.
 @export var completion_title := ""

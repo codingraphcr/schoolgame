@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Kai y Aegis salen al Bosque de Fibra.
+Aegis: No sabía que existían tantos colores.
+Kai: ¿Nunca habías visto algo así?
+Aegis: Mis registros contienen sus nombres. Pero nunca los había observado directamente.
+Kai: Bueno... entonces tenés bastante por conocer.
+Aegis: Gracias por regresar.
+Kai: Gracias por cuidarme primero."

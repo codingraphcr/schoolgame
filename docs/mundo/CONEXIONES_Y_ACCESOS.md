@@ -25,7 +25,7 @@ ficción o misiones secundarias. **No todas las puertas son cuestionarios.**
 | Acceso | 1. Sistema | 2. Por qué existe | 3. Región | 4. Qué lo permite | 5. Consecuencia | Estado |
 |---|---|---|---|---|---|---|
 | Computadoras del colegio (Sala 3, cuarto técnico, laboratorio) | Equipos de práctica y servidores | Clases y entrenamiento | Sistemas del colegio | Inmersión Digital (Cap. 1) | Persecución, combates y simulador | IMPLEMENTADO |
-| **Caja de fibra óptica del barrio** | Distribución de fibra de la cuadra | Lleva internet a las casas | Bosque de Fibra | Capítulo 3, Visión + Inmersión; la caja falla (misión «Sin señal en el barrio») | Kai descubre que la red es un mundo enorme; la cuadra recupera la señal | IMPLEMENTADO (MVP) |
+| **Caja de fibra óptica del barrio** | Distribución de fibra de la cuadra | Lleva internet a las casas | Bosque de Fibra | Atajo: se abre al terminar «El bosque que dejó de brillar» (el bosque se descubre cayendo, Capítulo 3) | La cuadra recupera la señal | IMPLEMENTADO |
 | **Rack de red del cuarto técnico** | Troncal de fibra del colegio | Une la red del colegio con el exterior | Bosque de Fibra (el claro) | Restaurar la señal del barrio (misión terminada) | Segunda entrada al bosque desde el colegio | IMPLEMENTADO (MVP) |
 | Computadoras públicas de la biblioteca | Red de la biblioteca | Servicio público | Distrito Caché | Capítulo 4 (acceso limitado en décimo) | Primeras visitas a la ciudad digital | FUTURO |
 | Planta de energía del puerto | Sistemas industriales | Energía del puerto | Núcleo Térmico | Undécimo (Cap. 6) | Ruta al Núcleo sin pasar por el Caché | FUTURO |
@@ -39,8 +39,8 @@ ficción o misiones secundarias. **No todas las puertas son cuestionarios.**
 |---|---|---|---|---|---|
 | `barrio_central` | Barrio ↔ Distrito Central | Camino | La calle hasta el portón del colegio | Capítulo 1 terminado («Todavía no terminan las clases») | IMPLEMENTADO |
 | `central_sistemas` | Distrito Central ↔ Sistemas del colegio | Inmersión | Computadoras del colegio | Inmersión Digital | IMPLEMENTADO |
-| `barrio_bosque` | Barrio ↔ Bosque de Fibra | Inmersión | Caja de fibra del poste | Capítulo 3, Visión e Inmersión | IMPLEMENTADO |
-| `central_bosque` | Distrito Central ↔ Bosque de Fibra | Inmersión | Rack de red del cuarto técnico | Misión «Sin señal en el barrio» terminada | IMPLEMENTADO |
+| `barrio_bosque` | Barrio ↔ Bosque de Fibra | Inmersión | Caja de fibra del poste | «El bosque que dejó de brillar» terminada (atajo) | IMPLEMENTADO |
+| `central_bosque` | Distrito Central ↔ Bosque de Fibra | Inmersión | Rack de red del cuarto técnico | Entrar desde el colegio: «El bosque que dejó de brillar» terminada. Salir del bosque al colegio (troncal del claro): desde el escape de la Estación Lázaro (Nivel 6) | IMPLEMENTADO |
 | `bosque_cache` | Bosque de Fibra ↔ Distrito Caché | Camino | La troncal de fibra | Capítulo 4 («La troncal... no tiene enlace») | Bloqueada a la vista (IMPLEMENTADO); el Caché, FUTURO |
 | `central_cartago` | Distrito Central ↔ Altos de Cartago | Camino | Estación del tren | Capítulo 5 | FUTURO |
 | `central_costa` | Distrito Central ↔ Costa del Pacífico | Camino | Terminal de buses | Capítulo 6 | FUTURO |

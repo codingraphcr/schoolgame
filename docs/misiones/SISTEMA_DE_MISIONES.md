@@ -21,9 +21,13 @@
 | Categoría | Qué es | Ejemplo |
 |---|---|---|
 | **Principal** | La historia (capítulos, niveles, interludios) | «Una clase diferente», «Camino a casa» |
-| **Secundaria** | Historia opcional con personajes, diálogos y consecuencias | «Sin señal en el barrio», «Un recreo diferente», «El proyecto perdido» |
-| **Tarea** | Encargo breve | «El robot que no obedece» (PROPUESTA) |
+| **Secundaria** | Historia opcional con personajes, diálogos y consecuencias | «El bosque que dejó de brillar», «Un recreo diferente», «El proyecto perdido» |
+| **Tarea** | Encargo breve | «El robot que no obedece» (Capítulo 2, IMPLEMENTADO) |
 | **Descubrimiento** | Lugar secreto, documento o ruta oculta | «Una fotografía antigua» (biblioteca, IMPLEMENTADO); «Las señales del pasado» (PROPUESTA) |
+
+| **Misión especial** | Una misión con nombre propio dentro de un nivel de la historia (no es opcional) | «Eco en la Red» (Capítulo 3, Nivel 6) |
+
+Cada misión tiene un **capítulo** (`Quest.chapter`, 0 = sin capítulo).
 
 **Colecciones** (Fragmentos de Datos y recuerdos) no son misiones: viven en el cuarto de Kai (`Keepsake`) y en el
 bestiario.
@@ -32,7 +36,10 @@ bestiario.
 
 - Una misión secundaria, tarea o descubrimiento **no reemplaza el objetivo principal**: el HUD sigue mostrando la
   historia y, debajo, la actividad secundaria en curso. Si no hay misión principal activa, la secundaria pasa arriba.
-- Ninguna secundaria es obligatoria para terminar la historia.
+- Ninguna secundaria es obligatoria para terminar la historia **del capítulo**. Excepción (decisión del equipo, 16 de
+  octubre de 2026): para **empezar el Capítulo 3** hay que terminar las secundarias y tareas de los capítulos 1 y 2
+  (`systems/quests/chapter_gate.gd`; solo cuentan las categorías Secundaria y Tarea). El Grimorio las lista en
+  «Asuntos pendientes» y siguen disponibles hasta terminarlas.
 - Un descubrimiento no se anuncia como objetivo: se registra al encontrarlo, aparece el aviso «Nuevo
   descubrimiento: …» y queda su página en el Grimorio (Registros).
 - Las recompensas únicas no se cobran dos veces (`Economy.claim_reward`).
@@ -45,9 +52,8 @@ Las misiones cambian algo visible cuando es posible: un comerciante recupera su 
 NPC reconoce a Kai, se restaura un puente, aparece un objeto en el cuarto, una conversación nueva. Pequeñas pero
 significativas. Se implementan con las marcas de la partida (la escena las lee al cargarse).
 
-**Ejemplo implementado — «Sin señal en el barrio»:** el Bosque de Fibra vuelve a brillar, la caja del poste queda en
-verde con la señal corriendo hacia las casas, el vecino agradece, se abre el acceso al bosque desde el rack del
-colegio, Fibroluz pasa a «Comprensión» en el bestiario y aparece un recuerdo en el cuarto de Kai.
+**Ejemplo implementado — «El bosque que dejó de brillar»:** el Bosque de Fibra vuelve a brillar, la caja del poste queda en
+verde con la señal corriendo hacia las casas, el vecino agradece, la caja queda como atajo al bosque, Fibroluz pasa a «Comprensión» en el bestiario y aparece un recuerdo en el cuarto de Kai.
 
 ## 4. Matriz de cada capítulo
 

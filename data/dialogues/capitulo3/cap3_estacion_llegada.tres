@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(En lo profundo del bosque hay una instalación blanca, vieja, con circuitos azules. Parece abandonada.)
+Kai: «Estación Lázaro»... Se parece al cuarto viejo donde encontré la Nullblade.
+Kai [pensativo]: Pero no es igual. Esto es digital. Y la luz azul se fue para allá adentro."

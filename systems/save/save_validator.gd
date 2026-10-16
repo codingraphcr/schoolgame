@@ -97,7 +97,7 @@ static func _state(state: Dictionary) -> String:
 		return "jugador inválido"
 	var ranges := {
 		"max_masks": [1, 20], "life_fragments": [0, 100], "energy_fragments": [0, 100], "max_energy_cells": [1, 10],
-		"dash_level": [0, 3], "nullblade_stage": [0, 4], "aegis_stage": [0, 3], "domain_stage": [0, 5],
+		"dash_level": [0, 3], "sword_level": [0, 2], "nullblade_stage": [0, 4], "aegis_stage": [0, 3], "domain_stage": [0, 5],
 	}
 	for key: String in ranges:
 		if player.has(key) and not is_int(player[key], ranges[key][0], ranges[key][1]):

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 0
+order = 4
+title = "Estación Lázaro"
+subtitle = "Mapa · Bosque de Fibra"
+text = "Una instalación digital de protección y recuperación de sistemas, en lo profundo del Bosque de Fibra. Superficies blancas, circuitos azules y cámaras de mantenimiento vacías: nadie vino en miles de ciclos.
+
+Sectores: vestíbulo, núcleo, sector superior (procesamiento), antena (comunicación) y mantenimiento (protección)."
+unlock_flag = &"estacion_lazaro_abierta"

@@ -1,0 +1,162 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_v2c2v"]
+[ext_resource type="Script" path="res://world/school/tienda_props.gd" id="2_66jbr"]
+[ext_resource type="Script" path="res://world/rooms/stairway.gd" id="3_50wup"]
+[ext_resource type="Script" path="res://world/school/shop_keeper.gd" id="4_xk0lc"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/tienda_bienvenida.tres" id="5_lmxml"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/tienda_repite.tres" id="6_pbr8k"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_pf_quieto.png" id="7_wsb4k"]
+[ext_resource type="Script" path="res://components/interaction/interactable.gd" id="8_pi3a5"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="9_t6nxl"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="10_0ld0t"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="11_hqkde"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="12_b1tbf"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="13_kiedf"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="14_vdtf5"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="15_j34u2"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="16_imla3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fkd8b"]
+size = Vector2(704, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4d05t"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u5kgc"]
+size = Vector2(32, 400)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7rxle"]
+atlas = ExtResource("7_wsb4k")
+region = Rect2(0, 0, 96, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c0mdi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7rxle")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7rxle")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m36nk"]
+size = Vector2(120, 56)
+
+[node name="Tienda" type="Node2D" unique_id=546075853 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_v2c2v")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 640, 360)
+music_track = &"colegio"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=441566242]
+
+[node name="Props" type="Node2D" parent="." unique_id=1233827977]
+script = ExtResource("2_66jbr")
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=964361402]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=1981439857]
+position = Vector2(320, 344)
+shape = SubResource("RectangleShape2D_fkd8b")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=290827177]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_4d05t")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=812614663]
+position = Vector2(656, 180)
+shape = SubResource("RectangleShape2D_u5kgc")
+
+[node name="APatio" type="Area2D" parent="." unique_id=1938597247]
+position = Vector2(60, 304)
+script = ExtResource("3_50wup")
+door_id = &"patio"
+target_scene = "res://world/zones/zone0/patio.tscn"
+target_entry = &"desde_tienda"
+going_up = false
+sign_text = "PATIO"
+show_art = false
+prompt_text = "E: volver al patio"
+prompt_offset = Vector2(-50, -110)
+
+[node name="Gente" type="Node2D" parent="." unique_id=886121977]
+
+[node name="Senora" type="Node2D" parent="Gente" unique_id=1958619342]
+position = Vector2(350, 304)
+script = ExtResource("4_xk0lc")
+shirt_color = Color(0.9098039, 0.7529412, 0.3764706, 1)
+pants_color = Color(0.41568628, 0.2901961, 0.22745098, 1)
+display_name = "Señora de la soda"
+dialogue = ExtResource("5_lmxml")
+repeat_dialogue = ExtResource("6_pbr8k")
+talked_flag = &"tienda_visitada"
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Gente/Senora" unique_id=360961661]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_c0mdi")
+animation = &"idle"
+offset = Vector2(0, -55)
+flip_h = true
+
+[node name="Interactable" type="Area2D" parent="Gente/Senora" unique_id=612287143]
+script = ExtResource("8_pi3a5")
+prompt_text = "E: comprar"
+prompt_offset = Vector2(-30, -84)
+
+[node name="Shape" type="CollisionShape2D" parent="Gente/Senora/Interactable" unique_id=1298669820]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_m36nk")
+
+[node name="Entries" type="Node2D" parent="." unique_id=1052270959]
+
+[node name="DesdePatio" type="Marker2D" parent="Entries" unique_id=2051126459]
+position = Vector2(110, 304)
+script = ExtResource("9_t6nxl")
+id = &"desde_patio"
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=191868811]
+position = Vector2(110, 304)
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=691944345 instance=ExtResource("10_0ld0t")]
+position = Vector2(110, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("11_hqkde")
+
+[node name="DigitalLayer" type="CanvasLayer" parent="." unique_id=1692139733]
+follow_viewport_enabled = true
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=1221203065 node_paths=PackedStringArray("player", "ambient")]
+script = ExtResource("12_b1tbf")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(1, 1, 1, 1)
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1340406812 node_paths=PackedStringArray("target") instance=ExtResource("13_kiedf")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("14_vdtf5")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("15_j34u2")]
+layer = 40
+script = ExtResource("16_imla3")
+player = NodePath("../Player")

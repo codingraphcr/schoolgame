@@ -45,14 +45,14 @@ se desbloquea. La sala gris (`tests/fixtures/`) solo la usan las pruebas automá
 | Peligros (pinchos, vacío) | Quitan 1 máscara y devuelven al **último suelo seguro** (el de ~0,3 s antes del golpe) |
 | Curación | Mantener **L** gasta energía y recupera 1 máscara (tarea C5) |
 | Muerte | Reaparece en el punto de control con las máscaras llenas y **pierde el 10 % de sus Ecos** (hacia abajo, **máximo 100**; **nada durante el tutorial**). Nunca pierde habilidades, evoluciones, comandos, páginas ni progreso |
-| Monedas | **ECOS** (moneda oficial, solo se obtienen jugando) para mejoras y tiendas, separados del **presupuesto** del colegio (decisiones de seguridad). Cada artículo tiene su propio precio |
+| Monedas | **ECOS** (moneda oficial, solo se obtienen jugando) para mejoras y tiendas, separados del **presupuesto** del colegio (decisiones de seguridad). Cada artículo tiene su propio precio. **La bolsa llega como máximo a 999 Ecos** (lo que sobra se pierde); las recompensas se bajaron para ese tope (común 1–3, especial 4–8, jefe 60–90, terminal 10–20, desafío 8–15, misión 30–50, depósito 10–25; `data/economy/economia.tres`). La tienda oficial es la de la soda del colegio (`docs/mundo/COLEGIO.md`) |
 
 ## Decisiones de movimiento
 
 | Tema | Decisión |
 |---|---|
-| Dash | **Por niveles**, se adquiere en la mini aventura y se mejora con Ecos: 0 sin dash · 1 Dash (no protege, pero **un dash en el momento justo hace el parry**) · 2 **Dash Fantasma** (atraviesa enemigos y ataques sin daño) · 3 **Esquiva Perfecta** (ventana de parry más amplia y mejor recompensa) |
-| Doble salto | Se desbloquea con la historia |
+| Dash | **Por niveles**, se adquiere en la mini aventura y se mejora con Ecos (el nivel 2 se vende en la tienda de la soda; el 3 cuando exista el parry): 0 sin dash · 1 Dash (no protege, pero **un dash en el momento justo hace el parry**) · 2 **Dash Fantasma** (atraviesa enemigos y ataques sin daño) · 3 **Esquiva Perfecta** (ventana de parry más amplia y mejor recompensa) |
+| Doble salto | Se **compra** en la tienda de la soda (800 Ecos, desde el Capítulo 2; decisión del equipo, Biblia v1.9) |
 | Pared | Deslizar + salto de pared, se desbloquea con la historia. Al agarrarse se recuperan el doble salto y el dash aéreo |
 | Caída | Más rápida y firme (gravedad ×2 al caer); la cámara se adelanta hacia abajo en caídas rápidas |
 

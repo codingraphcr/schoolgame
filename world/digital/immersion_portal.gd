@@ -40,6 +40,9 @@ const FIRST_LINES: PackedStringArray = ["Nueva habilidad: Inmersión Digital", "
 ## Se cierra para siempre (no se ve ni se usa) cuando la partida tiene esta marca: lo de adentro ya
 ## terminó (el jefe vencido y Kai afuera). A cada entorno digital de la historia se entra una sola vez.
 @export var closed_flag: StringName = &""
+## Además, solo cuando la partida tiene todas estas marcas (p. ej. la salida del bosque al barrio pide la señal
+## restaurada y que la historia ya permita salir).
+@export var required_flags: Array[StringName] = []
 
 var _canvas: VectorCanvas
 var _using := false
@@ -91,6 +94,9 @@ func is_available() -> bool:
 	var state := get_node("/root/GameState")
 	if closed_flag != &"" and state.has_flag(closed_flag):
 		return false
+	for flag in required_flags:
+		if not state.has_flag(flag):
+			return false
 	return requires_quest == &"" or state.has_reached_step(requires_quest, requires_step)
 
 

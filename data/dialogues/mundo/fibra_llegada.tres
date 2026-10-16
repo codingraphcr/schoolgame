@@ -4,8 +4,7 @@
 
 [resource]
 script = ExtResource("1_dlg")
-script_text = "# Primera vez en el Bosque de Fibra (desde la caja de fibra del barrio).
-(Kai atraviesa la caja de fibra y aparece en un bosque hecho de luz y de cables.)
-Kai: Esto... no es la red del colegio. Es mucho más grande.
-Kai: Pero está todo apagado. Los cables casi no brillan.
-(Una lucecita con antenas se asoma detrás de una raíz y se vuelve a esconder.)"
+script_text = "# Misión secundaria «El bosque que dejó de brillar» (Capítulo 3): empieza en las Raíces, después de la caída.
+(Las Raíces del bosque están casi apagadas. Un Fibroluz da vueltas junto a un cable sin luz, sin nada que llevar.)
+Kai: Este bosque está medio apagado... y ese bichito parece preocupado.
+(El Fibroluz mira a Kai, mira el cable apagado y vuelve a mirar a Kai.)"

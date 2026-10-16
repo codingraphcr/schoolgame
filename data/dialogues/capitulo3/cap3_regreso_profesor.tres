@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# El regreso: el cuarto técnico del colegio.
+(Kai sale por el rack de red del cuarto técnico. El profesor Alvarado está revisando el servidor.)
+Prof. Alvarado: ¡Kai! Las computadoras se estabilizaron hace un rato... ¿Qué encontraste?
+Kai: Un amigo.
+Prof. Alvarado: ¿Un...?
+(Por un instante, el profesor mira justo donde flota Aegis. Después aparta la vista.)
+Prof. Alvarado [pensativo]: ...Ya veo. Bueno. Lo importante es que el problema quedó contenido.
+Prof. Alvarado: Andá a clases. Y Kai... gracias.
+Kai [pensativo]: ¿Lo vio? No... imposible. ¿Verdad?"

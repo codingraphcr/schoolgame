@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Aegis: Kai está a salvo. Mantendré el mecanismo el tiempo que...
+Kai: ¡No, no, no! ¡Aegis, la tuya también importa!
+Aegis: ...
+(Aegis suelta el mecanismo y vuela hacia Kai. El puente cae detrás de ellos.)
+Aegis: Mi propia integridad... también importa. Registrado."

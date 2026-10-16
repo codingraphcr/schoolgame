@@ -8,8 +8,10 @@
 [ext_resource type="Resource" path="res://data/dialogues/colegio/taller_preparando.tres" id="6_hysxe"]
 [ext_resource type="Resource" path="res://data/robotics/cinta.tres" id="7_eeean"]
 [ext_resource type="Resource" path="res://data/robotics/asistente.tres" id="8_ly34s"]
+[ext_resource type="Resource" path="res://data/robotics/robot_companera.tres" id="9_6i8d6"]
 [ext_resource type="Script" path="res://world/school/anomaly.gd" id="9_pptso"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_robot.tres" id="10_3uonv"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/robot_mesa.tres" id="10_yik6k"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_robot_vision.tres" id="11_qc2mw"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_brazo.tres" id="12_6y5nd"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_brazo_vision.tres" id="13_ux221"]
@@ -26,27 +28,28 @@
 [ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companero_anomalias.tres" id="24_5k44s"]
 [ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_m2_quieto.png" id="25_3rl4w"]
 [ext_resource type="Script" path="res://components/interaction/interactable.gd" id="26_daxvr"]
-[ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companera_despues.tres" id="27_luypf"]
 [ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companera.tres" id="28_702i6"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/robot_despues.tres" id="29_hysxe"]
 [ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companera_anomalias.tres" id="29_t48sd"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/robot_pedido.tres" id="30_eeean"]
 [ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_f1_quieto.png" id="30_s6qji"]
 [ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_despues.tres" id="31_8jnmr"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/robot_esperando.tres" id="31_ly34s"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/robot_gracias.tres" id="32_pptso"]
 [ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_pedido.tres" id="32_ydjsj"]
 [ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_esperando.tres" id="33_gxbcl"]
 [ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_gracias.tres" id="34_a1ty0"]
 [ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_f2_quieto.png" id="35_x1rsr"]
 [ext_resource type="Script" path="res://systems/quests/quest_starter.gd" id="36_roftd"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="37_3uonv"]
 [ext_resource type="Script" path="res://world/digital/terminal_station.gd" id="37_y35q6"]
 [ext_resource type="Resource" path="res://data/terminals/proyecto_perdido.tres" id="38_gukwe"]
 [ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_encontrado.tres" id="39_3ufuy"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="40_shlm7"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="41_mpy8n"]
-[ext_resource type="Script" path="res://characters/player/player.gd" id="42_yu5b6"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="43_nwxwo"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="44_j6a0h"]
-[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="45_vlig7"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="46_1a4wr"]
-[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="47_egl86"]
 [ext_resource type="Texture2D" path="res://assets/art/backgrounds/taller.png" id="48_fondo"]
 [ext_resource type="Texture2D" path="res://assets/art/props/taller/robot.png" id="49_robot"]
 [ext_resource type="Texture2D" path="res://assets/art/props/taller/brazo.png" id="50_brazo"]
@@ -106,6 +109,26 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u6a18"]
 size = Vector2(44, 56)
 
+[sub_resource type="Resource" id="Resource_qc2mw"]
+script = ExtResource("21_rnwc6")
+quest_id = &"robot_desobediente"
+step_id = &"hablar_companera"
+dialogue = ExtResource("30_eeean")
+completes_step = true
+
+[sub_resource type="Resource" id="Resource_6y5nd"]
+script = ExtResource("21_rnwc6")
+quest_id = &"robot_desobediente"
+step_id = &"arreglar_robot"
+dialogue = ExtResource("31_ly34s")
+
+[sub_resource type="Resource" id="Resource_ux221"]
+script = ExtResource("21_rnwc6")
+quest_id = &"robot_desobediente"
+step_id = &"contarle"
+dialogue = ExtResource("32_pptso")
+completes_step = true
+
 [sub_resource type="Resource" id="Resource_y0enm"]
 script = ExtResource("21_rnwc6")
 quest_id = &"el_lenguaje_de_las_maquinas"
@@ -143,6 +166,16 @@ animations = [{
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m3rwm"]
 size = Vector2(44, 56)
+
+[sub_resource type="Resource" id="Resource_1rwfy"]
+script = ExtResource("37_3uonv")
+min_chapter = 2
+flags = PackedStringArray()
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_77gg7"]
+size = Vector2(1000, 80)
 
 [sub_resource type="Resource" id="Resource_fw0xc"]
 script = ExtResource("21_rnwc6")
@@ -269,6 +302,16 @@ sign_text = "FUNCIONES"
 painted = true
 prompt_offset = Vector2(-50, -96)
 
+[node name="RobotCompanera" type="Area2D" parent="Estaciones" unique_id=615121248]
+position = Vector2(1085, 304)
+script = ExtResource("4_6i8d6")
+challenge = ExtResource("9_6i8d6")
+preparing_dialogue = ExtResource("10_yik6k")
+sign_text = "SECUENCIAS"
+task_quest = &"robot_desobediente"
+task_step = &"arreglar_robot"
+prompt_offset = Vector2(-50, -96)
+
 [node name="Anomalias" type="Node2D" parent="." unique_id=874933133]
 
 [node name="Robot" type="Area2D" parent="Anomalias" unique_id=904344461]
@@ -324,7 +367,7 @@ prompt_offset = Vector2(-50, -100)
 script = ExtResource("18_hqjx8")
 show_quest = &"el_lenguaje_de_las_maquinas"
 show_step = &"taller_robotica"
-hide_quest = &"codigo_fuera_de_control"
+hide_flag = &"capitulo_3"
 
 [node name="Companero" type="Node2D" parent="Gente" unique_id=16253268]
 position = Vector2(910, 304)
@@ -354,9 +397,9 @@ shape = SubResource("RectangleShape2D_u6a18")
 position = Vector2(500, 304)
 script = ExtResource("19_7fnm3")
 display_name = "Compañera"
-dialogue = ExtResource("27_luypf")
-repeat_dialogue = ExtResource("27_luypf")
-conversations = Array[ExtResource("21_rnwc6")]([SubResource("Resource_y0enm"), SubResource("Resource_qt7av")])
+dialogue = ExtResource("29_hysxe")
+repeat_dialogue = ExtResource("29_hysxe")
+conversations = Array[ExtResource("21_rnwc6")]([SubResource("Resource_qc2mw"), SubResource("Resource_6y5nd"), SubResource("Resource_ux221"), SubResource("Resource_y0enm"), SubResource("Resource_qt7av")])
 
 [node name="Sprite" type="AnimatedSprite2D" parent="Gente/Companera" unique_id=50370997]
 scale = Vector2(0.5, 0.5)
@@ -372,6 +415,16 @@ prompt_offset = Vector2(-30, -74)
 [node name="Shape" type="CollisionShape2D" parent="Gente/Companera/Interactable" unique_id=7657444]
 position = Vector2(0, -28)
 shape = SubResource("RectangleShape2D_m3rwm")
+
+[node name="EmpiezaTarea" type="Area2D" parent="Gente" unique_id=86543742]
+position = Vector2(560, 304)
+script = ExtResource("36_roftd")
+quest_id = &"robot_desobediente"
+requirement = SubResource("Resource_1rwfy")
+
+[node name="Zona" type="CollisionShape2D" parent="Gente/EmpiezaTarea" unique_id=606323254]
+position = Vector2(0, -40)
+shape = SubResource("RectangleShape2D_77gg7")
 
 [node name="ProyectoPerdido" type="Node2D" parent="." unique_id=1327130610]
 
@@ -432,11 +485,8 @@ id = &"desde_laboratorio"
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=313232696]
 position = Vector2(100, 304)
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=1140118988 instance=ExtResource("41_mpy8n")]
+[node name="Player" parent="." unique_id=1140118988 instance=ExtResource("41_mpy8n")]
 position = Vector2(100, 304)
-collision_layer = 2
-floor_snap_length = 4.0
-script = ExtResource("42_yu5b6")
 
 [node name="DigitalLayer" type="CanvasLayer" parent="." unique_id=1945927309]
 follow_viewport_enabled = true
@@ -447,18 +497,8 @@ player = NodePath("../Player")
 ambient = NodePath("../Ambient")
 physical_ambient = Color(0.94, 0.95, 1, 1)
 
-[node name="GameCamera" type="Camera2D" parent="." unique_id=1856572185 node_paths=PackedStringArray("target") instance=ExtResource("44_j6a0h")]
-zoom = Vector2(2, 2)
-process_callback = 0
-position_smoothing_enabled = true
-position_smoothing_speed = 7.0
-drag_vertical_enabled = true
-drag_top_margin = 0.25
-drag_bottom_margin = 0.15
-script = ExtResource("45_vlig7")
+[node name="GameCamera" parent="." unique_id=1856572185 node_paths=PackedStringArray("target") instance=ExtResource("44_j6a0h")]
 target = NodePath("../Player")
 
-[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("46_1a4wr")]
-layer = 40
-script = ExtResource("47_egl86")
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("46_1a4wr")]
 player = NodePath("../Player")

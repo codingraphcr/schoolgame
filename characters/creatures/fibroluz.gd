@@ -12,10 +12,25 @@ const PACKET := Color("fff0a0")
 ## Si lleva su paquete de luz (sin señal no tiene qué llevar: se apaga un poco).
 @export var carrying := true
 
+## Segundos que le quedan de «risita» (rebota y suena: parece que se burla de Kai).
+var _giggle := 0.0
+
+
+## Hace su sonido y rebota un rato (no habla: así reacciona).
+func giggle(seconds := 1.2) -> void:
+	_giggle = seconds
+	Sfx.play(&"mail_ding")
+
+
+func _process(delta: float) -> void:
+	_giggle = maxf(_giggle - delta, 0.0)
+
 
 func _draw() -> void:
 	var t := _clock
 	var bob := sin(t * 4.0) * 2.0
+	if _giggle > 0.0:
+		bob = -absf(sin(t * 18.0)) * 6.0
 	var dim := 1.0 if carrying else 0.55
 	var fleeing := state == State.HUIDA
 	# Halo, cuerpo (una gotita de luz), antenas de fibra y patitas.
@@ -31,6 +46,8 @@ func _draw() -> void:
 	var eye := 1.6 if fleeing else 1.1
 	draw_circle(Vector2(face * 2.5 - 1.5, -11 + bob), eye, Color("0a1a2a"))
 	draw_circle(Vector2(face * 2.5 + 1.5, -11 + bob), eye, Color("0a1a2a"))
+	if _giggle > 0.0:
+		draw_string(ThemeDB.fallback_font, Vector2(8, -26 + bob), "♪", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, PACKET)
 	# El paquete de luz que transporta.
 	if carrying:
 		var packet := Vector2(-face * 9.0, -14 + bob + sin(t * 3.0) * 1.5)

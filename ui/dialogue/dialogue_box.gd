@@ -146,6 +146,15 @@ func advance() -> void:
 		finished.emit()
 
 
+## Cierra el diálogo de golpe (p. ej. al omitir una cinemática); quien esperaba play() sigue.
+func close() -> void:
+	if not _is_playing:
+		return
+	_is_playing = false
+	visible = false
+	finished.emit()
+
+
 ## Personaje registrado para un nombre del diálogo (o null).
 func character_for(speaker: String) -> DialogueCharacter:
 	for character in characters:

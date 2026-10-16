@@ -43,6 +43,9 @@ const THICKNESS := 12.0
 @export var close_delay := 0.6
 @export var reopen_delay := 2.0
 
+## Una temporal estabilizada (p. ej. por la señal protectora del Capítulo 3) no se apaga al pisarla.
+var stabilized := false
+
 var _shape: CollisionShape2D
 var _closing := false
 var _closed := false
@@ -90,7 +93,7 @@ func is_closed() -> bool:
 
 
 func _on_stepped(body: Node) -> void:
-	if _closing or _closed or not body is Player:
+	if _closing or _closed or stabilized or not body is Player:
 		return
 	_closing = true
 	_blink = 0.0

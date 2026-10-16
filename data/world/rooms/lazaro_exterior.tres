@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_snlid"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_qkl5s"]
+
+[sub_resource type="Resource" id="Resource_mym7q"]
+script = ExtResource("1_snlid")
+id = &"abajo"
+side = 3
+entry_id = &"desde_superior"
+
+[resource]
+script = ExtResource("2_qkl5s")
+id = &"lazaro_exterior"
+display_name = "Estación Lázaro · antena"
+scene_path = "res://world/zones/lazaro/lazaro_exterior.tscn"
+room_type = &"digital"
+district_id = &"bosque_fibra"
+size_cells = Vector2i(3, 1)
+doors = Array[ExtResource("1_snlid")]([SubResource("Resource_mym7q")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 3
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray()

@@ -15,11 +15,10 @@
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="13_v3w0u"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="14_kxdw4"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="15_ldk7f"]
-[ext_resource type="Script" path="res://characters/player/player.gd" id="16_pgbpf"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="17_gx05x"]
-[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="18_1odbw"]
+[ext_resource type="Script" path="res://world/home/chapter_three_rest.gd" id="18_l1prn"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_despertar.tres" id="19_6b0yu"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="19_d7sgb"]
-[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="20_lvyst"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mtfkc"]
 size = Vector2(704, 80)
@@ -137,24 +136,16 @@ target_entry = &"desde_cuarto"
 [node name="@CollisionShape2D@6" type="CollisionShape2D" parent="Exits/ToCasa" unique_id=1455423208]
 shape = SubResource("RectangleShape2D_uihi7")
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=811832760 instance=ExtResource("15_ldk7f")]
+[node name="Player" parent="." unique_id=811832760 instance=ExtResource("15_ldk7f")]
 position = Vector2(70, 304)
-collision_layer = 2
-floor_snap_length = 4.0
-script = ExtResource("16_pgbpf")
 
-[node name="GameCamera" type="Camera2D" parent="." unique_id=45738111 node_paths=PackedStringArray("target") instance=ExtResource("17_gx05x")]
-zoom = Vector2(2, 2)
-process_callback = 0
-position_smoothing_enabled = true
-position_smoothing_speed = 7.0
-drag_vertical_enabled = true
-drag_top_margin = 0.25
-drag_bottom_margin = 0.15
-script = ExtResource("18_1odbw")
+[node name="GameCamera" parent="." unique_id=45738111 node_paths=PackedStringArray("target") instance=ExtResource("17_gx05x")]
 target = NodePath("../Player")
 
-[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("19_d7sgb")]
-layer = 40
-script = ExtResource("20_lvyst")
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("19_d7sgb")]
 player = NodePath("../Player")
+
+[node name="ChapterThreeRest" type="Node" parent="." unique_id=587623594 node_paths=PackedStringArray("bed")]
+script = ExtResource("18_l1prn")
+bed = NodePath("../Cuarto/Cama")
+wake_dialogue = ExtResource("19_6b0yu")

@@ -21,6 +21,7 @@ const RED := "res://world/zones/red_entrenamiento/"
 const SIM := "res://world/zones/simulador/"
 const BARRIO := "res://world/zones/barrio/"
 const FIBRA := "res://world/zones/bosque_fibra/"
+const LAZARO := "res://world/zones/lazaro/"
 
 const POINTS: Array[Dictionary] = [
 	{ "grupo": "Prólogo", "nombre": "Inicio del juego (la entrada)", "escena": Z + "entrada.tscn", "entrada": &"",
@@ -47,6 +48,9 @@ const POINTS: Array[Dictionary] = [
 		"habilidades": [&"vision", &"nullblade"], "marcas": [] },
 	{ "grupo": "Capítulo 1", "nombre": "El patio y la soda (recreo)", "escena": Z + "patio.tscn", "entrada": &"desde_entrada",
 		"sala": &"patio", "mision": [&"una_clase_diferente", &"pedir_permiso"], "habilidades": [&"vision", &"nullblade"], "marcas": [] },
+	{ "grupo": "Capítulo 1", "nombre": "La tienda de la soda (abierta)", "escena": Z + "tienda.tscn",
+		"entrada": &"desde_patio", "sala": &"tienda", "mision": [&"una_clase_diferente", &"buscar_huellas"],
+		"habilidades": [&"vision", &"nullblade"], "marcas": [&"soda_presentada"] },
 	{ "grupo": "Capítulo 1", "nombre": "Tras las huellas del error (buscar rastros)", "escena": Z + "sala_3.tscn",
 		"entrada": &"desde_pasillo", "sala": &"sala_3", "mision": [&"una_clase_diferente", &"buscar_huellas"],
 		"habilidades": [&"vision", &"nullblade"], "marcas": [] },
@@ -110,16 +114,37 @@ const POINTS: Array[Dictionary] = [
 		"entrada": &"desde_simulador", "sala": &"laboratorio", "mision": [&"codigo_fuera_de_control", &"hablar_profesor"],
 		"habilidades": [&"vision", &"nullblade", &"inmersion"],
 		"marcas": [&"cap2_bucle_vencido", &"cap2_bucle_liberado", &"cap2_condicion_corregida", &"cap2_anomalia_vista", &"cap2_simulador_terminado"] },
-	{ "grupo": "Mundo (Capítulo 3)", "nombre": "Sin señal en el barrio · la caja de fibra", "escena": BARRIO + "calle.tscn",
-		"entrada": &"desde_casa", "sala": &"calle", "mision": [], "habilidades": [&"vision", &"nullblade", &"inmersion"],
-		"marcas": [&"capitulo_3"] },
-	{ "grupo": "Mundo (Capítulo 3)", "nombre": "Bosque de Fibra · raíces (seguir al Fibroluz)", "escena": FIBRA + "fibra_raices.tscn",
-		"entrada": &"desde_barrio", "sala": &"fibra_raices", "mision": [&"senal_del_barrio", &"seguir_fibroluz"],
-		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [&"capitulo_3"] },
-	{ "grupo": "Mundo (Capítulo 3)", "nombre": "Bosque de Fibra · el claro (reconectar)", "escena": FIBRA + "fibra_claro.tscn",
+	{ "grupo": "Capítulo 3", "nombre": "Inicio (la clase y el diagnóstico)", "escena": Z + "sala_3.tscn",
+		"entrada": &"desde_pasillo", "sala": &"sala_3", "mision": [&"contagio_digital", &"diagnostico"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 3", "nombre": "La conexión del equipo 7 (antes de la caída)", "escena": FIBRA + "conexion_contagio.tscn",
+		"entrada": &"inicio", "sala": &"", "mision": [&"contagio_digital", &"investigar_conexion"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 3", "nombre": "Bosque de Fibra · el aterrizaje", "escena": FIBRA + "bosque_caida.tscn",
+		"entrada": &"caida", "sala": &"bosque_caida", "mision": [&"contagio_digital", &"investigar_conexion"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [] },
+	{ "grupo": "Capítulo 3", "nombre": "El bosque que dejó de brillar · el claro", "escena": FIBRA + "fibra_claro.tscn",
 		"entrada": &"desde_raices", "sala": &"fibra_claro", "mision": [&"senal_del_barrio", &"reconectar"],
-		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [&"capitulo_3"] },
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": [&"capitulo_3", &"bosque_descubierto"] },
+	{ "grupo": "Capítulo 3", "nombre": "Estación Lázaro · el vestíbulo (Nivel 6)", "escena": LAZARO + "lazaro_vestibulo.tscn",
+		"entrada": &"desde_bosque", "sala": &"lazaro_vestibulo", "mision": [&"la_senal_perdida", &"explorar_estacion"],
+		"habilidades": [&"vision", &"nullblade", &"inmersion"], "marcas": LAZARO_FLAGS },
+	{ "grupo": "Capítulo 3", "nombre": "Eco en la Red · los guardianes y los módulos", "escena": LAZARO + "lazaro_vestibulo.tscn",
+		"entrada": &"desde_nucleo", "sala": &"lazaro_vestibulo", "mision": [&"la_senal_perdida", &"reparar_aegis"],
+		"actividad": [&"eco_en_la_red", &"recuperar_modulos"], "habilidades": [&"vision", &"nullblade", &"inmersion"],
+		"marcas": LAZARO_FLAGS + [&"registro_aegis_principal", &"lazaro_energia_restablecida"] },
+	{ "grupo": "Capítulo 3", "nombre": "Estación Lázaro · el escape (con Aegis)", "escena": LAZARO + "lazaro_escape.tscn",
+		"entrada": &"desde_nucleo", "sala": &"lazaro_escape", "mision": [&"la_senal_perdida", &"escapar"],
+		"actividad": [&"eco_en_la_red", &""], "habilidades": [&"vision", &"nullblade", &"inmersion", &"aegis"],
+		"marcas": LAZARO_FLAGS + [&"registro_aegis_principal", &"lazaro_energia_restablecida", &"aegis_nucleo_estable", &"lazaro_alarma"] },
+	{ "grupo": "Capítulo 3", "nombre": "Final del capítulo (el profesor)", "escena": Z + "cuarto_tecnico.tscn",
+		"entrada": &"desde_bosque", "sala": &"cuarto_tecnico", "mision": [&"la_senal_perdida", &"hablar_profesor"],
+		"actividad": [&"eco_en_la_red", &""], "habilidades": [&"vision", &"nullblade", &"inmersion", &"aegis"],
+		"marcas": LAZARO_FLAGS + [&"registro_aegis_principal", &"lazaro_energia_restablecida", &"aegis_nucleo_estable",
+			&"lazaro_escape_completo", &"lazaro_puente_soltado", &"bosque_salida_abierta"] },
 ]
+## Lo que ya pasó en el Nivel 5 al llegar a la Estación Lázaro.
+const LAZARO_FLAGS: Array[StringName] = [&"bosque_descubierto", &"puente_estabilizado", &"contagio_contenido", &"estacion_lazaro_abierta"]
 
 
 ## Deja GameState como si se hubiera jugado hasta el punto (sin tocar las ranuras de guardado).
@@ -143,6 +168,17 @@ static func prepare(point: Dictionary, state: Node) -> void:
 		state.unlock_immersion()
 	if abilities.has(&"dominio"):
 		state.set_domain_stage(maxi(state.domain_stage, 1))
+	if abilities.has(&"aegis"):
+		state.set_aegis_stage(maxi(state.aegis_stage, 1))
+		state.set_flag(AegisCompanion.FLAG)
+	# Una actividad empezada en medio de la historia (p. ej. «Eco en la Red»): hasta ese paso ("" = terminada).
+	var activity: Array = point.get("actividad", [])
+	if not activity.is_empty():
+		state.start_quest(activity[0])
+		for step in QuestDB.get_quest(activity[0]).steps:
+			if step.id == activity[1]:
+				break
+			state.complete_step(activity[0], step.id)
 	for flag in point.get("marcas", []):
 		state.set_flag(flag)
 
@@ -152,7 +188,12 @@ static func prepare(point: Dictionary, state: Node) -> void:
 ## actividad hasta el paso.
 static func _advance(state: Node, quest_id: StringName, step_id: StringName) -> void:
 	if quest_id != &"" and not CHAIN.has(quest_id):
-		_advance(state, &"", &"")
+		# Si otra misión lleva a esta (next_quest, p. ej. «Contagio digital» → «La señal perdida»), primero esa entera.
+		var before := _previous_quest(quest_id)
+		if before != &"":
+			_advance(state, before, &"")
+		else:
+			_advance(state, &"", &"")
 		state.start_quest(quest_id)
 		for step in QuestDB.get_quest(quest_id).steps:
 			if step.id == step_id:
@@ -168,3 +209,12 @@ static func _advance(state: Node, quest_id: StringName, step_id: StringName) -> 
 			if chain_quest == quest_id and step.id == step_id:
 				return
 			state.complete_step(chain_quest, step.id)
+
+
+## La misión de la historia cuyo next_quest es quest_id (fuera de CHAIN), o &"".
+static func _previous_quest(quest_id: StringName) -> StringName:
+	for other: StringName in QuestDB.PATHS:
+		var quest := QuestDB.get_quest(other)
+		if quest and quest.next_quest == quest_id and not CHAIN.has(other):
+			return other
+	return &""

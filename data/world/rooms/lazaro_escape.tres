@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_3pc2q"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_pbiwg"]
+
+[sub_resource type="Resource" id="Resource_gbaiq"]
+script = ExtResource("1_3pc2q")
+id = &"oeste"
+side = 0
+entry_id = &"desde_nucleo"
+
+[resource]
+script = ExtResource("2_pbiwg")
+id = &"lazaro_escape"
+display_name = "Estación Lázaro · salida de emergencia"
+scene_path = "res://world/zones/lazaro/lazaro_escape.tscn"
+room_type = &"digital"
+district_id = &"bosque_fibra"
+size_cells = Vector2i(3, 1)
+doors = Array[ExtResource("1_3pc2q")]([SubResource("Resource_gbaiq")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 3
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray()

@@ -84,6 +84,20 @@ const RECIPES := {
 	# Resonancia Digital: una señal lejana, como un módem a mucha distancia.
 	&"distant_signal": { "wave": "sine", "freq": 1320.0, "freq_end": 990.0, "dur": 2.2, "attack": 0.6, "volume": 0.07, "vibrato": [22.0, 30.0], "arp": [[0.0, 1.0], [0.2, 1.5], [0.35, 1.0], [0.55, 1.33], [0.75, 1.0]], "crush": 5.0, "lowpass": 2600.0 },
 	# Interfaz (suaves y bajos: en el menú se oyen solos)
+	# Cinemática inicial (la mañana de Kai).
+	&"alarm_ring": { "wave": "square", "freq": 1760.0, "dur": 1.6, "volume": 0.09, "duty": 0.3, "arp": [[0.0000, 1.0], [0.0625, 0.0], [0.1250, 1.0], [0.1875, 0.0], [0.2500, 1.0], [0.3125, 0.0], [0.3750, 1.0], [0.4375, 0.0], [0.5000, 1.0], [0.5625, 0.0], [0.6250, 1.0], [0.6875, 0.0], [0.7500, 1.0], [0.8125, 0.0], [0.8750, 1.0], [0.9375, 0.0]], "lowpass": 4200.0 },
+	&"click": { "wave": "square", "freq": 2400.0, "dur": 0.03, "volume": 0.1, "lowpass": 3000.0 },
+	&"bird_chirp": { "wave": "sine", "freq": 2600.0, "freq_end": 3400.0, "dur": 0.22, "volume": 0.05, "vibrato": [30.0, 120.0], "arp": [[0.0, 1.0], [0.3, 1.2], [0.5, 0.0], [0.62, 1.1]] },
+	&"car_far": { "wave": "noise", "freq": 320.0, "freq_end": 200.0, "dur": 1.4, "attack": 0.6, "volume": 0.05, "lowpass": 500.0 },
+	&"boing": { "wave": "sine", "freq": 220.0, "freq_end": 660.0, "dur": 0.3, "volume": 0.15, "vibrato": [18.0, 30.0] },
+	&"zipper": { "wave": "noise", "freq": 3000.0, "freq_end": 5200.0, "dur": 0.35, "volume": 0.08, "arp": [[0.0000, 1.0], [0.1250, 0.6], [0.2500, 1.0], [0.3750, 0.6], [0.5000, 1.0], [0.6250, 0.6], [0.7500, 1.0], [0.8750, 0.6]], "lowpass": 6000.0 },
+	&"plate": { "wave": "triangle", "freq": 1400.0, "dur": 0.12, "volume": 0.1, "noise": 0.2, "lowpass": 4000.0 },
+	&"gulp": { "wave": "sine", "freq": 300.0, "freq_end": 150.0, "dur": 0.1, "volume": 0.15 },
+	&"laugh": { "wave": "triangle", "freq": 330.0, "dur": 0.7, "volume": 0.12, "vibrato": [6.0, 12.0], "arp": [[0.0, 1.0], [0.12, 0.0], [0.18, 1.1], [0.3, 0.0], [0.36, 1.05], [0.48, 0.0], [0.54, 1.15], [0.66, 0.0]], "lowpass": 2400.0 },
+	&"door_close": { "wave": "noise", "freq": 500.0, "freq_end": 120.0, "dur": 0.25, "volume": 0.3, "lowpass": 600.0 },
+	&"bus_pass": { "wave": "noise", "freq": 220.0, "freq_end": 120.0, "dur": 3.0, "attack": 1.2, "volume": 0.12, "lowpass": 420.0 },
+	&"dog_bark": { "wave": "saw", "freq": 620.0, "freq_end": 300.0, "dur": 0.16, "volume": 0.16, "noise": 0.3, "crush": 6.0, "arp": [[0.0, 1.0], [0.5, 0.8]], "lowpass": 2400.0 },
+	&"bonk": { "wave": "square", "freq": 160.0, "freq_end": 60.0, "dur": 0.2, "volume": 0.25, "noise": 0.4, "lowpass": 1200.0 },
 	&"ui_move": { "wave": "triangle", "freq": 900.0, "dur": 0.035, "volume": 0.07, "lowpass": 2400.0 },
 	&"ui_accept": { "wave": "triangle", "freq": 600.0, "freq_end": 1000.0, "dur": 0.09, "volume": 0.1, "lowpass": 2600.0 },
 	&"ui_back": { "wave": "triangle", "freq": 800.0, "freq_end": 480.0, "dur": 0.09, "volume": 0.09, "lowpass": 2400.0 },

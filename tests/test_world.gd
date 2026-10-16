@@ -68,8 +68,10 @@ func _test_scenes_match_map() -> void:
 			var template: RoomTemplate = graph.template_of(room_id)
 			var scene := (load(template.scene_path) as PackedScene).instantiate()
 			var exits_by_door := {}
-			# Salidas por los bordes (RoomExit) y escaleras (Stairway): las dos tienen door_id y respaldo.
-			for room_exit in scene.find_children("*", "RoomExit", true, false) + scene.find_children("*", "Stairway", true, false):
+			# Salidas por los bordes (RoomExit), escaleras (Stairway), la puerta de la tienda (ShopDoor) y la compuerta de la
+			# Estación Lázaro (StationDoor): todas tienen door_id y respaldo.
+			for room_exit in (scene.find_children("*", "RoomExit", true, false) + scene.find_children("*", "Stairway", true, false)
+					+ scene.find_children("*", "ShopDoor", true, false) + scene.find_children("*", "StationDoor", true, false)):
 				var door: StringName = room_exit.door_id
 				if door == &"":
 					continue

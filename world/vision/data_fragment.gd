@@ -5,7 +5,7 @@ extends Area2D
 ## la capa digital de la sala (que consulta la misma marca).
 
 @export var flag: StringName = &"zona0_fragmento_recogido"
-@export var ecos_reward := 25
+@export var ecos_reward := 15
 @export var message := "¡Encontraste un fragmento de datos oculto en la red! (+%d Ecos)"
 
 

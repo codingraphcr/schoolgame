@@ -5,22 +5,36 @@
 > misiones, personajes ni diálogos de otros juegos. No todas son educativas; cuando tiene sentido, se relacionan
 > con el MEP. Estados: ver `../mundo/MAPA_MAESTRO.md`.
 
-## Implementada
+## Implementadas
 
-### Sin señal en el barrio — Secundaria · IMPLEMENTADO (MVP)
+### El bosque que dejó de brillar — Secundaria · Capítulo 3 · IMPLEMENTADO
 
-- **Ubicación:** Barrio de los Almendros → Bosque de Fibra. **Cuándo:** Capítulo 3 (décimo).
-- **Historia:** desde anoche no hay internet en la cuadra. Un vecino se lo cuenta a Kai; la luz de la caja de fibra
-  del poste parpadea en rojo. Con la Visión, Kai ve la conexión y entra por la caja: aparece en el Bosque de Fibra,
-  apagado. Un Fibroluz lo guía hasta un tramo cortado: los empalmes apuntan para cualquier lado. Kai los gira hasta
-  que la señal tiene un camino completo; el bosque vuelve a brillar y el Fibroluz lleva su paquete de luz al barrio.
-  De vuelta en la calle, la caja está en verde y el vecino le agradece.
-- **Pasos:** revisar la caja → seguir al Fibroluz → reconectar los empalmes → volver al barrio.
+- **Fusiona** la versión breve del MVP («Sin señal en el barrio», decisión del equipo del 16 de octubre de 2026).
+- **Cuándo y dónde:** empieza en el Bosque de Fibra, en las raíces, después de que Kai cae por la conexión del equipo 7
+  (Nivel 5). Se puede dejar para después: sigue disponible hasta terminarla.
+- **Historia:** el bosque está apagado. Un Fibroluz (el que se rió de la caída de Kai) no puede llevar su señal; Kai
+  lo sigue hasta el claro, donde los empalmes apuntan para cualquier lado, y los gira hasta que la señal tiene un camino
+  completo. El bosque vuelve a brillar, **vuelve la señal del barrio** (el vecino agradece) y la **caja de fibra del
+  poste queda como atajo** al bosque. Si Kai la hace después de rescatar a Aegis, Aegis comenta (una vez).
+- **Pasos:** ayudar al Fibroluz → reconectar los empalmes.
 - **Concepto:** conectividad y transmisión: la información solo llega si hay un camino continuo del origen al
-  destino; un solo enlace roto corta la comunicación (capa física; décimo, redes: LAN/WAN, capa física).
-- **Recompensas:** 60 Ecos (una vez), Fibroluz en «Comprensión», el recuerdo «Nota del vecino» en el cuarto de Kai,
-  el acceso al bosque desde el rack del colegio, el bosque iluminado para siempre.
-- **Archivos:** `data/quests/senal_del_barrio.tres`, `data/dialogues/mundo/`, `world/zones/bosque_fibra/`.
+  destino; un solo enlace roto corta la comunicación (capa física; décimo, redes).
+- **Recompensas:** 40 Ecos (una vez), Fibroluz en «Comprensión», el recuerdo «Nota del vecino» en el cuarto de Kai,
+  el atajo de la caja de fibra, el bosque iluminado para siempre.
+- **Archivos:** `data/quests/senal_del_barrio.tres` (el id se conserva por las partidas guardadas),
+  `data/dialogues/mundo/`, `world/zones/bosque_fibra/`, `tests/test_mundo.gd`.
+
+### El robot que no obedece — Tarea · Capítulo 2 · IMPLEMENTADO
+
+- **Dónde:** el taller de robótica (anexo del laboratorio), desde el Capítulo 2. La Compañera de la actividad de
+  robótica tiene un robot que ejecuta las instrucciones en orden incorrecto.
+- **Qué hace Kai:** ordena la secuencia en la estación del fondo del taller (`RoboticsChallenge`, tipo SECUENCIA,
+  simulado) y vuelve a contarle.
+- **Concepto:** secuencias y control de flujo (el orden de las instrucciones importa).
+- **Por qué existe:** el Capítulo 3 pide terminar las secundarias y tareas de los capítulos 1 y 2; el Capítulo 2 no
+  tenía ninguna.
+- **Archivos:** `data/quests/robot_desobediente.tres`, `data/robotics/robot_companera.tres`,
+  `data/dialogues/colegio/robot_*.tres`, `systems/robotics/sequence_sim.gd`.
 
 ## «Una fotografía antigua» (Descubrimiento, Capítulo 1) — IMPLEMENTADO
 
@@ -66,17 +80,13 @@
 | Nombre | Tipo | Ubicación | Historia | Conceptos | Recompensas |
 |---|---|---|---|---|---|
 | El último mensaje | Secundaria | Barrio de los Almendros | Un vecino intenta recuperar un mensaje antiguo de un dispositivo; Kai investiga y ayuda a restaurar una copia válida | Respaldos e integridad de datos | Ecos, una fotografía (recuerdo), diálogo opcional |
-| El robot que no obedece | Tarea | Colegio | Un compañero tiene un robot que ejecuta instrucciones en orden incorrecto | Secuencias y control de flujo | Ecos y un recuerdo decorativo |
 | El comerciante sin identidad | Secundaria | Distrito Caché | Un comerciante pierde el acceso legítimo a su almacén; Kai investiga los permisos y ayuda a restaurarlo | Autenticación y control de acceso | Productos nuevos y un atajo digital |
 | Las señales del pasado | Descubrimiento | Altos de Cartago | Registros de una instalación antigua de comunicaciones | Lore (sin revelar el Proyecto Génesis) | Lore, Fragmento de Datos, pista |
-| El bosque que dejó de brillar | Secundaria | Bosque de Fibra | Las conexiones luminosas fallan; Kai ayuda a restaurar las rutas de las criaturas | Conectividad y flujo de datos | Conexión nueva y registro del bestiario |
 | Una memoria que no quiere desaparecer | Secundaria | Archivo Criogénico | Una criatura conserva un recuerdo incompleto; Kai ayuda a reconstruirlo | Integridad y recuperación | Recuerdo y fragmento narrativo |
 | El pequeño depurador | Secundaria | Canales Corruptos | Una criatura intenta limpiar una zona contaminada; Kai restaura la contención | Detección, contención, recuperación | Sector restaurado y diálogo futuro |
 | El guardián sin órdenes | Secundaria | Santuario Raíz | Un guardián protege una puerta con instrucciones antiguas; Kai comprende el conflicto y busca una solución | Autorización y reglas de acceso | Ruta nueva e información narrativa |
 
-**Nota:** «El bosque que dejó de brillar» comparte idea con «Sin señal en el barrio» (la versión breve del MVP). Al
-desarrollar el Bosque de Fibra completo (undécimo), conviene que sea su continuación: un problema más grande de
-rutas entre nodos, con más criaturas afectadas.
+**Nota:** «El bosque que dejó de brillar» y «El robot que no obedece» pasaron de candidatas a implementadas (arriba).
 
 ## Reglas para las nuevas
 

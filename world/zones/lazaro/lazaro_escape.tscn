@@ -1,0 +1,202 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_44tku"]
+[ext_resource type="Script" path="res://world/lazaro/lazaro_props.gd" id="2_w0jmy"]
+[ext_resource type="Script" path="res://world/lazaro/lazaro_gate.gd" id="3_eytq0"]
+[ext_resource type="Script" path="res://world/lazaro/pulse_switch.gd" id="4_2q631"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="5_kd08c"]
+[ext_resource type="Script" path="res://characters/companions/aegis_body.gd" id="6_quj6g"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="7_dw6t5"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_escape_interruptor.tres" id="8_e3bao"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="9_awhvd"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="10_y3yaa"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="11_spu73"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="12_3tove"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="13_82dl1"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="14_im3ob"]
+[ext_resource type="Script" path="res://world/lazaro/escape_bridge.gd" id="15_ug2y3"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_escape_sostener.tres" id="16_1ye7m"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_escape_soltar.tres" id="17_25xpx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_06dm1"]
+size = Vector2(672, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5fhwo"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_75wto"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qdljw"]
+size = Vector2(272, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h3fk7"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l6dxr"]
+size = Vector2(12, 256)
+
+[node name="LazaroEscape" type="Node2D" unique_id=867851645 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_44tku")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 1440, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=332478587]
+color = Color(0.9, 0.94, 1, 1)
+
+[node name="Props" type="Node2D" parent="." unique_id=717185068]
+script = ExtResource("2_w0jmy")
+width = 1440.0
+variant = "escape"
+chambers = PackedFloat32Array()
+gaps = PackedVector2Array(640, 1200)
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=859521302]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=2000745641]
+position = Vector2(304, 344)
+shape = SubResource("RectangleShape2D_06dm1")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=538074508]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_5fhwo")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=831781277]
+position = Vector2(1456, 180)
+shape = SubResource("RectangleShape2D_75wto")
+
+[node name="Floor2" type="CollisionShape2D" parent="Collisions" unique_id=988585504]
+position = Vector2(1336, 344)
+shape = SubResource("RectangleShape2D_qdljw")
+
+[node name="Mundo" type="Node2D" parent="." unique_id=1227818916]
+
+[node name="Compuerta" type="StaticBody2D" parent="Mundo" unique_id=661324726]
+position = Vector2(400, 304)
+script = ExtResource("3_eytq0")
+open_flag = &"lazaro_compuerta_escape"
+height = 160.0
+
+[node name="Interruptor" type="Node2D" parent="Mundo" unique_id=1091072540]
+position = Vector2(400, 110)
+script = ExtResource("4_2q631")
+on_flag = &"lazaro_compuerta_escape"
+
+[node name="Tramo1" type="AnimatableBody2D" parent="Mundo" unique_id=1123378740]
+position = Vector2(700, 292)
+script = ExtResource("5_kd08c")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="Tramo2" type="AnimatableBody2D" parent="Mundo" unique_id=254402473]
+position = Vector2(810, 276)
+script = ExtResource("5_kd08c")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="Tramo3" type="AnimatableBody2D" parent="Mundo" unique_id=150060147]
+position = Vector2(920, 292)
+script = ExtResource("5_kd08c")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="Tramo4" type="AnimatableBody2D" parent="Mundo" unique_id=1277771638]
+position = Vector2(1030, 276)
+script = ExtResource("5_kd08c")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="Tramo5" type="AnimatableBody2D" parent="Mundo" unique_id=1781759188]
+position = Vector2(1140, 292)
+script = ExtResource("5_kd08c")
+kind = 2
+width = 84.0
+close_delay = 0.25
+reopen_delay = 3.0
+
+[node name="AegisSostiene" type="Node2D" parent="Mundo" unique_id=176945177]
+position = Vector2(650, 232)
+script = ExtResource("6_quj6g")
+
+[node name="DigitalLayer" type="Node2D" parent="." unique_id=53337675]
+
+[node name="Historia" type="Node2D" parent="." unique_id=400581130]
+
+[node name="Interruptor" type="Area2D" parent="Historia" unique_id=99746052]
+script = ExtResource("7_dw6t5")
+dialogue = ExtResource("8_e3bao")
+on_ready = true
+completes_step = false
+once_flag = &"cap3_escape_visto"
+requires_flag = &"lazaro_alarma"
+
+[node name="Entries" type="Node2D" parent="." unique_id=961522303]
+
+[node name="DesdeNucleo" type="Marker2D" parent="Entries" unique_id=124306091]
+position = Vector2(40, 304)
+script = ExtResource("9_awhvd")
+id = &"desde_nucleo"
+
+[node name="Exits" type="Node2D" parent="." unique_id=688624998]
+
+[node name="ToNucleo" type="Area2D" parent="Exits" unique_id=1707732273]
+position = Vector2(6, 176)
+script = ExtResource("10_y3yaa")
+door_id = &"oeste"
+target_scene = "res://world/zones/lazaro/lazaro_nucleo.tscn"
+target_entry = &"desde_escape"
+
+[node name="@CollisionShape2D@6" type="CollisionShape2D" parent="Exits/ToNucleo" unique_id=1238276533]
+shape = SubResource("RectangleShape2D_h3fk7")
+
+[node name="ToBosque" type="Area2D" parent="Exits" unique_id=1464404405]
+position = Vector2(1434, 176)
+script = ExtResource("10_y3yaa")
+target_scene = "res://world/zones/bosque_fibra/bosque_estacion.tscn"
+target_entry = &"desde_escape"
+
+[node name="@CollisionShape2D@7" type="CollisionShape2D" parent="Exits/ToBosque" unique_id=903390968]
+shape = SubResource("RectangleShape2D_l6dxr")
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1251590607]
+position = Vector2(40, 304)
+
+[node name="Player" parent="." unique_id=299383722 instance=ExtResource("11_spu73")]
+position = Vector2(40, 304)
+
+[node name="GameCamera" parent="." unique_id=1094914482 node_paths=PackedStringArray("target") instance=ExtResource("12_3tove")]
+target = NodePath("../Player")
+
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("13_82dl1")]
+player = NodePath("../Player")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=2005256569 node_paths=PackedStringArray("player", "ambient", "digital_layer")]
+script = ExtResource("14_im3ob")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(1, 1, 1, 1)
+digital_ambient = Color(0.72, 0.82, 1, 1)
+digital_layer = NodePath("../DigitalLayer")
+
+[node name="Puente" type="Node2D" parent="." unique_id=419396998 node_paths=PackedStringArray("holder")]
+script = ExtResource("15_ug2y3")
+platforms = Array[NodePath]([NodePath("../Mundo/Tramo1"), NodePath("../Mundo/Tramo2"), NodePath("../Mundo/Tramo3"), NodePath("../Mundo/Tramo4"), NodePath("../Mundo/Tramo5")])
+holder = NodePath("../Mundo/AegisSostiene")
+hold_x = 600.0
+far_x = 1230.0
+hold_dialogue = ExtResource("16_1ye7m")
+leave_dialogue = ExtResource("17_25xpx")

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="RoomTemplate" format=3]
+
+[ext_resource type="Script" path="res://systems/world/door_spec.gd" id="1_brj6c"]
+[ext_resource type="Script" path="res://systems/world/room_template.gd" id="2_cqmjv"]
+
+[sub_resource type="Resource" id="Resource_r2rv4"]
+script = ExtResource("1_brj6c")
+id = &"este"
+entry_id = &"desde_raices"
+
+[resource]
+script = ExtResource("2_cqmjv")
+id = &"bosque_caida"
+display_name = "Claro de la caída"
+scene_path = "res://world/zones/bosque_fibra/bosque_caida.tscn"
+room_type = &"digital"
+district_id = &"bosque_fibra"
+doors = Array[ExtResource("1_brj6c")]([SubResource("Resource_r2rv4")])
+fixed = true
+minimum_player_abilities = PackedStringArray()
+chapter_requirement = 3
+allowed_enemy_types = PackedStringArray()
+educational_objectives = PackedStringArray()
+mission_ids = PackedStringArray()

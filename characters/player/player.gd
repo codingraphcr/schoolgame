@@ -98,7 +98,8 @@ var is_wall_sliding := false
 var dash_cooldown_timer := 0.0
 ## Bloquea los controles (reaparición, cinemáticas). La gravedad sigue actuando.
 var controls_locked := false
-## En una cinemática (con los controles bloqueados), Kai camina hacia este lado (-1 izquierda, 1 derecha).
+## Con controls_locked, una escena puede mover a Kai (−1 izquierda, 1 derecha; 0 quieto): p. ej. la cinemática inicial y
+## la del Grimorio (LegacyCinematic).
 var scripted_axis := 0.0
 ## Energía para habilidades, en barritas (la curación gasta media). El máximo sale de GameState.
 var energy := 2.0

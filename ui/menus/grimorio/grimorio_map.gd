@@ -83,14 +83,19 @@ func room_states() -> Dictionary[StringName, int]:
 	var graph := _graph()
 	if graph == null:
 		return result
+	var game_state := get_node_or_null("/root/GameState")
+	# El mapa comprado en la tienda de la soda («mapa_<zona>») muestra todas las salas de la zona.
+	var bought_map: bool = game_state != null and game_state.has_flag(StringName("mapa_%s" % zone))
 	for room_id: StringName in graph.rooms:
-		result[room_id] = State.VISITED if _is_visited(graph, room_id) else State.UNKNOWN
+		if _is_visited(graph, room_id):
+			result[room_id] = State.VISITED
+		else:
+			result[room_id] = State.DISCOVERED if bought_map else State.UNKNOWN
 	for edge in graph.links:
 		for pair in [[edge["a"], edge["b"]], [edge["b"], edge["a"]]]:
 			if result[pair[0]] == State.VISITED and result[pair[1]] == State.UNKNOWN:
 				result[pair[1]] = State.DISCOVERED
 	var world := _world()
-	var game_state := get_node_or_null("/root/GameState")
 	for room_id: StringName in result:
 		if result[room_id] == State.DISCOVERED and not String(world.lock_reason(room_id)).is_empty():
 			result[room_id] = State.LOCKED
