@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(Kai activa la Visión Digital disimuladamente. Por los cables y por el Wi-Fi corren rastros oscuros, como tinta.)
+(Todos van y vienen de un mismo lugar: la carpeta compartida de la clase.)
+Kai [pensativo]: Ahí está. Algo dañado viaja por la carpeta compartida... y llega a cada equipo que la abre."

@@ -5,33 +5,22 @@
 
 [sub_resource type="Resource" id="Resource_0"]
 script = ExtResource("2_step")
-id = &"revisar_caja"
-objective = "Revisá la caja de fibra del poste con la Visión Digital."
-room_id = &"calle"
+id = &"ayudar_fibroluz"
+objective = "Un Fibroluz no puede transportar su señal: síguelo hasta donde se corta la conexión."
+room_id = &"fibra_raices"
 
 [sub_resource type="Resource" id="Resource_1"]
 script = ExtResource("2_step")
-id = &"seguir_fibroluz"
-objective = "Seguí al Fibroluz hasta donde se corta la señal."
-room_id = &"fibra_claro"
-
-[sub_resource type="Resource" id="Resource_2"]
-script = ExtResource("2_step")
 id = &"reconectar"
-objective = "Reconectá los empalmes para que la señal llegue al barrio."
+objective = "Reconecta los empalmes para que los Fibroluz vuelvan a transportar señales."
 room_id = &"fibra_claro"
-
-[sub_resource type="Resource" id="Resource_3"]
-script = ExtResource("2_step")
-id = &"volver_al_barrio"
-objective = "Volvé al barrio a ver si volvió la señal."
-room_id = &"calle"
 
 [resource]
 script = ExtResource("1_quest")
 id = &"senal_del_barrio"
-title = "Sin señal en el barrio"
+title = "El bosque que dejó de brillar"
+chapter = 3
 category = 1
-steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3")])
+steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_1")])
 completion_flag = &"senal_del_barrio_completada"
 ecos_reward = 40

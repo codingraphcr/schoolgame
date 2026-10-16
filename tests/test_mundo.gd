@@ -1,13 +1,14 @@
 extends SceneTree
 ## Prueba automática: el MVP del mundo (docs/mundo/MAPA_MAESTRO.md). El mapa maestro como datos (regiones,
-## conexiones, requisitos); en el Capítulo 3, el vecino sin internet empieza «Sin señal en el barrio» (una
-## actividad secundaria que no le quita el lugar a la historia); la caja de fibra falla y, con la Visión, es un
-## acceso de Inmersión al Bosque de Fibra (región descubierta; el Distrito Caché se ve con niebla y su troncal
-## cerrada); el Fibroluz se registra con la Visión (avistamiento, observación) y guía a Kai; el camino oculto solo
-## existe con la Visión y lleva a un Fragmento de Datos; el claro: empalmes que hay que orientar para que la señal
-## llegue; la troncal hacia el Distrito Caché no deja pasar; de vuelta al barrio: la caja en verde, el vecino, los
-## Ecos (una vez), la comprensión del Fibroluz, el recuerdo en el cuarto y el acceso desde el rack del colegio; el
-## Grimorio (mapa físico y digital, bestiario, misiones); guardar y cargar; otra ranura no comparte nada.
+## conexiones, requisitos); en el Capítulo 3 el Bosque de Fibra se descubre por la caída (la caja del barrio no es un
+## acceso hasta restaurar la señal); en las Raíces, el Fibroluz apagado empieza «El bosque que dejó de brillar» (una
+## actividad secundaria que no le quita el lugar a la historia; región descubierta; el Distrito Caché se ve con niebla y
+## su troncal cerrada); el Fibroluz se registra con la Visión (avistamiento, observación) y guía a Kai; el camino oculto
+## solo existe con la Visión y lleva a un Fragmento de Datos; el claro: empalmes que hay que orientar para que la señal
+## llegue (misión completada, Ecos una vez); la troncal hacia el Distrito Caché no deja pasar; las salidas al colegio y
+## al barrio se abren con la historia; en el barrio: la caja en verde, el vecino agradece, la comprensión del Fibroluz,
+## el recuerdo en el cuarto y el acceso desde el rack del colegio; el Grimorio (mapa físico y digital, bestiario,
+## misiones); guardar y cargar; otra ranura no comparte nada.
 ## Ejecutar: godot --headless --path . --script res://tests/test_mundo.gd
 
 const B := "res://world/zones/barrio/"
@@ -30,9 +31,11 @@ func _run() -> void:
 	_test_atlas()
 	_test_side_quest_rules()
 	root.get_node("SaveManager").new_game(1)
-	for point: Dictionary in DevPoints.POINTS:
-		if point["nombre"] == "Sin señal en el barrio · la caja de fibra":
-			DevPoints.prepare(point, state)
+	DevPoints._advance(state, &"contagio_digital", &"encontrar_salida")
+	state.set_flag(&"bosque_descubierto")
+	state.unlock_vision()
+	state.unlock_immersion()
+	state.set_nullblade_stage(1)
 	await _test_street()
 	await _test_forest_roots()
 	await _test_clearing()
@@ -85,32 +88,14 @@ func _test_side_quest_rules() -> void:
 func _test_street() -> void:
 	await _open(B + "calle.tscn", Vector2(1700, 304))
 	_check(ProgressTracker.chapter(state) == 3 and not state.has_reached_step(Q), "Capítulo 3, en la calle del barrio")
-	var box := room.get_node("Historia/CajaDeFibra")
 	var portal := room.get_node("Historia/AccesoFibra") as ImmersionPortal
-	_check(not portal.is_available(), "antes de saber del problema, la caja no es un acceso")
-	var bx := _box()
-	room.player.teleport_to(Vector2(1180, 304))
-	await _until(func() -> bool: return bx.is_playing())
-	_check(_line(bx).contains("caja de fibra") or bx.is_playing(), "el vecino cuenta que no hay internet en la cuadra")
-	await _advance(bx)
-	await _until(func() -> bool: return state.has_reached_step(Q))
-	_check(state.get_current_step(Q) == &"revisar_caja" and QuestDB.get_quest(Q).category == Quest.Category.SECUNDARIA,
-		"empieza la misión secundaria «Sin señal en el barrio»")
-	_check(box.is_failing() and portal.is_available(), "la caja falla (luz roja) y es un acceso de Inmersión")
-	var objective := room.get_node("CombatHUD").find_child("Objective", true, false)
-	_check(objective == null or objective.visible, "el objetivo de la actividad se ve en el HUD")
-	root.get_node("DigitalVision").activate(true)
-	room.player.teleport_to(Vector2(portal.global_position.x, 304))
-	await _frames(8)
-	await _action(&"interact")
-	await _until(func() -> bool: return current_scene is Room and current_scene.scene_file_path == F + "fibra_raices.tscn" and current_scene.is_node_ready())
-	await _frames(6)
-	room = current_scene as Room
-
+	_check(not portal.is_available() and room.get_node_or_null("Historia/VecinoSinSenal") == null,
+		"la caja del barrio no es un acceso (el bosque se descubre por la caída) y nadie manda a Kai al bosque")
+	await _open(F + "fibra_raices.tscn", Vector2(40, 304))
 
 func _test_forest_roots() -> void:
 	_check(world.current_district == &"bosque_fibra" and state.has_flag(&"region_visitada_bosque_fibra"),
-		"con la Visión y la Inmersión, Kai entra por la caja: el Bosque de Fibra (región descubierta)")
+		"en el Bosque de Fibra (región descubierta)")
 	var bosque := WorldAtlas.get_region(&"bosque_fibra")
 	var cache := WorldAtlas.get_region(&"distrito_cache")
 	_check(WorldAtlas.state_of(bosque, state, world) == WorldAtlas.State.VISITADA and WorldAtlas.state_of(cache, state, world) == WorldAtlas.State.NIEBLA,
@@ -119,10 +104,12 @@ func _test_forest_roots() -> void:
 	_check(WorldAtlas.is_link_known(trunk, state, world) and not trunk.is_open(state), "la troncal al Distrito Caché se ve, cerrada (región futura)")
 	_check(WorldAtlas.state_of(WorldAtlas.get_region(&"velo_nulo"), state, world) == WorldAtlas.State.DESCONOCIDA, "El Velo Nulo (secreto) no aparece")
 	var box := _box()
+	room.player.teleport_to(Vector2(560, 304))
 	await _until(func() -> bool: return box.is_playing())
 	await _advance(box)
-	await _until(func() -> bool: return state.get_current_step(Q) == &"seguir_fibroluz")
-	_check(state.get_current_step(Q) == &"seguir_fibroluz", "al llegar: «Seguí al Fibroluz»")
+	await _until(func() -> bool: return state.get_current_step(Q) == &"ayudar_fibroluz")
+	_check(state.get_current_step(Q) == &"ayudar_fibroluz" and QuestDB.get_quest(Q).category == Quest.Category.SECUNDARIA
+		and state.active_quest == &"contagio_digital", "el Fibroluz apagado empieza «El bosque que dejó de brillar» (la historia sigue arriba)")
 	# El Fibroluz con la Visión: avistamiento y observación.
 	var fibroluz := room.get_node("Mundo/Fibroluz") as Fibroluz
 	var entry := Bestiary.get_entry(&"fibroluz")
@@ -130,7 +117,6 @@ func _test_forest_roots() -> void:
 	room.player.teleport_to(fibroluz.global_position + Vector2(-150, 14))
 	await _until(func() -> bool: return Bestiary.stage(state, entry) >= 1)
 	_check(Bestiary.stage(state, entry) >= 1, "con la Visión, el Fibroluz queda registrado (avistamiento)")
-	# Seguir mirándolo: Kai lo sigue a la vista y vuelve a encender la Visión cuando se apaga.
 	var vision := root.get_node("DigitalVision")
 	for i in 900:
 		if Bestiary.stage(state, entry) >= 2:
@@ -142,13 +128,11 @@ func _test_forest_roots() -> void:
 		await _frames(1)
 	_check(Bestiary.stage(state, entry) == 2, "si Kai sigue mirándolo: observación (sin pelear)")
 	_check(not fibroluz.find_children("*", "HurtboxComponent", true, false).size(), "el Fibroluz no se puede dañar: no existe para ser vencido")
-	# Se acerca: el Fibroluz lo guía hacia el claro.
 	room.player.teleport_to(fibroluz.global_position + Vector2(-40, 14))
 	await _until(func() -> bool: return box.is_playing())
 	await _advance(box)
 	await _until(func() -> bool: return fibroluz.is_guiding())
 	_check(fibroluz.is_guiding(), "el Fibroluz guía a Kai (Interacción)")
-	# El camino oculto: sin la Visión no existe; con la Visión, se puede subir.
 	root.get_node("DigitalVision").deactivate()
 	await _frames(10)
 	room.player.teleport_to(Vector2(330, 240))
@@ -163,25 +147,25 @@ func _test_forest_roots() -> void:
 	room.player.teleport_to(Vector2(205, 100))
 	await _until(func() -> bool: return state.has_flag(&"fibra_fragmento_recogido"))
 	_check(state.has_flag(&"fibra_fragmento_recogido"), "arriba, un Fragmento de Datos escondido (se registra en la vitrina del cuarto)")
+	var exit := room.get_node("Historia/SalidaAlBarrio") as ImmersionPortal
+	_check(not exit.is_available(), "todavía no se puede salir al barrio")
 	room.player.teleport_to(Vector2(954, 304))
 	await _until(func() -> bool: return current_scene is Room and current_scene.scene_file_path == F + "fibra_claro.tscn" and current_scene.is_node_ready())
 	await _frames(6)
 	room = current_scene as Room
-
 
 func _test_clearing() -> void:
 	var box := _box()
 	await _until(func() -> bool: return box.is_playing())
 	await _advance(box)
 	await _until(func() -> bool: return state.get_current_step(Q) == &"reconectar")
-	_check(state.get_current_step(Q) == &"reconectar", "el Fibroluz espera junto al corte: «Reconectá los empalmes»")
+	_check(state.get_current_step(Q) == &"reconectar", "el Fibroluz espera junto al corte: «Reconecta los empalmes»")
 	var circuit := room.get_node("Mundo/Corte") as FiberCircuit
 	_check(circuit.lit_segments() <= circuit.junctions.size() and not circuit.is_solved, "los empalmes apuntan para cualquier lado: la señal no llega")
-	# La troncal hacia el Distrito Caché no deja pasar.
 	room.player.teleport_to(Vector2(794, 304))
 	await _frames(20)
 	_check(current_scene == room, "la troncal hacia el Distrito Caché no tiene enlace: no se pasa")
-	# Kai gira cada empalme con E hasta que apunte al siguiente.
+	var ecos_before: int = root.get_node("Economy").ecos
 	for junction in circuit.junctions:
 		room.player.teleport_to(Vector2(junction.global_position.x, 304 if junction.position.y > 250.0 else 248))
 		await _frames(8)
@@ -191,21 +175,26 @@ func _test_clearing() -> void:
 			await _action(&"interact")
 			await _frames(4)
 	await _until(func() -> bool: return circuit.is_solved)
-	_check(circuit.is_solved and state.get_current_step(Q) == &"volver_al_barrio", "con todos los empalmes en orden, la señal llega («Volvé al barrio»)")
+	_check(circuit.is_solved and state.is_quest_completed(Q) and root.get_node("Economy").ecos == ecos_before + 40,
+		"con todos los empalmes en orden, la señal llega: misión completada (+40 Ecos)")
 	_check(state.has_flag(&"bosque_fibra_enlace_restaurado"), "el bosque vuelve a brillar (cambio permanente)")
 	await _until(func() -> bool: return box.is_playing())
 	await _advance(box)
 	var to_school := room.get_node("Historia/SalidaAlColegio") as ImmersionPortal
-	_check(to_school.is_available(), "y se abre la salida al colegio por la troncal del rack (conexión nueva)")
+	_check(not to_school.is_available(), "la salida al colegio todavía no (Kai tiene que encontrar otra salida con la historia)")
+	var ecos: int = root.get_node("Economy").ecos
+	state.complete_step(Q, &"reconectar")
+	_check(root.get_node("Economy").ecos == ecos, "la recompensa no se cobra dos veces")
+	state.set_flag(&"bosque_salida_abierta")  # Lo deja la historia al salir de la Estación Lázaro (se prueba aparte).
+	_check(to_school.is_available(), "con la historia, se abre la salida al colegio por la troncal del rack")
 	room.player.teleport_to(Vector2(6, 304))
 	await _until(func() -> bool: return current_scene is Room and current_scene.scene_file_path == F + "fibra_raices.tscn" and current_scene.is_node_ready())
 	await _frames(6)
 	room = current_scene as Room
 
-
 func _test_return() -> void:
-	var ecos_before: int = root.get_node("Economy").ecos
 	var exit := room.get_node("Historia/SalidaAlBarrio") as ImmersionPortal
+	_check(exit.is_available(), "con la señal restaurada y la historia, se puede salir al barrio por la fibra (atajo)")
 	room.player.teleport_to(Vector2(exit.global_position.x, 304))
 	await _frames(8)
 	await _action(&"interact")
@@ -215,19 +204,14 @@ func _test_return() -> void:
 	var box := _box()
 	await _until(func() -> bool: return box.is_playing())
 	_check(world.current_room == &"calle", "Kai vuelve a la región anterior (el barrio) por la caja")
+	_check(_line(box).contains("caja del poste") or box.is_playing(), "el vecino agradece: volvió el internet")
 	await _advance(box)
-	await _until(func() -> bool: return state.is_quest_completed(Q))
-	_check(state.is_quest_completed(Q) and root.get_node("Economy").ecos == ecos_before + 40, "el vecino agradece: misión secundaria completada (+40 Ecos)")
 	_check(not room.get_node("Historia/CajaDeFibra").is_failing(), "la caja del poste queda en verde")
+	_check((room.get_node("Historia/AccesoFibra") as ImmersionPortal).is_available(), "y la caja es un acceso al bosque (atajo)")
 	_check(Bestiary.stage(state, Bestiary.get_entry(&"fibroluz")) == 3, "el Fibroluz pasa a «Comprensión» en el bestiario")
 	_check(HomeCollection.get_item(&"nota_vecino").is_unlocked(state) and HomeCollection.get_item(&"fragmento_bosque").is_unlocked(state),
 		"en el cuarto de Kai aparecen la nota del vecino y el fragmento del bosque")
 	_check(WorldAtlas.get_link(&"central_bosque").is_open(state), "el acceso desde el rack del colegio queda abierto")
-	# Completar otra vez no paga dos veces.
-	var ecos: int = root.get_node("Economy").ecos
-	state.complete_step(Q, &"volver_al_barrio")
-	_check(root.get_node("Economy").ecos == ecos, "la recompensa no se cobra dos veces")
-
 
 func _test_grimorio() -> void:
 	var screen := GrimorioScreen.open(room)
@@ -246,14 +230,18 @@ func _test_grimorio() -> void:
 	screen.show_world(WorldRegion.Kind.FISICA)
 	await _frames(2)
 	_check(screen._world_map.kind == WorldRegion.Kind.FISICA and screen._world_map.current_region().id == &"barrio_almendros", "mapa físico: Kai está en el Barrio de los Almendros")
-	var creatures := screen.entries_in(GrimorioEntry.Category.BESTIARIO)
-	_check(creatures.size() == 1 and screen.is_unlocked(creatures[0]) and creatures[0].text.contains("Transporta señales"),
+	# El Bestiario también tiene la Bitcucaracha (Capítulo 3): se busca la página del Fibroluz.
+	var fibroluz: GrimorioEntry = null
+	for page in screen.entries_in(GrimorioEntry.Category.BESTIARIO):
+		if page.title.contains("Fibroluz"):
+			fibroluz = page
+	_check(fibroluz != null and screen.is_unlocked(fibroluz) and fibroluz.text.contains("Transporta señales"),
 		"Grimorio · Bestiario: el Fibroluz con toda su información (comprensión)")
 	var missions := screen.entries_in(GrimorioEntry.Category.MISIONES)
 	var found := false
 	for page in missions:
-		found = found or (page.title == "Sin señal en el barrio" and page.subtitle.contains("Completada"))
-	_check(found, "Grimorio · Misiones: «Sin señal en el barrio», completada")
+		found = found or (page.title == "El bosque que dejó de brillar" and page.subtitle.contains("Completada"))
+	_check(found, "Grimorio · Misiones: «El bosque que dejó de brillar», completada")
 	screen.close()
 	await _frames(2)
 

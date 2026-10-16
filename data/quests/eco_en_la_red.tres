@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_quest"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_step"]
+
+[sub_resource type="Resource" id="Step_0"]
+script = ExtResource("2_step")
+id = &"restablecer_energia"
+objective = "Restablece la energía de la estación (el tablero de distribución)."
+room_id = &"lazaro_nucleo"
+
+[sub_resource type="Resource" id="Step_1"]
+script = ExtResource("2_step")
+id = &"recuperar_modulos"
+objective = "Recupera los tres módulos de Aegis: procesamiento, comunicación y protección."
+room_id = &"lazaro_vestibulo"
+
+[sub_resource type="Resource" id="Step_2"]
+script = ExtResource("2_step")
+id = &"estabilizar_nucleo"
+objective = "Instala los módulos y estabiliza el núcleo de Aegis."
+room_id = &"lazaro_nucleo"
+
+[resource]
+script = ExtResource("1_quest")
+id = &"eco_en_la_red"
+title = "Eco en la Red"
+category = 4
+chapter = 3
+steps = Array[ExtResource("2_step")]([SubResource("Step_0"), SubResource("Step_1"), SubResource("Step_2")])
+completion_flag = &"aegis_reparado"

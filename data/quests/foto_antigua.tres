@@ -13,5 +13,6 @@ room_id = &"biblioteca"
 script = ExtResource("1_quest")
 id = &"foto_antigua"
 title = "Una fotografía antigua"
+chapter = 1
 category = 3
 steps = Array[ExtResource("2_step")]([SubResource("Resource_0")])

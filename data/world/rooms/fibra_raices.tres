@@ -9,6 +9,12 @@ id = &"este"
 cell = Vector2i(1, 0)
 entry_id = &"desde_claro"
 
+[sub_resource type="Resource" id="Resource_xqjj7"]
+script = ExtResource("1_xqjj7")
+id = &"oeste"
+side = 0
+entry_id = &"desde_caida"
+
 [resource]
 script = ExtResource("2_pph3o")
 id = &"fibra_raices"
@@ -17,7 +23,7 @@ scene_path = "res://world/zones/bosque_fibra/fibra_raices.tscn"
 room_type = &"digital"
 district_id = &"bosque_fibra"
 size_cells = Vector2i(2, 1)
-doors = Array[ExtResource("1_xqjj7")]([SubResource("Resource_nn6fg")])
+doors = Array[ExtResource("1_xqjj7")]([SubResource("Resource_nn6fg"), SubResource("Resource_xqjj7")])
 fixed = true
 minimum_player_abilities = PackedStringArray()
 chapter_requirement = 3

@@ -426,6 +426,21 @@ func _quest_entries() -> Array[GrimorioEntry]:
 	var game_state := get_node_or_null("/root/GameState")
 	if game_state == null:
 		return result
+	# Antes del Capítulo 3: lo que falta de los capítulos 1 y 2 (ChapterGate), arriba de todo.
+	if game_state.has_flag(ChapterGate.CHAPTER_3_STORY_FLAG) and not game_state.has_flag(&"capitulo_3"):
+		var pending := ChapterGate.pending_names(game_state, 3)
+		if not pending.is_empty():
+			var gate := GrimorioEntry.new()
+			gate.category = GrimorioEntry.Category.MISIONES
+			gate.order = -1
+			gate.title = "Asuntos pendientes"
+			gate.subtitle = "Antes del Capítulo 3"
+			gate.text = ChapterGate.PENDING_MESSAGE + "
+
+" + "
+".join(Array(pending).map(func(n: String) -> String: return "· " + n))
+			gate.facts = { "Pendientes": str(pending.size()) }
+			result.append(gate)
 	var started: Array[StringName] = game_state.get_started_quests()
 	for i in started.size():
 		var quest := QuestDB.get_quest(started[i])

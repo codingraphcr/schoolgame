@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 4
+order = 40
+title = "Aegis"
+subtitle = "Registro · Estación Lázaro"
+text = "Una unidad de protección encontrada en la Estación Lázaro, en lo profundo del Bosque de Fibra.\n\nUNIDAD: AEGIS\nFUNCIÓN: PROTECCIÓN\nESTADO: AISLADA\nÚLTIMA DIRECTIVA: CONTENER AMENAZA\nRESULTADO: CONTENCIÓN INCOMPLETA\nORIGEN DEL INCIDENTE: [DATOS NO DISPONIBLES]\n\nKai: «Me cuidó antes de conocerme. Ahora me toca a mí.»"
+facts = Dictionary[String, String]({"Función": "Protección", "Habilidad": "Aegis Pulse"})
+unlock_flag = &"registro_aegis_principal"

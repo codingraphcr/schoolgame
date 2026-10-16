@@ -86,7 +86,7 @@ con `chapter_requirement` se abren al llegar a ese capítulo (`World.lock_reason
 | Nullblade afilada | 220 | Cap. 2 | +25 % de daño (`GameState.sword_level` 1) |
 | **Doble salto** | **800** | Cap. 2 | Desbloquea el doble salto (decisión del equipo; caro a propósito) |
 | Nullblade templada | 450 | Cap. 3 | Otro +25 % de daño (pide la anterior) |
-| Aegis: núcleo pulido | 300 | Cap. 3 | Mejora secundaria de Aegis: se ve desde el Cap. 3 pero se compra cuando Kai tenga a Aegis. **Pendiente:** su efecto se programa junto con Aegis (hoy solo deja la marca `aegis_mejora_1`) |
+| Aegis: núcleo pulido | 300 | Cap. 3 | Mejora secundaria de Aegis: se ve desde el Cap. 3 pero se compra cuando Kai tenga a Aegis. Aegis Pulse espera menos entre disparos (0,45 s en vez de 0,7 s; marca `aegis_mejora_1`) |
 | Mapa del Bosque de Fibra | 30 | Cap. 3 | El mapa del Grimorio muestra todo el bosque |
 
 - **Reglas:** cada artículo se compra **una sola vez** (marca `compra_<id>`, por ranura); antes de comprar se pregunta;

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(De las rejillas salen bichitos metálicos que corren hacia el núcleo.)
+Kai: ¡¿Y ESTAS COSAS DE DÓNDE SALIERON?!
+Aegis: Organismos digitales carroñeros. Probablemente atraídos por los residuos de energía.
+Kai: ¡¿Y NO PODÍAS AVISARME ANTES?!
+Aegis: Acabo de identificarlos.
+Kai: ¡PUES IDENTIFICALOS MÁS RÁPIDO!"

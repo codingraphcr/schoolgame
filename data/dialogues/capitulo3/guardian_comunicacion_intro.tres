@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Guardián: SECTOR DE COMUNICACIÓN. UNA SEÑAL QUE NO SE DETIENE ES SOLO RUIDO.
+Guardián: RESPONDE, Y LA SEÑAL TE DEJARÁ PASAR.
+Kai [pensativo]: Esto me suena a Bucle..."

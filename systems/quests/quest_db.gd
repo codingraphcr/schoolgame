@@ -15,11 +15,16 @@ const PATHS := {
 	# Capítulo 2.
 	&"el_lenguaje_de_las_maquinas": "res://data/quests/el_lenguaje_de_las_maquinas.tres",
 	&"codigo_fuera_de_control": "res://data/quests/codigo_fuera_de_control.tres",
+	# Capítulo 3.
+	&"contagio_digital": "res://data/quests/contagio_digital.tres",
+	&"la_senal_perdida": "res://data/quests/la_senal_perdida.tres",
+	&"eco_en_la_red": "res://data/quests/eco_en_la_red.tres",
 	# Actividades del mundo (docs/misiones/MISIONES_SECUNDARIAS.md).
 	&"senal_del_barrio": "res://data/quests/senal_del_barrio.tres",
 	&"foto_antigua": "res://data/quests/foto_antigua.tres",
 	&"un_recreo_diferente": "res://data/quests/un_recreo_diferente.tres",
 	&"proyecto_perdido": "res://data/quests/proyecto_perdido.tres",
+	&"robot_desobediente": "res://data/quests/robot_desobediente.tres",
 }
 
 

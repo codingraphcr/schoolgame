@@ -4,8 +4,9 @@
 
 [resource]
 script = ExtResource("1_dlg")
-script_text = "# Al volver a la calle: la consecuencia de la misión.
+script_text = "# Cuando volvió la señal del barrio («El bosque que dejó de brillar»).
 (La luz de la caja del poste está verde.)
-Vecino: ¡Kai! ¡Volvió el internet! No sé qué hizo, pero muchas gracias.
-Kai: Un tramo de la conexión estaba cortado. Ya llega la señal.
-Vecino: Tome, para un fresco. Y salúdeme a su mamá."
+Vecino: ¡Kai! ¡Volvió el internet! No sé qué pasó, pero se lo cuento por si acaso.
+Kai: Algo me dice que fue cosa de unos amigos muy pequeñitos.
+Vecino: ¿Ah?
+Kai: Nada, don. ¡Qué dicha!"

@@ -19,7 +19,12 @@ colegio, en algún momento, se ven indicios de que hay «algo más grande» detr
 - **Conceptos:** redes, conectividad, transmisión, flujo de datos.
 - **Criatura:** Fibroluz (IMPLEMENTADO).
 - **IMPLEMENTADO (MVP):** distrito `bosque_fibra`, sector introductorio «Raíces del barrio»:
-  - **Raíces del barrio** (`fibra_raices`): llegada desde la caja de fibra del barrio; el bosque está apagado;
+  - **El aterrizaje** (`bosque_caida`, Capítulo 3): Kai descubre el bosque **cayendo** desde la conexión del equipo 7
+    (única forma de descubrirlo). Desde ahí, el puente inestable (`bosque_puente`), el nodo de distribución
+    (`bosque_nodo`) y las afueras de la **Estación Lázaro** (`bosque_estacion`, `world/zones/lazaro/`: la
+    instalación donde estaba Aegis). Ver `docs/narrativa/capitulos/CAPITULO_03.md`.
+  - **Raíces del barrio** (`fibra_raices`): donde empieza «El bosque que dejó de brillar»; la caja de fibra del barrio
+    queda como atajo al terminarla; el bosque está apagado;
     Fibroluz; una **ruta alta que solo existe con la Visión Digital** (plataformas de la capa digital) hasta un
     Fragmento de Datos.
   - **El claro del corte** (`fibra_claro`): el tramo cortado (puzle de empalmes: la señal necesita un camino

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Nivel 6, «La señal perdida»: dentro de la Estación Lázaro.
+(Adentro, la estación está medio apagada. Pasillos blancos, cápsulas vacías, polvo de datos flotando.)
+Kai [pensativo]: Qué lugar más solo...
+Kai: ¿Hola? Luz azul, ¿estás por aquí?
+(A lo lejos, hacia el fondo de la estación, algo parpadea en cian.)"

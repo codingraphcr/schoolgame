@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 3, «Contagio digital»: los amigos en la entrada, unas semanas después.
+Compañera: ¡Kai! ¿Te acordás de la impresora que hacía un ruido raro? Dijiste «es el driver» antes que el técnico.
+Compañero: Mae, últimamente reconocés los problemas de las compus antes que nadie. ¿Qué hacés, les hablás?
+Kai: Claro. Les digo «¿qué te pasa, mi amor?» y me cuentan todo.
+Compañera: ...No sé si estás bromeando.
+Kai: Yo tampoco. ¡Vamos a clase!"

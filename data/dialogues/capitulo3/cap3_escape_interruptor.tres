@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(Una compuerta de emergencia corta el pasillo. Arriba, fuera del alcance de Kai, parpadea un interruptor rojo.)
+Kai: ¡Está cerrada! Y ese interruptor está altísimo...
+Aegis: Interruptor de emergencia detectado. Fuera de tu alcance. Dentro del mío.
+Kai: ¡Entonces dale!"

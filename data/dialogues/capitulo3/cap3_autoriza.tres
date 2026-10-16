@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Prof. Alvarado: Bien pensado. Desconecto la carpeta compartida de la red: así queda aislada.
+Prof. Alvarado [pensativo]: Pero algo sigue entrando por la conexión del equipo 7...
+Prof. Alvarado: Kai, revisá esa conexión. Una investigación controlada: mirás, anotás y volvés.
+Kai: Mirar, anotar y volver. Prometido.
+Kai [pensativo]: Con la Inmersión Digital puedo ver adentro de esa conexión."

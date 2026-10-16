@@ -13,8 +13,8 @@
 - **IMPLEMENTADO:** distrito `barrio` con la **calle** (del portón del colegio a la casa: casas de colores, rejas,
   postes, la pulpería «La Esquina», la parada, Canelo el perro, un vecino y un estudiante), la **casa** y el
   **cuarto de Kai**. La luz sigue el momento del día de la historia (`DayPhase`).
-- **IMPLEMENTADO (MVP del mundo):** la **caja de fibra óptica** del poste: primer acceso de Inmersión al Bosque
-  de Fibra (Capítulo 3) y la misión secundaria «Sin señal en el barrio».
+- **IMPLEMENTADO:** la **caja de fibra óptica** del poste: atajo de Inmersión al Bosque de Fibra después de la
+  secundaria «El bosque que dejó de brillar» (Capítulo 3; el bosque se descubre cayendo desde el colegio).
 - **FUTURO:** parque, soda del barrio, más vecinos con historias (misión «El último mensaje»).
 
 ## Distrito Central (`distrito_central`) — inspiración San José

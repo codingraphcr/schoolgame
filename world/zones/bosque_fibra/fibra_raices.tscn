@@ -7,19 +7,17 @@
 [ext_resource type="Script" path="res://world/vision/data_fragment.gd" id="5_nx3je"]
 [ext_resource type="Script" path="res://characters/creatures/fibroluz.gd" id="6_f1qh2"]
 [ext_resource type="Resource" path="res://data/bestiary/fibroluz.tres" id="7_53653"]
-[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="8_rmbux"]
 [ext_resource type="Resource" path="res://data/dialogues/mundo/fibra_llegada.tres" id="9_qlmda"]
 [ext_resource type="Script" path="res://world/zones/bosque_fibra/fiber_story.gd" id="10_5ywc0"]
 [ext_resource type="Resource" path="res://data/dialogues/mundo/fibroluz_guia.tres" id="11_6vkow"]
+[ext_resource type="Script" path="res://systems/quests/quest_starter.gd" id="11_guraf"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="12_fr2ko"]
 [ext_resource type="Script" path="res://world/digital/immersion_portal.gd" id="12_swpx8"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="13_3hr4t"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="14_fhml2"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="15_lm46e"]
-[ext_resource type="Script" path="res://characters/player/player.gd" id="16_bymj4"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="17_canfh"]
-[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="18_op7uf"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="19_c0g4y"]
-[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="20_uyvcy"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="21_7ky4g"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fmcwr"]
@@ -34,7 +32,20 @@ size = Vector2(32, 400)
 [sub_resource type="CircleShape2D" id="CircleShape2D_fyvdt"]
 radius = 14.0
 
+[sub_resource type="Resource" id="Resource_bt26x"]
+script = ExtResource("12_fr2ko")
+min_chapter = 3
+flags = PackedStringArray("bosque_descubierto")
+quests_completed = PackedStringArray()
+abilities = PackedStringArray()
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a41wr"]
+size = Vector2(260, 80)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2c532"]
+size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jf2x7"]
 size = Vector2(12, 256)
 
 [node name="FibraRaices" type="Node2D" unique_id=867851645 node_paths=PackedStringArray("player", "camera", "spawn_point")]
@@ -104,13 +115,6 @@ patrol = Array[Vector2]([Vector2(500, 290), Vector2(640, 290)])
 
 [node name="Historia" type="Node2D" parent="." unique_id=400581130]
 
-[node name="Llegada" type="Area2D" parent="Historia" unique_id=753653033]
-script = ExtResource("8_rmbux")
-quest_id = &"senal_del_barrio"
-step_id = &"revisar_caja"
-dialogue = ExtResource("9_qlmda")
-on_ready = true
-
 [node name="FiberStory" type="Node" parent="Historia" unique_id=1363173763 node_paths=PackedStringArray("fibroluz")]
 script = ExtResource("10_5ywc0")
 fibroluz = NodePath("../../Mundo/Fibroluz")
@@ -126,8 +130,20 @@ screen_size = Vector2(24, 26)
 title = "VOLVIENDO AL BARRIO..."
 lines = PackedStringArray("Siguiendo la fibra de vuelta", "Saliendo por la caja del poste...")
 needs_vision = false
+required_flags = Array[StringName]([&"bosque_fibra_enlace_restaurado", &"bosque_salida_abierta"])
 prompt_text = "E: entrar"
 prompt_offset = Vector2(-30, -40)
+
+[node name="EmpiezaMision" type="Area2D" parent="Historia" unique_id=339328397]
+position = Vector2(560, 304)
+script = ExtResource("11_guraf")
+quest_id = &"senal_del_barrio"
+requirement = SubResource("Resource_bt26x")
+dialogue = ExtResource("9_qlmda")
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Historia/EmpiezaMision" unique_id=1908784540]
+position = Vector2(0, -40)
+shape = SubResource("RectangleShape2D_a41wr")
 
 [node name="Entries" type="Node2D" parent="." unique_id=961522303]
 
@@ -143,6 +159,11 @@ script = ExtResource("13_3hr4t")
 id = &"desde_claro"
 facing = -1
 
+[node name="DesdeCaida" type="Marker2D" parent="Entries" unique_id=1695484191]
+position = Vector2(40, 304)
+script = ExtResource("13_3hr4t")
+id = &"desde_caida"
+
 [node name="Exits" type="Node2D" parent="." unique_id=688624998]
 
 [node name="ToClaro" type="Area2D" parent="Exits" unique_id=1622171107]
@@ -155,29 +176,26 @@ target_entry = &"desde_raices"
 [node name="Shape" type="CollisionShape2D" parent="Exits/ToClaro" unique_id=1711621914]
 shape = SubResource("RectangleShape2D_2c532")
 
+[node name="ToCaida" type="Area2D" parent="Exits" unique_id=1401252888]
+position = Vector2(6, 176)
+script = ExtResource("14_fhml2")
+door_id = &"oeste"
+target_scene = "res://world/zones/bosque_fibra/bosque_caida.tscn"
+target_entry = &"desde_raices"
+
+[node name="@CollisionShape2D@3" type="CollisionShape2D" parent="Exits/ToCaida" unique_id=2130571213]
+shape = SubResource("RectangleShape2D_jf2x7")
+
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=1251590607]
 position = Vector2(80, 304)
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=299383722 instance=ExtResource("15_lm46e")]
+[node name="Player" parent="." unique_id=299383722 instance=ExtResource("15_lm46e")]
 position = Vector2(80, 304)
-collision_layer = 2
-floor_snap_length = 4.0
-script = ExtResource("16_bymj4")
 
-[node name="GameCamera" type="Camera2D" parent="." unique_id=1094914482 node_paths=PackedStringArray("target") instance=ExtResource("17_canfh")]
-zoom = Vector2(2, 2)
-process_callback = 0
-position_smoothing_enabled = true
-position_smoothing_speed = 7.0
-drag_vertical_enabled = true
-drag_top_margin = 0.25
-drag_bottom_margin = 0.15
-script = ExtResource("18_op7uf")
+[node name="GameCamera" parent="." unique_id=1094914482 node_paths=PackedStringArray("target") instance=ExtResource("17_canfh")]
 target = NodePath("../Player")
 
-[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("19_c0g4y")]
-layer = 40
-script = ExtResource("20_uyvcy")
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("19_c0g4y")]
 player = NodePath("../Player")
 
 [node name="DigitalWorld" type="Node" parent="." unique_id=2005256569 node_paths=PackedStringArray("player", "ambient", "digital_layer")]

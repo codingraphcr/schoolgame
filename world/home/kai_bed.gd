@@ -25,6 +25,9 @@ var sleeping := false:
 		sleeping = value
 		queue_redraw()
 var interactable: Interactable
+## Otro uso de la cama cuando no es momento de quest_id (p. ej. empezar el Capítulo 3, ChapterThreeRest): recibe al
+## jugador y devuelve true si se encargó (si no, Kai dice que no tiene sueño).
+var alternate_rest := Callable()
 
 
 func _ready() -> void:
@@ -47,6 +50,8 @@ func can_rest() -> bool:
 
 func _on_interacted(player: Player) -> void:
 	if not can_rest():
+		if alternate_rest.is_valid() and await alternate_rest.call(player):
+			return
 		SpeechBark.say(player, not_now_lines[randi() % not_now_lines.size()], Vector2(0, -44), 1.8)
 		return
 	interactable.busy = true

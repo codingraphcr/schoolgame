@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_quest"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_step"]
+
+[sub_resource type="Resource" id="Step_0"]
+script = ExtResource("2_step")
+id = &"hablar_companera"
+objective = "Habla con la Compañera en el taller: su robot no obedece."
+room_id = &"taller"
+
+[sub_resource type="Resource" id="Step_1"]
+script = ExtResource("2_step")
+id = &"arreglar_robot"
+objective = "Ordena las instrucciones del robot de la Compañera (la mesa del fondo del taller)."
+room_id = &"taller"
+
+[sub_resource type="Resource" id="Step_2"]
+script = ExtResource("2_step")
+id = &"contarle"
+objective = "Cuéntale a la Compañera que su robot ya funciona."
+room_id = &"taller"
+
+[resource]
+script = ExtResource("1_quest")
+id = &"robot_desobediente"
+title = "El robot que no obedece"
+category = 2
+chapter = 2
+steps = Array[ExtResource("2_step")]([SubResource("Step_0"), SubResource("Step_1"), SubResource("Step_2")])

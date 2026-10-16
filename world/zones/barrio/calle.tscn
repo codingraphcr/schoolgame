@@ -19,8 +19,6 @@
 [ext_resource type="Script" path="res://world/digital/immersion_portal.gd" id="16_67tqw"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="16_r00in"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="17_6iwax"]
-[ext_resource type="Script" path="res://systems/quests/quest_starter.gd" id="17_x2x34"]
-[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="18_icuqh"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="19_4g0u3"]
 [ext_resource type="Resource" path="res://data/dialogues/mundo/senal_inicio.tres" id="19_11ro0"]
 [ext_resource type="Resource" path="res://data/dialogues/mundo/senal_vuelta.tres" id="20_43d5s"]
@@ -38,18 +36,11 @@ size = Vector2(32, 400)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_updpe"]
 size = Vector2(80, 120)
 
-[sub_resource type="Resource" id="Resource_oit8e"]
-script = ExtResource("18_icuqh")
-min_chapter = 3
-flags = PackedStringArray()
-quests_completed = PackedStringArray()
-abilities = PackedStringArray("vision", "inmersion")
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_07c08"]
-size = Vector2(120, 120)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xgt1x"]
 size = Vector2(240, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b5lfq"]
+size = Vector2(80, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jnyso"]
 size = Vector2(12, 256)
@@ -181,29 +172,33 @@ target_entry = &"desde_barrio"
 screen_size = Vector2(24, 26)
 title = "CONECTANDO A LA FIBRA..."
 lines = PackedStringArray("Señal encontrada en la caja del poste", "Siguiendo la fibra...")
-requires_quest = &"senal_del_barrio"
+required_flags = Array[StringName]([&"bosque_fibra_enlace_restaurado"])
 prompt_text = "E: entrar"
 prompt_offset = Vector2(-30, -40)
-
-[node name="VecinoSinSenal" type="Area2D" parent="Historia" unique_id=1529400516]
-position = Vector2(1180, 260)
-script = ExtResource("17_x2x34")
-quest_id = &"senal_del_barrio"
-requirement = SubResource("Resource_oit8e")
-dialogue = ExtResource("19_11ro0")
-
-[node name="Shape" type="CollisionShape2D" parent="Historia/VecinoSinSenal" unique_id=553999357]
-shape = SubResource("RectangleShape2D_07c08")
 
 [node name="SenalDeVuelta" type="Area2D" parent="Historia" unique_id=2037970935]
 position = Vector2(1300, 260)
 script = ExtResource("13_so2sf")
-quest_id = &"senal_del_barrio"
-step_id = &"volver_al_barrio"
 dialogue = ExtResource("20_43d5s")
+completes_step = false
+once_flag = &"vecino_senal_vuelta_vista"
+requires_flag = &"bosque_fibra_enlace_restaurado"
 
 [node name="Shape" type="CollisionShape2D" parent="Historia/SenalDeVuelta" unique_id=752302356]
 shape = SubResource("RectangleShape2D_xgt1x")
+
+[node name="VecinoComenta" type="Area2D" parent="Historia" unique_id=1040422352]
+position = Vector2(1180, 304)
+script = ExtResource("13_so2sf")
+quest_id = &"contagio_digital"
+step_id = &"dia_normal"
+dialogue = ExtResource("19_11ro0")
+completes_step = false
+once_flag = &"vecino_sin_senal_visto"
+
+[node name="@CollisionShape2D@3" type="CollisionShape2D" parent="Historia/VecinoComenta" unique_id=656150577]
+position = Vector2(0, -40)
+shape = SubResource("RectangleShape2D_b5lfq")
 
 [node name="Entries" type="Node2D" parent="." unique_id=34362124]
 

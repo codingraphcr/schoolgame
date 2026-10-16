@@ -16,14 +16,13 @@
 [ext_resource type="Script" path="res://world/zones/bosque_fibra/fiber_story.gd" id="14_0yvs3"]
 [ext_resource type="Resource" path="res://data/dialogues/mundo/fibra_reconectada.tres" id="15_y7auu"]
 [ext_resource type="Script" path="res://world/digital/immersion_portal.gd" id="16_0loto"]
+[ext_resource type="Script" path="res://world/rooms/stairway.gd" id="17_mek2f"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="17_qd2nv"]
+[ext_resource type="Resource" path="res://data/dialogues/mundo/fibra_aegis.tres" id="18_3qv4y"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="18_fmrs6"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="19_1sg7c"]
-[ext_resource type="Script" path="res://characters/player/player.gd" id="20_crqq8"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="21_8en8r"]
-[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="22_n8yhg"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="23_n61ua"]
-[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="24_ru03a"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="25_71veh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i1odw"]
@@ -149,7 +148,7 @@ kind = "salida"
 [node name="LlegadaAlCorte" type="Area2D" parent="Historia" unique_id=1305154146]
 script = ExtResource("12_qk64h")
 quest_id = &"senal_del_barrio"
-step_id = &"seguir_fibroluz"
+step_id = &"ayudar_fibroluz"
 dialogue = ExtResource("13_r7k6a")
 on_ready = true
 
@@ -169,10 +168,30 @@ screen_size = Vector2(24, 26)
 title = "VOLVIENDO AL COLEGIO..."
 lines = PackedStringArray("Troncal de fibra del colegio", "Saliendo por el rack de red...")
 needs_vision = false
-requires_quest = &"senal_del_barrio"
-requires_step = &"volver_al_barrio"
+required_flags = Array[StringName]([&"bosque_salida_abierta"])
 prompt_text = "E: entrar"
 prompt_offset = Vector2(-30, -40)
+
+[node name="SubirAlPuente" type="Area2D" parent="Historia" unique_id=1617534460]
+position = Vector2(740, 304)
+script = ExtResource("17_mek2f")
+door_id = &"norte"
+target_scene = "res://world/zones/bosque_fibra/bosque_puente.tscn"
+target_entry = &"desde_claro"
+sign_text = "RAÍZ ALTA"
+show_art = false
+prompt_text = "E: trepar por la raíz"
+prompt_offset = Vector2(-60, -110)
+
+[node name="AegisComenta" type="Area2D" parent="Historia" unique_id=133379194]
+script = ExtResource("12_qk64h")
+quest_id = &"senal_del_barrio"
+step_id = &"ayudar_fibroluz"
+dialogue = ExtResource("18_3qv4y")
+on_ready = true
+completes_step = false
+once_flag = &"fibra_aegis_comento"
+requires_flag = &"aegis_companero"
 
 [node name="Entries" type="Node2D" parent="." unique_id=1515019085]
 
@@ -187,6 +206,12 @@ script = ExtResource("17_qd2nv")
 id = &"desde_colegio"
 facing = -1
 arrival_effect = "materialize"
+
+[node name="DesdePuente" type="Marker2D" parent="Entries" unique_id=265798218]
+position = Vector2(740, 304)
+script = ExtResource("17_qd2nv")
+id = &"desde_puente"
+facing = -1
 
 [node name="Exits" type="Node2D" parent="." unique_id=1334022824]
 
@@ -211,26 +236,13 @@ shape = SubResource("RectangleShape2D_aamrx")
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=261993082]
 position = Vector2(40, 304)
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=1630581081 instance=ExtResource("19_1sg7c")]
+[node name="Player" parent="." unique_id=1630581081 instance=ExtResource("19_1sg7c")]
 position = Vector2(40, 304)
-collision_layer = 2
-floor_snap_length = 4.0
-script = ExtResource("20_crqq8")
 
-[node name="GameCamera" type="Camera2D" parent="." unique_id=1665935829 node_paths=PackedStringArray("target") instance=ExtResource("21_8en8r")]
-zoom = Vector2(2, 2)
-process_callback = 0
-position_smoothing_enabled = true
-position_smoothing_speed = 7.0
-drag_vertical_enabled = true
-drag_top_margin = 0.25
-drag_bottom_margin = 0.15
-script = ExtResource("22_n8yhg")
+[node name="GameCamera" parent="." unique_id=1665935829 node_paths=PackedStringArray("target") instance=ExtResource("21_8en8r")]
 target = NodePath("../Player")
 
-[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("23_n61ua")]
-layer = 40
-script = ExtResource("24_ru03a")
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("23_n61ua")]
 player = NodePath("../Player")
 
 [node name="DigitalWorld" type="Node" parent="." unique_id=921171338 node_paths=PackedStringArray("player", "ambient", "digital_layer")]

@@ -14,6 +14,8 @@ extends Node
 @export var hide_step: StringName = &""
 ## Al completar esta misión vuelve a verse aunque se haya ocultado.
 @export var return_quest: StringName = &""
+## También se oculta si la partida tiene esta marca (p. ej. &"capitulo_3": ya pasaron esos días).
+@export var hide_flag: StringName = &""
 ## Además se oculta mientras alguna de estas otras StoryPresence muestra a su personaje (p. ej. los
 ## estudiantes del recreo del Salón 3, mientras están la clase o el profesor del capítulo 2).
 @export var hide_while: Array[NodePath] = []
@@ -39,7 +41,7 @@ func is_present() -> bool:
 	if return_quest != &"" and state.is_quest_completed(return_quest):
 		return true
 	var shown: bool = show_quest == &"" or state.has_reached_step(show_quest, show_step)
-	var hidden: bool = hide_quest != &"" and state.has_reached_step(hide_quest, hide_step)
+	var hidden: bool = (hide_quest != &"" and state.has_reached_step(hide_quest, hide_step)) or (hide_flag != &"" and state.has_flag(hide_flag))
 	return shown and not hidden
 
 

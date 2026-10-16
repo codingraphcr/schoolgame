@@ -10,7 +10,6 @@
 [ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="8_y5xbq"]
 [ext_resource type="PackedScene" path="res://characters/npcs/profesor/profesor.tscn" id="9_p8mah"]
 [ext_resource type="Script" path="res://characters/npcs/npc.gd" id="10_snfhu"]
-[ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_saludo.tres" id="11_hat0x"]
 [ext_resource type="Script" path="res://characters/npcs/npc_conversation.gd" id="12_l41jd"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_pedido.tres" id="13_vrfec"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/profesor_recordatorio.tres" id="14_mmsf5"]
@@ -39,12 +38,22 @@
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="34_np0t7"]
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="35_dt8s2"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="36_jjocs"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_profe_investigar.tres" id="37_dr43v"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="37_ey5b1"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_profe_diagnostico.tres" id="38_dqg5b"]
 [ext_resource type="Script" path="res://world/rooms/stairway.gd" id="38_woobw"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_clase.tres" id="39_cq4iw"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_esperando.tres" id="39_espera"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_huellas.tres" id="40_huellas"]
+[ext_resource type="Script" path="res://world/school/diagnostic_station.gd" id="40_km4yi"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_profesor_taller.tres" id="41_taller"]
+[ext_resource type="Script" path="res://world/school/diagnosis_board.gd" id="41_xfrip"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_profesor_anomalias.tres" id="42_anomalias"]
+[ext_resource type="Resource" path="res://data/challenges/cap3_diagnostico.tres" id="42_tn0r4"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_diag_faltan.tres" id="43_kk8ub"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_vision.tres" id="44_1qy37"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_autoriza.tres" id="45_j31jh"]
+[ext_resource type="Script" path="res://world/digital/immersion_portal.gd" id="46_rotd2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i4vep"]
 size = Vector2(704, 80)
@@ -155,12 +164,6 @@ step_id = &"pedir_permiso"
 dialogue = ExtResource("20_km4yi")
 completes_step = true
 
-[sub_resource type="Resource" id="Resource_mtlg1"]
-script = ExtResource("12_l41jd")
-quest_id = &"travesuras_en_el_sistema"
-step_id = &"hablar_profesor"
-dialogue = ExtResource("21_xfrip")
-
 [sub_resource type="Resource" id="Resource_espera"]
 script = ExtResource("12_l41jd")
 quest_id = &"una_clase_diferente"
@@ -173,6 +176,12 @@ quest_id = &"una_clase_diferente"
 step_id = &"volver_profesor"
 dialogue = ExtResource("40_huellas")
 completes_step = true
+
+[sub_resource type="Resource" id="Resource_mtlg1"]
+script = ExtResource("12_l41jd")
+quest_id = &"travesuras_en_el_sistema"
+step_id = &"hablar_profesor"
+dialogue = ExtResource("21_xfrip")
 
 [sub_resource type="Resource" id="Resource_taller"]
 script = ExtResource("12_l41jd")
@@ -209,6 +218,21 @@ script = ExtResource("12_l41jd")
 quest_id = &"el_lenguaje_de_las_maquinas"
 step_id = &"ciclos"
 dialogue = ExtResource("31_04ff4")
+
+[sub_resource type="Resource" id="Resource_dr43v"]
+script = ExtResource("12_l41jd")
+quest_id = &"contagio_digital"
+step_id = &"diagnostico"
+dialogue = ExtResource("38_dqg5b")
+
+[sub_resource type="Resource" id="Resource_dqg5b"]
+script = ExtResource("12_l41jd")
+quest_id = &"contagio_digital"
+step_id = &"investigar_conexion"
+dialogue = ExtResource("37_dr43v")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cq4iw"]
+size = Vector2(640, 80)
 
 [node name="Sala3" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
@@ -426,7 +450,7 @@ alt_characters = PackedStringArray()
 script = ExtResource("8_y5xbq")
 hide_quest = &"una_clase_diferente"
 return_quest = &"travesuras_en_el_sistema"
-hide_while = Array[NodePath]([NodePath("../../Capitulo2/Clase/StoryPresence"), NodePath("../../Capitulo2/Profesor/StoryPresence")])
+hide_while = Array[NodePath]([NodePath("../../Capitulo2/Clase/StoryPresence"), NodePath("../../Capitulo2/Profesor/StoryPresence"), NodePath("../../Capitulo3/Clase/StoryPresence")])
 
 [node name="Capitulo2" type="Node2D" parent="." unique_id=1574686011]
 
@@ -466,14 +490,9 @@ show_quest = &"el_lenguaje_de_las_maquinas"
 hide_quest = &"el_lenguaje_de_las_maquinas"
 hide_step = &"variables"
 
-[node name="Profesor" type="Node2D" parent="Capitulo2" unique_id=1210871726 instance=ExtResource("9_p8mah")]
+[node name="Profesor" parent="Capitulo2" unique_id=1210871726 instance=ExtResource("9_p8mah")]
 position = Vector2(455, 304)
-script = ExtResource("10_snfhu")
-display_name = "Prof. Alvarado"
-dialogue = ExtResource("11_hat0x")
-repeat_dialogue = ExtResource("11_hat0x")
 conversations = Array[ExtResource("12_l41jd")]([SubResource("Resource_taller"), SubResource("Resource_anomalias"), SubResource("Resource_04ff4"), SubResource("Resource_ws05w"), SubResource("Resource_dvda5"), SubResource("Resource_v2urv")])
-idle_extra_animation = &"notas"
 
 [node name="StoryPresence" type="Node" parent="Capitulo2/Profesor" unique_id=1411639577]
 script = ExtResource("8_y5xbq")
@@ -486,6 +505,129 @@ quest_id = &"el_lenguaje_de_las_maquinas"
 step_id = &"clase_programacion"
 dialogue = ExtResource("33_dvda5")
 on_ready = true
+
+[node name="Capitulo3" type="Node2D" parent="." unique_id=184137195]
+
+[node name="Clase" type="Node2D" parent="Capitulo3" unique_id=2091024602]
+
+[node name="StoryPresence" type="Node" parent="Capitulo3/Clase" unique_id=308111824]
+script = ExtResource("8_y5xbq")
+show_quest = &"contagio_digital"
+show_step = &"dia_normal"
+hide_quest = &"contagio_digital"
+hide_step = &"encontrar_salida"
+
+[node name="Estudiante_m1" type="Node2D" parent="Capitulo3/Clase" unique_id=1375824473]
+position = Vector2(110, 304)
+script = ExtResource("7_v2urv")
+alt_characters = PackedStringArray()
+
+[node name="Estudiante_f2" type="Node2D" parent="Capitulo3/Clase" unique_id=1938727216]
+position = Vector2(150, 304)
+script = ExtResource("7_v2urv")
+character = "f2"
+alt_characters = PackedStringArray()
+
+[node name="Estudiante_m3" type="Node2D" parent="Capitulo3/Clase" unique_id=1305228077]
+position = Vector2(560, 304)
+script = ExtResource("7_v2urv")
+character = "m3"
+facing = -1
+alt_characters = PackedStringArray()
+
+[node name="Estudiante_f3" type="Node2D" parent="Capitulo3/Clase" unique_id=125068815]
+position = Vector2(600, 304)
+script = ExtResource("7_v2urv")
+character = "f3"
+facing = -1
+alt_characters = PackedStringArray()
+
+[node name="Profesor" type="Node2D" parent="Capitulo3" unique_id=2125882668 instance=ExtResource("9_p8mah")]
+position = Vector2(520, 304)
+script = ExtResource("10_snfhu")
+display_name = "Prof. Alvarado"
+dialogue = ExtResource("37_dr43v")
+repeat_dialogue = ExtResource("37_dr43v")
+conversations = Array[ExtResource("12_l41jd")]([SubResource("Resource_dr43v"), SubResource("Resource_dqg5b")])
+idle_extra_animation = &"notas"
+
+[node name="StoryPresence" type="Node" parent="Capitulo3/Profesor" unique_id=477889684]
+script = ExtResource("8_y5xbq")
+show_quest = &"contagio_digital"
+show_step = &"dia_normal"
+hide_quest = &"contagio_digital"
+hide_step = &"encontrar_salida"
+
+[node name="Clase3" type="Area2D" parent="Capitulo3" unique_id=1460495528]
+script = ExtResource("32_ws05w")
+quest_id = &"contagio_digital"
+step_id = &"dia_normal"
+dialogue = ExtResource("39_cq4iw")
+on_ready = true
+
+[node name="@CollisionShape2D@3" type="CollisionShape2D" parent="Capitulo3/Clase3" unique_id=598869295]
+position = Vector2(320, -40)
+shape = SubResource("RectangleShape2D_cq4iw")
+
+[node name="Equipo2" type="Area2D" parent="Capitulo3" unique_id=1541699022]
+position = Vector2(200, 304)
+script = ExtResource("40_km4yi")
+id = &"equipo_2"
+title = "Equipo 2"
+symptoms = PackedStringArray("Se desconecta de la red cada pocos segundos", "El navegador no carga nada")
+connections = PackedStringArray("Switch del aula (cable)", "Carpeta compartida CLASE_3")
+kai_note = "Se le cae la red... pero no a todos los equipos del switch. Raro."
+screen_error = "SIN CONEXIÓN"
+prompt_text = "E: revisar el equipo"
+prompt_offset = Vector2(-50, -86)
+
+[node name="Equipo7" type="Area2D" parent="Capitulo3" unique_id=1622915909]
+position = Vector2(320, 304)
+script = ExtResource("40_km4yi")
+id = &"equipo_7"
+title = "Equipo 7 (el puesto de Kai)"
+symptoms = PackedStringArray("Los archivos de la carpeta compartida no abren", "Mensaje: «Error: archivo dañado»", "Un proceso, sync_clase, dejó de responder")
+connections = PackedStringArray("Switch del aula (cable)", "Carpeta compartida CLASE_3", "Impresora")
+kai_note = "Este es el peor. Todo lo que toca la carpeta compartida se daña."
+screen_error = "ARCHIVO DAÑADO"
+draw_desk = false
+prompt_text = "E: revisar el equipo"
+prompt_offset = Vector2(-50, -86)
+
+[node name="Equipo11" type="Area2D" parent="Capitulo3" unique_id=421899182]
+position = Vector2(450, 304)
+script = ExtResource("40_km4yi")
+id = &"equipo_11"
+title = "Equipo 11"
+symptoms = PackedStringArray("Va muy lento", "Mensaje: «La aplicación dejó de responder»")
+connections = PackedStringArray("Wi-Fi del colegio", "Carpeta compartida CLASE_3")
+kai_note = "Este ni siquiera usa el cable del aula... y también falla."
+screen_error = "NO RESPONDE"
+prompt_text = "E: revisar el equipo"
+prompt_offset = Vector2(-50, -86)
+
+[node name="Consola" type="Area2D" parent="Capitulo3" unique_id=2095821930]
+position = Vector2(600, 304)
+script = ExtResource("41_xfrip")
+stations = Array[NodePath]([NodePath("../Equipo2"), NodePath("../Equipo7"), NodePath("../Equipo11")])
+challenge = ExtResource("42_tn0r4")
+missing_dialogue = ExtResource("43_kk8ub")
+vision_dialogue = ExtResource("44_1qy37")
+authorize_dialogue = ExtResource("45_j31jh")
+prompt_text = "E: comparar los equipos"
+prompt_offset = Vector2(-70, -96)
+
+[node name="ConexionEquipo7" type="Area2D" parent="Capitulo3" unique_id=786592424]
+position = Vector2(320, 270)
+script = ExtResource("46_rotd2")
+target_scene = "res://world/zones/bosque_fibra/conexion_contagio.tscn"
+target_entry = &"inicio"
+title = "CONEXIÓN DEL EQUIPO 7"
+lines = PackedStringArray("Conexión dañada", "Investigación controlada...")
+requires_quest = &"contagio_digital"
+requires_step = &"investigar_conexion"
+prompt_text = "E: entrar a la conexión"
+prompt_offset = Vector2(-30, -40)
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("31_sepej")]
 position = Vector2(40, 304)

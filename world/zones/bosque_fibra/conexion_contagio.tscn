@@ -1,0 +1,145 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_w6jvu"]
+[ext_resource type="Script" path="res://world/digital/fiber/connection_props.gd" id="2_mw4q5"]
+[ext_resource type="Script" path="res://world/digital/chase/data_platform.gd" id="3_d8qgj"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="4_0dgd6"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_conexion_entrada.tres" id="5_ld8fl"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="6_fvqp7"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="7_0cl6p"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="8_esnu2"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="9_f08a3"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="10_qsrai"]
+[ext_resource type="Script" path="res://world/zones/bosque_fibra/fall_sequence.gd" id="11_m752v"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_confiado.tres" id="12_ea3b3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fmcwr"]
+size = Vector2(364, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5fhwo"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_75wto"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e01c5"]
+size = Vector2(200, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b6k0j"]
+size = Vector2(300, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d7o26"]
+size = Vector2(132, 80)
+
+[node name="ConexionContagio" type="Node2D" unique_id=867851645 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_w6jvu")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 1280, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=332478587]
+
+[node name="Props" type="Node2D" parent="." unique_id=876152470]
+script = ExtResource("2_mw4q5")
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=859521302]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=2000745641]
+position = Vector2(150, 344)
+shape = SubResource("RectangleShape2D_fmcwr")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=538074508]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_5fhwo")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=831781277]
+position = Vector2(1296, 180)
+shape = SubResource("RectangleShape2D_75wto")
+
+[node name="Floor2" type="CollisionShape2D" parent="Collisions" unique_id=388156029]
+position = Vector2(500, 344)
+shape = SubResource("RectangleShape2D_e01c5")
+
+[node name="Floor3" type="CollisionShape2D" parent="Collisions" unique_id=2134207025]
+position = Vector2(850, 344)
+shape = SubResource("RectangleShape2D_b6k0j")
+
+[node name="Floor4" type="CollisionShape2D" parent="Collisions" unique_id=1932864099]
+position = Vector2(1246, 344)
+shape = SubResource("RectangleShape2D_d7o26")
+
+[node name="Mundo" type="Node2D" parent="." unique_id=1227818916]
+
+[node name="Temporal" type="AnimatableBody2D" parent="Mundo" unique_id=1095799868]
+position = Vector2(318, 270)
+script = ExtResource("3_d8qgj")
+kind = 2
+width = 80.0
+
+[node name="Movil" type="AnimatableBody2D" parent="Mundo" unique_id=202455027]
+position = Vector2(600, 264)
+script = ExtResource("3_d8qgj")
+kind = 1
+width = 80.0
+move_offset = Vector2(40, 0)
+
+[node name="Inestable" type="AnimatableBody2D" parent="Mundo" unique_id=1631475363]
+position = Vector2(1040, 296)
+script = ExtResource("3_d8qgj")
+width = 100.0
+
+[node name="DigitalLayer" type="Node2D" parent="." unique_id=53337675]
+
+[node name="Historia" type="Node2D" parent="." unique_id=400581130]
+
+[node name="Llegada" type="Area2D" parent="Historia" unique_id=1129991545]
+script = ExtResource("4_0dgd6")
+quest_id = &"contagio_digital"
+step_id = &"investigar_conexion"
+dialogue = ExtResource("5_ld8fl")
+on_ready = true
+completes_step = false
+once_flag = &"cap3_conexion_vista"
+
+[node name="Entries" type="Node2D" parent="." unique_id=961522303]
+
+[node name="Inicio" type="Marker2D" parent="Entries" unique_id=617488120]
+position = Vector2(60, 304)
+script = ExtResource("6_fvqp7")
+id = &"inicio"
+
+[node name="Exits" type="Node2D" parent="." unique_id=688624998]
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1251590607]
+position = Vector2(60, 304)
+
+[node name="Player" parent="." unique_id=299383722 instance=ExtResource("7_0cl6p")]
+position = Vector2(60, 304)
+
+[node name="GameCamera" parent="." unique_id=1094914482 node_paths=PackedStringArray("target") instance=ExtResource("8_esnu2")]
+target = NodePath("../Player")
+
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("9_f08a3")]
+player = NodePath("../Player")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=2005256569 node_paths=PackedStringArray("player", "ambient", "digital_layer")]
+script = ExtResource("10_qsrai")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(1, 1, 1, 1)
+digital_ambient = Color(0.72, 0.82, 1, 1)
+digital_layer = NodePath("../DigitalLayer")
+
+[node name="FallSequence" type="Node" parent="." unique_id=2036132623 node_paths=PackedStringArray("platform")]
+script = ExtResource("11_m752v")
+platform = NodePath("../Mundo/Inestable")
+warning_x = 880.0
+warning_lines = PackedStringArray("ADVERTENCIA DE INTEGRIDAD", "Plataforma inestable · integridad: 12 %", "No se recomienda pisarla")
+confident_dialogue = ExtResource("12_ea3b3")
+fall_lines = PackedStringArray("¡AAAAAAH!", "¡Esto NO estaba en el plan!", "¡Profe, esto no es una investigación controlada!", "...¿Cuánto falta?", "¡AAAAAAH! (otra vez)")
+landing_scene = "res://world/zones/bosque_fibra/bosque_caida.tscn"

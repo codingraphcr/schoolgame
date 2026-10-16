@@ -29,7 +29,9 @@
 [ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="19_5xygr"]
 [ext_resource type="Script" path="res://world/zones/zone0/tech_room_story.gd" id="30_igjiy"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/genesis_profesor.tres" id="30_t4oqr"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="31_3dpnw"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/servidor_rojo.tres" id="31_6wxf3"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_regreso_profesor.tres" id="32_kvepe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lmghx"]
 size = Vector2(704, 80)
@@ -148,6 +150,9 @@ dialogue = ExtResource("18_qbbt1")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t4oqr"]
 size = Vector2(12, 256)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_megoe"]
+size = Vector2(60, 100)
 
 [node name="CuartoTecnico" type="Node2D" unique_id=149049123 node_paths=PackedStringArray("tile_layer", "player", "camera", "spawn_point")]
 texture_filter = 1
@@ -335,3 +340,21 @@ props = NodePath("../Props")
 server_dialogue = ExtResource("31_6wxf3")
 profesor = NodePath("../Capitulo1/Profesor")
 genesis_dialogue = ExtResource("30_t4oqr")
+
+[node name="Capitulo3" type="Node2D" parent="." unique_id=1846339943]
+
+[node name="Regreso" type="Area2D" parent="Capitulo3" unique_id=973135097]
+script = ExtResource("31_3dpnw")
+quest_id = &"la_senal_perdida"
+step_id = &"volver_colegio"
+on_ready = true
+
+[node name="UnAmigo" type="Area2D" parent="Capitulo3" unique_id=1350217849]
+position = Vector2(350, 260)
+script = ExtResource("31_3dpnw")
+quest_id = &"la_senal_perdida"
+step_id = &"hablar_profesor"
+dialogue = ExtResource("32_kvepe")
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Capitulo3/UnAmigo" unique_id=1313780101]
+shape = SubResource("RectangleShape2D_megoe")

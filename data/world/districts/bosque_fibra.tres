@@ -12,6 +12,86 @@ room_b = &"fibra_claro"
 door_b = &"oeste"
 requires = PackedStringArray()
 
+[sub_resource type="Resource" id="Resource_0w7ge"]
+script = ExtResource("1_0w7ge")
+room_a = &"bosque_caida"
+door_a = &"este"
+room_b = &"fibra_raices"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_l4uhi"]
+script = ExtResource("1_0w7ge")
+room_a = &"fibra_claro"
+door_a = &"norte"
+room_b = &"bosque_puente"
+door_b = &"abajo"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_qc4y1"]
+script = ExtResource("1_0w7ge")
+room_a = &"bosque_puente"
+door_a = &"este"
+room_b = &"bosque_nodo"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_r4v1e"]
+script = ExtResource("1_0w7ge")
+room_a = &"bosque_nodo"
+door_a = &"este"
+room_b = &"bosque_estacion"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_ts81w"]
+script = ExtResource("1_0w7ge")
+room_a = &"bosque_estacion"
+door_a = &"estacion"
+room_b = &"lazaro_vestibulo"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_ukbdb"]
+script = ExtResource("1_0w7ge")
+room_a = &"lazaro_vestibulo"
+door_a = &"este"
+room_b = &"lazaro_nucleo"
+door_b = &"oeste"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_7bvw3"]
+script = ExtResource("1_0w7ge")
+room_a = &"lazaro_vestibulo"
+door_a = &"arriba"
+room_b = &"lazaro_superior"
+door_b = &"abajo"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_84yok"]
+script = ExtResource("1_0w7ge")
+room_a = &"lazaro_vestibulo"
+door_a = &"abajo"
+room_b = &"lazaro_inferior"
+door_b = &"arriba"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_xexyy"]
+script = ExtResource("1_0w7ge")
+room_a = &"lazaro_superior"
+door_a = &"arriba"
+room_b = &"lazaro_exterior"
+door_b = &"abajo"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_7cok6"]
+script = ExtResource("1_0w7ge")
+room_a = &"lazaro_nucleo"
+door_a = &"este"
+room_b = &"lazaro_escape"
+door_b = &"oeste"
+requires = PackedStringArray()
+
 [sub_resource type="Resource" id="Resource_qd343"]
 script = ExtResource("2_wdi4q")
 room_id = &"fibra_raices"
@@ -23,10 +103,70 @@ room_id = &"fibra_claro"
 template_id = &"fibra_claro"
 cell = Vector2i(2, 0)
 
+[sub_resource type="Resource" id="Resource_wdi4q"]
+script = ExtResource("2_wdi4q")
+room_id = &"bosque_caida"
+template_id = &"bosque_caida"
+cell = Vector2i(-1, 0)
+
+[sub_resource type="Resource" id="Resource_f60gs"]
+script = ExtResource("2_wdi4q")
+room_id = &"bosque_puente"
+template_id = &"bosque_puente"
+cell = Vector2i(3, -1)
+
+[sub_resource type="Resource" id="Resource_w315d"]
+script = ExtResource("2_wdi4q")
+room_id = &"bosque_nodo"
+template_id = &"bosque_nodo"
+cell = Vector2i(6, -1)
+
+[sub_resource type="Resource" id="Resource_hnha6"]
+script = ExtResource("2_wdi4q")
+room_id = &"bosque_estacion"
+template_id = &"bosque_estacion"
+cell = Vector2i(8, -1)
+
+[sub_resource type="Resource" id="Resource_da34o"]
+script = ExtResource("2_wdi4q")
+room_id = &"lazaro_vestibulo"
+template_id = &"lazaro_vestibulo"
+cell = Vector2i(10, -1)
+
+[sub_resource type="Resource" id="Resource_o5iaq"]
+script = ExtResource("2_wdi4q")
+room_id = &"lazaro_superior"
+template_id = &"lazaro_superior"
+cell = Vector2i(10, -2)
+
+[sub_resource type="Resource" id="Resource_6yh53"]
+script = ExtResource("2_wdi4q")
+room_id = &"lazaro_exterior"
+template_id = &"lazaro_exterior"
+cell = Vector2i(10, -3)
+
+[sub_resource type="Resource" id="Resource_2aurv"]
+script = ExtResource("2_wdi4q")
+room_id = &"lazaro_inferior"
+template_id = &"lazaro_inferior"
+cell = Vector2i(11, 0)
+
+[sub_resource type="Resource" id="Resource_c633d"]
+script = ExtResource("2_wdi4q")
+room_id = &"lazaro_nucleo"
+template_id = &"lazaro_nucleo"
+cell = Vector2i(12, -1)
+
+[sub_resource type="Resource" id="Resource_6jlon"]
+script = ExtResource("2_wdi4q")
+room_id = &"lazaro_escape"
+template_id = &"lazaro_escape"
+cell = Vector2i(14, -1)
+
 [resource]
 script = ExtResource("3_l4uhi")
 id = &"bosque_fibra"
 display_name = "Bosque de Fibra"
-start_room = &"fibra_raices"
-rooms = Array[ExtResource("2_wdi4q")]([SubResource("Resource_qd343"), SubResource("Resource_hgyd7")])
-links = Array[ExtResource("1_0w7ge")]([SubResource("Resource_xbwbx")])
+start_room = &"bosque_caida"
+rooms = Array[ExtResource("2_wdi4q")]([SubResource("Resource_qd343"), SubResource("Resource_hgyd7"), SubResource("Resource_wdi4q"), SubResource("Resource_f60gs"), SubResource("Resource_w315d"), SubResource("Resource_hnha6"), SubResource("Resource_da34o"), SubResource("Resource_o5iaq"), SubResource("Resource_6yh53"), SubResource("Resource_2aurv"), SubResource("Resource_c633d"), SubResource("Resource_6jlon")])
+links = Array[ExtResource("1_0w7ge")]([SubResource("Resource_xbwbx"), SubResource("Resource_0w7ge"), SubResource("Resource_l4uhi"), SubResource("Resource_qc4y1"), SubResource("Resource_r4v1e"), SubResource("Resource_ts81w"), SubResource("Resource_ukbdb"), SubResource("Resource_7bvw3"), SubResource("Resource_84yok"), SubResource("Resource_xexyy"), SubResource("Resource_7cok6")])

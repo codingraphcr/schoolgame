@@ -25,5 +25,6 @@ room_id = &"taller"
 script = ExtResource("1_quest")
 id = &"proyecto_perdido"
 title = "El proyecto perdido"
+chapter = 1
 category = 1
 steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_1"), SubResource("Resource_2")])

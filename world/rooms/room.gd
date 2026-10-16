@@ -64,6 +64,9 @@ func _ready() -> void:
 		player.damage.hurt.connect(_on_player_hurt)
 		player.damage.hazard_respawned.connect(_snap_camera)
 	_place_player()
+	# Desde el Capítulo 3, Aegis acompaña a Kai en todas las salas.
+	if player and game_state and AegisCompanion.is_active(game_state):
+		spawn_companion()
 
 
 func _exit_tree() -> void:
@@ -99,6 +102,17 @@ func _unhandled_input(event: InputEvent) -> void:
 			saves.auto_save.save_now("salir")
 		var scene_manager := _scene_manager()
 		scene_manager.change_scene(scene_manager.MAIN_MENU)
+
+
+## Agrega a Aegis junto a Kai (si todavía no está). Lo llama la sala al cargar y la escena en que Aegis decide acompañarlo.
+func spawn_companion() -> AegisCompanion:
+	for node in find_children("*", "AegisCompanion", true, false):
+		return node as AegisCompanion
+	var companion := AegisCompanion.new()
+	companion.name = "AegisCompanion"
+	companion.player = player
+	add_child(companion)
+	return companion
 
 
 ## Al cargar la sala: por la entrada desde la que se llega, o en el punto de aparición.

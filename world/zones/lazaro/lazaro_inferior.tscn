@@ -1,0 +1,147 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_y1kie"]
+[ext_resource type="Script" path="res://world/lazaro/lazaro_props.gd" id="2_as8vi"]
+[ext_resource type="Script" path="res://world/rooms/stairway.gd" id="3_a7jyw"]
+[ext_resource type="Script" path="res://world/lazaro/station_log.gd" id="4_vkmq8"]
+[ext_resource type="Script" path="res://world/lazaro/knowledge_guardian.gd" id="5_icflf"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/guardian_proteccion_intro.tres" id="6_2cawq"]
+[ext_resource type="Resource" path="res://data/challenges/cap3_guardian_proteccion.tres" id="7_atdek"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/guardian_proteccion_ok.tres" id="8_m7rfw"]
+[ext_resource type="Script" path="res://world/lazaro/lazaro_gate.gd" id="9_ly3ru"]
+[ext_resource type="Script" path="res://world/lazaro/aegis_module.gd" id="10_awfwi"]
+[ext_resource type="Script" path="res://world/hazards/spikes.gd" id="11_cdqeo"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="12_saf5f"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="13_fdv32"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="14_sbmqa"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="15_vql35"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="16_qwgds"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ukmcp"]
+size = Vector2(1024, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5fhwo"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_75wto"]
+size = Vector2(32, 400)
+
+[node name="LazaroInferior" type="Node2D" unique_id=867851645 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_y1kie")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 960, 360)
+player_tint = Color(0.75, 1, 1.1, 1)
+footstep = &"step_digital"
+music_track = &"computadora"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=332478587]
+color = Color(0.9, 0.94, 1, 1)
+
+[node name="Props" type="Node2D" parent="." unique_id=80397463]
+script = ExtResource("2_as8vi")
+variant = "inferior"
+chambers = PackedFloat32Array(300, 900)
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=859521302]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=2000745641]
+position = Vector2(480, 344)
+shape = SubResource("RectangleShape2D_ukmcp")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=538074508]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_5fhwo")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=831781277]
+position = Vector2(976, 180)
+shape = SubResource("RectangleShape2D_75wto")
+
+[node name="Mundo" type="Node2D" parent="." unique_id=1227818916]
+
+[node name="SubirVestibulo" type="Area2D" parent="Mundo" unique_id=12782883]
+position = Vector2(90, 304)
+script = ExtResource("3_a7jyw")
+door_id = &"arriba"
+target_scene = "res://world/zones/lazaro/lazaro_vestibulo.tscn"
+target_entry = &"desde_inferior"
+sign_text = "VESTÍBULO"
+prompt_text = "E: subir"
+prompt_offset = Vector2(-20, -90)
+
+[node name="Registro_mantenimiento" type="Area2D" parent="Mundo" unique_id=26478298]
+position = Vector2(230, 304)
+script = ExtResource("4_vkmq8")
+id = &"mantenimiento"
+title = "Bitácora de mantenimiento"
+lines = PackedStringArray("CICLO 4112: mantenimiento automático en curso. Personal asignado: 0.", "CICLO 4113: mantenimiento automático en curso. Personal asignado: 0.", "CICLO 4114: mantenimiento automático en curso. Personal asignado: 0.")
+kai_note = "Nadie vino en miles de ciclos."
+prompt_text = "E: leer el registro"
+prompt_offset = Vector2(-50, -96)
+
+[node name="Guardian" type="Area2D" parent="Mundo" unique_id=1996703803]
+position = Vector2(430, 304)
+script = ExtResource("5_icflf")
+id = &"proteccion"
+title = "GUARDIÁN DE PROTECCIÓN"
+intro_dialogue = ExtResource("6_2cawq")
+challenge = ExtResource("7_atdek")
+success_dialogue = ExtResource("8_m7rfw")
+prompt_text = "E: acercarse al guardián"
+prompt_offset = Vector2(-70, -150)
+
+[node name="Barrera" type="StaticBody2D" parent="Mundo" unique_id=1673009678]
+position = Vector2(510, 304)
+script = ExtResource("9_ly3ru")
+open_flag = &"guardian_proteccion"
+height = 160.0
+
+[node name="Modulo" type="Area2D" parent="Mundo" unique_id=30321911]
+position = Vector2(840, 304)
+script = ExtResource("10_awfwi")
+id = &"proteccion"
+
+[node name="Residuo" type="Area2D" parent="Mundo" unique_id=1924887522]
+position = Vector2(680, 304)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("11_cdqeo")
+width = 48.0
+spike_color = Color(0.45, 0.08, 0.2, 1)
+damage = 0.5
+is_hazard = true
+
+[node name="DigitalLayer" type="Node2D" parent="." unique_id=53337675]
+
+[node name="Historia" type="Node2D" parent="." unique_id=400581130]
+
+[node name="Entries" type="Node2D" parent="." unique_id=961522303]
+
+[node name="DesdeVestibulo" type="Marker2D" parent="Entries" unique_id=936076818]
+position = Vector2(90, 304)
+script = ExtResource("12_saf5f")
+id = &"desde_vestibulo"
+
+[node name="Exits" type="Node2D" parent="." unique_id=688624998]
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1251590607]
+position = Vector2(90, 304)
+
+[node name="Player" parent="." unique_id=299383722 instance=ExtResource("13_fdv32")]
+position = Vector2(90, 304)
+
+[node name="GameCamera" parent="." unique_id=1094914482 node_paths=PackedStringArray("target") instance=ExtResource("14_sbmqa")]
+target = NodePath("../Player")
+
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("15_vql35")]
+player = NodePath("../Player")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=2005256569 node_paths=PackedStringArray("player", "ambient", "digital_layer")]
+script = ExtResource("16_qwgds")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(1, 1, 1, 1)
+digital_ambient = Color(0.72, 0.82, 1, 1)
+digital_layer = NodePath("../DigitalLayer")

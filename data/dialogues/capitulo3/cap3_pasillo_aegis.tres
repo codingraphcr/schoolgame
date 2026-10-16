@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Después del Capítulo 3: Aegis observa a los humanos.
+Aegis: Kai. Aquel estudiante lleva tres minutos mirando su teléfono sin parpadear. ¿Está dañado?
+Kai: No, está viendo memes.
+Aegis: Aquella estudiante dijo «me muero de hambre». ¿Debo alertar a una unidad médica?
+Kai: ¡No! Es una forma de decir. Va para la soda.
+Aegis: Registrado. Los humanos exageran para comunicar urgencia moderada.
+Kai: ...Y no lo digás tan fuerte, que solo yo te veo y parezco loco hablando solo.
+Aegis: Bajando el volumen al cuarenta por ciento."

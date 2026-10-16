@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# La decisión de Aegis: es una invitación, no una orden.
+Aegis: Mi función era permanecer en esta estación y proteger sus sistemas.
+Kai: ¿Y querés quedarte aquí?
+Aegis: No dispongo de una instrucción para responder esa pregunta.
+Kai: No te pregunté qué te ordenaron. Te pregunté qué querés vos.
+Aegis: ...Nunca me habían preguntado eso.
+Aegis: Quisiera... conocer lo que existe afuera.
+Kai: Entonces vení conmigo.
+Aegis: ¿Eso constituye una nueva directiva?
+Kai: No. Es una invitación.
+Aegis: En ese caso... acepto."

@@ -1,0 +1,84 @@
+[gd_resource type="Resource" script_class="ChoiceChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/challenges/choice_question.gd" id="1_question"]
+[ext_resource type="Script" path="res://systems/challenges/choice_option.gd" id="2_option"]
+[ext_resource type="Script" path="res://systems/challenges/choice_challenge.gd" id="3_challenge"]
+
+[sub_resource type="Resource" id="Option_0_0"]
+script = ExtResource("2_option")
+text = "El switch del aula"
+detail = "Lo usan el 2 y el 7"
+feedback = "El equipo 11 se conecta por Wi-Fi, no por el switch, y también falla: el switch no explica los tres."
+
+[sub_resource type="Resource" id="Option_0_1"]
+script = ExtResource("2_option")
+text = "La carpeta compartida CLASE_3"
+detail = "La abren los tres"
+correct = true
+feedback = "¡Eso! Es lo único que comparten los tres. Si algo dañado está ahí, llega a cada equipo que la abre."
+
+[sub_resource type="Resource" id="Option_0_2"]
+script = ExtResource("2_option")
+text = "La impresora"
+detail = "Solo la usa el 7"
+feedback = "Solo el equipo 7 imprime: no puede explicar lo que les pasa a los otros dos."
+
+[sub_resource type="Resource" id="Question_0"]
+script = ExtResource("1_question")
+prompt = "¿Qué tienen en común los tres equipos que fallan?"
+options = Array[ExtResource("2_option")]([SubResource("Option_0_0"), SubResource("Option_0_1"), SubResource("Option_0_2")])
+
+[sub_resource type="Resource" id="Option_1_0"]
+script = ExtResource("2_option")
+text = "Aislarlo: desconectarlo de la red y de la carpeta compartida"
+detail = "Sin apagarlo"
+correct = true
+feedback = "Correcto. Aislar el equipo afectado evita que el problema siga pasando a los demás, y se conserva lo que pasó para investigarlo."
+
+[sub_resource type="Resource" id="Option_1_1"]
+script = ExtResource("2_option")
+text = "Compartir el archivo dañado con otros para que lo revisen"
+detail = "Más ojos ven más"
+feedback = "Así el problema llega a más equipos. Lo dañado no se comparte: se aísla."
+
+[sub_resource type="Resource" id="Option_1_2"]
+script = ExtResource("2_option")
+text = "Reiniciar todos los equipos a la vez"
+detail = "Para empezar de cero"
+feedback = "Si la causa sigue conectada, el problema vuelve al encender. Y se pierden pistas de lo que pasó."
+
+[sub_resource type="Resource" id="Question_1"]
+script = ExtResource("1_question")
+prompt = "El equipo 7 es el más afectado. ¿Qué se hace primero?"
+options = Array[ExtResource("2_option")]([SubResource("Option_1_0"), SubResource("Option_1_1"), SubResource("Option_1_2")])
+
+[sub_resource type="Resource" id="Option_2_0"]
+script = ExtResource("2_option")
+text = "Para que se repare solo"
+detail = ""
+feedback = "Aislar no repara nada: solo evita que empeore mientras se investiga."
+
+[sub_resource type="Resource" id="Option_2_1"]
+script = ExtResource("2_option")
+text = "Para que el problema no se propague a otros sistemas"
+detail = ""
+correct = true
+feedback = "Exacto: contener primero. Después se investiga y se repara."
+
+[sub_resource type="Resource" id="Option_2_2"]
+script = ExtResource("2_option")
+text = "Para que la red vaya más rápido"
+detail = ""
+feedback = "Puede pasar, pero no es la razón: lo importante es que el daño no se extienda."
+
+[sub_resource type="Resource" id="Question_2"]
+script = ExtResource("1_question")
+prompt = "¿Por qué se aísla un sistema afectado?"
+options = Array[ExtResource("2_option")]([SubResource("Option_2_0"), SubResource("Option_2_1"), SubResource("Option_2_2")])
+
+[resource]
+script = ExtResource("3_challenge")
+id = &"cap3_diagnostico"
+title = "Diagnóstico de la Sala 3"
+ecos_reward = -1
+questions = Array[ExtResource("1_question")]([SubResource("Question_0"), SubResource("Question_1"), SubResource("Question_2")])

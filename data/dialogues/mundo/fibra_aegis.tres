@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# «El bosque que dejó de brillar» después de rescatar a Aegis.\nAegis: Detecto una criatura luminosa de baja energía. Su patrón de luz indica... ¿burla?\nKai: Es Fibroluz. Se rió de mí cuando me caí.\nAegis: Registrado. Ya somos dos los que presenciamos esa caída.\nKai: ...¿Me vas a ayudar o no?\nAegis: Afirmativo. Los conductos del claro están cortados. Reconectarlos restauraría el flujo de luz."

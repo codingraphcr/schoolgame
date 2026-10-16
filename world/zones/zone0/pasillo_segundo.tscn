@@ -10,11 +10,10 @@
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="8_omkri"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="9_wenrf"]
 [ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="10_86yxd"]
-[ext_resource type="Script" path="res://characters/player/player.gd" id="11_06cao"]
 [ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="12_k7ag2"]
-[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="13_1ibcl"]
+[ext_resource type="Script" path="res://systems/quests/quest_trigger.gd" id="13_dmbhd"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo3/cap3_pasillo_aegis.tres" id="14_bnlcc"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="14_oq0td"]
-[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="15_4qbfs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f7n4n"]
 size = Vector2(1964, 80)
@@ -188,24 +187,19 @@ target_entry = &"desde_escaleras"
 [node name="@CollisionShape2D@3" type="CollisionShape2D" parent="Exits/ToBiblioteca" unique_id=22106772]
 shape = SubResource("RectangleShape2D_x7mlk")
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=2079599500 instance=ExtResource("10_86yxd")]
+[node name="Player" parent="." unique_id=2079599500 instance=ExtResource("10_86yxd")]
 position = Vector2(40, 304)
-collision_layer = 2
-floor_snap_length = 4.0
-script = ExtResource("11_06cao")
 
-[node name="GameCamera" type="Camera2D" parent="." unique_id=1944359124 node_paths=PackedStringArray("target") instance=ExtResource("12_k7ag2")]
-zoom = Vector2(2, 2)
-process_callback = 0
-position_smoothing_enabled = true
-position_smoothing_speed = 7.0
-drag_vertical_enabled = true
-drag_top_margin = 0.25
-drag_bottom_margin = 0.15
-script = ExtResource("13_1ibcl")
+[node name="GameCamera" parent="." unique_id=1944359124 node_paths=PackedStringArray("target") instance=ExtResource("12_k7ag2")]
 target = NodePath("../Player")
 
-[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_oq0td")]
-layer = 40
-script = ExtResource("15_4qbfs")
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_oq0td")]
 player = NodePath("../Player")
+
+[node name="AegisObserva" type="Area2D" parent="." unique_id=629262618]
+script = ExtResource("13_dmbhd")
+dialogue = ExtResource("14_bnlcc")
+on_ready = true
+completes_step = false
+once_flag = &"cap3_pasillo_visto"
+requires_flag = &"capitulo_3_completado"

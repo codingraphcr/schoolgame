@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(Un tronco de fibra enorme reenvía paquetes por cinco conductos. Algunos salen... raros.)
+Kai: Este nodo está mandando datos para todos lados... hasta el colegio.
+Kai [pensativo]: Con la Visión puedo ver cuáles flujos están dañados. Hay que cerrar esos, sin cortar los sanos."

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Capítulo 3: unas semanas después del simulador.
+(Pasaron unas semanas desde lo del simulador. El colegio volvió a la normalidad... más o menos.)
+Kai [pensativo]: Desde lo de Bucle, cada vez que una compu hace algo raro, la veo distinto.
+Kai: Bueno. Otro día normal. Ojalá."

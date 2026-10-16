@@ -1,0 +1,53 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_quest"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_step"]
+
+[sub_resource type="Resource" id="Step_0"]
+script = ExtResource("2_step")
+id = &"dia_normal"
+objective = "Unas semanas después: ve a clase a la Sala 3."
+room_id = &"sala_3"
+
+[sub_resource type="Resource" id="Step_1"]
+script = ExtResource("2_step")
+id = &"diagnostico"
+objective = "Las computadoras fallan: diagnostica los tres equipos de la Sala 3."
+room_id = &"sala_3"
+
+[sub_resource type="Resource" id="Step_2"]
+script = ExtResource("2_step")
+id = &"investigar_conexion"
+objective = "Investiga la conexión afectada con la Inmersión Digital."
+room_id = &"sala_3"
+
+[sub_resource type="Resource" id="Step_3"]
+script = ExtResource("2_step")
+id = &"encontrar_salida"
+objective = "Estás en una región desconocida: busca otra salida."
+room_id = &"bosque_caida"
+
+[sub_resource type="Resource" id="Step_4"]
+script = ExtResource("2_step")
+id = &"contener_contagio"
+objective = "Detén el nodo que reenvía información dañada."
+room_id = &"bosque_nodo"
+
+[sub_resource type="Resource" id="Step_5"]
+script = ExtResource("2_step")
+id = &"llegar_estacion"
+objective = "Sigue la señal azul."
+room_id = &"bosque_estacion"
+
+[resource]
+script = ExtResource("1_quest")
+id = &"contagio_digital"
+title = "Contagio digital"
+category = 0
+chapter = 3
+steps = Array[ExtResource("2_step")]([SubResource("Step_0"), SubResource("Step_1"), SubResource("Step_2"), SubResource("Step_3"), SubResource("Step_4"), SubResource("Step_5")])
+completion_title = "NIVEL 5 COMPLETADO"
+completion_subtitle = "CONTAGIO DIGITAL"
+start_flag = &"capitulo_3"
+extra_completion_flags = Array[StringName]([&"nivel_5_completado"])
+next_quest = &"la_senal_perdida"
