@@ -104,9 +104,16 @@ func _test_connection() -> void:
 	vision.activate(true)
 	await _frames(20)
 	_check(portal.is_available(), "con la Visión aparece la conexión del equipo 7")
+	# Se entra por la conexión, como el jugador: la pantalla de carga se cierra cuando Kai se materializa.
+	room.player.teleport_to(Vector2(portal.global_position.x, 304))
+	await _frames(3)
+	portal._on_interacted(room.player)
+	await _arrive(F + "conexion_contagio.tscn")
+	await _until(func() -> bool: return get_nodes_in_group(&"loading_screen").is_empty())
+	_check(get_nodes_in_group(&"loading_screen").is_empty(), "al entrar por la conexión, la pantalla de carga se cierra (Kai no queda trabado)")
 	vision.deactivate()
-	await _open(F + "conexion_contagio.tscn")
 	await _read_box()
+	_check(not room.player.controls_locked, "y Kai se puede mover en la conexión")
 	var fall := room.get_node("FallSequence") as FallSequence
 	fall.quick = true
 	var crumble := room.get_node("Mundo/Inestable") as DataPlatform

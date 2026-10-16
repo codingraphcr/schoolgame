@@ -112,6 +112,7 @@ once_flag = &"cap3_conexion_vista"
 position = Vector2(60, 304)
 script = ExtResource("6_fvqp7")
 id = &"inicio"
+arrival_effect = "materialize"
 
 [node name="Exits" type="Node2D" parent="." unique_id=688624998]
 
