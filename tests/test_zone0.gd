@@ -28,6 +28,10 @@ func _run() -> void:
 	current_scene.get_node("%PlayButton").pressed.emit()
 	await process_frame
 	(current_scene.get_node("SlotSelect") as SlotSelect).pick(1)
+	await create_timer(0.6, true, false, true).timeout
+	# La cinemática inicial (su prueba es test_cinematica_inicial): se omite.
+	if current_scene is IntroCinematic:
+		(current_scene as IntroCinematic).skip()
 	await create_timer(1.2, true, false, true).timeout
 	var room := current_scene as Room
 	_check(room != null and room.name == "Entrada", "Jugar abre la Entrada del colegio")

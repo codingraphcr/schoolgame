@@ -725,6 +725,32 @@ anexo del laboratorio, detrás de la puerta de vidrio). Las tres tienen `chapter
 | `GameState.sword_level` | `autoload/` | Mejora de la espada comprada (0–2, +25 % de daño cada una; se guarda con la partida) |
 | `patio_props.gd`, `soda_props.gd`, `taller_props.gd`, `tienda_props.gd` | `world/school/` | Arte provisional por código |
 
+## Cinemática inicial (antes del prólogo)
+
+`world/cinematics/intro/` (guion y detalles: `docs/narrativa/capitulos/CINEMATICA_INICIAL.md`). `main_menu.start_new_game`
+va a `SceneManager.INTRO`; al terminar u omitir (Esc dos veces), `IntroCinematic` deja la marca `cinematica_inicial_vista`
+y va a `FIRST_ROOM`. No es una sala (no se guarda). Kai es el jugador de verdad, movido con `Player.scripted_axis`
+(con los controles bloqueados); `DialogueBox.close()` corta un diálogo al omitir. Piezas por código: `IntroProp`
+(despertador, perro, bus...) e `IntroCloseup` (primeros planos). Música provisional `intro_manana` / `intro_prisa`
+(`Music`) y efectos nuevos en `Sfx`. Menú de pruebas (F9): «Ver la cinemática inicial».
+
+## Capítulo 3: el Bosque de Fibra, la Estación Lázaro y Aegis
+
+Historia y pasos: `docs/narrativa/capitulos/CAPITULO_03.md`.
+
+| Pieza | Dónde | Qué hace |
+|---|---|---|
+| `ChapterGate` | `systems/quests/` | Qué secundarias y tareas (categorías SECUNDARIA y TAREA, `Quest.chapter`) faltan antes de un capítulo; lo usan la cama (`ChapterThreeRest`) y la página «Asuntos pendientes» del Grimorio |
+| `DiagnosticStation` / `DiagnosisBoard` | `world/school/` | El diagnóstico de la Sala 3 (tres equipos y la consola de preguntas) |
+| `FallSequence` / `LandingScene` / `FallOverlay` | `world/zones/bosque_fibra/`, `ui/effects/` | La caída cómica al Bosque de Fibra y el aterrizaje («NUEVA REGIÓN») |
+| `SignalBridge`, `FlowValve` / `ContagionNode`, `StationDoor` | `world/zones/bosque_fibra/` | La señal azul: el puente, el nodo del contagio (válvulas) y la compuerta de la estación (`GrimorioAlert.show_lines`) |
+| `PowerGrid` / `PowerGridWindow` / `PowerBoard` | `systems/puzzles/`, `ui/puzzles/`, `world/lazaro/` | El tablero eléctrico: fichas con máscara de lados (N, E, S, O) que se giran; datos en `data/puzzles/` |
+| `KnowledgeGuardian`, `LazaroGate`, `AegisModule`, `StationLog` | `world/lazaro/` | Los guardianes (una `ChoiceChallenge` con reintentos), las barreras por marca, los tres módulos y los registros |
+| `CoreInstall` / `CoreDefense` / `Bitcucaracha` | `world/lazaro/`, `characters/enemies/bitcucaracha/` | La estabilización del núcleo: oleadas que corren al núcleo; sin derrota (la oleada se repite) |
+| `AegisEncounter`, `PulseSwitch`, `EscapeBridge`, `ForestExitScene` | `world/lazaro/`, `world/zones/bosque_fibra/` | El encuentro, la decisión, el escape y la salida al bosque |
+| `PoweredStairway` | `world/lazaro/` | Una escalera que necesita una marca (la energía) |
+| `AegisBody` / `AegisCompanion` / `aegis_shot.gd` | `characters/companions/` | Aegis (arte por código) y el compañero: `Room.spawn_companion()` lo agrega en cada sala con la marca `aegis_companero`; Aegis Pulse (`aegis_fire`) al blanco válido más cercano sin paredes en medio (enemigos o grupo `aegis_target`) |
+
 ## Capítulo 2: el simulador de prácticas
 
 Especificación en `docs/narrativa/capitulos/CAPITULO_02.md`. Misiones `el_lenguaje_de_las_maquinas` (nivel 3) y

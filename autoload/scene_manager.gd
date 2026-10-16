@@ -7,6 +7,8 @@ const MAIN_MENU := "res://ui/menus/main_menu/main_menu.tscn"
 const SETTINGS := "res://ui/menus/settings/settings_screen.tscn"
 ## Primera sala jugable: Zona 0, Entrada del colegio.
 const FIRST_ROOM := "res://world/zones/zone0/entrada.tscn"
+## La cinemática inicial (antes de FIRST_ROOM, solo en una partida nueva).
+const INTRO := "res://world/cinematics/intro/intro.tscn"
 
 const FADE_DURATION := 0.25
 const FADE_COLOR := Color(0.039, 0.067, 0.141)

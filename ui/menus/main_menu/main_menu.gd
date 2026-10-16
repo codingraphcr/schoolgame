@@ -123,11 +123,12 @@ func _on_slot_chosen(slot: int, mode: SlotSelect.Mode) -> void:
 		_open_slots(SlotSelect.Mode.LOAD)
 
 
-## Partida nueva en esa ranura: Kai empieza como un alumno común, sin habilidades.
+## Partida nueva en esa ranura: Kai empieza como un alumno común, sin habilidades. Primero, la cinemática inicial
+## (Kai se despierta tarde y llega al colegio); al terminar, la Entrada del colegio. Cargar no la repite.
 func start_new_game(slot: int) -> void:
 	SaveManager.new_game(slot)
 	GameState.start_quest(&"prologo")
-	SceneManager.change_scene(SceneManager.FIRST_ROOM)
+	SceneManager.change_scene(SceneManager.INTRO)
 
 
 ## Sigue la última partida usada, desde la computadora segura donde se guardó.

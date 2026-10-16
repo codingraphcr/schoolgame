@@ -30,10 +30,14 @@ func _run() -> void:
 	current_scene.get_node("%PlayButton").pressed.emit()
 	await process_frame
 	(current_scene.get_node("SlotSelect") as SlotSelect).pick(1)
+	await _wait(0.6)
+	_check(current_scene is IntroCinematic, "Jugar empieza con la cinemática inicial")
+	if current_scene is IntroCinematic:
+		(current_scene as IntroCinematic).skip()
 	await _wait(1.2)
 	_check(state.get_current_step(&"prologo") == &"hablar_profesor", "Jugar empieza el prólogo")
 	var objective: Label = current_scene.get_node("CombatHUD/Objective")._text
-	_check(objective.text == "Busca al profesor en el pasillo.", "el objetivo aparece en pantalla")
+	_check(objective.text == "Habla con el profesor Alvarado.", "el objetivo aparece en pantalla")
 
 	var room := await _go(LAB)
 	var player := room.player

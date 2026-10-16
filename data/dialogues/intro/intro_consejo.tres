@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Papá: ¡Kai! Un momento.
+Papá: Recordá esto, Kai: cuanto más grande sea tu capacidad de cambiar las cosas, mayor será tu responsabilidad de hacer lo correcto.
+Kai [pensativo]: Pa... solo voy al colegio.
+Papá: Y yo solo te estoy dando un consejo."
