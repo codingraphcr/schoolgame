@@ -116,7 +116,12 @@ position = Vector2(48, 304)
 [node name="Gate" type="StaticBody2D" parent="." unique_id=496967580]
 position = Vector2(20, 304)
 script = ExtResource("5_jw8xu")
-height = 220.0
+height = 300.0
+
+[node name="GateDerecha" type="StaticBody2D" parent="."]
+position = Vector2(620, 304)
+script = ExtResource("5_jw8xu")
+height = 300.0
 
 [node name="Bucle" type="CharacterBody2D" parent="." unique_id=901945035]
 position = Vector2(320, 176)
@@ -124,6 +129,8 @@ script = ExtResource("6_6toqw")
 config = ExtResource("7_y6ao3")
 hover_y = 176.0
 perch = Rect2(147, 181, 344, 0)
+fatigue_spots = PackedVector2Array(200, 176, 320, 176, 440, 176, 103, 241, 533, 241)
+task_spots = PackedVector2Array(103, 246, 533, 246, 35, 196, 603, 196, 172, 181, 466, 181)
 
 
 [node name="Exits" type="Node2D" parent="." unique_id=904449206]
@@ -156,11 +163,13 @@ target = NodePath("../Player")
 [node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("14_21f0g")]
 player = NodePath("../Player")
 
-[node name="Fight" type="Node" parent="." unique_id=1155115476 node_paths=PackedStringArray("boss", "gate", "platforms", "background")]
+[node name="Fight" type="Node" parent="." unique_id=1155115476 node_paths=PackedStringArray("boss", "gate", "exit_gate", "platforms", "essential", "background")]
 script = ExtResource("16_qk0sg")
 boss = NodePath("../Bucle")
 gate = NodePath("../Gate")
+exit_gate = NodePath("../GateDerecha")
 platforms = [NodePath("../Platforms/PlataformaIzquierda"), NodePath("../Platforms/PlataformaDerecha"), NodePath("../Platforms/PilarIzquierdo"), NodePath("../Platforms/PilarDerecho")]
+essential = [NodePath("../Platforms/PlataformaIzquierda"), NodePath("../Platforms/PlataformaDerecha")]
 background = NodePath("../Background")
 intro_dialogue = ExtResource("17_50iar")
 closing_dialogue = ExtResource("18_h33h4")

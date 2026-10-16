@@ -42,36 +42,59 @@ propia: la repetición progresiva de instrucciones digitales.
 | `INTRO` | Presentación de Bucle y preparación del escenario |
 | `PREPARE_PATTERN` | Anuncia la nueva secuencia |
 | `EXECUTE_PATTERN` | Ejecuta los ataques del ciclo; se lo puede golpear, arriesgándose |
-| `FATIGUE` | Se detiene, cansado: ventana clara de ataque. Si nadie lo golpea, se recupera y **repite el mismo ciclo** (terminar una secuencia no sube la dificultad; la sube recibir un impacto) |
+| `FATIGUE` | Se detiene, cansado (donde le toque): ventana clara de ataque. Si nadie lo golpea, se recupera y **repite el ciclo**, más rápido y con un ataque más (ciclo infinito: ×2, ×3...). En los ciclos 6 y 7 no hay descanso |
 | `HIT_REACTION` | Interrumpe el ataque de forma segura, suma el impacto, apaga los peligros que deban cancelarse, reacciona; no registra otro impacto |
 | `TRANSFORMATION` | Acumula más instrucciones visuales, el escenario cambia; empieza el ciclo siguiente |
 | `DEFEATED` | Tras el séptimo: termina todo, apaga los peligros, detiene la lógica, final narrativo, jefe completado, recompensa única |
 
 ### A.4 Los siete ciclos (valores provisionales, configurables)
 
-| Ciclo | Secuencia | Velocidad | Descanso |
-|---|---|---|---|
-| 1 | Pulso · Lluvia | base | 2,5 s |
-| 2 | Pulso · Lluvia · Anillo | un poco mayor | 2,3 s |
-| 3 | Lluvia · Pulso · Anillo (orden cambiado) | | 2,1 s |
-| 4 | Pulso · Anillo · Lluvia · Pulso | | 1,9 s |
-| 5 | Anillo · Lluvia · Pulso · Anillo | superior | 1,7 s |
-| 6 | Pulso · Lluvia · Anillo · Pulso · Lluvia | | 1,5 s |
-| 7 | Lluvia · Anillo · Pulso · Lluvia · Anillo | mayor | 1,5 s |
+| Ciclo | Secuencia | Velocidad | Descanso | Qué suma |
+|---|---|---|---|---|
+| 1 | Pulso · Lluvia | base | 2,5 s | — |
+| 2 | Pulso · Iteración · Anillo | ×1,08 | 2,3 s | la **Iteración** |
+| 3 | Lluvia · Pulso · Iteración · Anillo | ×1,15 | 2,1 s | **Desbordamiento**, 2 **tareas pendientes**, se cansa en **distintos lugares** |
+| 4 | Pulso · Anillo · Lluvia · Iteración | ×1,22 | 1,9 s | **Recursión**, dos rayos por Iteración, Error de ejecución |
+| 5 | Anillo · Lluvia+Pulso · Iteración · Anillo | ×1,30 | 1,7 s | **Copias del proceso**, **ataques combinados**, el hueco de la Iteración cambia de altura, 3 tareas |
+| 6 | Pulso+Anillo · Lluvia · Iteración · Anillo+Lluvia | ×1,38 | **sin descanso** | Error de ejecución de **dos plataformas** |
+| 7 | Lluvia+Anillo · Iteración · Pulso+Lluvia · Anillo · Iteración+Pulso | ×1,46 | **sin descanso** | todo junto |
 
 La dificultad sube con más ataques, menos tiempo entre ellos, combinaciones, cambios de orden, de velocidad y del
 escenario; **no** subiendo el daño. Las secuencias finales nunca son imposibles de esquivar.
+
+**Ciclo infinito real:** si Kai no lo golpea, Bucle repite el ciclo cada vez más rápido (+6 % por repetición) y con
+un ataque más, hasta tres repeticiones; sobre él (y sobre sus copias) se ve el contador ×2, ×3, ×4.
+
+**Romper la condición** (ciclos 3 a 5): mientras ejecuta la secuencia aparecen «tarea_pendiente()» sobre
+plataformas encendidas. Si Kai las rompe todas (un tajo cada una), la condición de salida se cumple: la secuencia
+se corta, se borran los ataques y Bucle se cansa más tiempo (+1 s). Si no, descansa apenas 0,8 s.
+
+**Ciclos 6 y 7 sin descanso:** al terminar la secuencia empieza otra (cuenta como repetición): solo se le gana con
+golpes arriesgados, saltando mientras ataca.
+
+**Dónde se cansa** (desde el ciclo 3): un punto del puente o una de las plataformas de los costados, nunca dos
+veces seguidas en el mismo lugar ni en una plataforma apagada. El descanso corre desde que llega.
 
 ### A.5 Ataques
 
 - **Pulso repetitivo:** una onda recorre el suelo. Se esquiva saltando, subiendo a una plataforma o con el dash.
   Aviso visual antes.
 - **Lluvia de instrucciones:** bloques digitales caen desde arriba, con indicador de peligro antes. Más bloques en
-  ciclos altos, pero **siempre** con zonas de escape.
-- **Ciclo circular:** un anillo de energía se expande desde Bucle. La colisión coincide con lo que se ve.
-- **Error de ejecución** (ocasional): altera una plataforma o mecanismo (activar una plataforma temporal,
-  desactivar una ruta unos segundos, mover un obstáculo o crear una zona de peligro anunciada). Nunca todas las
-  plataformas a la vez; siempre hay rutas de recuperación.
+  ciclos altos, pero **siempre** con zonas de escape. Con el **Desbordamiento** los bloques se quedan apilados en
+  el suelo 3,5 s (hasta dos por carril) y dañan al tocarlos: sube el suelo y obliga a usar las plataformas; los
+  apilados cuentan como carriles tapados, así que siempre quedan libres.
+- **Ciclo circular:** un anillo de energía se expande desde Bucle. La colisión coincide con lo que se ve. Con la
+  **Recursión**, al llegar lejos (250 px) se divide en 6 anillos chicos que vuelven hacia donde nació (uno sale de
+  cada hueco: por donde se pasó deja de ser seguro); avisan marcando su camino.
+- **Iteración:** un rayo vertical barre la sala de un lado al otro (sale del lado contrario a Kai) con un hueco a
+  la altura del suelo, de las plataformas de los costados o del puente y los pilares. El aviso marca el camino del
+  hueco. En ciclos altos salen dos rayos seguidos y el hueco cambia de altura a mitad de camino.
+- **Copias del proceso:** dos clones idénticos que también atacan (cada paso tiran un mini anillo hacia Kai). Solo
+  el verdadero recibe golpes (en una copia el tajo rebota). Lo delata un detalle: la flecha de ciclo sobre su
+  cabeza gira como las agujas del reloj; la de las copias, al revés. Los tres aparecen a la vez en su lugar.
+- **Ataques combinados:** dos ataques a la vez («lluvia+pulso»).
+- **Error de ejecución** (ciclos 4 a 7): apaga una plataforma (dos en los ciclos 6 y 7) unos segundos. Nunca las
+  dos de los costados (por ahí se sube al puente) ni el puente; siempre hay rutas de recuperación.
 
 ### A.6 Arena
 
@@ -204,7 +227,7 @@ aprobación, la Biblia (B.11).
 ### B.3 Máquina de estados
 
 ```
-INTRO ──► PREPARE_PATTERN ──► EXECUTE_PATTERN ──► FATIGUE ──(sin golpe)──► PREPARE_PATTERN (mismo ciclo)
+INTRO ──► PREPARE_PATTERN ──► EXECUTE_PATTERN ──► FATIGUE ──(sin golpe)──► PREPARE_PATTERN (mismo ciclo, ×2: más rápido y con un ataque más; en los ciclos 6 y 7, sin FATIGUE)
               ▲                 │ golpe válido         │ golpe válido
               │                 ▼                      ▼
         TRANSFORMATION ◄──── HIT_REACTION ◄────────────┘
@@ -240,7 +263,7 @@ Bucle pasa a `DEFEATED` y se queda en la arena.
 Un `BucleConfig` con siete `BucleCycle` en `data/bosses/bucle.tres`. Por ciclo: la secuencia de ataques (p. ej.
 `[&"pulso", &"lluvia", &"anillo"]`), la velocidad, la fatiga, el tiempo de aviso (con un mínimo de 0,4 s), la pausa
 entre ataques, la cantidad de bloques de la lluvia, el tamaño del hueco del anillo y si empieza con un Error de
-ejecución (ciclos 4 a 7, una plataforma por vez). El ciclo actual es `impactos + 1`.
+ejecución (ciclos 4 a 7: una plataforma, dos en el 6 y el 7; `error_platforms`) y las variantes (`iteration_beams`, `iteration_split`, `overflow`, `ring_split`, `copies`, `condition_nodes`, `no_fatigue`, `roam_fatigue`; ataques combinados con «+» en `attacks`). El ciclo actual es `impactos + 1`.
 
 **Rutas de escape garantizadas:** la lluvia divide la arena en carriles y nunca tapa todos (siempre quedan por lo
 menos dos libres y no contiguos a una pared). Lo comprueba una prueba que recorre los siete ciclos.
@@ -284,7 +307,7 @@ suaves. Se cambia de etapa en `TRANSFORMATION`, cuando no hay peligros en la are
 |---|---|
 | 1. Prototipo y estados | Empieza en el ciclo 1; las transiciones siguen el diagrama con tiempos de física; un estado temporizado nunca se traba aunque se interrumpa |
 | 2. Un ataque + impactos | Un golpe válido suma 1; un segundo golpe en el mismo ciclo no suma; golpes en `INTRO`, `HIT_REACTION` y `TRANSFORMATION` no suman; se puede golpear durante el ataque |
-| 3. Fatiga y ciclos | La fatiga llega al terminar el patrón; sin golpe se repite el mismo ciclo; con golpe sube el ciclo y su velocidad |
+| 3. Fatiga y ciclos | La fatiga llega al terminar el patrón; sin golpe se repite el ciclo, más rápido y con un ataque más (contador ×2); con golpe sube el ciclo y su velocidad |
 | 4. Los otros ataques | Todos tienen aviso (≥ 0,4 s); al ser golpeado no queda ningún peligro en la arena; la colisión del anillo coincide con el arco dibujado |
 | 5. Las siete secuencias | La lluvia siempre deja carriles libres; un bot esquiva el pulso saltando y subiendo a una plataforma |
 | 6. Arena | Con un Error de ejecución activo siempre hay una ruta a cada plataforma y al suelo |

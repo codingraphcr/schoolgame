@@ -17,6 +17,12 @@ var spin := 30.0
 ## Ángulo del primer hueco al salir (grados; el otro está enfrente).
 var gap_angle := 0.0
 var telegraph := 0.6
+## Recursión: al llegar a split_radius (0 = nunca) se divide en split_count mini anillos (MiniLoop) que
+## vuelven hacia donde nació, a split_speed px/s (con split_telegraph de aviso).
+var split_radius := 0.0
+var split_count := 8
+var split_speed := 130.0
+var split_telegraph := 0.4
 
 var radius := 14.0
 var _time := 0.0
@@ -64,10 +70,31 @@ func _physics_process(real_delta: float) -> void:
 		return
 	active = true
 	radius += speed * delta
+	if split_radius > 0.0 and radius >= split_radius:
+		_split()
+		queue_free()
+		return
 	if radius >= MAX_RADIUS:
 		queue_free()
 		return
 	_place_shape()
+
+
+## Recursión: el anillo se parte en anillos chicos que vuelven hacia el centro (uno sale de cada hueco: el
+## lugar por donde se pasó deja de ser seguro).
+func _split() -> void:
+	var first := deg_to_rad(gap_angle + spin * _time)
+	for k in split_count:
+		var angle := first + k * TAU / split_count
+		var shard := MiniLoop.new()
+		shard.direction = -Vector2.from_angle(angle)
+		shard.speed = split_speed
+		shard.travel = radius - 18.0
+		shard.telegraph = split_telegraph
+		shard.damage = damage
+		get_parent().add_child(shard)
+		shard.global_position = global_position + Vector2.from_angle(angle) * radius
+	Sfx.play(&"boss_charge", 2.2, -8.0)
 
 
 ## Pone la forma de choque en un punto del anillo dentro del Hurtbox de Kai (o la apaga).

@@ -6,7 +6,8 @@ extends Node
 ## - Al llegar se registra el checkpoint (como la arena de Chip y Glitch) y la puerta se cierra.
 ## - Introducción, la barra «BUCLE» con siete segmentos (los impactos clave) y el combate (BucleBoss).
 ## - Golpe arriesgado (mientras ataca): Kai recibe energía (risky_energy).
-## - Error de ejecución: apaga una sola plataforma unos segundos (rotando: nunca todas).
+## - Error de ejecución: apaga una o dos plataformas unos segundos (rotando; siempre queda una de essential:
+##   la ruta al puente).
 ## - Cada impacto: el fondo cambia con la etapa de Bucle (background.stage).
 ## - Si Kai pierde, reaparece en la entrada y el combate vuelve a empezar (ciclo 1, sin introducción).
 ## - Final: diálogo, recompensa única, Bucle liberado (no muere: queda en la arena), el puzle de la
@@ -33,8 +34,12 @@ const ANOMALY_FLAG := &"cap2_anomalia_vista"
 
 @export var boss: BucleBoss
 @export var gate: ArenaBarrier
-## Plataformas que el Error de ejecución puede apagar (de a una).
+## La otra salida (la del laboratorio, a la derecha): también se cierra durante la pelea.
+@export var exit_gate: ArenaBarrier
+## Plataformas que el Error de ejecución puede apagar (en orden, rotando).
 @export var platforms: Array[DataPlatform] = []
+## De estas siempre queda por lo menos una encendida (las de los costados: por ahí se sube al puente).
+@export var essential: Array[DataPlatform] = []
 ## Fondo de la arena (si tiene la propiedad stage, cambia con la transformación).
 @export var background: Node2D
 @export var intro_dialogue: Dialogue
@@ -53,6 +58,8 @@ var phase := Phase.WAITING
 var _room: Room
 var _bar: BossBar
 var _error_index := 0
+## Avisos ya mostrados (tareas pendientes, copias).
+var _hints: Array[StringName] = []
 
 
 func _ready() -> void:
@@ -61,6 +68,9 @@ func _ready() -> void:
 	boss.key_hit.connect(_on_key_hit)
 	boss.transformed.connect(_on_transformed)
 	boss.execution_error.connect(_on_execution_error)
+	boss.tasks_spawned.connect(_on_tasks_spawned)
+	boss.condition_broken.connect(_on_condition_broken)
+	boss.copies_spawned.connect(_on_copies_spawned)
 	boss.finished.connect(_victory)
 	_room.player_respawned.connect(_on_player_respawned)
 	if get_node("/root/GameState").has_flag(DONE_FLAG):
@@ -75,7 +85,7 @@ func _start() -> void:
 		saves.save_game(_room.scene_file_path, entry_id)
 	_room.arrival_entry = entry_id
 	phase = Phase.INTRO
-	gate.active = true
+	_set_gates(true)
 	await _play(intro_dialogue)
 	_begin_fight()
 
@@ -108,11 +118,46 @@ func _on_transformed(stage: int) -> void:
 
 
 func _on_execution_error(_cycle: int) -> void:
-	if platforms.is_empty():
+	for k in boss.cycle_data().error_platforms:
+		_close_one()
+
+
+## Apaga la próxima plataforma (rotando) que se pueda apagar: nunca una ya apagada ni la última encendida de
+## essential (la ruta al puente).
+func _close_one() -> void:
+	for attempt in platforms.size():
+		var platform := platforms[_error_index % platforms.size()]
+		_error_index += 1
+		if platform.is_closed() or platform.is_in_group(&"unsafe_ground"):
+			continue
+		if essential.has(platform) and essential.filter(_is_open).size() <= 1:
+			continue
+		platform.force_close(boss.config.error_time)
 		return
-	var platform := platforms[_error_index % platforms.size()]
-	_error_index += 1
-	platform.force_close(boss.config.error_time)
+
+
+func _is_open(platform: DataPlatform) -> bool:
+	return not platform.is_closed() and not platform.is_in_group(&"unsafe_ground")
+
+
+## Avisos la primera vez que aparece cada cosa nueva (no quitan el control).
+func _on_tasks_spawned(_count: int) -> void:
+	_hint(&"tareas", "¡Tareas pendientes! Rómpelas todas para cortar el bucle")
+
+
+func _on_condition_broken() -> void:
+	get_tree().call_group(&"toast", &"show_message", "¡Condición de salida cumplida! Bucle se cansa", 1.8)
+
+
+func _on_copies_spawned() -> void:
+	_hint(&"copias", "Copias del proceso: la flecha del verdadero gira como el reloj")
+
+
+func _hint(id: StringName, text: String) -> void:
+	if _hints.has(id):
+		return
+	_hints.append(id)
+	get_tree().call_group(&"toast", &"show_message", text, 2.6)
 
 
 func _on_player_respawned() -> void:
@@ -164,7 +209,7 @@ func _after_victory() -> void:
 	await _play(anomaly_dialogue)
 	state.set_flag(FINISHED_FLAG)
 	_room.player.damage.protected = false
-	gate.active = false
+	_set_gates(false)
 	phase = Phase.DONE
 
 
@@ -172,10 +217,10 @@ func _already_won() -> void:
 	boss.rest()
 	if get_node("/root/GameState").has_flag(FINISHED_FLAG):
 		phase = Phase.DONE
-		gate.active = false
+		_set_gates(false)
 	else:
 		# Ganó, pero no terminó (se cerró el juego en el puzle): sigue desde ahí.
-		gate.active = true
+		_set_gates(true)
 		_after_victory.call_deferred()
 
 
@@ -194,3 +239,10 @@ func _play(dialogue: Dialogue) -> void:
 	player.controls_locked = true
 	await box.play(dialogue)
 	player.controls_locked = false
+
+
+## Cierra (o abre) las dos salidas de la arena.
+func _set_gates(on: bool) -> void:
+	gate.active = on
+	if exit_gate:
+		exit_gate.active = on
