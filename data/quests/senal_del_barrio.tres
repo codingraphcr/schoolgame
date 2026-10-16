@@ -34,4 +34,4 @@ title = "Sin señal en el barrio"
 category = 1
 steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3")])
 completion_flag = &"senal_del_barrio_completada"
-ecos_reward = 60
+ecos_reward = 40

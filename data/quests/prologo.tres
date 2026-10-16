@@ -26,5 +26,5 @@ script = ExtResource("1_swvs6")
 id = &"prologo"
 title = "Capítulo 0: El despertar"
 steps = Array[ExtResource("2_onf2i")]([SubResource("Resource_dvwnn"), SubResource("Resource_b57hf"), SubResource("Resource_gnj7q")])
-ecos_reward = 25
+ecos_reward = 15
 next_quest = &"contrasena_profesor"

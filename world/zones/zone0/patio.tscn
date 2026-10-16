@@ -18,7 +18,9 @@
 [ext_resource type="Resource" path="res://data/school/anuncios/wifi_colegio.tres" id="16_70pbw"]
 [ext_resource type="Resource" path="res://data/school/anuncios/feria_ciencias.tres" id="17_81c05"]
 [ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="18_102as"]
+[ext_resource type="Script" path="res://world/school/shop_door.gd" id="18_irfom"]
 [ext_resource type="Script" path="res://world/zones/zone0/npc_bark.gd" id="19_bgyiy"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/tienda_cerrada.tres" id="19_jtclt"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="20_k7grv"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="21_ccwh5"]
 [ext_resource type="Script" path="res://world/rooms/stairway.gd" id="22_3nhyo"]
@@ -109,6 +111,14 @@ position = Vector2(1265, 304)
 script = ExtResource("10_eegy6")
 announcements = Array[ExtResource("11_hyiv5")]([ExtResource("12_heti1"), ExtResource("13_3h6od"), ExtResource("14_vmiqs"), ExtResource("15_0t0mw"), ExtResource("16_70pbw"), ExtResource("17_81c05")])
 
+[node name="PuertaTienda" type="Area2D" parent="Objetos" unique_id=615676622]
+position = Vector2(120, 304)
+script = ExtResource("18_irfom")
+target_scene = "res://world/zones/zone0/tienda.tscn"
+target_entry = &"desde_patio"
+locked_dialogue = ExtResource("19_jtclt")
+prompt_offset = Vector2(-60, -140)
+
 [node name="Gente" type="Node2D" parent="." unique_id=39283645]
 
 [node name="Charla1" type="Node2D" parent="Gente" unique_id=1859840680]
@@ -180,6 +190,11 @@ facing = -1
 position = Vector2(70, 304)
 script = ExtResource("20_k7grv")
 id = &"desde_soda"
+
+[node name="DesdeTienda" type="Marker2D" parent="Entries" unique_id=158337795]
+position = Vector2(120, 304)
+script = ExtResource("20_k7grv")
+id = &"desde_tienda"
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=1344988902]
 position = Vector2(1400, 304)

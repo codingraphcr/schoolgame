@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://systems/shop/shop_item.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 3
+
+[resource]
+script = ExtResource("1_item")
+id = &"mapa_bosque_fibra"
+title = "Mapa del Bosque de Fibra"
+kind = 6
+description = "Marca en el mapa del Grimorio todas las zonas del Bosque de Fibra."
+note = "Un cliente raro me lo cambió por un gallo pinto."
+price = 30
+value = 1
+reveal_flag = &"mapa_bosque_fibra"
+requirement = SubResource("Req")
+order = 62

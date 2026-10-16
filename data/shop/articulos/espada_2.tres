@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://systems/shop/shop_item.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 3
+
+[resource]
+script = ExtResource("1_item")
+id = &"espada_2"
+title = "Nullblade templada"
+kind = 3
+description = "Otra piedra de datos, más dura: la Nullblade hace otro 25 % más de daño."
+note = "Esta pesa más. Cuidado con los dedos."
+price = 450
+value = 2
+reveal_flag = &""
+requirement = SubResource("Req")
+order = 41

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://systems/shop/shop_item.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 2
+
+[resource]
+script = ExtResource("1_item")
+id = &"dash_fantasma"
+title = "Dash Fantasma"
+kind = 2
+description = "El dash atraviesa enemigos y ataques sin recibir daño (dash nivel 2)."
+note = "No me pregunte cómo funciona. Funciona."
+price = 250
+value = 2
+reveal_flag = &""
+requirement = SubResource("Req")
+order = 30

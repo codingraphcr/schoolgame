@@ -79,7 +79,7 @@ func _test_bridge_and_fragment() -> void:
 	var ecos_before: int = root.get_node("Economy").ecos
 	player.teleport_to(FRAGMENT)
 	await _frames(10)
-	_check(state.has_flag(FRAGMENT_FLAG) and root.get_node("Economy").ecos == ecos_before + 25, "recoger el fragmento da 25 Ecos y queda marcado")
+	_check(state.has_flag(FRAGMENT_FLAG) and root.get_node("Economy").ecos == ecos_before + 15, "recoger el fragmento da 15 Ecos y queda marcado")
 	_check(room.get_node("CombatHUD/Toast").text.contains("fragmento"), "aparece el mensaje del fragmento")
 
 	_action("vision")

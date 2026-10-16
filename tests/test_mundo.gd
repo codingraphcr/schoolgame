@@ -217,7 +217,7 @@ func _test_return() -> void:
 	_check(world.current_room == &"calle", "Kai vuelve a la región anterior (el barrio) por la caja")
 	await _advance(box)
 	await _until(func() -> bool: return state.is_quest_completed(Q))
-	_check(state.is_quest_completed(Q) and root.get_node("Economy").ecos == ecos_before + 60, "el vecino agradece: misión secundaria completada (+60 Ecos)")
+	_check(state.is_quest_completed(Q) and root.get_node("Economy").ecos == ecos_before + 40, "el vecino agradece: misión secundaria completada (+40 Ecos)")
 	_check(not room.get_node("Historia/CajaDeFibra").is_failing(), "la caja del poste queda en verde")
 	_check(Bestiary.stage(state, Bestiary.get_entry(&"fibroluz")) == 3, "el Fibroluz pasa a «Comprensión» en el bestiario")
 	_check(HomeCollection.get_item(&"nota_vecino").is_unlocked(state) and HomeCollection.get_item(&"fragmento_bosque").is_unlocked(state),

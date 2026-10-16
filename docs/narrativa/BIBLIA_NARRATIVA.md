@@ -394,7 +394,6 @@ El libro se cierra. Comienzan los créditos.
 - Cómo se materializa el enfrentamiento final en gameplay.
 - Destino del antagonista después del desenlace.
 - Contenido concreto de los secretos y Fragmentos de Datos.
-- Dónde y cómo se consigue el **doble salto** (propuesta del equipo: comprarlo con Ecos en la soda del colegio).
 - Dónde se mueve la entrada a la computadora del profesor que hoy está en el prólogo (la Contraseña débil y el nivel del SPAM): el equipo decidió sacarla del prólogo; el lugar está por definir.
 - Validación de temas y resultados educativos contra los programas completos del MEP.
 
@@ -516,6 +515,13 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
   Antes del simulador, la actividad de robótica de décimo (condicionales, ciclos y funciones) y cuatro **anomalías**
   que repiten algo; con la Visión, Kai descubre que vienen del simulador. Bucle no se revela antes de tiempo y el
   Dominio Nulo sigue reservado para el Capítulo 4.
+
+- **La tienda de la soda** (decisión del equipo, 16 de octubre de 2026): la tienda oficial del juego está al lado de la
+  soda del colegio y la atiende la señora de la soda; se abre después de hablar con ella (Capítulo 1). Vende mejoras
+  secundarias (fragmentos de vida y energía, mejoras del dash, de la espada y de Aegis, mapas y pistas) y el **doble
+  salto** (resuelve el pendiente de la sección XVI: se compra, caro, desde el Capítulo 2). Las formas de la Nullblade y
+  las evoluciones de Aegis siguen siendo de la historia. Nadie explica de dónde salen los artículos («llegan en cajas»).
+- **Economía:** la bolsa de Ecos llega como máximo a 999 y las recompensas se equilibraron para ese tope.
 
 **FIN — BIBLIA NARRATIVA V1.9**
 

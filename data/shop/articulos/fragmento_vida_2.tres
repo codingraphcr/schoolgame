@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://systems/shop/shop_item.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 2
+
+[resource]
+script = ExtResource("1_item")
+id = &"fragmento_vida_2"
+title = "Otro fragmento de vida"
+kind = 0
+description = "Otro cristal tibio. Cuatro fragmentos: una máscara nueva."
+note = "Me llegó otro. Se lo guardé."
+price = 150
+value = 1
+reveal_flag = &""
+requirement = SubResource("Req")
+order = 11

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 4
+order = 30
+title = "Pistas del colegio"
+subtitle = "Registro · La libreta de la soda"
+text = "Lo que la señora de la soda anotó de lo que cuentan los estudiantes:
+
+· En el pasillo, por encima de las bandejas de cables, algo brilla con la Visión Digital. Hay que subir.
+· En la biblioteca, entre los diplomas, hay una foto muy vieja. Nadie se acuerda de quién la colgó.
+· La puerta de vidrio del laboratorio no es de adorno.
+· En el patio, durante el recreo, siempre hay alguien que sabe algo."
+facts = Dictionary[String, String]({"Fuente": "La señora de la soda"})
+unlock_flag = &"pista_colegio"

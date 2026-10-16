@@ -719,7 +719,11 @@ anexo del laboratorio, detrás de la puerta de vidrio). Las tres tienen `chapter
 | `RoboticsStation` | `world/school/` | La mesa de una estación: «en preparación» en el Capítulo 1; abre su desafío desde el paso `taller_robotica`; marca `robotica_<id>` y Ecos una vez |
 | `Anomaly` | `world/school/` | Falla que repite algo (robot, brazo, mensaje, puerta); aparecen de a una; con la Visión se investiga (marca `anomalia_<id>`) |
 | `NpcConversation.requires_flag` | `characters/npcs/` | Una conversación que solo vale con una marca (p. ej. el amigo recuerda la elección del recreo) |
-| `patio_props.gd`, `soda_props.gd`, `taller_props.gd` | `world/school/` | Arte provisional por código |
+| `ShopItem` / `Shop` | `systems/shop/`, datos en `data/shop/articulos/` | La tienda de la soda: catálogo por capítulo (`WorldRequirement`), estado de cada artículo, compra única (`Economy.spend_ecos` + efecto + marca `compra_<id>`) |
+| `ShopWindow` | `ui/shop/` | La ventana de la tienda (catálogo, detalle, Ecos de la bolsa, «Comprar» con confirmación) |
+| `ShopDoor` / `ShopKeeper` | `world/school/` | La puerta del patio (cerrada hasta `soda_presentada`) y la señora atendiendo (`FamilyMember` que abre la tienda) |
+| `GameState.sword_level` | `autoload/` | Mejora de la espada comprada (0–2, +25 % de daño cada una; se guarda con la partida) |
+| `patio_props.gd`, `soda_props.gd`, `taller_props.gd`, `tienda_props.gd` | `world/school/` | Arte provisional por código |
 
 ## Capítulo 2: el simulador de prácticas
 

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ShopItem" format=3]
+
+[ext_resource type="Script" path="res://systems/shop/shop_item.gd" id="1_item"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 3
+
+[resource]
+script = ExtResource("1_item")
+id = &"aegis_nucleo"
+title = "Aegis: núcleo pulido"
+kind = 5
+description = "Un paño de datos para el núcleo de Aegis: dispara más seguido."
+note = "La caja dice «para núcleos de protección». Yo no sé qué es eso."
+price = 300
+value = 1
+reveal_flag = &""
+requirement = SubResource("Req")
+order = 70

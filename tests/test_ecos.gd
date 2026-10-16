@@ -55,7 +55,7 @@ func _test_split() -> void:
 	var enemy := ENEMY.instantiate() as EnemyBase
 	root.add_child(enemy)
 	var reward := enemy.get_ecos_reward()
-	_check(reward >= 20 and reward <= 40, "la «Contraseña débil» es un enemigo especial: suelta entre 20 y 40 Ecos (%d)" % reward)
+	_check(reward >= 4 and reward <= 8, "la «Contraseña débil» es un enemigo especial: suelta entre 4 y 8 Ecos (%d)" % reward)
 	enemy.ecos_reward = 5
 	_check(enemy.get_ecos_reward() == 5, "cada enemigo puede fijar su propia cantidad")
 	enemy.free()

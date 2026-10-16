@@ -130,8 +130,11 @@ func _physics_process(delta: float) -> void:
 		_windup -= delta
 		if _windup <= 0.0:
 			_place_hitbox()
-			# El único lugar donde se aplica la bonificación de daño (Dominio Nulo), una vez por golpe.
-			hitbox.damage = weapon.damage * (player.domain.damage_multiplier() if player.domain else 1.0)
+			# El único lugar donde se aplican las bonificaciones de daño (Dominio Nulo y las mejoras de la espada
+			# compradas en la tienda), una vez por golpe.
+			var state := get_node_or_null("/root/GameState")
+			var sword: float = state.sword_damage_multiplier() if state else 1.0
+			hitbox.damage = weapon.damage * sword * (player.domain.damage_multiplier() if player.domain else 1.0)
 			hitbox.activate()
 			_active = weapon.active_time
 	elif _active > 0.0:
