@@ -43,6 +43,8 @@
 [ext_resource type="Script" path="res://world/rooms/stairway.gd" id="38_woobw"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_esperando.tres" id="39_espera"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_huellas.tres" id="40_huellas"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_profesor_taller.tres" id="41_taller"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_profesor_anomalias.tres" id="42_anomalias"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i4vep"]
 size = Vector2(704, 80)
@@ -171,6 +173,18 @@ quest_id = &"una_clase_diferente"
 step_id = &"volver_profesor"
 dialogue = ExtResource("40_huellas")
 completes_step = true
+
+[sub_resource type="Resource" id="Resource_taller"]
+script = ExtResource("12_l41jd")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"taller_robotica"
+dialogue = ExtResource("41_taller")
+
+[sub_resource type="Resource" id="Resource_anomalias"]
+script = ExtResource("12_l41jd")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"investigar_anomalias"
+dialogue = ExtResource("42_anomalias")
 
 [sub_resource type="Resource" id="Resource_04ff4"]
 script = ExtResource("12_l41jd")
@@ -458,7 +472,7 @@ script = ExtResource("10_snfhu")
 display_name = "Prof. Alvarado"
 dialogue = ExtResource("11_hat0x")
 repeat_dialogue = ExtResource("11_hat0x")
-conversations = Array[ExtResource("12_l41jd")]([SubResource("Resource_04ff4"), SubResource("Resource_ws05w"), SubResource("Resource_dvda5"), SubResource("Resource_v2urv")])
+conversations = Array[ExtResource("12_l41jd")]([SubResource("Resource_taller"), SubResource("Resource_anomalias"), SubResource("Resource_04ff4"), SubResource("Resource_ws05w"), SubResource("Resource_dvda5"), SubResource("Resource_v2urv")])
 idle_extra_animation = &"notas"
 
 [node name="StoryPresence" type="Node" parent="Capitulo2/Profesor" unique_id=1411639577]

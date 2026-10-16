@@ -512,6 +512,11 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
   su archivo no se borró: Chip y Glitch lo movieron). Son los dos NPC nuevos permitidos: la señora de la soda y la
   estudiante.
 
+- **Capítulo 2 ampliado:** el **taller de robótica** es un anexo del laboratorio (detrás de la puerta de vidrio).
+  Antes del simulador, la actividad de robótica de décimo (condicionales, ciclos y funciones) y cuatro **anomalías**
+  que repiten algo; con la Visión, Kai descubre que vienen del simulador. Bucle no se revela antes de tiempo y el
+  Dominio Nulo sigue reservado para el Capítulo 4.
+
 **FIN — BIBLIA NARRATIVA V1.9**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.

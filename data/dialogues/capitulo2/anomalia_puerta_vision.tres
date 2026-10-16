@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(La puerta abre y cierra. Con la Visión, los hilos de todas las fallas se juntan aquí y salen hacia el laboratorio: hacia el simulador.)
+Kai: Todas repiten algo. Y todas vienen del simulador.
+Kai [serio]: Adentro hay algo que no sabe detenerse. Tengo que entrar."

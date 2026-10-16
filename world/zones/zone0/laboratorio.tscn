@@ -22,27 +22,17 @@
 [ext_resource type="PackedScene" path="res://characters/npcs/profesor/profesor.tscn" id="18_fhapv"]
 [ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="18_xwk6k"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="19_bv8qh"]
-[ext_resource type="Script" path="res://characters/npcs/npc.gd" id="19_keyrc"]
 [ext_resource type="Script" path="res://world/zones/zone0/red_zona0.gd" id="20_le1i0"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="21_olkf2"]
 [ext_resource type="Script" path="res://characters/npcs/npc_conversation.gd" id="21_yicei"]
 [ext_resource type="Script" path="res://world/zones/zone0/lab_computer.gd" id="22_o7o5e"]
+[ext_resource type="Script" path="res://world/rooms/stairway.gd" id="22_wv1ae"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo2/cap2_profesor_final.tres" id="22_xkdvc"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/computadora_pantalla.tres" id="23_d83o5"]
 [ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="23_tc3sw"]
-[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_despues.tres" id="23_xwk6k"]
-[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_pedido.tres" id="24_bv8qh"]
 [ext_resource type="Resource" path="res://data/dialogues/prologo/computadora_despues.tres" id="24_qmmen"]
-[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_esperando.tres" id="25_le1i0"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="25_sorln"]
-[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_gracias.tres" id="26_olkf2"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="26_vubhy"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_f2_quieto.png" id="27_o7o5e"]
-[ext_resource type="Script" path="res://components/interaction/interactable.gd" id="28_d83o5"]
-[ext_resource type="Script" path="res://systems/quests/quest_starter.gd" id="29_qmmen"]
-[ext_resource type="Script" path="res://world/digital/terminal_station.gd" id="30_sorln"]
-[ext_resource type="Resource" path="res://data/terminals/proyecto_perdido.tres" id="31_vubhy"]
-[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_encontrado.tres" id="32_hx5qy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hx5qy"]
 size = Vector2(784, 80)
@@ -181,55 +171,6 @@ quest_id = &"codigo_fuera_de_control"
 step_id = &"hablar_profesor"
 dialogue = ExtResource("22_xkdvc")
 completes_step = true
-
-[sub_resource type="Resource" id="Resource_e8ovw"]
-script = ExtResource("21_yicei")
-quest_id = &"proyecto_perdido"
-step_id = &"hablar_estudiante"
-dialogue = ExtResource("24_bv8qh")
-completes_step = true
-
-[sub_resource type="Resource" id="Resource_mstgl"]
-script = ExtResource("21_yicei")
-quest_id = &"proyecto_perdido"
-step_id = &"buscar_archivo"
-dialogue = ExtResource("25_le1i0")
-
-[sub_resource type="Resource" id="Resource_oon06"]
-script = ExtResource("21_yicei")
-quest_id = &"proyecto_perdido"
-step_id = &"volver_estudiante"
-dialogue = ExtResource("26_olkf2")
-completes_step = true
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5v4ln"]
-atlas = ExtResource("27_o7o5e")
-region = Rect2(0, 0, 96, 128)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_c72ai"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5v4ln")
-}],
-"loop": 1,
-"name": &"idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5v4ln")
-}],
-"loop": 1,
-"name": &"talk",
-"speed": 5.0
-}]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_p3jyn"]
-size = Vector2(48, 56)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_gkn2c"]
-size = Vector2(640, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kmyuo"]
 size = Vector2(40, 64)
@@ -453,54 +394,21 @@ script = ExtResource("23_tc3sw")
 show_quest = &"codigo_fuera_de_control"
 show_step = &"hablar_profesor"
 
-[node name="ProyectoPerdido" type="Node2D" parent="." unique_id=172457702]
+[node name="ATaller" type="Area2D" parent="." unique_id=2095565910]
+position = Vector2(298, 304)
+script = ExtResource("22_wv1ae")
+door_id = &"taller"
+target_scene = "res://world/zones/zone0/taller.tscn"
+target_entry = &"desde_laboratorio"
+going_up = false
+sign_text = "TALLER"
+show_art = false
+prompt_text = "E: entrar al taller"
+prompt_offset = Vector2(-60, -110)
 
-[node name="StoryPresence" type="Node" parent="ProyectoPerdido" unique_id=194562379]
+[node name="StoryPresence" type="Node" parent="ATaller" unique_id=438298751]
 script = ExtResource("23_tc3sw")
 show_quest = &"una_clase_diferente"
-show_step = &"buscar_huellas"
-
-[node name="Estudiante" type="Node2D" parent="ProyectoPerdido" unique_id=14542979]
-position = Vector2(330, 304)
-script = ExtResource("19_keyrc")
-display_name = "Estudiante"
-dialogue = ExtResource("23_xwk6k")
-repeat_dialogue = ExtResource("23_xwk6k")
-conversations = Array[ExtResource("21_yicei")]([SubResource("Resource_e8ovw"), SubResource("Resource_mstgl"), SubResource("Resource_oon06")])
-
-[node name="Sprite" type="AnimatedSprite2D" parent="ProyectoPerdido/Estudiante" unique_id=1744715579]
-scale = Vector2(0.5, 0.5)
-sprite_frames = SubResource("SpriteFrames_c72ai")
-animation = &"idle"
-offset = Vector2(0, -55)
-flip_h = true
-
-[node name="Interactable" type="Area2D" parent="ProyectoPerdido/Estudiante" unique_id=1147407895]
-script = ExtResource("28_d83o5")
-prompt_text = "E: hablar"
-prompt_offset = Vector2(-30, -74)
-
-[node name="Shape" type="CollisionShape2D" parent="ProyectoPerdido/Estudiante/Interactable" unique_id=1255509636]
-position = Vector2(0, -28)
-shape = SubResource("RectangleShape2D_p3jyn")
-
-[node name="EmpiezaMision" type="Area2D" parent="ProyectoPerdido" unique_id=1543067477]
-position = Vector2(330, 304)
-script = ExtResource("29_qmmen")
-quest_id = &"proyecto_perdido"
-
-[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="ProyectoPerdido/EmpiezaMision" unique_id=80539287]
-position = Vector2(0, -40)
-shape = SubResource("RectangleShape2D_gkn2c")
-
-[node name="Equipo4" type="Area2D" parent="ProyectoPerdido" unique_id=896422654]
-position = Vector2(128, 304)
-script = ExtResource("30_sorln")
-challenge = ExtResource("31_vubhy")
-quest_id = &"proyecto_perdido"
-step_id = &"buscar_archivo"
-success_dialogue = ExtResource("32_hx5qy")
-prompt_text = "E: usar el equipo 4"
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("16_kkawr")]
 position = Vector2(56, 304)
@@ -575,6 +483,11 @@ script = ExtResource("25_sorln")
 id = &"desde_simulador"
 facing = -1
 arrival_effect = "materialize"
+
+[node name="FromTaller" type="Marker2D" parent="Entries" unique_id=402013068]
+position = Vector2(298, 304)
+script = ExtResource("25_sorln")
+id = &"desde_taller"
 
 [node name="Exits" type="Node2D" parent="." unique_id=843824894]
 

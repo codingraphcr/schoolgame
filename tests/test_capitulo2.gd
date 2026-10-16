@@ -68,7 +68,14 @@ func _test_class() -> void:
 	_check(box.is_playing() and (room.get_node("Capitulo2/Profesor") as Node2D).visible and (room.get_node("Capitulo2/Clase") as Node2D).visible,
 		"en la Sala 3 empieza la clase de programación (el profesor y los compañeros)")
 	await _advance(box)
-	await _until(func() -> bool: return state.get_current_step(Q3) == &"entrar_simulador")
+	await _until(func() -> bool: return state.get_current_step(Q3) == &"taller_robotica")
+	_check(state.get_current_step(Q3) == &"taller_robotica", "después de la clase, la actividad de robótica en el taller")
+	# El taller y las anomalías se prueban aparte (test_taller_robotica): aquí se dan por hechos.
+	for station_id in RoboticsStation.ALL:
+		ClueTracker.register(state, RoboticsStation.flag_of(station_id), RoboticsStation.flags(), RoboticsStation.ALL.size(),
+			RoboticsStation.QUEST, RoboticsStation.STEP)
+	for anomaly_id in Anomaly.ALL:
+		Anomaly.register(state, anomaly_id)
 	_check(state.get_current_step(Q3) == &"entrar_simulador", "después hay que entrar al simulador del laboratorio")
 
 

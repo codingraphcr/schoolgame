@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="RoboticsChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/robotics/robotics_challenge.gd" id="1_rob"]
+[ext_resource type="Script" path="res://systems/robotics/robotics_slot.gd" id="2_slot"]
+
+[sub_resource type="Resource" id="Slot_0"]
+script = ExtResource("2_slot")
+label = "preparar_mesa(): 1.°"
+options = PackedStringArray("revisar el cable", "encender la compu", "abrir el programa", "apagar la compu")
+start = 2
+
+[sub_resource type="Resource" id="Slot_1"]
+script = ExtResource("2_slot")
+label = "2.°"
+options = PackedStringArray("revisar el cable", "encender la compu", "abrir el programa", "apagar la compu")
+start = 0
+
+[sub_resource type="Resource" id="Slot_2"]
+script = ExtResource("2_slot")
+label = "3.°"
+options = PackedStringArray("revisar el cable", "encender la compu", "abrir el programa", "apagar la compu")
+start = 1
+
+[sub_resource type="Resource" id="Slot_3"]
+script = ExtResource("2_slot")
+label = "llamar a preparar_mesa()"
+options = PackedStringArray("1 vez", "3 veces")
+start = 0
+
+[resource]
+script = ExtResource("1_rob")
+id = &"asistente"
+kind = 2
+title = "Asistente modular"
+goal = "Hay que dejar listas las 3 mesas del taller: cable revisado, compu encendida y programa abierto. Arma la función preparar_mesa() y decide cuántas veces llamarla."
+slots = Array[ExtResource("2_slot")]([SubResource("Slot_0"), SubResource("Slot_1"), SubResource("Slot_2"), SubResource("Slot_3")])
+hints = PackedStringArray("Una compu no enciende si el cable no está bien, y un programa no abre con la compu apagada.", "Primero el cable, después encender y al final abrir el programa.", "La función prepara una mesa... y hay tres mesas.")
+success_text = "Una función agrupa instrucciones bajo un nombre y se puede usar muchas veces."
+ecos_reward = -1

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(Una mesa cubierta con una tela. Un papel pegado dice: «Actividad de robótica · décimo · ¡próximamente!».)
+Kai: Están armando algo para la actividad de robótica. Ya quiero verlo."

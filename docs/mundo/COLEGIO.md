@@ -8,13 +8,14 @@
 ## Mapa
 
 ```
-                                                         [pasillo_segundo] ── [biblioteca]
-                                                                 │
-[cuarto_viejo] ── [pasillo_viejo] ── [laboratorio] ── [pasillo] ── [escaleras] ── [cuarto_tecnico]
-                                                       │     │
-                                                  [sala_3] [entrada] ── (calle del barrio)
-                                                               │
-                                              [soda] ── [patio]
+[cuarto_tecnico] ── [escaleras] ── [pasillo_segundo] ── [biblioteca]          (segundo piso)
+                         │
+[entrada] ──────── [pasillo] ── [laboratorio] ── [pasillo_viejo] ── [cuarto_viejo]
+    │                  │              │
+[soda] ── [patio]   [sala_3]      [taller]
+
+(calle del barrio) ── [entrada]   ·   la escalera de la entrada baja al patio; la puerta de vidrio del
+laboratorio lleva al taller
 ```
 
 Las uniones están en `data/world/districts/colegio.tres` (cada puerta con su pareja en la sala vecina). Las salas
@@ -27,7 +28,7 @@ con `chapter_requirement` se abren al llegar a ese capítulo (`World.lock_reason
 | Entrada | `zone0/entrada.tscn` | Llegada y salida al barrio; los amigos; escalera al patio | Prólogo | IMPLEMENTADO |
 | Pasillo central | `zone0/pasillo.tscn` | Une la entrada, la Sala 3, el laboratorio y las escaleras | Prólogo | IMPLEMENTADO |
 | Sala 3 (aula) | `zone0/sala_3.tscn` | Clases del profesor Alvarado | Prólogo | IMPLEMENTADO |
-| Laboratorio / taller de informática y robótica | `zone0/laboratorio.tscn` | Prácticas; en el Cap. 2, las estaciones de robótica y el simulador | Prólogo | IMPLEMENTADO (las estaciones: EN CURSO) |
+| Laboratorio | `zone0/laboratorio.tscn` | Prácticas, la conexión al simulador (Cap. 2) y la puerta de vidrio al taller (desde el Cap. 1) | Prólogo | IMPLEMENTADO |
 | Escaleras | `zone0/escaleras.tscn` | Une los dos pisos y el cuarto técnico | Cap. 1 | IMPLEMENTADO |
 | Pasillo del segundo piso | `zone0/pasillo_segundo.tscn` | Persecución larga del Cap. 1 | Cap. 1 | IMPLEMENTADO |
 | Biblioteca | `zone0/biblioteca.tscn` | La computadora del archivo; la fotografía antigua; el estante y la mesa de lectura | Cap. 1 | IMPLEMENTADO |
@@ -35,6 +36,7 @@ con `chapter_requirement` se abren al llegar a ese capítulo (`World.lock_reason
 | Pasillo viejo y cuarto viejo (Laboratorio 2) | `zone0/pasillo_viejo.tscn`, `cuarto_viejo.tscn` | La Nullblade (prólogo) | Prólogo | IMPLEMENTADO |
 | **Patio** | `zone0/patio.tscn` | **Punto de encuentro (hub social)**: recreo, tablón de anuncios, une la entrada con la soda | Cap. 1 | IMPLEMENTADO |
 | **Soda** | `zone0/soda.tscn` | Zona social: la señora de la soda, compañeros comiendo | Cap. 1 | IMPLEMENTADO |
+| **Taller de robótica** (anexo del laboratorio) | `zone0/taller.tscn` | Detrás de la puerta de vidrio: «El proyecto perdido» (Cap. 1), la actividad de robótica y las anomalías (Cap. 2) | Cap. 1 | IMPLEMENTADO |
 
 ## El patio
 
@@ -82,12 +84,15 @@ soda también se oscurecen, como el resto del colegio.
 ## Actividades opcionales del Capítulo 1
 
 - **«Un recreo diferente»** (soda): el Compañero espera a Kai en la mesa de la derecha; charla con una elección pequeña.
-- **«El proyecto perdido»** (laboratorio): la estudiante y la computadora «Equipo 4» (terminal simulada).
+- **«El proyecto perdido»** (taller): la estudiante y la computadora «Equipo 4» (terminal simulada).
 - Las dos están desde que el profesor prepara el acceso; detalle en `../misiones/MISIONES_SECUNDARIAS.md`.
 
-## Lo que viene en la expansión (EN CURSO)
+## El taller de robótica (Capítulo 2)
 
-- Cap. 2: las tres estaciones de robótica en el taller (antes del simulador) y las anomalías antes de Bucle.
+El anexo del laboratorio (decisión del equipo: ampliar el laboratorio sin tocar el prólogo; la puerta de vidrio
+aparece desde el Capítulo 1). En el Capítulo 1 las estaciones están cubiertas («próximamente») y trabaja ahí la
+estudiante de «El proyecto perdido». En el Capítulo 2: la actividad de robótica (tres estaciones con la misma
+ventana) y las anomalías antes de Bucle. Detalle: `../narrativa/capitulos/CAPITULO_02.md` (4b).
 
 ## Reutilización en los tres años (FUTURO)
 
@@ -100,4 +105,4 @@ conversaciones y gente, no salas nuevas, salvo que la historia lo pida.
 `tests/test_patio_soda.gd` (mapa, prólogo, examinables, tablón, la señora de la soda, guardado y otra ranura),
 `tests/test_foto_antigua.gd` (la foto, el registro, el Grimorio, guardado y otra ranura),
 `tests/test_tras_las_huellas.gd` (los rastros, el profesor, guardado), `tests/test_recreo.gd`,
-`tests/test_proyecto_perdido.gd` y los puntos «El patio y la soda (recreo)» y «Tras las huellas del error» del menú de pruebas (F9).
+`tests/test_proyecto_perdido.gd`, `tests/test_taller_robotica.gd` y los puntos «El patio y la soda (recreo)» y «Tras las huellas del error» del menú de pruebas (F9).

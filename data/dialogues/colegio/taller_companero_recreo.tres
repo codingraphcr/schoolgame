@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Compañero: ¡Kai! Como quedamos en la soda: venimos juntos. ¿Y la merienda?
+Kai: ...Mañana. Prometido.
+Compañero: Ja. Yo ya probé la cinta: ¡no se detenía nunca hasta que le puse cuándo parar!"

@@ -33,11 +33,23 @@ id = &"ciclos"
 objective = "Arma el puente con el ciclo justo y responde el repaso."
 room_id = &"sim_ciclos"
 
+[sub_resource type="Resource" id="Resource_taller"]
+script = ExtResource("2_jdjfk")
+id = &"taller_robotica"
+objective = "Ve al taller del laboratorio (detrás de la puerta de vidrio) y completa las tres estaciones de robótica."
+room_id = &"taller"
+
+[sub_resource type="Resource" id="Resource_anomalias"]
+script = ExtResource("2_jdjfk")
+id = &"investigar_anomalias"
+objective = "Algo raro pasa en el taller: investiga las fallas con la Visión Digital."
+room_id = &"taller"
+
 [resource]
 script = ExtResource("1_gpw5t")
 id = &"el_lenguaje_de_las_maquinas"
 title = "El lenguaje de las máquinas"
-steps = Array[ExtResource("2_jdjfk")]([SubResource("Resource_su3n7"), SubResource("Resource_l4jrh"), SubResource("Resource_xgpmw"), SubResource("Resource_xrm1m"), SubResource("Resource_uqset")])
+steps = Array[ExtResource("2_jdjfk")]([SubResource("Resource_su3n7"), SubResource("Resource_taller"), SubResource("Resource_anomalias"), SubResource("Resource_l4jrh"), SubResource("Resource_xgpmw"), SubResource("Resource_xrm1m"), SubResource("Resource_uqset")])
 completion_title = "NIVEL 3 COMPLETADO"
 completion_subtitle = "EL LENGUAJE DE LAS MÁQUINAS"
 completion_flag = &"nivel_3_completado"

@@ -8,3 +8,5 @@ extends Resource
 @export var step_id: StringName = &""
 @export var dialogue: Dialogue
 @export var completes_step := false
+## Solo vale si la partida tiene esta marca (vacío = siempre). Sirve para que un NPC recuerde algo (p. ej. una elección).
+@export var requires_flag: StringName = &""

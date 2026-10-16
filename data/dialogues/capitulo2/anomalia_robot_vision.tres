@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(Con la Visión, sobre el robot gira un símbolo de datos: ↻. Un hilo de luz sale de él hacia el laboratorio.)
+Kai: No es el programa del robot. Algo le manda la misma orden una y otra vez."

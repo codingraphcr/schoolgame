@@ -6,20 +6,20 @@
 [sub_resource type="Resource" id="Resource_0"]
 script = ExtResource("2_step")
 id = &"hablar_estudiante"
-objective = "Habla con la estudiante del laboratorio."
-room_id = &"laboratorio"
+objective = "Habla con la estudiante del taller (detrás de la puerta de vidrio del laboratorio)."
+room_id = &"taller"
 
 [sub_resource type="Resource" id="Resource_1"]
 script = ExtResource("2_step")
 id = &"buscar_archivo"
-objective = "Busca su proyecto en la computadora del laboratorio (solo buscar y leer)."
-room_id = &"laboratorio"
+objective = "Busca su proyecto en la computadora «Equipo 4» del taller (solo buscar y leer)."
+room_id = &"taller"
 
 [sub_resource type="Resource" id="Resource_2"]
 script = ExtResource("2_step")
 id = &"volver_estudiante"
 objective = "Cuéntale a la estudiante dónde estaba su archivo."
-room_id = &"laboratorio"
+room_id = &"taller"
 
 [resource]
 script = ExtResource("1_quest")

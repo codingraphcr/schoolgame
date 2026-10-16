@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="RoboticsChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/robotics/robotics_challenge.gd" id="1_rob"]
+[ext_resource type="Script" path="res://systems/robotics/robotics_slot.gd" id="2_slot"]
+
+[sub_resource type="Resource" id="Slot_0"]
+script = ExtResource("2_slot")
+label = "repetir"
+options = PackedStringArray("para siempre", "3 veces", "8 veces")
+start = 0
+
+[sub_resource type="Resource" id="Slot_1"]
+script = ExtResource("2_slot")
+label = "detener cuando"
+options = PackedStringArray("nunca", "no queden cajas", "se hayan movido 3 cajas")
+start = 0
+
+[resource]
+script = ExtResource("1_rob")
+id = &"cinta"
+kind = 1
+title = "Cinta automática"
+goal = "Hay 5 cajas. El ciclo tiene que moverlas todas y detenerse justo cuando ya no queden. Elige cuántas veces repetir y cuándo detenerse."
+slots = Array[ExtResource("2_slot")]([SubResource("Slot_0"), SubResource("Slot_1")])
+hints = PackedStringArray("Ejecútalo así primero: ¿qué pasa si el ciclo no tiene condición de salida?", "La condición de salida tiene que mirar las cajas, no las vueltas.", "repetir para siempre (o 8 veces) y detener cuando no queden cajas.")
+success_text = "Un ciclo repite instrucciones; la condición de salida decide cuándo parar. Sin ella, el ciclo no termina nunca."
+ecos_reward = -1

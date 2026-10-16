@@ -26,10 +26,10 @@ func _run() -> void:
 	DevPoints._advance(state, Q1, &"pedir_permiso")
 	state.unlock_vision()
 	state.set_nullblade_stage(1)
-	await _open(Z + "laboratorio.tscn")
+	await _open(Z + "taller.tscn")
 	_check(not _group().visible and not state.has_reached_step(Q), "antes de pedir permiso, la estudiante no está (ni empieza la misión)")
 	DevPoints._advance(state, Q1, &"buscar_huellas")
-	await _open(Z + "laboratorio.tscn")
+	await _open(Z + "taller.tscn")
 	await _test_start()
 	await _test_terminal_rules()
 	await _test_solve()
@@ -43,7 +43,7 @@ func _test_start() -> void:
 	room.player.teleport_to(Vector2(_student().global_position.x - 40, 304))
 	await _until(func() -> bool: return state.has_reached_step(Q))
 	_check(_group().visible and state.get_current_step(Q) == &"hablar_estudiante" and state.active_quest == Q1
-		and state.get_side_quest() == Q, "al entrar al laboratorio empieza «El proyecto perdido» (la historia sigue arriba)")
+		and state.get_side_quest() == Q, "al entrar al taller empieza «El proyecto perdido» (la historia sigue arriba)")
 	_check(not _station().is_usable(), "la computadora todavía no se usa (primero hay que hablar con ella)")
 	var line := await _talk(_student())
 	_check(line.contains("¿Dónde está?") and state.get_current_step(Q) == &"buscar_archivo", "la estudiante perdió su proyecto de la feria")
@@ -109,7 +109,7 @@ func _test_thanks() -> void:
 
 func _test_saved() -> void:
 	var saves := root.get_node("SaveManager")
-	_check(saves.save_game(Z + "laboratorio.tscn", &"desde_pasillo"), "se guarda la partida")
+	_check(saves.save_game(Z + "taller.tscn", &"desde_laboratorio"), "se guarda la partida")
 	state.reset()
 	saves.load_slot(1)
 	_check(state.is_quest_completed(Q), "al cargar, la misión sigue completada")

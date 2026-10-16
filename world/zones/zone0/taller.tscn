@@ -1,0 +1,440 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_ejef1"]
+[ext_resource type="Script" path="res://world/school/taller_props.gd" id="2_tfdja"]
+[ext_resource type="Script" path="res://world/rooms/stairway.gd" id="3_jonbw"]
+[ext_resource type="Script" path="res://world/school/robotics_station.gd" id="4_6i8d6"]
+[ext_resource type="Resource" path="res://data/robotics/clasificador.tres" id="5_yik6k"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/taller_preparando.tres" id="6_hysxe"]
+[ext_resource type="Resource" path="res://data/robotics/cinta.tres" id="7_eeean"]
+[ext_resource type="Resource" path="res://data/robotics/asistente.tres" id="8_ly34s"]
+[ext_resource type="Script" path="res://world/school/anomaly.gd" id="9_pptso"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_robot.tres" id="10_3uonv"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_robot_vision.tres" id="11_qc2mw"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_brazo.tres" id="12_6y5nd"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_brazo_vision.tres" id="13_ux221"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_mensaje.tres" id="14_1rwfy"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_mensaje_vision.tres" id="15_77gg7"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_puerta.tres" id="16_b007j"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo2/anomalia_puerta_vision.tres" id="17_imbtg"]
+[ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="18_hqjx8"]
+[ext_resource type="Script" path="res://characters/npcs/npc.gd" id="19_7fnm3"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companero_despues.tres" id="20_1rr2w"]
+[ext_resource type="Script" path="res://characters/npcs/npc_conversation.gd" id="21_rnwc6"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companero_recreo.tres" id="22_3mw6r"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companero.tres" id="23_5uth4"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companero_anomalias.tres" id="24_5k44s"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_m2_quieto.png" id="25_3rl4w"]
+[ext_resource type="Script" path="res://components/interaction/interactable.gd" id="26_daxvr"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companera_despues.tres" id="27_luypf"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companera.tres" id="28_702i6"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/taller_companera_anomalias.tres" id="29_t48sd"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_f1_quieto.png" id="30_s6qji"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_despues.tres" id="31_8jnmr"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_pedido.tres" id="32_ydjsj"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_esperando.tres" id="33_gxbcl"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_gracias.tres" id="34_a1ty0"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_f2_quieto.png" id="35_x1rsr"]
+[ext_resource type="Script" path="res://systems/quests/quest_starter.gd" id="36_roftd"]
+[ext_resource type="Script" path="res://world/digital/terminal_station.gd" id="37_y35q6"]
+[ext_resource type="Resource" path="res://data/terminals/proyecto_perdido.tres" id="38_gukwe"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/proyecto_encontrado.tres" id="39_3ufuy"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="40_shlm7"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="41_mpy8n"]
+[ext_resource type="Script" path="res://characters/player/player.gd" id="42_yu5b6"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="43_nwxwo"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="44_j6a0h"]
+[ext_resource type="Script" path="res://world/camera/game_camera.gd" id="45_vlig7"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="46_1a4wr"]
+[ext_resource type="Script" path="res://ui/hud/combat_hud.gd" id="47_egl86"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_73eyu"]
+size = Vector2(1184, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6hmkp"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gauo0"]
+size = Vector2(32, 400)
+
+[sub_resource type="Resource" id="Resource_kqvxs"]
+script = ExtResource("21_rnwc6")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"taller_robotica"
+dialogue = ExtResource("22_3mw6r")
+requires_flag = &"recreo_eleccion_2"
+
+[sub_resource type="Resource" id="Resource_60cmh"]
+script = ExtResource("21_rnwc6")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"taller_robotica"
+dialogue = ExtResource("23_5uth4")
+
+[sub_resource type="Resource" id="Resource_f43qs"]
+script = ExtResource("21_rnwc6")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"investigar_anomalias"
+dialogue = ExtResource("24_5k44s")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tuo42"]
+atlas = ExtResource("25_3rl4w")
+region = Rect2(0, 0, 96, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uycda"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tuo42")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tuo42")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u6a18"]
+size = Vector2(44, 56)
+
+[sub_resource type="Resource" id="Resource_y0enm"]
+script = ExtResource("21_rnwc6")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"taller_robotica"
+dialogue = ExtResource("28_702i6")
+
+[sub_resource type="Resource" id="Resource_qt7av"]
+script = ExtResource("21_rnwc6")
+quest_id = &"el_lenguaje_de_las_maquinas"
+step_id = &"investigar_anomalias"
+dialogue = ExtResource("29_t48sd")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m3e7j"]
+atlas = ExtResource("30_s6qji")
+region = Rect2(0, 0, 96, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sule3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m3e7j")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m3e7j")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m3rwm"]
+size = Vector2(44, 56)
+
+[sub_resource type="Resource" id="Resource_fw0xc"]
+script = ExtResource("21_rnwc6")
+quest_id = &"proyecto_perdido"
+step_id = &"hablar_estudiante"
+dialogue = ExtResource("32_ydjsj")
+completes_step = true
+
+[sub_resource type="Resource" id="Resource_ytesr"]
+script = ExtResource("21_rnwc6")
+quest_id = &"proyecto_perdido"
+step_id = &"buscar_archivo"
+dialogue = ExtResource("33_gxbcl")
+
+[sub_resource type="Resource" id="Resource_mhhss"]
+script = ExtResource("21_rnwc6")
+quest_id = &"proyecto_perdido"
+step_id = &"volver_estudiante"
+dialogue = ExtResource("34_a1ty0")
+completes_step = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bf8w8"]
+atlas = ExtResource("35_x1rsr")
+region = Rect2(0, 0, 96, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ugtii"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bf8w8")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bf8w8")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_idcuw"]
+size = Vector2(44, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nmo7m"]
+size = Vector2(520, 80)
+
+[node name="Taller" type="Node2D" unique_id=882909187 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_ejef1")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 1120, 360)
+music_track = &"colegio"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=1687672073]
+color = Color(0.94, 0.95, 1, 1)
+
+[node name="Props" type="Node2D" parent="." unique_id=566840688]
+script = ExtResource("2_tfdja")
+width = 1120.0
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=924388498]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=151804361]
+position = Vector2(560, 344)
+shape = SubResource("RectangleShape2D_73eyu")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1260462819]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_6hmkp")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=1908395845]
+position = Vector2(1136, 180)
+shape = SubResource("RectangleShape2D_gauo0")
+
+[node name="ALaboratorio" type="Area2D" parent="." unique_id=1109999265]
+position = Vector2(61, 304)
+script = ExtResource("3_jonbw")
+door_id = &"laboratorio"
+target_scene = "res://world/zones/zone0/laboratorio.tscn"
+target_entry = &"desde_taller"
+going_up = false
+sign_text = "LABORATORIO"
+show_art = false
+prompt_text = "E: volver al laboratorio"
+prompt_offset = Vector2(-60, -110)
+
+[node name="Estaciones" type="Node2D" parent="." unique_id=336409245]
+
+[node name="Clasificador" type="Area2D" parent="Estaciones" unique_id=1441370132]
+position = Vector2(420, 304)
+script = ExtResource("4_6i8d6")
+challenge = ExtResource("5_yik6k")
+preparing_dialogue = ExtResource("6_hysxe")
+sign_text = "CONDICIONALES"
+prompt_offset = Vector2(-50, -96)
+
+[node name="Cinta" type="Area2D" parent="Estaciones" unique_id=424110802]
+position = Vector2(660, 304)
+script = ExtResource("4_6i8d6")
+challenge = ExtResource("7_eeean")
+preparing_dialogue = ExtResource("6_hysxe")
+sign_text = "CICLOS"
+prompt_offset = Vector2(-50, -96)
+
+[node name="Asistente" type="Area2D" parent="Estaciones" unique_id=1018361743]
+position = Vector2(820, 304)
+script = ExtResource("4_6i8d6")
+challenge = ExtResource("8_ly34s")
+preparing_dialogue = ExtResource("6_hysxe")
+sign_text = "FUNCIONES"
+prompt_offset = Vector2(-50, -96)
+
+[node name="Anomalias" type="Node2D" parent="." unique_id=874933133]
+
+[node name="Robot" type="Area2D" parent="Anomalias" unique_id=904344461]
+position = Vector2(740, 304)
+script = ExtResource("9_pptso")
+id = &"robot"
+normal_dialogue = ExtResource("10_3uonv")
+vision_dialogue = ExtResource("11_qc2mw")
+prompt_offset = Vector2(-50, -100)
+
+[node name="Brazo" type="Area2D" parent="Anomalias" unique_id=1661477942]
+position = Vector2(580, 304)
+script = ExtResource("9_pptso")
+id = &"brazo"
+kind = 1
+normal_dialogue = ExtResource("12_6y5nd")
+vision_dialogue = ExtResource("13_ux221")
+prompt_offset = Vector2(-50, -100)
+
+[node name="Mensaje" type="Area2D" parent="Anomalias" unique_id=1862496645]
+position = Vector2(320, 304)
+script = ExtResource("9_pptso")
+id = &"mensaje"
+kind = 2
+normal_dialogue = ExtResource("14_1rwfy")
+vision_dialogue = ExtResource("15_77gg7")
+prompt_offset = Vector2(-50, -100)
+
+[node name="Puerta" type="Area2D" parent="Anomalias" unique_id=1499090976]
+position = Vector2(1020, 304)
+script = ExtResource("9_pptso")
+id = &"puerta"
+kind = 3
+normal_dialogue = ExtResource("16_b007j")
+vision_dialogue = ExtResource("17_imbtg")
+prompt_offset = Vector2(-50, -100)
+
+[node name="Gente" type="Node2D" parent="." unique_id=1679026132]
+
+[node name="StoryPresence" type="Node" parent="Gente" unique_id=1955750539]
+script = ExtResource("18_hqjx8")
+show_quest = &"el_lenguaje_de_las_maquinas"
+show_step = &"taller_robotica"
+hide_quest = &"codigo_fuera_de_control"
+
+[node name="Companero" type="Node2D" parent="Gente" unique_id=16253268]
+position = Vector2(910, 304)
+script = ExtResource("19_7fnm3")
+display_name = "Compañero"
+dialogue = ExtResource("20_1rr2w")
+repeat_dialogue = ExtResource("20_1rr2w")
+conversations = Array[ExtResource("21_rnwc6")]([SubResource("Resource_kqvxs"), SubResource("Resource_60cmh"), SubResource("Resource_f43qs")])
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Gente/Companero" unique_id=1253788008]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_uycda")
+animation = &"idle"
+offset = Vector2(0, -55)
+flip_h = true
+
+[node name="Interactable" type="Area2D" parent="Gente/Companero" unique_id=101200806]
+script = ExtResource("26_daxvr")
+prompt_text = "E: hablar"
+prompt_offset = Vector2(-30, -74)
+
+[node name="Shape" type="CollisionShape2D" parent="Gente/Companero/Interactable" unique_id=1114003091]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_u6a18")
+
+[node name="Companera" type="Node2D" parent="Gente" unique_id=1287190137]
+position = Vector2(500, 304)
+script = ExtResource("19_7fnm3")
+display_name = "Compañera"
+dialogue = ExtResource("27_luypf")
+repeat_dialogue = ExtResource("27_luypf")
+conversations = Array[ExtResource("21_rnwc6")]([SubResource("Resource_y0enm"), SubResource("Resource_qt7av")])
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Gente/Companera" unique_id=50370997]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_sule3")
+animation = &"idle"
+offset = Vector2(0, -55)
+
+[node name="Interactable" type="Area2D" parent="Gente/Companera" unique_id=728212241]
+script = ExtResource("26_daxvr")
+prompt_text = "E: hablar"
+prompt_offset = Vector2(-30, -74)
+
+[node name="Shape" type="CollisionShape2D" parent="Gente/Companera/Interactable" unique_id=7657444]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_m3rwm")
+
+[node name="ProyectoPerdido" type="Node2D" parent="." unique_id=1327130610]
+
+[node name="StoryPresence" type="Node" parent="ProyectoPerdido" unique_id=1529938575]
+script = ExtResource("18_hqjx8")
+show_quest = &"una_clase_diferente"
+show_step = &"buscar_huellas"
+
+[node name="Estudiante" type="Node2D" parent="ProyectoPerdido" unique_id=895398558]
+position = Vector2(230, 304)
+script = ExtResource("19_7fnm3")
+display_name = "Estudiante"
+dialogue = ExtResource("31_8jnmr")
+repeat_dialogue = ExtResource("31_8jnmr")
+conversations = Array[ExtResource("21_rnwc6")]([SubResource("Resource_fw0xc"), SubResource("Resource_ytesr"), SubResource("Resource_mhhss")])
+
+[node name="Sprite" type="AnimatedSprite2D" parent="ProyectoPerdido/Estudiante" unique_id=1703635621]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_ugtii")
+animation = &"idle"
+offset = Vector2(0, -55)
+flip_h = true
+
+[node name="Interactable" type="Area2D" parent="ProyectoPerdido/Estudiante" unique_id=1481206812]
+script = ExtResource("26_daxvr")
+prompt_text = "E: hablar"
+prompt_offset = Vector2(-30, -74)
+
+[node name="Shape" type="CollisionShape2D" parent="ProyectoPerdido/Estudiante/Interactable" unique_id=2057453485]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_idcuw")
+
+[node name="EmpiezaMision" type="Area2D" parent="ProyectoPerdido" unique_id=1861622596]
+position = Vector2(300, 304)
+script = ExtResource("36_roftd")
+quest_id = &"proyecto_perdido"
+
+[node name="Zona" type="CollisionShape2D" parent="ProyectoPerdido/EmpiezaMision" unique_id=2084785268]
+position = Vector2(0, -40)
+shape = SubResource("RectangleShape2D_nmo7m")
+
+[node name="Equipo4" type="Area2D" parent="ProyectoPerdido" unique_id=646077750]
+position = Vector2(150, 304)
+script = ExtResource("37_y35q6")
+challenge = ExtResource("38_gukwe")
+quest_id = &"proyecto_perdido"
+step_id = &"buscar_archivo"
+success_dialogue = ExtResource("39_3ufuy")
+prompt_text = "E: usar el equipo 4"
+
+[node name="Entries" type="Node2D" parent="." unique_id=993790363]
+
+[node name="DesdeLaboratorio" type="Marker2D" parent="Entries" unique_id=1777164380]
+position = Vector2(100, 304)
+script = ExtResource("40_shlm7")
+id = &"desde_laboratorio"
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=313232696]
+position = Vector2(100, 304)
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1140118988 instance=ExtResource("41_mpy8n")]
+position = Vector2(100, 304)
+collision_layer = 2
+floor_snap_length = 4.0
+script = ExtResource("42_yu5b6")
+
+[node name="DigitalLayer" type="CanvasLayer" parent="." unique_id=1945927309]
+follow_viewport_enabled = true
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=2027111970 node_paths=PackedStringArray("player", "ambient")]
+script = ExtResource("43_nwxwo")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(0.94, 0.95, 1, 1)
+
+[node name="GameCamera" type="Camera2D" parent="." unique_id=1856572185 node_paths=PackedStringArray("target") instance=ExtResource("44_j6a0h")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.25
+drag_bottom_margin = 0.15
+script = ExtResource("45_vlig7")
+target = NodePath("../Player")
+
+[node name="CombatHUD" type="CanvasLayer" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("46_1a4wr")]
+layer = 40
+script = ExtResource("47_egl86")
+player = NodePath("../Player")

@@ -92,6 +92,8 @@ func _current_conversation() -> NpcConversation:
 	for conversation in conversations:
 		if conversation == null or conversation.dialogue == null:
 			continue
+		if conversation.requires_flag != &"" and not _game_state().has_flag(conversation.requires_flag):
+			continue
 		var step: StringName = _game_state().get_current_step(conversation.quest_id)
 		# Sin paso: vale mientras la misión está en curso (cualquier paso; p. ej. lo que dice en un capítulo).
 		if (conversation.step_id == &"" and step != &"") or (conversation.step_id != &"" and step == conversation.step_id):

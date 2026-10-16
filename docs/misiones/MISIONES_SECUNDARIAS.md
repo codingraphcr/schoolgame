@@ -47,7 +47,8 @@
 
 ## «El proyecto perdido» (Secundaria, Capítulo 1) — IMPLEMENTADO
 
-- **Cuándo y dónde:** desde que el profesor prepara el acceso, en el laboratorio (taller). Empieza al entrar; el HUD la
+- **Cuándo y dónde:** desde que el profesor prepara el acceso, en el taller (el anexo del laboratorio, detrás de la
+  puerta de vidrio). Empieza al entrar; el HUD la
   muestra como ACTIVIDAD debajo de la historia.
 - **Quién:** una estudiante (NPC nuevo 2 de 2, sin nombre) perdió su proyecto de la feria: un robot seguidor de línea.
 - **Qué hace Kai:** usa la computadora «Equipo 4», una terminal **simulada** (solo `help`, `pwd`, `ls`, `cd`, `cat`;
@@ -58,7 +59,7 @@
   copias en lugares distintos: respaldos).
 - **Conceptos:** navegación de carpetas, rutas, leer antes de actuar, registros de cambios, copias de respaldo.
 - **Archivos:** `data/terminals/proyecto_perdido.tres`, `data/quests/proyecto_perdido.tres`,
-  `data/dialogues/colegio/proyecto_*.tres`, la escena del laboratorio (`ProyectoPerdido`), `tests/test_proyecto_perdido.gd`.
+  `data/dialogues/colegio/proyecto_*.tres`, la escena del taller (`ProyectoPerdido`), `tests/test_proyecto_perdido.gd`.
 
 ## Candidatas (FUTURO, no son compromisos de implementación)
 

@@ -50,10 +50,34 @@ repetidos, sin explicar nada más. «FIN DEL CAPÍTULO 2».
 
 | Misión | Pasos (sala) |
 |---|---|
-| `el_lenguaje_de_las_maquinas` (nivel 3) | `clase_programacion` (Sala 3) → `entrar_simulador` (Laboratorio, conexión con la Visión) → `variables` (sim_variables) → `condiciones` (sim_condiciones) → `ciclos` (sim_ciclos, con el repaso). «NIVEL 3 COMPLETADO» |
+| `el_lenguaje_de_las_maquinas` (nivel 3) | `clase_programacion` (Sala 3) → `taller_robotica` (taller: las tres estaciones) → `investigar_anomalias` (taller, con la Visión) → `entrar_simulador` (Laboratorio, conexión con la Visión) → `variables` (sim_variables) → `condiciones` (sim_condiciones) → `ciclos` (sim_ciclos, con el repaso). «NIVEL 3 COMPLETADO» |
 | `codigo_fuera_de_control` (nivel 4) | `procesos` (sim_procesos) → `vencer_bucle` (arena_bucle) → `hablar_profesor` (Laboratorio). «FIN DEL CAPÍTULO 2» |
 
 El capítulo empieza al terminar «Travesuras en el sistema» (marca `capitulo_2`: se abren las salas del capítulo 2).
+
+## 4b. Expansión (Biblia v1.9): el taller de robótica y las anomalías
+
+Entre la clase y el simulador, sin tocar el simulador ni a Bucle:
+
+- **La clase** termina con el simulador lento: el profesor lo va a revisar y manda a décimo a la **actividad de
+  robótica** del taller (el anexo del laboratorio, detrás de la puerta de vidrio).
+- **Tres estaciones con la misma ventana** (`RoboticsWindow`): el jugador arma un programa corto eligiendo opciones,
+  lo ejecuta y mira la simulación; si falla, la explicación dice por qué y se corrige.
+  - **Condicionales · robot clasificador:** «si el objeto es [metal] → [Ruta A]; si no → [Ruta B]».
+  - **Ciclos · cinta automática:** «repetir [para siempre / 3 / 8 veces]» + «detener cuando [nunca / no queden
+    cajas / se movieron 3]». Empieza sin condición de salida: la cinta gira vacía y la simulación la corta por
+    seguridad (anticipa a Bucle, que no sabe detenerse).
+  - **Funciones · asistente modular:** `preparar_mesa()` con tres instrucciones en orden y cuántas veces llamarla
+    (tres mesas: tres llamadas en vez de nueve instrucciones).
+- **Anomalías progresivas** (de a una): el robot de prueba mueve una caja de ida y vuelta, un brazo repite el mismo
+  gesto, la pantalla repite «TAREA 7: REPETIR» y la puerta de la bodega abre y cierra. Los compañeros creen que son
+  errores normales; con la Visión, Kai ve un ↻ de datos sobre cada una y un hilo hacia el simulador. Con las cuatro,
+  Kai entiende que todo viene del simulador: «Adentro hay algo que no sabe detenerse». **No se revela a Bucle.**
+- **Continuidad:** el Compañero recuerda lo que se habló en «Un recreo diferente» si Kai cambió de tema a la robótica.
+- **El Dominio Nulo sigue bloqueado** (provisionalmente, Capítulo 4).
+- **Alineación curricular (provisional):** condicionales, ciclos y funciones están en la tabla de décimo de
+  `docs/curriculo_mep.md` (Programación); también se practica la identificación y corrección de errores. No se
+  afirma una alineación oficial con el MEP hasta validarla con los programas completos.
 
 ## 5. El simulador (zona «Simulador»)
 

@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="RoboticsChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/robotics/robotics_challenge.gd" id="1_rob"]
+[ext_resource type="Script" path="res://systems/robotics/robotics_slot.gd" id="2_slot"]
+
+[sub_resource type="Resource" id="Slot_0"]
+script = ExtResource("2_slot")
+label = "si el objeto es"
+options = PackedStringArray("metal", "papel", "plástico")
+start = 1
+
+[sub_resource type="Resource" id="Slot_1"]
+script = ExtResource("2_slot")
+label = "→ enviarlo a"
+options = PackedStringArray("Ruta A", "Ruta B")
+start = 1
+
+[sub_resource type="Resource" id="Slot_2"]
+script = ExtResource("2_slot")
+label = "si no → enviarlo a"
+options = PackedStringArray("Ruta A", "Ruta B")
+start = 1
+
+[resource]
+script = ExtResource("1_rob")
+id = &"clasificador"
+kind = 0
+title = "Robot clasificador"
+goal = "Las latas (metal) van a la Ruta A; todo lo demás (papel y plástico), a la Ruta B. Arma la condición del robot."
+slots = Array[ExtResource("2_slot")]([SubResource("Slot_0"), SubResource("Slot_1"), SubResource("Slot_2")])
+hints = PackedStringArray("El «si» pregunta por una sola cosa; todo lo que no la cumple se va por el «si no».", "Pregunta por lo que tiene que ir aparte: el metal.", "si el objeto es metal → Ruta A; si no → Ruta B.")
+success_text = "Una condicional elige entre dos caminos según una pregunta de sí o no."
+ecos_reward = -1

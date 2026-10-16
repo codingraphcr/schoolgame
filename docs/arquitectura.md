@@ -699,6 +699,28 @@ con `requires_quest` = `camino_a_casa` / `volver_a_casa`.
 | `HomeNight` | Cuarto | Acostarse, ir a la escena de los papás, la Resonancia Digital, despertar, completar la misión y guardar en la cama |
 | `house_props.gd`, `bedroom_props.gd`, `street_props.gd`, `street_dog.gd` | `world/home/` | Arte provisional por código |
 
+## El colegio ampliado (expansión de los capítulos 1 y 2)
+
+Detalle de diseño en `docs/mundo/COLEGIO.md`. Salas nuevas del distrito `colegio`: `patio`, `soda` y `taller` (el
+anexo del laboratorio, detrás de la puerta de vidrio). Las tres tienen `chapter_requirement = 1` y sus puertas usan
+`StoryPresence` (el prólogo no cambia).
+
+| Pieza | Dónde | Qué hace |
+|---|---|---|
+| `Announcement` / `NoticeBoard` | `systems/school/`, `world/school/`, datos en `data/school/anuncios/` | Tablón de anuncios: avisos con requisito (`WorldRequirement`) y marca que los esconde; se leen en la `InspectionWindow` (marca `anuncio_leido_<id>`) |
+| `OldPhoto` | `world/school/` | Un descubrimiento que se mira en la `InspectionWindow` y se registra (misión de categoría Descubrimiento + página de Registros del Grimorio) |
+| `ClueTracker` | `systems/quests/` | Cuenta marcas de un grupo y completa un paso al juntar las necesarias (lo usan los rastros, las anomalías y las estaciones) |
+| `ErrorTrace` | `world/school/` | Rastro que solo se ve con la Visión durante un paso («Tras las huellas del error»; bastan 2 de 3) |
+| `DialogueChoice` | `ui/components/` | Elección de diálogo sin respuestas correctas (2–3 opciones; pausa; hay que elegir) |
+| `RecessChat` | `world/school/` | Charla con elección: intro → elección → respuesta → cierre; marca `<choice_flag>_<n>` y completa una misión |
+| `RoboticsChallenge` / `RoboticsSlot` / `RoboticsRun` | `systems/robotics/`, datos en `data/robotics/` | Una estación de robótica: casillas con opciones, pistas, lo que se aprende y los Ecos |
+| `RoboticsSim` (`SorterSim`, `ConveyorSim`, `AssistantSim`) | `systems/robotics/` | La simulación de cada tipo (condicionales, ciclos, funciones): `run()` evalúa y explica; `draw()` anima. Todo finito: un ciclo sin salida se corta en `SAFETY_LIMIT` vueltas |
+| `RoboticsWindow` | `ui/robotics/` | La misma ventana para las tres estaciones: programa (◀ opción ▶), Ejecutar, Pista, animación y explicación |
+| `RoboticsStation` | `world/school/` | La mesa de una estación: «en preparación» en el Capítulo 1; abre su desafío desde el paso `taller_robotica`; marca `robotica_<id>` y Ecos una vez |
+| `Anomaly` | `world/school/` | Falla que repite algo (robot, brazo, mensaje, puerta); aparecen de a una; con la Visión se investiga (marca `anomalia_<id>`) |
+| `NpcConversation.requires_flag` | `characters/npcs/` | Una conversación que solo vale con una marca (p. ej. el amigo recuerda la elección del recreo) |
+| `patio_props.gd`, `soda_props.gd`, `taller_props.gd` | `world/school/` | Arte provisional por código |
+
 ## Capítulo 2: el simulador de prácticas
 
 Especificación en `docs/narrativa/capitulos/CAPITULO_02.md`. Misiones `el_lenguaje_de_las_maquinas` (nivel 3) y

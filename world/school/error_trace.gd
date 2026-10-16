@@ -80,19 +80,20 @@ static func flag_of(trace_id: StringName) -> StringName:
 	return StringName("huella_%s" % trace_id)
 
 
-static func found_count(state: Node) -> int:
-	var count := 0
+static func flags() -> Array[StringName]:
+	var result: Array[StringName] = []
 	for trace_id in ALL:
-		if state.has_flag(flag_of(trace_id)):
-			count += 1
-	return count
+		result.append(flag_of(trace_id))
+	return result
+
+
+static func found_count(state: Node) -> int:
+	return ClueTracker.count(state, flags())
 
 
 ## Registra un rastro encontrado; con REQUIRED se completa el paso (Kai ya puede volver con el profesor).
 static func register(state: Node, trace_id: StringName) -> void:
-	state.set_flag(flag_of(trace_id))
-	if found_count(state) >= REQUIRED and state.get_current_step(QUEST) == STEP:
-		state.complete_step(QUEST, STEP)
+	ClueTracker.register(state, flag_of(trace_id), flags(), REQUIRED, QUEST, STEP)
 
 
 func _on_interacted(_player: Player) -> void:
