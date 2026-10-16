@@ -41,6 +41,8 @@
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="36_jjocs"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="37_ey5b1"]
 [ext_resource type="Script" path="res://world/rooms/stairway.gd" id="38_woobw"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_esperando.tres" id="39_espera"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/profesor_huellas.tres" id="40_huellas"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i4vep"]
 size = Vector2(704, 80)
@@ -156,6 +158,19 @@ script = ExtResource("12_l41jd")
 quest_id = &"travesuras_en_el_sistema"
 step_id = &"hablar_profesor"
 dialogue = ExtResource("21_xfrip")
+
+[sub_resource type="Resource" id="Resource_espera"]
+script = ExtResource("12_l41jd")
+quest_id = &"una_clase_diferente"
+step_id = &"buscar_huellas"
+dialogue = ExtResource("39_espera")
+
+[sub_resource type="Resource" id="Resource_huellas"]
+script = ExtResource("12_l41jd")
+quest_id = &"una_clase_diferente"
+step_id = &"volver_profesor"
+dialogue = ExtResource("40_huellas")
+completes_step = true
 
 [sub_resource type="Resource" id="Resource_04ff4"]
 script = ExtResource("12_l41jd")
@@ -302,7 +317,7 @@ hide_step = &"biblioteca"
 
 [node name="Profesor" parent="Capitulo1" unique_id=1425553402 instance=ExtResource("9_p8mah")]
 position = Vector2(455, 304)
-conversations = Array[ExtResource("12_l41jd")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_trmnl"), SubResource("Resource_lltp1"), SubResource("Resource_elegir"), SubResource("Resource_invit"), SubResource("Resource_invrec1"), SubResource("Resource_invrec2"), SubResource("Resource_yi4qo"), SubResource("Resource_0b5hx"), SubResource("Resource_73d67"), SubResource("Resource_3qquy"), SubResource("Resource_rsnk6"), SubResource("Resource_mtlg1")])
+conversations = Array[ExtResource("12_l41jd")]([SubResource("Resource_n71tl"), SubResource("Resource_caeod"), SubResource("Resource_pgyjs"), SubResource("Resource_reb7v"), SubResource("Resource_bchj4"), SubResource("Resource_trmnl"), SubResource("Resource_lltp1"), SubResource("Resource_elegir"), SubResource("Resource_invit"), SubResource("Resource_invrec1"), SubResource("Resource_invrec2"), SubResource("Resource_yi4qo"), SubResource("Resource_0b5hx"), SubResource("Resource_73d67"), SubResource("Resource_3qquy"), SubResource("Resource_rsnk6"), SubResource("Resource_espera"), SubResource("Resource_huellas"), SubResource("Resource_mtlg1")])
 
 [node name="StoryPresence" type="Node" parent="Capitulo1/Profesor" unique_id=582807898]
 script = ExtResource("8_y5xbq")

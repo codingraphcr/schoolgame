@@ -1,0 +1,235 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_6ttlu"]
+[ext_resource type="Script" path="res://world/home/phase_light.gd" id="2_h68e3"]
+[ext_resource type="Script" path="res://world/school/patio_props.gd" id="3_irfom"]
+[ext_resource type="Script" path="res://world/objects/examinable.gd" id="4_jtclt"]
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="5_fwpvq"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/patio_mural.tres" id="6_03wrp"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/patio_almendro.tres" id="7_uenp0"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/patio_bebedero.tres" id="8_socmq"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/patio_bandera.tres" id="9_r8g2p"]
+[ext_resource type="Script" path="res://world/school/notice_board.gd" id="10_eegy6"]
+[ext_resource type="Script" path="res://systems/school/announcement.gd" id="11_hyiv5"]
+[ext_resource type="Resource" path="res://data/school/anuncios/reglamento_pasillos.tres" id="12_heti1"]
+[ext_resource type="Resource" path="res://data/school/anuncios/charla_contrasenas.tres" id="13_3h6od"]
+[ext_resource type="Resource" path="res://data/school/anuncios/robotica_pronto.tres" id="14_vmiqs"]
+[ext_resource type="Resource" path="res://data/school/anuncios/robotica_hoy.tres" id="15_0t0mw"]
+[ext_resource type="Resource" path="res://data/school/anuncios/wifi_colegio.tres" id="16_70pbw"]
+[ext_resource type="Resource" path="res://data/school/anuncios/feria_ciencias.tres" id="17_81c05"]
+[ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="18_102as"]
+[ext_resource type="Script" path="res://world/zones/zone0/npc_bark.gd" id="19_bgyiy"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="20_k7grv"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="21_ccwh5"]
+[ext_resource type="Script" path="res://world/rooms/stairway.gd" id="22_3nhyo"]
+[ext_resource type="Script" path="res://world/school/error_trace.gd" id="23_mx3cc"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="23_ykni7"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/huella_patio.tres" id="24_6ttlu"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="25_1jogs"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="27_g58i1"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="28_6ttlu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xet3r"]
+size = Vector2(1564, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ty6d7"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m1ts7"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yd0d3"]
+size = Vector2(12, 256)
+
+[node name="Patio" type="Node2D" unique_id=1103646134 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_6ttlu")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 1500, 360)
+music_track = &"colegio"
+
+[node name="Luz" type="CanvasModulate" parent="." unique_id=1770469081]
+script = ExtResource("2_h68e3")
+
+[node name="Props" type="Node2D" parent="." unique_id=540090638]
+script = ExtResource("3_irfom")
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=172874962]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=1171444485]
+position = Vector2(750, 344)
+shape = SubResource("RectangleShape2D_xet3r")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=1198699167]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_ty6d7")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=208514336]
+position = Vector2(1516, 180)
+shape = SubResource("RectangleShape2D_m1ts7")
+
+[node name="Objetos" type="Node2D" parent="." unique_id=436691156]
+
+[node name="Mural" type="Area2D" parent="Objetos" unique_id=1135914315]
+position = Vector2(690, 304)
+script = ExtResource("4_jtclt")
+dialogues = Array[ExtResource("5_fwpvq")]([ExtResource("6_03wrp")])
+size = Vector2(130, 60)
+prompt_text = "E: mirar el mural"
+prompt_offset = Vector2(-44.2, -78)
+
+[node name="Almendro" type="Area2D" parent="Objetos" unique_id=1859569488]
+position = Vector2(315, 304)
+script = ExtResource("4_jtclt")
+dialogues = Array[ExtResource("5_fwpvq")]([ExtResource("7_uenp0")])
+size = Vector2(60, 60)
+prompt_text = "E: mirar el almendro"
+prompt_offset = Vector2(-52, -78)
+
+[node name="Bebedero" type="Area2D" parent="Objetos" unique_id=499275874]
+position = Vector2(1051, 304)
+script = ExtResource("4_jtclt")
+dialogues = Array[ExtResource("5_fwpvq")]([ExtResource("8_socmq")])
+size = Vector2(40, 50)
+prompt_text = "E: tomar agua"
+prompt_offset = Vector2(-33.8, -68)
+
+[node name="Bandera" type="Area2D" parent="Objetos" unique_id=1886319492]
+position = Vector2(1150, 304)
+script = ExtResource("4_jtclt")
+dialogues = Array[ExtResource("5_fwpvq")]([ExtResource("9_r8g2p")])
+size = Vector2(30, 60)
+prompt_text = "E: mirar la bandera"
+prompt_offset = Vector2(-49.4, -78)
+
+[node name="Tablon" type="Node2D" parent="Objetos" unique_id=1320943468]
+position = Vector2(1265, 304)
+script = ExtResource("10_eegy6")
+announcements = Array[ExtResource("11_hyiv5")]([ExtResource("12_heti1"), ExtResource("13_3h6od"), ExtResource("14_vmiqs"), ExtResource("15_0t0mw"), ExtResource("16_70pbw"), ExtResource("17_81c05")])
+
+[node name="Gente" type="Node2D" parent="." unique_id=39283645]
+
+[node name="Charla1" type="Node2D" parent="Gente" unique_id=1859840680]
+position = Vector2(392, 304)
+script = ExtResource("18_102as")
+mode = 2
+partner = NodePath("../Charla2")
+alt_characters = PackedStringArray()
+
+[node name="Charla2" type="Node2D" parent="Gente" unique_id=232427213]
+position = Vector2(420, 304)
+script = ExtResource("18_102as")
+character = "f2"
+mode = 2
+facing = -1
+partner = NodePath("../Charla1")
+talks_first = false
+alt_characters = PackedStringArray()
+
+[node name="Comentario_Charla1" type="Area2D" parent="Gente" unique_id=2055144215 node_paths=PackedStringArray("npc")]
+position = Vector2(392, 304)
+script = ExtResource("19_bgyiy")
+npc = NodePath("../Charla1")
+lines = PackedStringArray("¿Ya hiciste la tarea de redes?", "¡Mañana hay examen de mate!")
+
+[node name="Caminando" type="Node2D" parent="Gente" unique_id=722898330]
+position = Vector2(600, 304)
+script = ExtResource("18_102as")
+character = "m3"
+mode = 1
+walk_left = -120.0
+walk_right = 140.0
+alt_characters = PackedStringArray()
+
+[node name="Comentario_Caminando" type="Area2D" parent="Gente" unique_id=1437789604 node_paths=PackedStringArray("npc")]
+position = Vector2(600, 304)
+script = ExtResource("19_bgyiy")
+npc = NodePath("../Caminando")
+lines = PackedStringArray("¡Kai! ¿Vas a la soda?", "Hoy hay empanadas de queso.")
+
+[node name="Leyendo" type="Node2D" parent="Gente" unique_id=54624483]
+position = Vector2(760, 304)
+script = ExtResource("18_102as")
+character = "f3"
+alt_characters = PackedStringArray()
+
+[node name="Comentario_Leyendo" type="Area2D" parent="Gente" unique_id=1635155329 node_paths=PackedStringArray("npc")]
+position = Vector2(760, 304)
+script = ExtResource("19_bgyiy")
+npc = NodePath("../Leyendo")
+lines = PackedStringArray("Shh... estoy estudiando.", "¿Sabés qué viene en el examen?")
+
+[node name="Almendras" type="Node2D" parent="Gente" unique_id=496780610]
+position = Vector2(1000, 304)
+script = ExtResource("18_102as")
+character = "x2"
+facing = -1
+alt_characters = PackedStringArray()
+
+[node name="Entries" type="Node2D" parent="." unique_id=524129443]
+
+[node name="DesdeEntrada" type="Marker2D" parent="Entries" unique_id=85604035]
+position = Vector2(1400, 304)
+script = ExtResource("20_k7grv")
+id = &"desde_entrada"
+facing = -1
+
+[node name="DesdeSoda" type="Marker2D" parent="Entries" unique_id=1233240850]
+position = Vector2(70, 304)
+script = ExtResource("20_k7grv")
+id = &"desde_soda"
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1344988902]
+position = Vector2(1400, 304)
+
+[node name="Exits" type="Node2D" parent="." unique_id=2101009685]
+
+[node name="ToSoda" type="Area2D" parent="Exits" unique_id=1347571434]
+position = Vector2(6, 176)
+script = ExtResource("21_ccwh5")
+door_id = &"soda"
+target_scene = "res://world/zones/zone0/soda.tscn"
+target_entry = &"desde_patio"
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="Exits/ToSoda" unique_id=1217926950]
+shape = SubResource("RectangleShape2D_yd0d3")
+
+[node name="AEntrada" type="Area2D" parent="." unique_id=456629908]
+position = Vector2(1400, 304)
+script = ExtResource("22_3nhyo")
+door_id = &"entrada"
+target_scene = "res://world/zones/zone0/entrada.tscn"
+target_entry = &"desde_patio"
+sign_text = "ENTRADA"
+prompt_text = "E: subir a la entrada"
+prompt_offset = Vector2(-50, -90)
+
+[node name="Huellas" type="Node2D" parent="." unique_id=1778361332]
+
+[node name="Huella" type="Area2D" parent="Huellas" unique_id=530946746]
+position = Vector2(520, 304)
+script = ExtResource("23_mx3cc")
+id = &"patio"
+lines = PackedStringArray("CHIP", "ESTUVO AQUÍ :)")
+dialogue = ExtResource("24_6ttlu")
+height = 120.0
+prompt_text = "E: mirar el rastro"
+
+[node name="Player" parent="." unique_id=587343516 instance=ExtResource("23_ykni7")]
+position = Vector2(1400, 304)
+
+[node name="DigitalLayer" type="CanvasLayer" parent="." unique_id=295129142]
+follow_viewport_enabled = true
+
+[node name="GameCamera" parent="." unique_id=1286247872 node_paths=PackedStringArray("target") instance=ExtResource("25_1jogs")]
+target = NodePath("../Player")
+
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("27_g58i1")]
+player = NodePath("../Player")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=1351926776 node_paths=PackedStringArray("player")]
+script = ExtResource("28_6ttlu")
+player = NodePath("../Player")
+physical_ambient = Color(1, 1, 1, 1)

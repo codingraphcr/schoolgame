@@ -21,9 +21,9 @@
 | Categoría | Qué es | Ejemplo |
 |---|---|---|
 | **Principal** | La historia (capítulos, niveles, interludios) | «Una clase diferente», «Camino a casa» |
-| **Secundaria** | Historia opcional con personajes, diálogos y consecuencias | «Sin señal en el barrio» |
+| **Secundaria** | Historia opcional con personajes, diálogos y consecuencias | «Sin señal en el barrio», «Un recreo diferente», «El proyecto perdido» |
 | **Tarea** | Encargo breve | «El robot que no obedece» (PROPUESTA) |
-| **Descubrimiento** | Lugar secreto, documento o ruta oculta | «Las señales del pasado» (PROPUESTA) |
+| **Descubrimiento** | Lugar secreto, documento o ruta oculta | «Una fotografía antigua» (biblioteca, IMPLEMENTADO); «Las señales del pasado» (PROPUESTA) |
 
 **Colecciones** (Fragmentos de Datos y recuerdos) no son misiones: viven en el cuarto de Kai (`Keepsake`) y en el
 bestiario.
@@ -33,6 +33,8 @@ bestiario.
 - Una misión secundaria, tarea o descubrimiento **no reemplaza el objetivo principal**: el HUD sigue mostrando la
   historia y, debajo, la actividad secundaria en curso. Si no hay misión principal activa, la secundaria pasa arriba.
 - Ninguna secundaria es obligatoria para terminar la historia.
+- Un descubrimiento no se anuncia como objetivo: se registra al encontrarlo, aparece el aviso «Nuevo
+  descubrimiento: …» y queda su página en el Grimorio (Registros).
 - Las recompensas únicas no se cobran dos veces (`Economy.claim_reward`).
 - Empiezan con `QuestStarter` (zona + `WorldRequirement`) o desde una conversación.
 - El Grimorio las lista en la pestaña **MISIONES** (junto con la historia), con su categoría, si están en curso o completadas, su paso y su recompensa.

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Kai: Nada, seguro fue un virus. El profe lo está arreglando.
+Compañero: Un virus... ¿de esos que se ríen? Porque yo juraría que oí una risita.
+Compañero: Bueno, si vos lo decís. Pero tenés cara de que no es solo eso.
+Kai [pensativo]: No me gusta esconderle cosas. Pero ni yo entiendo lo que vi."

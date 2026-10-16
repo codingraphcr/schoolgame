@@ -18,8 +18,13 @@
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/biblioteca_catalogo.tres" id="11_cqv8g"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="12_cqv8g"]
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/biblioteca_resuelta.tres" id="12_okeg1"]
+[ext_resource type="Script" path="res://world/school/old_photo.gd" id="13_7qgb7"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="13_okeg1"]
+[ext_resource type="Script" path="res://world/objects/examinable.gd" id="14_4y83i"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="14_7qgb7"]
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="15_r72qm"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/biblioteca_estante.tres" id="16_stl0j"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/biblioteca_mesa.tres" id="17_132rj"]
 [ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="90_bgnpc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1mwm3"]
@@ -227,6 +232,31 @@ catalog_dialogue = ExtResource("11_cqv8g")
 resolved_dialogue = ExtResource("12_okeg1")
 prompt_text = "E: revisar el catálogo"
 prompt_offset = Vector2(-44, -40)
+
+[node name="Objetos" type="Node2D" parent="." unique_id=345178391]
+
+[node name="FotoAntigua" type="Node2D" parent="Objetos" unique_id=1644520865]
+position = Vector2(500, 304)
+script = ExtResource("13_7qgb7")
+description = "Una foto vieja y amarillenta, en un marco entre los diplomas del colegio. Un grupo posa frente a un rack de computadoras recién instalado, con una cinta de inauguración. Arriba, un cartel: «LABORATORIO 2». En la orilla, un poco aparte, un hombre joven de gabacha, anteojos y pelo alborotado sostiene una carpeta."
+kai_note = "Ese es el profe Alvarado... muchísimo más joven. El Laboratorio 2 es el cuarto viejo del pasillo, el que estaba cerrado. Nunca contó que él estuvo cuando lo abrieron. ¿Y con quién sería ese convenio?"
+lines = Array[String](["Etiqueta: «Inauguración del Laboratorio 2 · Programa de Sistemas Inteligentes»", "«En convenio con...» (el resto de la etiqueta está arrancado)", "La fecha se borró con el sol."])
+
+[node name="Estante" type="Area2D" parent="Objetos" unique_id=1833129022]
+position = Vector2(720, 304)
+script = ExtResource("14_4y83i")
+dialogues = Array[ExtResource("15_r72qm")]([ExtResource("16_stl0j")])
+size = Vector2(48, 48)
+prompt_text = "E: mirar los libros"
+prompt_offset = Vector2(-49.4, -66)
+
+[node name="Mesa" type="Area2D" parent="Objetos" unique_id=86566534]
+position = Vector2(410, 304)
+script = ExtResource("14_4y83i")
+dialogues = Array[ExtResource("15_r72qm")]([ExtResource("17_132rj")])
+size = Vector2(40, 40)
+prompt_text = "E: mirar la mesa"
+prompt_offset = Vector2(-41.6, -58)
 
 [node name="Gente" type="Node2D" parent="." unique_id=727651649]
 

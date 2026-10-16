@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Compañero: ¿Sabés qué es lo mejor de estar en un colegio técnico?
+Compañero: Que aquí nadie te ve raro porque te gusten las computadoras. Aquí todos somos así de raros.
+Kai: Ja. Tiene sentido.
+Compañero: Bueno, andá a hacer lo tuyo. ¡Nos vemos!"

@@ -52,6 +52,10 @@ pequeños desafíos educativos que representan los problemas que causaron.
 Introduce: investigación, interacción con terminales, uso del Grimorio, decisiones de seguridad y primeras
 persecuciones cortas. Al final, Chip y Glitch escapan hacia una **zona técnica**.
 
+**Expansión (v1.9):** después de pedir permiso, mientras el profesor prepara el acceso, Kai busca rastros de la falla
+con la Visión («Tras las huellas del error»; bastan dos de tres) y puede explorar el patio, la soda y la biblioteca
+(descubrimiento «Una fotografía antigua»). Detalle en `CAPITULO_01_GUION.md` (escena 1.6) y `../../mundo/COLEGIO.md`.
+
 ## 5. Nivel 2 — Travesuras en el sistema
 
 Kai sigue la persecución. Chip y Glitch desaparecen dentro de una computadora. Kai intenta seguirlos, pero no sabe

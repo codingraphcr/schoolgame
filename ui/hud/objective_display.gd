@@ -94,20 +94,24 @@ func _draw() -> void:
 	draw_colored_polygon(PackedVector2Array([center + Vector2(0, -r), center + Vector2(r, 0), center + Vector2(0, r), center + Vector2(-r, 0)]), accent)
 
 
-func _on_quest_changed(_quest_id: StringName) -> void:
-	_refresh(true)
+func _on_quest_changed(quest_id: StringName) -> void:
+	# Un descubrimiento no es un objetivo: lo anuncia el aviso de «Nuevo descubrimiento».
+	var quest := QuestDB.get_quest(quest_id)
+	_refresh(quest == null or quest.category != Quest.Category.DESCUBRIMIENTO)
 
 
 func _on_quest_completed(quest_id: StringName) -> void:
 	var quest := QuestDB.get_quest(quest_id)
 	if quest and quest.category != Quest.Category.PRINCIPAL:
 		var reward := " (+%d Ecos)" % quest.ecos_reward if quest.ecos_reward > 0 else ""
-		get_tree().call_group(&"toast", &"show_message", "%s completada: %s%s" % [Quest.CATEGORY_NAMES[quest.category], quest.title, reward], 3.0)
-	_refresh(true)
+		var message := "Nuevo descubrimiento: %s" % quest.title if quest.category == Quest.Category.DESCUBRIMIENTO 			else "%s completada: %s" % [Quest.CATEGORY_NAMES[quest.category], quest.title]
+		get_tree().call_group(&"toast", &"show_message", message + reward, 3.0)
+	_refresh(quest == null or quest.category != Quest.Category.DESCUBRIMIENTO)
 
 
 func _refresh(flash: bool) -> void:
 	var game_state := get_node("/root/GameState")
+	var before := _text.text + _side.text
 	var objective: String = game_state.get_objective_text()
 	_text.text = objective
 	var side_id: StringName = game_state.get_side_quest()
@@ -117,7 +121,8 @@ func _refresh(flash: bool) -> void:
 	visible = not objective.is_empty() or _side.visible
 	var quest := QuestDB.get_quest(game_state.active_quest)
 	_quest_title = quest.title.to_upper() if quest and not quest.title.is_empty() else ""
-	if flash and visible:
+	# Solo se anuncia si cambió lo que se lee (p. ej. un descubrimiento no cambia el objetivo).
+	if flash and visible and _text.text + _side.text != before:
 		_flash = 1.0
 		_new_left = NEW_TIME
 		_slide = 1.0

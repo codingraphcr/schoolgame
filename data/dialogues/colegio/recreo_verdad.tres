@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Kai: Vi... algo. Como si la falla tuviera forma. Y se reía.
+Compañero [pensativo]: ¿Forma? Mae, eso suena a película de miedo.
+Compañero: Pero te creo. Vos no sos de inventar cosas.
+Compañero: Si necesitás ayuda con lo que sea, aquí estoy. Aunque sea para cuidarle la mochila.
+Kai: Gracias. En serio."

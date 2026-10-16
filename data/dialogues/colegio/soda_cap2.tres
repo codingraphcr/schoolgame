@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Señora de la soda: Dicen que hoy hay actividad de robótica en el taller.
+Señora de la soda: Coma algo antes, que con la panza vacía no se piensa.
+Kai: Una empanada, entonces. De queso."

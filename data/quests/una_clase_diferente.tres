@@ -39,11 +39,23 @@ id = &"pedir_permiso"
 objective = "Pídele permiso al profesor (en la Sala 3) para entrar al cuarto técnico."
 room_id = &"sala_3"
 
+[sub_resource type="Resource" id="Resource_6"]
+script = ExtResource("2_step")
+id = &"buscar_huellas"
+objective = "Mientras el profe prepara el acceso, busca rastros de la falla por el colegio con la Visión Digital (con dos basta)."
+room_id = &"patio"
+
+[sub_resource type="Resource" id="Resource_7"]
+script = ExtResource("2_step")
+id = &"volver_profesor"
+objective = "Vuelve con el profe a la Sala 3: el acceso al cuarto técnico ya debería estar listo."
+room_id = &"sala_3"
+
 [resource]
 script = ExtResource("1_quest")
 id = &"una_clase_diferente"
 title = "Una clase diferente"
-steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_2"), SubResource("Resource_1"), SubResource("Resource_3"), SubResource("Resource_4"), SubResource("Resource_5")])
+steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_2"), SubResource("Resource_1"), SubResource("Resource_3"), SubResource("Resource_4"), SubResource("Resource_5"), SubResource("Resource_6"), SubResource("Resource_7")])
 completion_title = "NIVEL 1 COMPLETADO"
 completion_subtitle = "UNA CLASE DIFERENTE"
 completion_flag = &"nivel_1_completado"

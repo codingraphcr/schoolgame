@@ -1,6 +1,6 @@
 # BIBLIA NARRATIVA DEL VIDEOJUEGO
 
-**Versión:** 1.8 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
+**Versión:** 1.9 — Documento maestro de historia (cambios en «Registro de cambios», al final)  
 **Estado:** Base narrativa de referencia; algunas decisiones siguen abiertas.  
 **Nombre oficial del videojuego:** Nullveil: Beyond the Firewall.  
 **Nombre provisional del proyecto de origen:** Proyecto Génesis.  
@@ -496,6 +496,22 @@ El estudiante aprende ciberseguridad durante tres años. La lección final no co
   la pelea (reemplaza la salida «atrapando el error» de la v1.7): tras el puzle de la condición de salida aparece la
   pista «arquitectura reconocida» y se abre la salida.
 
-**FIN — BIBLIA NARRATIVA V1.8**
+**v1.9 — 15 de octubre de 2026** (expansión de los capítulos 1 y 2; no cambia los 15 acontecimientos del Capítulo 1):
+
+- **El colegio se amplía:** el **patio** (punto de encuentro, con el tablón de anuncios) y la **soda** (la señora de la
+  soda, sin nombre propio por ahora). Ver `docs/mundo/COLEGIO.md`.
+- **«Una fotografía antigua»** (descubrimiento, biblioteca): la inauguración del **Laboratorio 2** con el profesor
+  Alvarado joven y una etiqueta «Programa de Sistemas Inteligentes» con el nombre del convenio arrancado. Pista
+  sutil: no nombra el Proyecto Génesis ni el origen de Kai.
+- **«Tras las huellas del error»** (Capítulo 1, entre el permiso y el cuarto técnico): el profesor necesita unos
+  minutos para preparar el acceso; Kai busca rastros de la falla con la Visión (bastan dos) y el profesor le enseña
+  qué es **buscar indicadores**. El profesor no menciona la Visión de Kai.
+
+- **Actividades opcionales del Capítulo 1:** «Un recreo diferente» (el Compañero en la soda, con una elección
+  pequeña y sin consecuencias irreversibles) y «El proyecto perdido» (una estudiante del laboratorio, sin nombre;
+  su archivo no se borró: Chip y Glitch lo movieron). Son los dos NPC nuevos permitidos: la señora de la soda y la
+  estudiante.
+
+**FIN — BIBLIA NARRATIVA V1.9**
 
 **Uso recomendado:** Guardar en `docs/narrativa/BIBLIA_NARRATIVA.md`; consultar antes de diseñar capítulos, personajes, niveles, misiones, diálogos o recompensas. Mantener propuestas pendientes identificadas y registrar revisiones en Git. No tratar esta Biblia como sustituto del documento de diseño técnico ni de los planes completos del MEP.

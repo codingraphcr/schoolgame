@@ -182,9 +182,20 @@ func _test_permission() -> void:
 	var box := _box()
 	await _until(func() -> bool: return box.is_playing())
 	await _advance(box)
+	await _until(func() -> bool: return state.get_current_step(Q1) == &"buscar_huellas")
+	_check(state.get_current_step(Q1) == &"buscar_huellas" and not state.is_quest_completed(Q1),
+		"Kai le pide permiso al profesor: tiene que preparar el acceso (mientras, Kai busca rastros)")
+	# Los rastros se prueban aparte (test_tras_las_huellas): aquí se dan por encontrados.
+	ErrorTrace.register(state, &"patio")
+	ErrorTrace.register(state, &"soda")
+	_check(state.get_current_step(Q1) == &"volver_profesor", "con dos rastros, Kai vuelve con el profesor")
+	await _frames(4)
+	await _action(&"interact")
+	await _until(func() -> bool: return box.is_playing())
+	await _advance(box)
 	await _until(func() -> bool: return state.is_quest_completed(Q1))
 	_check(state.is_quest_completed(Q1) and state.has_flag(&"nivel_1_completado") and titles.has("NIVEL 1 COMPLETADO"),
-		"Kai le pide permiso al profesor: «NIVEL 1 COMPLETADO»")
+		"el profesor ya tiene la llave: «NIVEL 1 COMPLETADO»")
 	var exit := room.get_node("Exits/APasillo") as Stairway
 	room.player.teleport_to(exit.global_position + Vector2(0, -8))
 	await _frames(6)

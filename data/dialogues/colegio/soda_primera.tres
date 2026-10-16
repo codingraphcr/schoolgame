@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# La primera vez en la soda.
+Señora de la soda: ¡Buenas, mi amor! ¿Qué le sirvo?
+Kai: Un fresco de cas, por favor.
+Señora de la soda: Aquí tiene. Y llévese una empanadita, que está recién salida.
+Kai: ¡Gracias!
+(La empanada está deliciosa. Kai entiende por qué la fila llega hasta el patio.)"

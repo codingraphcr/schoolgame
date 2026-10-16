@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(Con la Visión, en la pared brilla una marca de datos: «CHIP ESTUVO AQUÍ», con una carita.)
+Kai: ¿Hasta el patio llegaron? Se movieron por la red Wi-Fi del colegio.
+Kai [pensativo]: Todo lo que tocan deja un rastro. Como una línea en un registro."

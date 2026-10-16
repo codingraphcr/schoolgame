@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Misión secundaria «El proyecto perdido»: una estudiante del laboratorio no encuentra su proyecto de la feria.
+Estudiante: ¡Ay, no, no, no! ¿Dónde está?
+Kai: ¿Pasó algo?
+Estudiante: Mi proyecto de la feria: el robot seguidor de línea. Lo guardé esta mañana y ahora no aparece.
+Estudiante: Desde que las compus se pusieron raras, todo está desordenado. ¿Y si se borró?
+Kai: A veces los archivos no se borran: solo cambian de lugar. ¿Me dejás buscar?
+Estudiante: ¡Por favor! Es esa computadora. Pero no toqués nada más, porfa.
+Kai: Solo buscar y leer. Prometido."

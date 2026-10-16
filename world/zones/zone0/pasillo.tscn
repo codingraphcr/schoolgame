@@ -31,6 +31,8 @@
 [ext_resource type="Resource" path="res://data/dialogues/capitulo1/persecucion_escaleras.tres" id="25_2lsgh"]
 [ext_resource type="Script" path="res://world/vision/data_fragment.gd" id="25_k1yll"]
 [ext_resource type="Script" path="res://world/vision/digital_world.gd" id="26_0ow0d"]
+[ext_resource type="Script" path="res://world/school/error_trace.gd" id="26_7g1i6"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/huella_pasillo.tres" id="27_2lsgh"]
 [ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="27_ligia"]
 [ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="28_6effe"]
 [ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="29_bgnpc"]
@@ -419,6 +421,7 @@ position = Vector2(392, 304)
 script = ExtResource("29_bgnpc")
 character = "f3"
 mode = 4
+alt_characters = PackedStringArray()
 
 [node name="ChicoCharla" type="Node2D" parent="Gente" unique_id=1353103927]
 position = Vector2(268, 304)
@@ -426,6 +429,7 @@ script = ExtResource("29_bgnpc")
 mode = 2
 partner = NodePath("../ChicoAudifonos")
 chat_offset = 2.0
+alt_characters = PackedStringArray()
 
 [node name="ChicoAudifonos" type="Node2D" parent="Gente" unique_id=1853804214]
 position = Vector2(292, 304)
@@ -435,6 +439,7 @@ mode = 2
 partner = NodePath("../ChicoCharla")
 talks_first = false
 chat_offset = 2.0
+alt_characters = PackedStringArray()
 
 [node name="Profesora" type="Node2D" parent="Gente" unique_id=1710978465]
 position = Vector2(575, 304)
@@ -444,6 +449,7 @@ mode = 1
 facing = -1
 walk_left = -45.0
 walk_right = 45.0
+alt_characters = PackedStringArray()
 
 [node name="Npcs" type="Node2D" parent="." unique_id=1595665627]
 
@@ -472,6 +478,18 @@ actors = [NodePath("../Chip"), NodePath("../Glitch")]
 path = Array[Vector2]([Vector2(470, 296), Vector2(400, 296), Vector2(340, 296), Vector2(330, 250)])
 start_dialogue = ExtResource("25_2lsgh")
 played_flag = &"cap1_dialogo_escaleras"
+
+[node name="Huellas" type="Node2D" parent="." unique_id=140208682]
+
+[node name="Huella" type="Area2D" parent="Huellas" unique_id=761054423]
+position = Vector2(130, 304)
+script = ExtResource("26_7g1i6")
+id = &"pasillo"
+author = 1
+lines = PackedStringArray("→ CUARTO", "TÉCNICO")
+dialogue = ExtResource("27_2lsgh")
+height = 96.0
+prompt_text = "E: mirar el rastro"
 
 [node name="Player" parent="." unique_id=1430338163 instance=ExtResource("20_4m53y")]
 position = Vector2(56, 304)

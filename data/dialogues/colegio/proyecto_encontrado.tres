@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Kai: Aquí está: respaldo/viejos/seguidor.py. No se borró: alguien lo movió... y el cambio quedó anotado en el registro."

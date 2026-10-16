@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Kai: Mejor contame: ¿vas a ir a la actividad de robótica del taller?
+Compañero: ¡Obvio! Dicen que hay un robot que clasifica cosas. Yo quiero programar la cinta automática.
+Compañero: Mi primo dice que en décimo todo parece teoría, pero que en el taller uno por fin entiende para qué sirve programar.
+Kai: Suena bien. Vamos juntos.
+Compañero: Trato hecho. Pero vos traés la merienda."

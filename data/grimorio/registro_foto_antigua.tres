@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrimorioEntry" format=3]
+
+[ext_resource type="Script" path="res://systems/grimorio/grimorio_entry.gd" id="1_entry"]
+
+[resource]
+script = ExtResource("1_entry")
+category = 4
+order = 20
+title = "Una fotografía antigua"
+subtitle = "Descubrimiento · Biblioteca del colegio"
+text = "Una foto vieja y amarillenta, en un marco entre los diplomas del colegio. Un grupo posa frente a un rack de computadoras recién instalado, con una cinta de inauguración. Arriba, un cartel: «LABORATORIO 2». En la orilla, un poco aparte, un hombre joven de gabacha, anteojos y pelo alborotado sostiene una carpeta.\n\nEtiqueta: «Inauguración del Laboratorio 2 · Programa de Sistemas Inteligentes»\n«En convenio con...» (el resto de la etiqueta está arrancado)\nLa fecha se borró con el sol.\n\nKai: «Ese es el profe Alvarado... muchísimo más joven. El Laboratorio 2 es el cuarto viejo del pasillo, el que estaba cerrado. Nunca contó que él estuvo cuando lo abrieron. ¿Y con quién sería ese convenio?»"
+facts = Dictionary[String, String]({"Lugar": "Biblioteca", "Fecha": "Ilegible"})
+unlock_flag = &"foto_antigua_vista"

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Announcement" format=3]
+
+[ext_resource type="Script" path="res://systems/school/announcement.gd" id="1_ann"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 1
+
+[resource]
+script = ExtResource("1_ann")
+id = &"reglamento_pasillos"
+title = "No se corre en los pasillos"
+kind = 2
+text = "La Dirección recuerda que no se corre en los pasillos ni en las gradas. Gracias por su colaboración."
+kai_note = "Hoy no voy a poder cumplir esa regla."
+requirement = SubResource("Req")
+hidden_flag = &""
+paper = Color(0.96, 0.94, 0.89, 1)

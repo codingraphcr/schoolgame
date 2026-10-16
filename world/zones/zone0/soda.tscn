@@ -1,0 +1,294 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/rooms/room.gd" id="1_llx1i"]
+[ext_resource type="Script" path="res://world/school/soda_props.gd" id="2_c5bqh"]
+[ext_resource type="Script" path="res://characters/npcs/background_npc.gd" id="3_4wjvh"]
+[ext_resource type="Script" path="res://world/zones/zone0/npc_bark.gd" id="4_l7a8s"]
+[ext_resource type="Script" path="res://characters/npcs/familia/family_member.gd" id="5_jfno0"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/soda_primera.tres" id="6_rkcii"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/soda_repite.tres" id="7_afbpn"]
+[ext_resource type="Script" path="res://characters/npcs/npc_conversation.gd" id="8_i84qx"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/soda_cap1.tres" id="9_my1d3"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/soda_cap2.tres" id="10_wu1yq"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/soda_antes_clase.tres" id="11_antes"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/npcs_fondo/npc_pf_quieto.png" id="11_stlim"]
+[ext_resource type="Script" path="res://components/interaction/interactable.gd" id="12_shlea"]
+[ext_resource type="Script" path="res://world/objects/examinable.gd" id="13_kcgq3"]
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="14_3a7o4"]
+[ext_resource type="Script" path="res://systems/quests/story_presence.gd" id="14_wu1yq"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/soda_menu.tres" id="15_hk6c6"]
+[ext_resource type="Script" path="res://world/school/recess_chat.gd" id="15_stlim"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/soda_radio.tres" id="16_1eyhn"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/recreo_intro.tres" id="16_shlea"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/soda_refri.tres" id="17_f5ree"]
+[ext_resource type="Script" path="res://world/rooms/room_entry.gd" id="18_6uhg0"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/recreo_verdad.tres" id="18_kcgq3"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/recreo_virus.tres" id="19_3a7o4"]
+[ext_resource type="Script" path="res://world/rooms/room_exit.gd" id="19_q2l0r"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/recreo_robotica.tres" id="20_hk6c6"]
+[ext_resource type="PackedScene" path="res://characters/player/player.tscn" id="20_mwg3i"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/recreo_cierre.tres" id="21_1eyhn"]
+[ext_resource type="Script" path="res://world/school/error_trace.gd" id="21_llx1i"]
+[ext_resource type="PackedScene" path="res://world/camera/game_camera.tscn" id="22_72wr0"]
+[ext_resource type="Resource" path="res://data/dialogues/capitulo1/huella_soda.tres" id="22_c5bqh"]
+[ext_resource type="Resource" path="res://data/dialogues/colegio/recreo_repite.tres" id="22_f5ree"]
+[ext_resource type="PackedScene" path="res://ui/hud/combat_hud.tscn" id="24_wii31"]
+[ext_resource type="Script" path="res://world/vision/digital_world.gd" id="26_c5bqh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n0q4t"]
+size = Vector2(704, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7grao"]
+size = Vector2(32, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_svhsc"]
+size = Vector2(32, 400)
+
+[sub_resource type="Resource" id="Resource_antes"]
+script = ExtResource("8_i84qx")
+quest_id = &"una_clase_diferente"
+step_id = &"ir_a_clase"
+dialogue = ExtResource("11_antes")
+
+[sub_resource type="Resource" id="Resource_8naah"]
+script = ExtResource("8_i84qx")
+quest_id = &"una_clase_diferente"
+dialogue = ExtResource("9_my1d3")
+
+[sub_resource type="Resource" id="Resource_o86to"]
+script = ExtResource("8_i84qx")
+quest_id = &"travesuras_en_el_sistema"
+dialogue = ExtResource("9_my1d3")
+
+[sub_resource type="Resource" id="Resource_h7f6g"]
+script = ExtResource("8_i84qx")
+quest_id = &"el_lenguaje_de_las_maquinas"
+dialogue = ExtResource("10_wu1yq")
+
+[sub_resource type="Resource" id="Resource_yltt1"]
+script = ExtResource("8_i84qx")
+quest_id = &"codigo_fuera_de_control"
+dialogue = ExtResource("10_wu1yq")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3psw"]
+atlas = ExtResource("11_stlim")
+region = Rect2(0, 0, 96, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cvo1e"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d3psw")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d3psw")
+}],
+"loop": 1,
+"name": &"talk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_abwfv"]
+size = Vector2(48, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0jusc"]
+size = Vector2(12, 256)
+
+[node name="Soda" type="Node2D" unique_id=499967707 node_paths=PackedStringArray("player", "camera", "spawn_point")]
+texture_filter = 1
+script = ExtResource("1_llx1i")
+player = NodePath("Player")
+camera = NodePath("GameCamera")
+spawn_point = NodePath("SpawnPoint")
+room_size = Rect2(0, 0, 640, 360)
+music_track = &"colegio"
+
+[node name="Ambient" type="CanvasModulate" parent="." unique_id=1215494208]
+
+[node name="Props" type="Node2D" parent="." unique_id=1805662690]
+script = ExtResource("2_c5bqh")
+
+[node name="Collisions" type="StaticBody2D" parent="." unique_id=1902010113]
+
+[node name="Floor" type="CollisionShape2D" parent="Collisions" unique_id=443363602]
+position = Vector2(320, 344)
+shape = SubResource("RectangleShape2D_n0q4t")
+
+[node name="WallLeft" type="CollisionShape2D" parent="Collisions" unique_id=726158918]
+position = Vector2(-16, 180)
+shape = SubResource("RectangleShape2D_7grao")
+
+[node name="WallRight" type="CollisionShape2D" parent="Collisions" unique_id=2015145753]
+position = Vector2(656, 180)
+shape = SubResource("RectangleShape2D_svhsc")
+
+[node name="Gente" type="Node2D" parent="." unique_id=1097312055]
+
+[node name="Comiendo1" type="Node2D" parent="Gente" unique_id=1972368082]
+position = Vector2(84, 304)
+script = ExtResource("3_4wjvh")
+character = "f1"
+alt_characters = PackedStringArray()
+
+[node name="Comiendo2" type="Node2D" parent="Gente" unique_id=326240190]
+position = Vector2(136, 304)
+script = ExtResource("3_4wjvh")
+character = "m2"
+facing = -1
+alt_characters = PackedStringArray()
+
+[node name="Comentario_Comiendo1" type="Area2D" parent="Gente" unique_id=2045107361 node_paths=PackedStringArray("npc")]
+position = Vector2(84, 304)
+script = ExtResource("4_l7a8s")
+npc = NodePath("../Comiendo1")
+lines = PackedStringArray("Esta empanada está buenísima.", "¿Me pasás la salsa?")
+
+[node name="Comentario_Comiendo2" type="Area2D" parent="Gente" unique_id=1731021318 node_paths=PackedStringArray("npc")]
+position = Vector2(136, 304)
+script = ExtResource("4_l7a8s")
+npc = NodePath("../Comiendo2")
+lines = PackedStringArray("Dicen que la señora de la soda sabe todo lo que pasa en el colegio.")
+
+[node name="Comiendo3" type="Node2D" parent="Gente" unique_id=623170693]
+position = Vector2(556, 304)
+script = ExtResource("3_4wjvh")
+character = "x1"
+alt_characters = PackedStringArray()
+
+[node name="SenoraSoda" type="Node2D" parent="Gente" unique_id=2020566906]
+position = Vector2(360, 304)
+script = ExtResource("5_jfno0")
+shirt_color = Color(0.9098039, 0.7529412, 0.3764706, 1)
+pants_color = Color(0.41568628, 0.2901961, 0.22745098, 1)
+display_name = "Señora de la soda"
+dialogue = ExtResource("6_rkcii")
+repeat_dialogue = ExtResource("7_afbpn")
+talked_flag = &"soda_presentada"
+conversations = Array[ExtResource("8_i84qx")]([SubResource("Resource_antes"), SubResource("Resource_8naah"), SubResource("Resource_o86to"), SubResource("Resource_h7f6g"), SubResource("Resource_yltt1")])
+intro_first = true
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Gente/SenoraSoda" unique_id=591400631]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_cvo1e")
+animation = &"idle"
+offset = Vector2(0, -55)
+flip_h = true
+
+[node name="Interactable" type="Area2D" parent="Gente/SenoraSoda" unique_id=35790376]
+script = ExtResource("12_shlea")
+prompt_text = "E: pedir algo"
+prompt_offset = Vector2(-30, -74)
+
+[node name="Shape" type="CollisionShape2D" parent="Gente/SenoraSoda/Interactable" unique_id=1882232976]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_abwfv")
+
+[node name="Amigo" type="Node2D" parent="Gente" unique_id=2138297729]
+position = Vector2(612, 304)
+script = ExtResource("3_4wjvh")
+character = "m2"
+facing = -1
+alt_characters = PackedStringArray()
+
+[node name="StoryPresence" type="Node" parent="Gente/Amigo" unique_id=1444302145]
+script = ExtResource("14_wu1yq")
+show_quest = &"una_clase_diferente"
+show_step = &"buscar_huellas"
+hide_quest = &"travesuras_en_el_sistema"
+
+[node name="Recreo" type="Area2D" parent="Gente/Amigo" unique_id=1703269454]
+script = ExtResource("15_stlim")
+quest_id = &"un_recreo_diferente"
+intro = ExtResource("16_shlea")
+question = "¿Qué le contás?"
+options = PackedStringArray("La verdad: vi algo raro en las computadoras.", "Que no fue nada, seguro un virus.", "Mejor cambiar de tema: la actividad de robótica.")
+answers = Array[ExtResource("14_3a7o4")]([ExtResource("18_kcgq3"), ExtResource("19_3a7o4"), ExtResource("20_hk6c6")])
+outro = ExtResource("21_1eyhn")
+repeat_dialogue = ExtResource("22_f5ree")
+choice_flag = &"recreo_eleccion"
+prompt_text = "E: sentarte con tu amigo"
+prompt_offset = Vector2(-60, -84)
+
+[node name="Objetos" type="Node2D" parent="." unique_id=484043290]
+
+[node name="Menu" type="Area2D" parent="Objetos" unique_id=194490409]
+position = Vector2(135, 304)
+script = ExtResource("13_kcgq3")
+dialogues = Array[ExtResource("14_3a7o4")]([ExtResource("15_hk6c6")])
+size = Vector2(50, 60)
+prompt_text = "E: leer el menú"
+prompt_offset = Vector2(-39, -78)
+
+[node name="Radio" type="Area2D" parent="Objetos" unique_id=621664977]
+position = Vector2(250, 304)
+script = ExtResource("13_kcgq3")
+dialogues = Array[ExtResource("14_3a7o4")]([ExtResource("16_1eyhn")])
+size = Vector2(40, 60)
+prompt_text = "E: escuchar la radio"
+prompt_offset = Vector2(-52, -78)
+
+[node name="Refri" type="Area2D" parent="Objetos" unique_id=2112712450]
+position = Vector2(498, 304)
+script = ExtResource("13_kcgq3")
+dialogues = Array[ExtResource("14_3a7o4")]([ExtResource("17_f5ree")])
+size = Vector2(50, 60)
+prompt_text = "E: mirar la refri"
+prompt_offset = Vector2(-44.2, -78)
+
+[node name="Entries" type="Node2D" parent="." unique_id=1021376109]
+
+[node name="DesdePatio" type="Marker2D" parent="Entries" unique_id=1470366720]
+position = Vector2(580, 304)
+script = ExtResource("18_6uhg0")
+id = &"desde_patio"
+facing = -1
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=649327305]
+position = Vector2(580, 304)
+
+[node name="Exits" type="Node2D" parent="." unique_id=16805780]
+
+[node name="ToPatio" type="Area2D" parent="Exits" unique_id=1963106434]
+position = Vector2(634, 176)
+script = ExtResource("19_q2l0r")
+door_id = &"patio"
+target_scene = "res://world/zones/zone0/patio.tscn"
+target_entry = &"desde_soda"
+
+[node name="@CollisionShape2D@3" type="CollisionShape2D" parent="Exits/ToPatio" unique_id=778745919]
+shape = SubResource("RectangleShape2D_0jusc")
+
+[node name="Huellas" type="Node2D" parent="." unique_id=1784327004]
+
+[node name="Huella" type="Area2D" parent="Huellas" unique_id=1693683343]
+position = Vector2(305, 304)
+script = ExtResource("21_llx1i")
+id = &"soda"
+author = 1
+lines = PackedStringArray("JIJIJI", "JIJIJI", "JIJIJI")
+dialogue = ExtResource("22_c5bqh")
+height = 150.0
+prompt_text = "E: mirar el rastro"
+
+[node name="Player" parent="." unique_id=901833981 instance=ExtResource("20_mwg3i")]
+position = Vector2(580, 304)
+
+[node name="DigitalLayer" type="CanvasLayer" parent="." unique_id=1060783041]
+follow_viewport_enabled = true
+
+[node name="GameCamera" parent="." unique_id=1923256939 node_paths=PackedStringArray("target") instance=ExtResource("22_72wr0")]
+target = NodePath("../Player")
+
+[node name="CombatHUD" parent="." unique_id=834849493 node_paths=PackedStringArray("player") instance=ExtResource("24_wii31")]
+player = NodePath("../Player")
+
+[node name="DigitalWorld" type="Node" parent="." unique_id=1767782678 node_paths=PackedStringArray("player", "ambient")]
+script = ExtResource("26_c5bqh")
+player = NodePath("../Player")
+ambient = NodePath("../Ambient")
+physical_ambient = Color(1, 1, 1, 1)

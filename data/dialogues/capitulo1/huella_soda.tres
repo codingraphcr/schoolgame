@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(La radio de la soda se conecta al Wi-Fi. Con la Visión se ve un mensaje que se repite sin parar: «JIJIJI».)
+Kai: Glitch se metió en la radio. Por eso suena la misma canción una y otra vez.
+Kai [pensativo]: Mejor no toco nada. Lo anoto y sigo."

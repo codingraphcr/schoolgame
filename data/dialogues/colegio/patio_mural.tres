@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "(El mural de la especialidad: un candado enorme rodeado por un circuito.)
+Kai: Lo pintaron los de duodécimo del año pasado. Algún día me gustaría dejar algo así."

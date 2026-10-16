@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="Quest" format=3]
+
+[ext_resource type="Script" path="res://systems/quests/quest.gd" id="1_quest"]
+[ext_resource type="Script" path="res://systems/quests/quest_step.gd" id="2_step"]
+
+[sub_resource type="Resource" id="Resource_0"]
+script = ExtResource("2_step")
+id = &"hablar_estudiante"
+objective = "Habla con la estudiante del laboratorio."
+room_id = &"laboratorio"
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2_step")
+id = &"buscar_archivo"
+objective = "Busca su proyecto en la computadora del laboratorio (solo buscar y leer)."
+room_id = &"laboratorio"
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("2_step")
+id = &"volver_estudiante"
+objective = "Cuéntale a la estudiante dónde estaba su archivo."
+room_id = &"laboratorio"
+
+[resource]
+script = ExtResource("1_quest")
+id = &"proyecto_perdido"
+title = "El proyecto perdido"
+category = 1
+steps = Array[ExtResource("2_step")]([SubResource("Resource_0"), SubResource("Resource_1"), SubResource("Resource_2")])

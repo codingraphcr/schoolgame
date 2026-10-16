@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "# Actividad «Un recreo diferente»: Kai y su amigo en la soda, mientras el profesor prepara el acceso.
+Compañero: ¡Kai! Vení, sentate. Te guardé campo.
+Kai: ¿Y vos no tenés clase?
+Compañero: El profe de Mate se fue a ayudar con las compus. Recreo extendido, mae.
+Compañero: Tomá, la mitad de mi empanada. Es de queso, la última que quedaba.
+Kai: Gracias... Me hacía falta.
+Compañero [pensativo]: Oíste, en serio: ¿qué fue eso en la Sala 3? Las pantallas hacían caras.
+Compañero: Y vos te quedaste mirando a la nada, como si vieras algo que los demás no."

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Announcement" format=3]
+
+[ext_resource type="Script" path="res://systems/school/announcement.gd" id="1_ann"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 1
+
+[resource]
+script = ExtResource("1_ann")
+id = &"robotica_pronto"
+title = "Actividad de robótica (pronto)"
+kind = 0
+text = "Décimo prepara una actividad en el taller: un robot clasificador, una cinta automática y un asistente modular. ¡Inscripciones en el taller!"
+kai_note = "Suena divertido."
+requirement = SubResource("Req")
+hidden_flag = &"capitulo_2"
+paper = Color(0.7, 0.88, 1, 1)

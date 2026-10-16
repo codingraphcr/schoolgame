@@ -36,7 +36,7 @@ func _test_quests() -> void:
 	_check(first.title == "Una clase diferente" and second.title == "Travesuras en el sistema", "títulos de los niveles de la especificación")
 	_check(first.next_quest == &"travesuras_en_el_sistema" and first.completion_flag == &"nivel_1_completado"
 		and second.completion_flag == &"capitulo_1_completado", "el nivel 1 lleva al 2; marcas de nivel y de capítulo")
-	_check(first.steps.size() == 6 and second.steps.size() == 5, "pasos: 6 en el nivel 1 y 5 en el nivel 2")
+	_check(first.steps.size() == 8 and second.steps.size() == 5, "pasos: 8 en el nivel 1 (con «Tras las huellas del error») y 5 en el nivel 2")
 	_check(QuestDB.get_quest(&"cuarto_viejo").next_quest == &"una_clase_diferente", "el prólogo («El cuarto viejo») lleva al Capítulo 1")
 
 

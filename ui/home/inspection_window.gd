@@ -21,6 +21,8 @@ const PANEL_BORDER := Color("8a6a40")
 var title := ""
 var entries: Array[Dictionary] = []
 var empty_text := "Todavía no hay nada aquí."
+## Lo que dice la ayuda de abajo al cerrar («E / Esc: volver al cuarto»).
+var back_text := "volver al cuarto"
 var selected := -1
 
 var _buttons: Array[Button] = []
@@ -34,8 +36,10 @@ var _note: Label
 var _was_paused := false
 
 
-static func open(from: Node, window_title: String, list: Array[Dictionary], empty := "") -> InspectionWindow:
+static func open(from: Node, window_title: String, list: Array[Dictionary], empty := "", back := "") -> InspectionWindow:
 	var window := InspectionWindow.new()
+	if not back.is_empty():
+		window.back_text = back
 	window.title = window_title
 	window.entries = list
 	if not empty.is_empty():
@@ -184,7 +188,7 @@ func _build() -> void:
 	detail.add_child(_note_title)
 	_note = _label("", 16, NOTE)
 	detail.add_child(_note)
-	var hint := _label("↑↓: elegir   ·   E / Esc: volver al cuarto", 13, Color(MUTED, 0.9))
+	var hint := _label("↑↓: elegir   ·   E / Esc: " + back_text, 13, Color(MUTED, 0.9))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	column.add_child(hint)
 

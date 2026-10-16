@@ -13,6 +13,8 @@ signal talked(first_time: bool)
 @export var talked_flag: StringName = &""
 ## Conversaciones según el paso de una misión (tienen prioridad sobre dialogue y repeat_dialogue).
 @export var conversations: Array[NpcConversation] = []
+## La primera vez dice dialogue aunque haya una conversación de la misión (una presentación; necesita talked_flag).
+@export var intro_first := false
 ## Animación que hace de vez en cuando mientras espera (p. ej. "notas": revisa su tablet).
 @export var idle_extra_animation: StringName = &""
 ## Segundos entre una y otra vez (al azar dentro del rango) y cuánto dura.
@@ -54,7 +56,7 @@ func has_talked() -> bool:
 
 func _on_interacted(player: Player) -> void:
 	var first_time := not has_talked()
-	var conversation := _current_conversation()
+	var conversation: NpcConversation = null if intro_first and first_time and dialogue else _current_conversation()
 	var lines: Dialogue
 	if conversation:
 		lines = conversation.dialogue
@@ -88,7 +90,11 @@ func _on_interacted(player: Player) -> void:
 ## La conversación que corresponde al paso actual de alguna misión (o null).
 func _current_conversation() -> NpcConversation:
 	for conversation in conversations:
-		if conversation and conversation.dialogue and _game_state().get_current_step(conversation.quest_id) == conversation.step_id:
+		if conversation == null or conversation.dialogue == null:
+			continue
+		var step: StringName = _game_state().get_current_step(conversation.quest_id)
+		# Sin paso: vale mientras la misión está en curso (cualquier paso; p. ej. lo que dice en un capítulo).
+		if (conversation.step_id == &"" and step != &"") or (conversation.step_id != &"" and step == conversation.step_id):
 			return conversation
 	return null
 

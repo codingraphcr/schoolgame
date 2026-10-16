@@ -22,8 +22,8 @@
 - **CONFIRMADO:** región urbana central: colegio técnico, calles, edificios, comercios, biblioteca, talleres,
   laboratorios, zonas escolares y accesos a otras regiones. El colegio es centro narrativo y de navegación.
 - **IMPLEMENTADO:** el colegio (distrito `colegio`): entrada, pasillos, Sala 3, laboratorio, escaleras, pasillo del
-  segundo piso, biblioteca, cuarto técnico, pasillo viejo y cuarto viejo (Laboratorio 2), y las salas opcionales del
-  generador.
+  segundo piso, biblioteca, cuarto técnico, pasillo viejo y cuarto viejo (Laboratorio 2), el **patio** (punto de
+  encuentro, con el tablón de anuncios) y la **soda**, y las salas opcionales del generador. Detalle: `COLEGIO.md`.
 - **FUTURO:** las calles del centro, comercios (zona comercial: misiones de emprendimiento en undécimo), la
   biblioteca pública (acceso limitado al Distrito Caché en décimo), la estación del tren y la terminal de buses.
 

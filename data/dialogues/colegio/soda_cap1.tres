@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Señora de la soda: ¿Usted también vio las computadoras haciendo cosas raras? Los profes andan corriendo de un lado a otro.
+Kai: ...Algo así.
+Señora de la soda: Treinta años en esta soda y nunca había visto tanto alboroto. Coma algo, que se ve cansado."

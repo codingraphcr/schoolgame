@@ -44,6 +44,8 @@ func is_present() -> bool:
 
 
 func _refresh() -> void:
+	if not is_inside_tree():
+		return  # La sala se cerró antes de este refresco (se llamó con call_deferred).
 	var present := is_present()
 	if int(present) == _applied:
 		return

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Announcement" format=3]
+
+[ext_resource type="Script" path="res://systems/school/announcement.gd" id="1_ann"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 1
+
+[resource]
+script = ExtResource("1_ann")
+id = &"charla_contrasenas"
+title = "Charla: contraseñas seguras"
+kind = 0
+text = "Este viernes, en la Sala 3: cómo crear contraseñas largas y fáciles de recordar. Traer cuaderno."
+kai_note = "Eso ya lo practiqué con el profe."
+requirement = SubResource("Req")
+hidden_flag = &""
+paper = Color(1, 0.92, 0.6, 1)

@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="TerminalChallenge" format=3]
+
+[ext_resource type="Script" path="res://systems/terminal/terminal_challenge.gd" id="1_term"]
+
+[resource]
+script = ExtResource("1_term")
+id = &"cap1_proyecto_perdido"
+title = "Laboratorio · Equipo 4"
+objective = "Encuentra el proyecto perdido (seguidor.py) sin borrar ni cambiar nada."
+user = "estudiante"
+host = "lab-equipo-4"
+welcome = "Equipo 4 del laboratorio.
+Escribe help para ver los comandos."
+files = Dictionary[String, String]({
+"LEEME.txt": "Equipo del laboratorio.
+Los proyectos se guardan en la carpeta proyectos/.
+Si algo se pierde, no lo borres: primero búscalo.
+",
+"proyectos/notas.txt": "Proyecto de la feria: robot seguidor de línea.
+Archivo: seguidor.py
+Último cambio: hoy, 7:40 a. m.
+",
+"proyectos/ideas.txt": "- Que el robot pite al llegar al final.
+- Pedirle al profe un sensor extra.
+",
+"descargas/": "",
+"temporal/registro_de_cambios.txt": "07:40  guardado     proyectos/seguidor.py      usuario: estudiante
+03:12  movido       proyectos/seguidor.py  ->  respaldo/viejos/seguidor.py      usuario: chip_y_glitch
+03:12  movidos 340 archivos más      usuario: chip_y_glitch
+",
+"respaldo/viejos/practica_1.py": "# Práctica 1: hola mundo
+mostrar(\"Hola, mundo\")
+",
+"respaldo/viejos/seguidor.py": "# Robot seguidor de línea · Feria de ciencias
+# Si el sensor ve la línea, avanza; si no, gira hasta encontrarla.
+si sensor_ve_linea():
+    avanzar()
+si no:
+    girar()
+"
+})
+goal_file = "respaldo/viejos/seguidor.py"
+allowed_commands = PackedStringArray("help", "pwd", "ls", "cd", "cat")
+hints = PackedStringArray("Lee proyectos/notas.txt: dice cómo se llama el archivo que falta.", "Los cambios quedan anotados: busca un registro en la carpeta temporal/.", "El registro dice a dónde se movió: entra con cd respaldo/viejos y léelo con cat seguidor.py.")
+success_text = "El archivo nunca se borró: alguien lo movió a otra carpeta. Antes de dar algo por perdido, se averigua dónde está (pwd, ls, cd) y se lee para confirmarlo (cat). Y para que no vuelva a pasar: copias de respaldo en más de un lugar."
+ecos_reward = -1

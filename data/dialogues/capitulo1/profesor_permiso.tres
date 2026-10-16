@@ -4,8 +4,10 @@
 
 [resource]
 script = ExtResource("1_dlg")
-script_text = "# Escena 1.5: Kai le pide permiso al profesor para entrar al cuarto técnico.
+script_text = "# Escena 1.5: Kai le pide permiso al profesor para entrar al cuarto técnico. El profesor tiene que preparar el
+# acceso; mientras tanto, Kai busca rastros («Tras las huellas del error»).
 Kai: Profe, creo que la falla viene del cuarto técnico. ¿Me deja revisar?
 Prof. Alvarado [pensativo]: ¿El cuarto técnico? Ahí no entra cualquiera...
-Prof. Alvarado: Te acompaño hasta la puerta. Revisás solo el respaldo del sistema de entrenamiento. Nada más.
-Kai: Solo el respaldo. Prometido."
+Prof. Alvarado: Está bien, pero dame unos minutos. Tengo que pedir la llave en la Dirección y desconectar el sistema de entrenamiento de la red del colegio.
+Prof. Alvarado: Mientras tanto, fijate si la falla dejó rastros por el colegio: por dónde pasó, qué tocó. Antes de arreglar algo, primero se averigua qué pasó.
+Kai [pensativo]: Rastros... Con la Visión Digital tal vez los vea."

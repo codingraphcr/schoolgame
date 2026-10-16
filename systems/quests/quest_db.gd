@@ -17,6 +17,9 @@ const PATHS := {
 	&"codigo_fuera_de_control": "res://data/quests/codigo_fuera_de_control.tres",
 	# Actividades del mundo (docs/misiones/MISIONES_SECUNDARIAS.md).
 	&"senal_del_barrio": "res://data/quests/senal_del_barrio.tres",
+	&"foto_antigua": "res://data/quests/foto_antigua.tres",
+	&"un_recreo_diferente": "res://data/quests/un_recreo_diferente.tres",
+	&"proyecto_perdido": "res://data/quests/proyecto_perdido.tres",
 }
 
 

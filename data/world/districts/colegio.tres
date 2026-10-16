@@ -76,6 +76,22 @@ room_b = &"biblioteca"
 door_b = &"oeste"
 requires = PackedStringArray()
 
+[sub_resource type="Resource" id="Resource_do2ii"]
+script = ExtResource("3_link")
+room_a = &"entrada"
+door_a = &"patio"
+room_b = &"patio"
+door_b = &"entrada"
+requires = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_n2rmx"]
+script = ExtResource("3_link")
+room_a = &"patio"
+door_a = &"soda"
+room_b = &"soda"
+door_b = &"patio"
+requires = PackedStringArray()
+
 [sub_resource type="Resource" id="Resource_entrada"]
 script = ExtResource("2_room")
 room_id = &"entrada"
@@ -135,11 +151,23 @@ room_id = &"pasillo_segundo"
 template_id = &"pasillo_segundo"
 cell = Vector2i(2, -2)
 
+[sub_resource type="Resource" id="Resource_lpwxg"]
+script = ExtResource("2_room")
+room_id = &"patio"
+template_id = &"patio"
+cell = Vector2i(-2, 1)
+
+[sub_resource type="Resource" id="Resource_l8jhf"]
+script = ExtResource("2_room")
+room_id = &"soda"
+template_id = &"soda"
+cell = Vector2i(-3, 1)
+
 [resource]
 script = ExtResource("1_dist")
 id = &"colegio"
 display_name = "Colegio"
 start_room = &"entrada"
-rooms = Array[ExtResource("2_room")]([SubResource("Resource_entrada"), SubResource("Resource_pasillo"), SubResource("Resource_laboratorio"), SubResource("Resource_pasillo_viejo"), SubResource("Resource_cuarto_viejo"), SubResource("Resource_ymgt7"), SubResource("Resource_q2v3j"), SubResource("Resource_ilm8n"), SubResource("Resource_sala3"), SubResource("Resource_vu3hk")])
-links = Array[ExtResource("3_link")]([SubResource("Resource_link1"), SubResource("Resource_link2"), SubResource("Resource_link3"), SubResource("Resource_link4"), SubResource("Resource_wl8p2"), SubResource("Resource_qgcq0"), SubResource("Resource_link_sala3"), SubResource("Resource_ipydh"), SubResource("Resource_gnpla")])
+rooms = Array[ExtResource("2_room")]([SubResource("Resource_entrada"), SubResource("Resource_pasillo"), SubResource("Resource_laboratorio"), SubResource("Resource_pasillo_viejo"), SubResource("Resource_cuarto_viejo"), SubResource("Resource_ymgt7"), SubResource("Resource_q2v3j"), SubResource("Resource_ilm8n"), SubResource("Resource_sala3"), SubResource("Resource_vu3hk"), SubResource("Resource_lpwxg"), SubResource("Resource_l8jhf")])
+links = Array[ExtResource("3_link")]([SubResource("Resource_link1"), SubResource("Resource_link2"), SubResource("Resource_link3"), SubResource("Resource_link4"), SubResource("Resource_wl8p2"), SubResource("Resource_qgcq0"), SubResource("Resource_link_sala3"), SubResource("Resource_ipydh"), SubResource("Resource_gnpla"), SubResource("Resource_do2ii"), SubResource("Resource_n2rmx")])
 optional_rooms = 2

@@ -67,10 +67,25 @@ estudiante** (notas y datos personales).
 ### Escena 1.5 · El cuarto técnico (fin del nivel 1)
 
 Los hermanos se cuelan por debajo de la puerta del **cuarto técnico** del colegio (los servidores). La puerta está
-cerrada con llave. Kai no la fuerza: **le pide permiso al profesor** (acceso autorizado). El profesor lo acompaña
-hasta la puerta, la abre y le pide revisar **solo** el respaldo del sistema de entrenamiento.
+cerrada con llave. Kai no la fuerza: **le pide permiso al profesor** (acceso autorizado). El profesor acepta, pero
+necesita unos minutos para preparar el acceso (pedir la llave en la Dirección y desconectar el sistema de
+entrenamiento de la red del colegio).
 
-Marca: `nivel_1_completado`.
+### Escena 1.6 · Tras las huellas del error (expansión, v1.9)
+
+Mientras tanto, Kai puede explorar el colegio (patio, soda, biblioteca, amigos, actividades opcionales). El objetivo
+principal sigue claro: **buscar rastros de la falla con la Visión Digital** y volver con el profesor.
+
+- Hay tres rastros (`ErrorTrace`): «CHIP ESTUVO AQUÍ» en la pared del patio, el «JIJIJI» que se repite en la radio de
+  la soda (Glitch) y una flecha hacia el cuarto técnico en la pizarra del pasillo. Solo se ven con la Visión y solo
+  en este momento. **Bastan dos**: no hay temporizador ni hay que encontrarlos todos.
+- Si Kai vuelve antes, el profesor le pide «un par de rastros».
+- Con dos, Kai vuelve a la Sala 3. El profesor nombra lo que hizo: **buscar indicadores** (las señales de que un
+  sistema fue alterado; se anotan antes de tocar nada). Ya tiene la llave: lo acompaña hasta la puerta y le pide
+  revisar **solo** el respaldo del sistema de entrenamiento.
+
+Pasos: `pedir_permiso` → `buscar_huellas` → `volver_profesor`. Marcas: `huella_patio`, `huella_soda`,
+`huella_pasillo`, `nivel_1_completado`.
 
 ---
 

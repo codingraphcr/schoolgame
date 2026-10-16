@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Announcement" format=3]
+
+[ext_resource type="Script" path="res://systems/school/announcement.gd" id="1_ann"]
+[ext_resource type="Script" path="res://systems/world_map/world_requirement.gd" id="2_req"]
+
+[sub_resource type="Resource" id="Req"]
+script = ExtResource("2_req")
+min_chapter = 1
+
+[resource]
+script = ExtResource("1_ann")
+id = &"wifi_colegio"
+title = "Red Wi-Fi del colegio"
+kind = 2
+text = "La red del colegio es solo para fines educativos. No compartás tu contraseña con nadie, ni siquiera con tus amigos."
+kai_note = "Ni siquiera con los amigos. Anotado."
+requirement = SubResource("Req")
+hidden_flag = &""
+paper = Color(0.85, 1, 0.8, 1)
